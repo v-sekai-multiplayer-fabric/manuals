@@ -386,5 +386,114 @@
   <guid>https://v-sekai-fire.github.io/manuals/decisions/20260501-cockroachdb-with-mtls-role-separation.html</guid>
   <pubDate>Fri, 01 May 2026 00:00:00 GMT</pubDate>
 </item>
+<item>
+  <title></title>
+  <link>https://v-sekai-fire.github.io/manuals/decisions/present-proposal-template.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="proposal-title" class="level1">
+<h1>[Proposal Title]</h1>
+<section id="the-context" class="level2">
+<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
+<p>Describe the circumstances that led to this proposal. Give enough background that someone unfamiliar with the area can understand why the work matters. State what you were trying to accomplish, not what solution you reached for first.</p>
+</section>
+<section id="the-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
+<p>State the specific problem, limitation, or gap being addressed. Be concrete. A reader should be able to confirm whether a proposed solution actually solves it.</p>
+</section>
+<section id="design" class="level2">
+<h2 class="anchored" data-anchor-id="design">Design</h2>
+<p>Detail the proposed solution precisely enough that it could be implemented without improvising the design. Include code, diagrams, or examples where they reduce ambiguity. Vague or underspecified proposals cannot be acted on.</p>
+</section>
+<section id="cris-score" class="level2">
+<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 53%">
+<col style="width: 17%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Factor</th>
+<th>Score</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>C</strong>omplexity</td>
+<td>0–10</td>
+<td>[10 = simple, well-understood; 0 = novel or high-risk — why]</td>
+</tr>
+<tr class="even">
+<td><strong>R</strong>each</td>
+<td>0–10</td>
+<td>[10 = affects everyone; 0 = affects almost no one — why]</td>
+</tr>
+<tr class="odd">
+<td><strong>I</strong>mpediment</td>
+<td>0–10</td>
+<td>[10 = total blocker with no workaround; 0 = trivial to work around — why]</td>
+</tr>
+<tr class="even">
+<td><strong>S</strong>takeholder</td>
+<td>0–10</td>
+<td>[10 = critical dependency for a major project; 0 = no project depends on it — why]</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td></td>
+<td>[Average of four factors (0–10); 8–10 = build now, 6–8 = schedule soon, 4–6 = evaluate, 0–4 = defer]</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-downsides" class="level2">
+<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
+<p>Describe the costs, risks, or trade-offs. Every proposal has them.</p>
+</section>
+<section id="the-road-not-taken" class="level2">
+<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
+<p>Describe the alternatives considered and why this approach was chosen over them.</p>
+</section>
+<section id="status" class="level2">
+<h2 class="anchored" data-anchor-id="status">Status</h2>
+<p>Status: Draft <!-- Draft | Proposed | Rejected | Accepted | Deprecated | Superseded by [Link/Reference] --></p>
+</section>
+<section id="decision-makers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
+<ul>
+<li>[Name or role]</li>
+</ul>
+</section>
+<section id="tags" class="level2">
+<h2 class="anchored" data-anchor-id="tags">Tags</h2>
+<ul>
+<li>[relevant-tag-1], [relevant-tag-2], YYYYMMDD-this-filename-without-extension, present-proposal-template</li>
+</ul>
+<!-- Always include the filename (without .md) as the last tag.
+     This makes the document findable by filename from any grep or
+     code-search tool, the same way Godot Engine source files are
+     cross-referenced by their basename. -->
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
+<ol type="1">
+<li><a href="URL">Title</a></li>
+</ol>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-fire.github.io/manuals/decisions/present-proposal-template.html</guid>
+  <pubDate>Wed, 06 May 2026 16:26:02 GMT</pubDate>
+</item>
 </channel>
 </rss>
