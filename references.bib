@@ -1,0 +1,335 @@
+% references.bib — V-Sekai Fire Manuals
+% Migrated from https://v-sekai.github.io/manuals/references.html
+% Only entries relevant to: networking, multiplayer, Godot, CockroachDB,
+% FoundationDB, deployment infrastructure, and formal verification.
+
+%% ── Networking / Protocols ────────────────────────────────────────────────
+
+@misc{ietf2023webtransport,
+  title        = {{WebTransport} over {HTTP/3}},
+  author       = {Frindell, Alan and Kinnear, Eric and Vassiliev, Victor},
+  howpublished = {RFC 9220, IETF},
+  year         = {2023},
+  url          = {https://www.rfc-editor.org/rfc/rfc9220}
+}
+
+@inproceedings{jacobson1988congestion,
+  author    = {Jacobson, Van and Karels, Michael J.},
+  title     = {Congestion Avoidance and Control},
+  booktitle = {Proceedings of {SIGCOMM} '88},
+  pages     = {314--329},
+  year      = {1988},
+  doi       = {10.1145/52324.52356}
+}
+
+@inproceedings{karn1987rtt,
+  author    = {Karn, Phil and Partridge, Craig},
+  title     = {Improving Round-Trip Time Estimates in Reliable Transport Protocols},
+  booktitle = {Proceedings of {ACM SIGCOMM} '87},
+  pages     = {2--7},
+  year      = {1987},
+  doi       = {10.1145/55483.55484}
+}
+
+@techreport{mills2010rfc5905,
+  author      = {Mills, David and Martin, Juergen and Burbank, Jack and Kasch, William},
+  title       = {Network Time Protocol Version 4: Protocol and Algorithms Specification},
+  institution = {IETF},
+  type        = {RFC},
+  number      = {5905},
+  year        = {2010},
+  doi         = {10.17487/RFC5905}
+}
+
+@misc{enet2024,
+  author = {Salzman, Lee},
+  title  = {{ENet}: Reliable {UDP} Networking Library},
+  year   = {2024},
+  url    = {http://enet.bespin.org/}
+}
+
+%% ── Multiplayer / Game Servers / Interest Management ──────────────────────
+
+@inproceedings{braud2021talaria,
+  author    = {Braud, Tristan and Alhilal, Ahmad and Hui, Pan},
+  title     = {Talaria: In-Engine Synchronisation for Seamless Migration of Mobile Edge Gaming Instances},
+  booktitle = {Proceedings of the 17th International Conference on Emerging Networking EXperiments and Technologies ({CoNEXT} '21)},
+  pages     = {375--381},
+  year      = {2021},
+  doi       = {10.1145/3485983.3494848}
+}
+
+@article{beskow2009partialmigration,
+  author  = {Beskow, Paul B. and Vik, Knut-Helge and Halvorsen, P{\aa}l and Griwodz, Carsten},
+  title   = {The Partial Migration of Game State and Dynamic Server Selection to Reduce Latency},
+  journal = {Multimedia Tools and Applications},
+  volume  = {45},
+  number  = {1--3},
+  pages   = {83--107},
+  year    = {2009},
+  doi     = {10.1007/s11042-009-0287-7}
+}
+
+@inproceedings{cronin2003cheatproof,
+  author    = {Cronin, Eric and Filstrup, Brian and Jamin, Sugih},
+  title     = {Cheat-Proofing Dead Reckoned Multiplayer Games},
+  booktitle = {Workshop on Anti-Cheating in Online Games (ADCOG), co-located with ACM SIGCOMM},
+  year      = {2003}
+}
+
+@article{baughman2007cheatproof,
+  author  = {Baughman, Nathaniel E. and Liberatore, Marc and Levine, Brian Neil},
+  title   = {Cheat-Proof Playout for Centralized and Peer-to-Peer Gaming},
+  journal = {{IEEE/ACM} Transactions on Networking},
+  volume  = {15},
+  number  = {1},
+  year    = {2007},
+  doi     = {10.1109/TNET.2006.886289}
+}
+
+@inproceedings{bharambe2004spectators,
+  author    = {Bharambe, Ashwin R. and Padmanabhan, Venkata N. and Seshan, Srinivasan},
+  title     = {Supporting Spectators in Online Multiplayer Games},
+  booktitle = {Proceedings of the 3rd Workshop on Hot Topics in Networks ({HotNets-III})},
+  year      = {2004},
+  url       = {https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/hotnets2004.pdf}
+}
+
+@inproceedings{lee2018lagcompensation,
+  author    = {Lee, Steven W. K. and Chang, Rocky K. C.},
+  title     = {Enhancing the Experience of Multiplayer Shooter Games via Advanced Lag Compensation},
+  booktitle = {Proceedings of the 9th {ACM} Multimedia Systems Conference (MMSys '18)},
+  pages     = {284--293},
+  year      = {2018},
+  doi       = {10.1145/3204949.3204971}
+}
+
+@article{liu2022latencysurvey,
+  author    = {Liu, Shengmei and Xu, Xiaokun and Claypool, Mark},
+  title     = {A Survey and Taxonomy of Latency Compensation Techniques for Network Computer Games},
+  journal   = {ACM Computing Surveys},
+  volume    = {54},
+  number    = {11s},
+  articleno = {243},
+  year      = {2022},
+  doi       = {10.1145/3519023}
+}
+
+@article{liu2014interestmgmt,
+  author    = {Liu, Elvis S. and Theodoropoulos, Georgios K.},
+  title     = {Interest Management for Distributed Virtual Environments: A Survey},
+  journal   = {ACM Computing Surveys},
+  volume    = {46},
+  number    = {4},
+  articleno = {51},
+  year      = {2014},
+  doi       = {10.1145/2535417}
+}
+
+@incollection{ahmed2009zoningaoi,
+  author    = {Ahmed, Dewan T. and Shirmohammadi, Shervin},
+  title     = {Zoning Issues and Area of Interest Management in Massively Multiplayer Online Games},
+  booktitle = {Handbook of Multimedia for Digital Entertainment and Arts},
+  publisher = {Springer},
+  address   = {Boston, MA},
+  year      = {2009},
+  doi       = {10.1007/978-0-387-89024-1_8}
+}
+
+@inproceedings{ahmed2008dynaoi,
+  author    = {Ahmed, Dewan T. and Shirmohammadi, Shervin},
+  title     = {A Dynamic Area of Interest Management and Collaboration Model for {P2P} {MMOGs}},
+  booktitle = {Proceedings of the 12th {IEEE/ACM} International Symposium on Distributed Simulation and Real-Time Applications (DS-RT '08)},
+  pages     = {27--34},
+  year      = {2008},
+  doi       = {10.1109/DS-RT.2008.26}
+}
+
+@inproceedings{boulanger2006comparing,
+  author    = {Boulanger, Jean-S{\'e}bastien and Kienzle, J{\"o}rg and Verbrugge, Clark},
+  title     = {Comparing Interest Management Algorithms for Massively Multiplayer Games},
+  booktitle = {Proceedings of the 5th {ACM SIGCOMM} Workshop on Network and System Support for Games (NetGames '06)},
+  year      = {2006},
+  doi       = {10.1145/1230040.1230046}
+}
+
+@inproceedings{morgan2004expandingspheres,
+  author    = {Morgan, Graham and Storey, Kier and Lu, Fengyun},
+  title     = {Expanding Spheres: A Collision Detection Algorithm for Interest Management in Networked Games},
+  booktitle = {Entertainment Computing -- {ICEC} 2004},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {3166},
+  pages     = {507--516},
+  publisher = {Springer},
+  year      = {2004},
+  doi       = {10.1007/978-3-540-28643-1_56}
+}
+
+@inproceedings{lazaridis2021hitboxes,
+  author    = {Lazaridis, Lazaros and Papatsimouli, Maria and Kollias, Konstantinos F. and Sarigiannidis, Panagiotis and Fragulis, George F.},
+  title     = {Hitboxes: A Survey About Collision Detection in Video Games},
+  booktitle = {{HCI} in Games: Experience Design and Game Mechanics},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {12789},
+  pages     = {307--320},
+  publisher = {Springer},
+  year      = {2021},
+  doi       = {10.1007/978-3-030-77277-2_24}
+}
+
+@misc{photon2024regions,
+  author = {{Exit Games}},
+  title  = {{Photon PUN2}: Regions and Best Region},
+  year   = {2024},
+  url    = {https://doc.photonengine.com/pun/current/connection-and-authentication/regions}
+}
+
+@misc{vrcschool2024networksync,
+  author = {{VRChat School}},
+  title  = {{VRChat} Network Sync and {IK} Update Rate},
+  year   = {2024},
+  url    = {https://vrchatschool.com/network-sync/}
+}
+
+@misc{ps2guinness2022,
+  author = {{Guinness World Records} and {{Daybreak Game Company}}},
+  title  = {Most Players Simultaneously in a First-Person Shooter Battle: {Planetside 2} World Record},
+  year   = {2022},
+  url    = {https://www.guinnessworldrecords.com/world-records/most-players-simultaneously-in-a-fps-battle}
+}
+
+%% ── Godot Engine ──────────────────────────────────────────────────────────
+
+@misc{godot_engine_2024,
+  title = {Godot Engine},
+  year  = {2024},
+  url   = {https://godotengine.org/}
+}
+
+@misc{godot_engine_documentation_2024,
+  title = {Godot Engine Documentation},
+  year  = {2024},
+  url   = {https://docs.godotengine.org/}
+}
+
+@misc{gdscript_documentation_2024,
+  title = {{GDScript} Documentation},
+  year  = {2024},
+  url   = {https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/gdscript_basics.html}
+}
+
+@misc{godot2022webtransport3899,
+  author = {{Godot Engine Contributors}},
+  title  = {Add {WebTransport} Support (Proposal \#3899)},
+  year   = {2022},
+  url    = {https://github.com/godotengine/godot-proposals/issues/3899},
+  note   = {Opened 2022, unmerged as of 2026-04-21}
+}
+
+@misc{godot2024bvhstructs,
+  author = {{Godot Engine contributors}},
+  title  = {{Godot 4.x} Dynamic {BVH} Broadphase: Node Expansion Constants},
+  year   = {2024},
+  url    = {https://github.com/godotengine/godot/blob/master/servers/physics_3d/godot_broad_phase_3d_bvh.h}
+}
+
+%% ── CockroachDB / FoundationDB / Distributed Databases ───────────────────
+
+@misc{cockroachlabs2024,
+  author = {{Cockroach Labs}},
+  title  = {{CockroachDB}},
+  year   = {2024},
+  url    = {https://www.cockroachlabs.com/}
+}
+
+@misc{cockroachdb2020parallelcommits,
+  author = {{Cockroach Labs}},
+  title  = {Parallel Commits {TLA+} Specification},
+  year   = {2020},
+  url    = {https://github.com/v-sekai/cockroach/blob/release-22.1-oxide/docs/tla-plus/ParallelCommits/ParallelCommits.tla}
+}
+
+@misc{cockroachdb_manual_deployment_2024,
+  title = {{CockroachDB} Manual Deployment},
+  year  = {2024},
+  url   = {https://www.cockroachlabs.com/docs/v22.1/manual-deployment.html}
+}
+
+@inproceedings{kulkarni2014hlc,
+  author    = {Kulkarni, Sandeep and Demirbas, Murat and Madappa, Deepak and Avva, Bharadwaj and Leone, Marcelo},
+  title     = {Logical Physical Clocks and Consistent Snapshots in Globally Distributed Databases},
+  booktitle = {Stabilization, Safety, and Security of Distributed Systems (SSS 2014)},
+  year      = {2014},
+  doi       = {10.1007/978-3-319-11764-5_14}
+}
+
+@inproceedings{fdb2021paper,
+  author    = {Zhou, Jingyu and Xu, Meng and Shraer, Alexander and Namasivayam, Bala and Miller, Alex and Tschannen, Evan and Atherton, Steve and Beez, Andrew J. and Hammer, Pat and Arefin, Soumya and Banning, Jared and Laber, Markus and Stumm, Michael and Butterstein, David and Fischel, Brian and Gazit, Benny and Terber, Avi and Collins, Rusty},
+  title     = {{FoundationDB}: A Distributed Unbundled Transactional Key Value Store},
+  booktitle = {Proceedings of the 2021 {ACM SIGMOD} International Conference on Management of Data},
+  year      = {2021},
+  doi       = {10.1145/3448016.3457559}
+}
+
+@misc{apples_foundationdb_2024,
+  author = {{Apple Inc.}},
+  title  = {{FoundationDB}},
+  year   = {2024},
+  url    = {https://github.com/apple/foundationdb}
+}
+
+@misc{fdb_faulttolerance_2024,
+  title = {{FoundationDB} Fault Tolerance},
+  year  = {2024},
+  url   = {https://apple.github.io/foundationdb/fault-tolerance.html}
+}
+
+%% ── Deployment / Infrastructure ───────────────────────────────────────────
+
+@misc{systemd_service_unit_2024,
+  title = {systemd Service Unit Documentation},
+  year  = {2024},
+  url   = {https://www.freedesktop.org/software/systemd/man/systemd.service.html}
+}
+
+@misc{helm_documentation_2024,
+  title = {Helm Documentation},
+  year  = {2024},
+  url   = {https://helm.sh/docs/}
+}
+
+@misc{tailscale_funnel_2024,
+  title = {Tailscale Funnel Documentation},
+  year  = {2024},
+  url   = {https://tailscale.com/kb/1132/tailscale-funnel/}
+}
+
+@misc{dokku_documentation_2024,
+  title = {Dokku Documentation},
+  year  = {2024},
+  url   = {http://dokku.viewdocs.io/dokku/}
+}
+
+@misc{twelvefactor_config_2024,
+  title = {The Twelve-Factor App: Config},
+  year  = {2024},
+  url   = {https://12factor.net/config}
+}
+
+%% ── Formal Verification / Lean 4 ──────────────────────────────────────────
+
+@inproceedings{demoura2021lean4,
+  author    = {de Moura, Leonardo and Ullrich, Sebastian},
+  title     = {The {Lean} 4 Theorem Prover and Programming Language},
+  booktitle = {Automated Deduction -- CADE 28},
+  year      = {2021},
+  doi       = {10.1007/978-3-030-79876-5_37}
+}
+
+@inproceedings{mathlib2020,
+  author    = {{The mathlib Community}},
+  title     = {The {Lean} Mathematical Library},
+  booktitle = {Proceedings of the 9th {ACM SIGPLAN} International Conference on Certified Programs and Proofs},
+  year      = {2020},
+  doi       = {10.1145/3372885.3373824}
+}
