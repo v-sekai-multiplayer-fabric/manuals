@@ -1,0 +1,38 @@
+project:
+  type: website
+  output-dir: _site
+
+resources:
+  - decisions/attachments
+
+website:
+  site-url: https://v-sekai-fire.github.io/manuals
+  repo-url: https://github.com/V-Sekai-fire/manuals
+  repo-branch: main
+  repo-actions: edit
+  title: V-Sekai Fire — Manuals
+  page-navigation: true
+  navbar:
+    background: primary
+    search: true
+    left:
+      - text: "Changes"
+        file: changelog.qmd
+      - text: "Decisions"
+        file: decisions.qmd
+  page-footer:
+    right:
+      - icon: github
+        href: https://github.com/V-Sekai-fire
+
+format:
+  html:
+    toc: true
+    theme:
+      light: flatly
+      dark: darkly
+
+filters:
+  - quarto
+
+freeze: true

@@ -1,0 +1,13 @@
+---
+title: "Decisions"
+toc: true
+listing:
+  filter-ui: true
+  type: table
+  contents:
+    - "decisions/**/*.md"
+    - "!decisions/attachments/"
+  sort: "filename desc"
+  feed: true
+  fields: [title, reading-time, filename]
+---
