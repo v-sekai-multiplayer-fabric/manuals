@@ -1,7 +1,14 @@
 [
   {
+    "listing": "/changelog.html",
+    "items": [
+      "/changelog/2026/20260506-deck-log.html"
+    ]
+  },
+  {
     "listing": "/decisions.html",
     "items": [
+      "/decisions/20260506-observability-stack-victoriatraces.html",
       "/decisions/20260506-observability-stack-victoriametrics-tempo.html",
       "/decisions/20260506-observability-stack-victoriametrics-jaeger.html",
       "/decisions/20260506-ghcr-package-ownership-same-repo.html",
@@ -9,12 +16,6 @@
       "/decisions/20260501-godot-double-precision-template-release-for-zone.html",
       "/decisions/20260501-fly-io-for-deployment.html",
       "/decisions/20260501-cockroachdb-with-mtls-role-separation.html"
-    ]
-  },
-  {
-    "listing": "/changelog.html",
-    "items": [
-      "/changelog/2026/20260506-deck-log.html"
     ]
   }
 ]

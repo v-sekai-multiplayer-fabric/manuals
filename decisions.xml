@@ -12,6 +12,83 @@
 <generator>quarto-1.9.37</generator>
 <lastBuildDate>Wed, 06 May 2026 00:00:00 GMT</lastBuildDate>
 <item>
+  <title>Replace Jaeger with VictoriaTraces for trace storage</title>
+  <link>https://v-sekai-fire.github.io/manuals/decisions/20260506-observability-stack-victoriatraces.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context" class="level2">
+<h2 class="anchored" data-anchor-id="context">Context</h2>
+<p>Jaeger all-in-one with Badger storage was chosen as the Apache 2.0 replacement for Tempo. However, VictoriaMetrics (the same vendor as VictoriaMetrics and VictoriaLogs already in the stack) ships VictoriaTraces — an Apache 2.0 trace backend that accepts OTLP directly and claims 3.7× less RAM and 2.6× less CPU than Tempo.</p>
+<p>Using VictoriaTraces gives us a unified vendor stack (VictoriaMetrics / VictoriaLogs / VictoriaTraces), eliminates Badger’s single-node limitation, and follows the same port and CLI-flag conventions as the other Victoria services.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Replace Jaeger all-in-one with VictoriaTraces in the single-machine observability stack.</p>
+<ul>
+<li>VictoriaTraces listens on 10428 (HTTP, UI + query + OTLP HTTP ingest).</li>
+<li>OTEL Collector exports traces via <code>otlphttp/traces</code> to <code>http://localhost:10428/insert/opentelemetry</code>.</li>
+<li>Data persists at <code>/var/lib/victoriatraces</code> on the shared Fly volume.</li>
+<li>Jaeger is removed entirely; no separate query UI process is needed.</li>
+</ul>
+<p>Port map after this change:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 37%">
+<col style="width: 25%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Service</th>
+<th>Port</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>VictoriaMetrics</td>
+<td>8428</td>
+<td>Metrics storage and PromQL</td>
+</tr>
+<tr class="even">
+<td>VictoriaLogs</td>
+<td>9428</td>
+<td>Log storage and query</td>
+</tr>
+<tr class="odd">
+<td>VictoriaTraces</td>
+<td>10428</td>
+<td>Trace storage and query</td>
+</tr>
+<tr class="even">
+<td>OTEL Collector</td>
+<td>4317 (gRPC), 4318 (HTTP)</td>
+<td>OTLP ingest, routes to the above</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>All four services are now Apache 2.0 and from the VictoriaMetrics ecosystem.</li>
+<li>VictoriaTraces query UI is at <code>http://...:10428/select/vmui</code>.</li>
+<li><code>fly proxy 10428:10428</code> replaces the former <code>fly proxy 16686:16686</code> for trace inspection.</li>
+<li>No explicit trace TTL is configured; add <code>-retentionPeriod</code> if disk pressure becomes a concern.</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-fire.github.io/manuals/decisions/20260506-observability-stack-victoriatraces.html</guid>
+  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo</title>
   <link>https://v-sekai-fire.github.io/manuals/decisions/20260506-observability-stack-victoriametrics-tempo.html</link>
   <description><![CDATA[ 

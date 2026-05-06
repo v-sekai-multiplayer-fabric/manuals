@@ -28,165 +28,32 @@
     "text": "Consequences\n\nJaeger UI replaces the Tempo query endpoint: fly proxy 16686:16686 instead of fly proxy 3200:3200.\nBadger is ephemeral-safe only with --badger.ephemeral=false; this flag must be set or traces are lost on restart.\nNo explicit trace TTL is configured; traces accumulate until disk pressure. Add --badger.span-store-ttl if retention limits are needed.\nJaeger’s Badger backend does not support distributed mode; acceptable for a single-machine stack."
   },
   {
-    "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html",
-    "href": "decisions/20260506-observability-stack-victoriametrics-tempo.html",
-    "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
+    "objectID": "decisions/20260501-webtransport-over-quic-for-game-traffic.html",
+    "href": "decisions/20260501-webtransport-over-quic-for-game-traffic.html",
+    "title": "Use WebTransport over QUIC for game traffic",
     "section": "",
-    "text": "The stack needs metrics, logs, and traces. Options considered: Grafana Cloud (cost), self-hosted Prometheus+Loki+Tempo (three separate apps), or a compact single-machine stack."
+    "text": "The zone server needs low-latency bidirectional communication between clients and the Godot game server. HTTP/1.1 and WebSocket both run over TCP, which head-of-line blocks on packet loss and degrades real-time game state."
   },
   {
-    "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html#context",
-    "href": "decisions/20260506-observability-stack-victoriametrics-tempo.html#context",
-    "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
+    "objectID": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#context",
+    "href": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#context",
+    "title": "Use WebTransport over QUIC for game traffic",
     "section": "",
-    "text": "The stack needs metrics, logs, and traces. Options considered: Grafana Cloud (cost), self-hosted Prometheus+Loki+Tempo (three separate apps), or a compact single-machine stack."
+    "text": "The zone server needs low-latency bidirectional communication between clients and the Godot game server. HTTP/1.1 and WebSocket both run over TCP, which head-of-line blocks on packet loss and degrades real-time game state."
   },
   {
-    "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html#decision",
-    "href": "decisions/20260506-observability-stack-victoriametrics-tempo.html#decision",
-    "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
+    "objectID": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#decision",
+    "href": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#decision",
+    "title": "Use WebTransport over QUIC for game traffic",
     "section": "Decision",
-    "text": "Decision\nRun VictoriaMetrics (metrics), VictoriaLogs (logs), and Grafana Tempo (traces) under supervisord in a single Fly Machine, with an OpenTelemetry Collector as the ingest router.\n\nOTEL Collector listens on 4317 (gRPC) and 4318 (HTTP) on the private network.\nCollector routes: metrics → VictoriaMetrics (8428 via Prometheus remote write), logs → VictoriaLogs (9428 OTLP), traces → Tempo (5317 OTLP internal).\nData persists on a 10 GB Fly volume."
+    "text": "Decision\nUse WebTransport (HTTP/3 over QUIC) for all game traffic. Clients connect to the Elixir gateway on UDP port 443, which proxies into the Godot zone server on UDP port 7443."
   },
   {
-    "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html#consequences",
-    "href": "decisions/20260506-observability-stack-victoriametrics-tempo.html#consequences",
-    "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
+    "objectID": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#consequences",
+    "href": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#consequences",
+    "title": "Use WebTransport over QUIC for game traffic",
     "section": "Consequences",
-    "text": "Consequences\n\nOTLP ports must not be exposed publicly — they accept unauthenticated writes.\nOther Fly apps send telemetry to multiplayer-fabric-observability.internal:4317 or :4318.\nGrafana Tempo v3 config changed significantly from v2: ingester and compactor top-level keys were removed; -target=all flag is required to run all components.\nSee GHCR package ownership decision for why the zone binary image was renamed and moved to multiplayer-fabric-zone."
-  },
-  {
-    "objectID": "decisions/20260501-godot-double-precision-template-release-for-zone.html",
-    "href": "decisions/20260501-godot-double-precision-template-release-for-zone.html",
-    "title": "Godot double precision template_release for zone servers",
-    "section": "",
-    "text": "Zone servers run the game simulation headlessly. Two Godot build targets are candidates: editor (includes import tools) and template_release (runtime only). Precision must match the rest of the V-Sekai stack."
-  },
-  {
-    "objectID": "decisions/20260501-godot-double-precision-template-release-for-zone.html#context",
-    "href": "decisions/20260501-godot-double-precision-template-release-for-zone.html#context",
-    "title": "Godot double precision template_release for zone servers",
-    "section": "",
-    "text": "Zone servers run the game simulation headlessly. Two Godot build targets are candidates: editor (includes import tools) and template_release (runtime only). Precision must match the rest of the V-Sekai stack."
-  },
-  {
-    "objectID": "decisions/20260501-godot-double-precision-template-release-for-zone.html#decision",
-    "href": "decisions/20260501-godot-double-precision-template-release-for-zone.html#decision",
-    "title": "Godot double precision template_release for zone servers",
-    "section": "Decision",
-    "text": "Decision\nBuild zone server binaries as target=template_release precision=double with no Mono. Build from the V-Sekai fork at V-Sekai-fire/multiplayer-fabric-build@b27142e94."
-  },
-  {
-    "objectID": "decisions/20260501-godot-double-precision-template-release-for-zone.html#consequences",
-    "href": "decisions/20260501-godot-double-precision-template-release-for-zone.html#consequences",
-    "title": "Godot double precision template_release for zone servers",
-    "section": "Consequences",
-    "text": "Consequences\n\ntemplate_release has no import or export tools, making it smaller and faster to start.\nlibstdc++-static must be included in the AlmaLinux 9 build environment because template_release links libstdc++ statically.\nThe binary filename is godot.linuxbsd.template_release.double.x86_64.\n--headless flag is required at runtime.\nDouble precision matches the physics and networking precision of the rest of the stack."
-  },
-  {
-    "objectID": "decisions/20260506-ghcr-package-ownership-same-repo.html",
-    "href": "decisions/20260506-ghcr-package-ownership-same-repo.html",
-    "title": "GHCR packages must be built by the repo that consumes them",
-    "section": "",
-    "text": "The zone server binary was built by multiplayer-fabric-baker and pushed to ghcr.io/v-sekai-fire/godot-zone-double. The zone deploy workflow (in multiplayer-fabric-zone) used --local-only with docker/login-action to pull that image, but received 403 Forbidden.\nGitHub Container Registry ties package write access to the repository whose GITHUB_TOKEN created it. The zone repo’s token could not push to a package owned by the baker repo, and could not pull a private package owned by another repo without package-scoped access."
-  },
-  {
-    "objectID": "decisions/20260506-ghcr-package-ownership-same-repo.html#context",
-    "href": "decisions/20260506-ghcr-package-ownership-same-repo.html#context",
-    "title": "GHCR packages must be built by the repo that consumes them",
-    "section": "",
-    "text": "The zone server binary was built by multiplayer-fabric-baker and pushed to ghcr.io/v-sekai-fire/godot-zone-double. The zone deploy workflow (in multiplayer-fabric-zone) used --local-only with docker/login-action to pull that image, but received 403 Forbidden.\nGitHub Container Registry ties package write access to the repository whose GITHUB_TOKEN created it. The zone repo’s token could not push to a package owned by the baker repo, and could not pull a private package owned by another repo without package-scoped access."
-  },
-  {
-    "objectID": "decisions/20260506-ghcr-package-ownership-same-repo.html#decision",
-    "href": "decisions/20260506-ghcr-package-ownership-same-repo.html#decision",
-    "title": "GHCR packages must be built by the repo that consumes them",
-    "section": "Decision",
-    "text": "Decision\nEach repository builds and publishes the GHCR images it directly uses in its own deploy:\n\nmultiplayer-fabric-baker builds and owns godot-editor-double.\nmultiplayer-fabric-zone builds and owns multiplayer-fabric-zone-godot (renamed from godot-zone-double to reflect ownership).\n\nworkflow_run triggers only fire within the same repository, so the zone binary build workflow must live in the zone repo for the deploy to auto-trigger after a successful build."
-  },
-  {
-    "objectID": "decisions/20260506-ghcr-package-ownership-same-repo.html#consequences",
-    "href": "decisions/20260506-ghcr-package-ownership-same-repo.html#consequences",
-    "title": "GHCR packages must be built by the repo that consumes them",
-    "section": "Consequences",
-    "text": "Consequences\n\nPackage names must reflect the owning repo to avoid confusion.\nMoving a package between repos requires deleting it (needs delete:packages API scope) and rebuilding, or renaming.\nCross-repo GHCR access requires either a PAT with read:packages scope or making the package public."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "V-Sekai Fire — Multiplayer Fabric",
-    "section": "",
-    "text": "Documentation for the multiplayer fabric stack: a WebTransport-based game server platform built on Godot, Elixir, and CockroachDB, deployed on Fly.io.\n\nSource code: V-Sekai-fire on GitHub\nIssues and discussion: multiplayer-fabric-taskweft\n\n\n\n\n\n\nRepo\nPurpose\n\n\n\n\nmultiplayer-fabric-gateway\nElixir WebTransport gateway (WebRTC → Godot zone)\n\n\nmultiplayer-fabric-crdb\nCockroachDB with mTLS, role-separated access\n\n\nmultiplayer-fabric-uro\nPhoenix zone backend (shard registry, asset API)\n\n\nmultiplayer-fabric-baker\nHeadless Godot asset validator and exporter\n\n\nmultiplayer-fabric-zone\nGodot zone server (template_release, double precision)\n\n\nmultiplayer-fabric-observability\nVictoriaMetrics + VictoriaLogs + Tempo + OTEL Collector\n\n\nmultiplayer-fabric-infra\nTerraform for Fly.io resources\n\n\nmultiplayer-fabric-build\nV-Sekai fork of the Godot engine"
-  },
-  {
-    "objectID": "index.html#repositories",
-    "href": "index.html#repositories",
-    "title": "V-Sekai Fire — Multiplayer Fabric",
-    "section": "",
-    "text": "Repo\nPurpose\n\n\n\n\nmultiplayer-fabric-gateway\nElixir WebTransport gateway (WebRTC → Godot zone)\n\n\nmultiplayer-fabric-crdb\nCockroachDB with mTLS, role-separated access\n\n\nmultiplayer-fabric-uro\nPhoenix zone backend (shard registry, asset API)\n\n\nmultiplayer-fabric-baker\nHeadless Godot asset validator and exporter\n\n\nmultiplayer-fabric-zone\nGodot zone server (template_release, double precision)\n\n\nmultiplayer-fabric-observability\nVictoriaMetrics + VictoriaLogs + Tempo + OTEL Collector\n\n\nmultiplayer-fabric-infra\nTerraform for Fly.io resources\n\n\nmultiplayer-fabric-build\nV-Sekai fork of the Godot engine"
-  },
-  {
-    "objectID": "changelog/2026/20260506-deck-log.html",
-    "href": "changelog/2026/20260506-deck-log.html",
-    "title": "V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)",
-    "section": "",
-    "text": "Date: 2026-05-06\n\n\n\nWebTransport gateway (Elixir) deployed at gateway.chibifire.com and gateway-cdb4.chibifire.com\nCockroachDB with mTLS deployed as multiplayer-fabric-crdb; admin UI accessible via flyctl proxy\nUro zone backend deployed at hub.chibifire.com and bake.chibifire.com\nObservability stack: VictoriaMetrics, VictoriaLogs, Grafana Tempo, OTEL Collector on single Fly Machine\nBaker (headless Godot asset exporter) deployed as multiplayer-fabric-baker\nZone server pipeline: Godot template_release binary build in multiplayer-fabric-zone\nTerraform infra management in multiplayer-fabric-infra with state on tfstate branch\nDaily CRDB backup to Tigris via restic\nDNS records for hub, bake, zone subdomains on chibifire.com\nAGENTS.md documentation across all repos\nThis manuals repo was created\n\n\n\n\n\nZone binary GHCR push: renamed image to multiplayer-fabric-zone-godot (package ownership tied to creating repo)\nTerraform: renamed my-crdb-node to multiplayer-fabric-crdb throughout state, configs, and scripts\nBaker deploy: dropped curl package (conflicts with curl-minimal pre-installed in AlmaLinux 9)\nBuild CI: excluded web from editor merge and release jobs (web only builds template_release)\nGrafana Tempo v3: removed renamed ingester/compactor config keys; added -target=all"
-  },
-  {
-    "objectID": "changelog/2026/20260506-deck-log.html#added",
-    "href": "changelog/2026/20260506-deck-log.html#added",
-    "title": "V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)",
-    "section": "",
-    "text": "WebTransport gateway (Elixir) deployed at gateway.chibifire.com and gateway-cdb4.chibifire.com\nCockroachDB with mTLS deployed as multiplayer-fabric-crdb; admin UI accessible via flyctl proxy\nUro zone backend deployed at hub.chibifire.com and bake.chibifire.com\nObservability stack: VictoriaMetrics, VictoriaLogs, Grafana Tempo, OTEL Collector on single Fly Machine\nBaker (headless Godot asset exporter) deployed as multiplayer-fabric-baker\nZone server pipeline: Godot template_release binary build in multiplayer-fabric-zone\nTerraform infra management in multiplayer-fabric-infra with state on tfstate branch\nDaily CRDB backup to Tigris via restic\nDNS records for hub, bake, zone subdomains on chibifire.com\nAGENTS.md documentation across all repos\nThis manuals repo was created"
-  },
-  {
-    "objectID": "changelog/2026/20260506-deck-log.html#fixed",
-    "href": "changelog/2026/20260506-deck-log.html#fixed",
-    "title": "V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)",
-    "section": "",
-    "text": "Zone binary GHCR push: renamed image to multiplayer-fabric-zone-godot (package ownership tied to creating repo)\nTerraform: renamed my-crdb-node to multiplayer-fabric-crdb throughout state, configs, and scripts\nBaker deploy: dropped curl package (conflicts with curl-minimal pre-installed in AlmaLinux 9)\nBuild CI: excluded web from editor merge and release jobs (web only builds template_release)\nGrafana Tempo v3: removed renamed ingester/compactor config keys; added -target=all"
-  },
-  {
-    "objectID": "decisions.html",
-    "href": "decisions.html",
-    "title": "Decisions",
-    "section": "",
-    "text": "Order By\n      Default\n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nReading Time\n\n\n\nFile Name\n\n\n\n\n\n\n\n\nObservability stack with VictoriaMetrics, VictoriaLogs, and Tempo\n\n\n1 min\n\n\n20260506-observability-stack-victoriametrics-tempo.md\n\n\n\n\n\n\nObservability stack with VictoriaMetrics, VictoriaLogs, and Jaeger\n\n\n2 min\n\n\n20260506-observability-stack-victoriametrics-jaeger.md\n\n\n\n\n\n\nGHCR packages must be built by the repo that consumes them\n\n\n1 min\n\n\n20260506-ghcr-package-ownership-same-repo.md\n\n\n\n\n\n\nUse WebTransport over QUIC for game traffic\n\n\n1 min\n\n\n20260501-webtransport-over-quic-for-game-traffic.md\n\n\n\n\n\n\nGodot double precision template_release for zone servers\n\n\n1 min\n\n\n20260501-godot-double-precision-template-release-for-zone.md\n\n\n\n\n\n\nFly.io for deployment\n\n\n1 min\n\n\n20260501-fly-io-for-deployment.md\n\n\n\n\n\n\nCockroachDB with mTLS and role-separated access\n\n\n1 min\n\n\n20260501-cockroachdb-with-mtls-role-separation.md\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "changelog.html",
-    "href": "changelog.html",
-    "title": "Changelog",
-    "section": "",
-    "text": "All notable changes are documented here. Format based on Keep a Changelog.\nAdded — new features. Changed — changes in existing functionality. Fixed — bug fixes. Removed — removed features.\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\n\n\n\n\n\nV-Sekai Fire Deck Log — 2026-05-06 (Wednesday)\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "decisions/20260501-fly-io-for-deployment.html",
-    "href": "decisions/20260501-fly-io-for-deployment.html",
-    "title": "Fly.io for deployment",
-    "section": "",
-    "text": "The stack requires a platform that supports UDP (for QUIC/WebTransport), private networking between services, persistent volumes, and on-demand machines for job workloads (asset baking)."
-  },
-  {
-    "objectID": "decisions/20260501-fly-io-for-deployment.html#context",
-    "href": "decisions/20260501-fly-io-for-deployment.html#context",
-    "title": "Fly.io for deployment",
-    "section": "",
-    "text": "The stack requires a platform that supports UDP (for QUIC/WebTransport), private networking between services, persistent volumes, and on-demand machines for job workloads (asset baking)."
-  },
-  {
-    "objectID": "decisions/20260501-fly-io-for-deployment.html#decision",
-    "href": "decisions/20260501-fly-io-for-deployment.html#decision",
-    "title": "Fly.io for deployment",
-    "section": "Decision",
-    "text": "Decision\nDeploy all services on Fly.io in the iad (Ashburn, Virginia) region.\n\nMachines handle deployment; Terraform (fly-apps/fly provider v0.0.21) manages resources (apps, IPs, volumes, secrets) but not machines, due to Machines API limitations in the provider.\nPrivate networking uses Fly’s 6PN (WireGuard mesh). All .internal DNS resolves to IPv6 only, requiring socket_options: [:inet6] in any Erlang/Elixir TCP stack.\nDedicated IPv4 is required for UDP. Fly passes UDP without DNAT; the app must bind to the same port clients connect to.\nOn-demand machines (Fly Machines API) are used for the baker — one machine per bake job, exits when done."
-  },
-  {
-    "objectID": "decisions/20260501-fly-io-for-deployment.html#consequences",
-    "href": "decisions/20260501-fly-io-for-deployment.html#consequences",
-    "title": "Fly.io for deployment",
-    "section": "Consequences",
-    "text": "Consequences\n\nAll services must be in the same region to communicate over the private network without egress charges.\n.flycast requires [[services]] on the target app; .internal works without it.\nCloudflare proxy must be disabled for UDP/QUIC endpoints; DNS-only records point directly to the Fly IP.\nTerraform state is stored on a tfstate orphan branch in the infra repo to avoid requiring a remote backend."
+    "text": "Consequences\n\nUDP eliminates TCP head-of-line blocking.\nFly.io passes UDP without DNAT, so the app must bind to the same port clients connect to.\nPort 443 requires running as root (or CAP_NET_BIND_SERVICE). The gateway container runs as root.\nDatagrams are used for game state messages. Streams are avoided for ping/pong to sidestep stream half-close deadlock (client must close write side before server response fires).\nCloudflare’s proxy cannot forward QUIC/UDP. All game-traffic DNS records must be DNS-only (no proxy)."
   },
   {
     "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html",
@@ -217,31 +84,192 @@
     "text": "Consequences\n\n--advertise-addr must be localhost. A flycast address routes the internal gRPC loopback through Fly’s NAT, breaking the admin UI.\nprepare: :unnamed is required in Postgrex to avoid statement-cache OOM on single-node deployments.\nPort 26257 is never publicly exposed. Access is via Fly’s private network (6PN) using socket_options: [:inet6] in Ecto, because .internal DNS returns only AAAA records.\nThe root cert is provisioned on the CRDB machine only. gateway_admin is the highest-privilege cert available to the application."
   },
   {
-    "objectID": "decisions/20260501-webtransport-over-quic-for-game-traffic.html",
-    "href": "decisions/20260501-webtransport-over-quic-for-game-traffic.html",
-    "title": "Use WebTransport over QUIC for game traffic",
+    "objectID": "decisions/20260501-fly-io-for-deployment.html",
+    "href": "decisions/20260501-fly-io-for-deployment.html",
+    "title": "Fly.io for deployment",
     "section": "",
-    "text": "The zone server needs low-latency bidirectional communication between clients and the Godot game server. HTTP/1.1 and WebSocket both run over TCP, which head-of-line blocks on packet loss and degrades real-time game state."
+    "text": "The stack requires a platform that supports UDP (for QUIC/WebTransport), private networking between services, persistent volumes, and on-demand machines for job workloads (asset baking)."
   },
   {
-    "objectID": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#context",
-    "href": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#context",
-    "title": "Use WebTransport over QUIC for game traffic",
+    "objectID": "decisions/20260501-fly-io-for-deployment.html#context",
+    "href": "decisions/20260501-fly-io-for-deployment.html#context",
+    "title": "Fly.io for deployment",
     "section": "",
-    "text": "The zone server needs low-latency bidirectional communication between clients and the Godot game server. HTTP/1.1 and WebSocket both run over TCP, which head-of-line blocks on packet loss and degrades real-time game state."
+    "text": "The stack requires a platform that supports UDP (for QUIC/WebTransport), private networking between services, persistent volumes, and on-demand machines for job workloads (asset baking)."
   },
   {
-    "objectID": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#decision",
-    "href": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#decision",
-    "title": "Use WebTransport over QUIC for game traffic",
+    "objectID": "decisions/20260501-fly-io-for-deployment.html#decision",
+    "href": "decisions/20260501-fly-io-for-deployment.html#decision",
+    "title": "Fly.io for deployment",
     "section": "Decision",
-    "text": "Decision\nUse WebTransport (HTTP/3 over QUIC) for all game traffic. Clients connect to the Elixir gateway on UDP port 443, which proxies into the Godot zone server on UDP port 7443."
+    "text": "Decision\nDeploy all services on Fly.io in the iad (Ashburn, Virginia) region.\n\nMachines handle deployment; Terraform (fly-apps/fly provider v0.0.21) manages resources (apps, IPs, volumes, secrets) but not machines, due to Machines API limitations in the provider.\nPrivate networking uses Fly’s 6PN (WireGuard mesh). All .internal DNS resolves to IPv6 only, requiring socket_options: [:inet6] in any Erlang/Elixir TCP stack.\nDedicated IPv4 is required for UDP. Fly passes UDP without DNAT; the app must bind to the same port clients connect to.\nOn-demand machines (Fly Machines API) are used for the baker — one machine per bake job, exits when done."
   },
   {
-    "objectID": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#consequences",
-    "href": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#consequences",
-    "title": "Use WebTransport over QUIC for game traffic",
+    "objectID": "decisions/20260501-fly-io-for-deployment.html#consequences",
+    "href": "decisions/20260501-fly-io-for-deployment.html#consequences",
+    "title": "Fly.io for deployment",
     "section": "Consequences",
-    "text": "Consequences\n\nUDP eliminates TCP head-of-line blocking.\nFly.io passes UDP without DNAT, so the app must bind to the same port clients connect to.\nPort 443 requires running as root (or CAP_NET_BIND_SERVICE). The gateway container runs as root.\nDatagrams are used for game state messages. Streams are avoided for ping/pong to sidestep stream half-close deadlock (client must close write side before server response fires).\nCloudflare’s proxy cannot forward QUIC/UDP. All game-traffic DNS records must be DNS-only (no proxy)."
+    "text": "Consequences\n\nAll services must be in the same region to communicate over the private network without egress charges.\n.flycast requires [[services]] on the target app; .internal works without it.\nCloudflare proxy must be disabled for UDP/QUIC endpoints; DNS-only records point directly to the Fly IP.\nTerraform state is stored on a tfstate orphan branch in the infra repo to avoid requiring a remote backend."
+  },
+  {
+    "objectID": "changelog.html",
+    "href": "changelog.html",
+    "title": "Changelog",
+    "section": "",
+    "text": "All notable changes are documented here. Format based on Keep a Changelog.\nAdded — new features. Changed — changes in existing functionality. Fixed — bug fixes. Removed — removed features.\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\n\n\n\n\n\nV-Sekai Fire Deck Log — 2026-05-06 (Wednesday)\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "decisions.html",
+    "href": "decisions.html",
+    "title": "Decisions",
+    "section": "",
+    "text": "Order By\n      Default\n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nReading Time\n\n\n\nFile Name\n\n\n\n\n\n\n\n\nReplace Jaeger with VictoriaTraces for trace storage\n\n\n2 min\n\n\n20260506-observability-stack-victoriatraces.md\n\n\n\n\n\n\nObservability stack with VictoriaMetrics, VictoriaLogs, and Tempo\n\n\n1 min\n\n\n20260506-observability-stack-victoriametrics-tempo.md\n\n\n\n\n\n\nObservability stack with VictoriaMetrics, VictoriaLogs, and Jaeger\n\n\n2 min\n\n\n20260506-observability-stack-victoriametrics-jaeger.md\n\n\n\n\n\n\nGHCR packages must be built by the repo that consumes them\n\n\n1 min\n\n\n20260506-ghcr-package-ownership-same-repo.md\n\n\n\n\n\n\nUse WebTransport over QUIC for game traffic\n\n\n1 min\n\n\n20260501-webtransport-over-quic-for-game-traffic.md\n\n\n\n\n\n\nGodot double precision template_release for zone servers\n\n\n1 min\n\n\n20260501-godot-double-precision-template-release-for-zone.md\n\n\n\n\n\n\nFly.io for deployment\n\n\n1 min\n\n\n20260501-fly-io-for-deployment.md\n\n\n\n\n\n\nCockroachDB with mTLS and role-separated access\n\n\n1 min\n\n\n20260501-cockroachdb-with-mtls-role-separation.md\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "changelog/2026/20260506-deck-log.html",
+    "href": "changelog/2026/20260506-deck-log.html",
+    "title": "V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)",
+    "section": "",
+    "text": "Date: 2026-05-06\n\n\n\nWebTransport gateway (Elixir) deployed at gateway.chibifire.com and gateway-cdb4.chibifire.com\nCockroachDB with mTLS deployed as multiplayer-fabric-crdb; admin UI accessible via flyctl proxy\nUro zone backend deployed at hub.chibifire.com and bake.chibifire.com\nObservability stack: VictoriaMetrics, VictoriaLogs, Grafana Tempo, OTEL Collector on single Fly Machine\nBaker (headless Godot asset exporter) deployed as multiplayer-fabric-baker\nZone server pipeline: Godot template_release binary build in multiplayer-fabric-zone\nTerraform infra management in multiplayer-fabric-infra with state on tfstate branch\nDaily CRDB backup to Tigris via restic\nDNS records for hub, bake, zone subdomains on chibifire.com\nAGENTS.md documentation across all repos\nThis manuals repo was created\n\n\n\n\n\nZone binary GHCR push: renamed image to multiplayer-fabric-zone-godot (package ownership tied to creating repo)\nTerraform: renamed my-crdb-node to multiplayer-fabric-crdb throughout state, configs, and scripts\nBaker deploy: dropped curl package (conflicts with curl-minimal pre-installed in AlmaLinux 9)\nBuild CI: excluded web from editor merge and release jobs (web only builds template_release)\nGrafana Tempo v3: removed renamed ingester/compactor config keys; added -target=all"
+  },
+  {
+    "objectID": "changelog/2026/20260506-deck-log.html#added",
+    "href": "changelog/2026/20260506-deck-log.html#added",
+    "title": "V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)",
+    "section": "",
+    "text": "WebTransport gateway (Elixir) deployed at gateway.chibifire.com and gateway-cdb4.chibifire.com\nCockroachDB with mTLS deployed as multiplayer-fabric-crdb; admin UI accessible via flyctl proxy\nUro zone backend deployed at hub.chibifire.com and bake.chibifire.com\nObservability stack: VictoriaMetrics, VictoriaLogs, Grafana Tempo, OTEL Collector on single Fly Machine\nBaker (headless Godot asset exporter) deployed as multiplayer-fabric-baker\nZone server pipeline: Godot template_release binary build in multiplayer-fabric-zone\nTerraform infra management in multiplayer-fabric-infra with state on tfstate branch\nDaily CRDB backup to Tigris via restic\nDNS records for hub, bake, zone subdomains on chibifire.com\nAGENTS.md documentation across all repos\nThis manuals repo was created"
+  },
+  {
+    "objectID": "changelog/2026/20260506-deck-log.html#fixed",
+    "href": "changelog/2026/20260506-deck-log.html#fixed",
+    "title": "V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)",
+    "section": "",
+    "text": "Zone binary GHCR push: renamed image to multiplayer-fabric-zone-godot (package ownership tied to creating repo)\nTerraform: renamed my-crdb-node to multiplayer-fabric-crdb throughout state, configs, and scripts\nBaker deploy: dropped curl package (conflicts with curl-minimal pre-installed in AlmaLinux 9)\nBuild CI: excluded web from editor merge and release jobs (web only builds template_release)\nGrafana Tempo v3: removed renamed ingester/compactor config keys; added -target=all"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "V-Sekai Fire — Multiplayer Fabric",
+    "section": "",
+    "text": "Documentation for the multiplayer fabric stack: a WebTransport-based game server platform built on Godot, Elixir, and CockroachDB, deployed on Fly.io.\n\nSource code: V-Sekai-fire on GitHub\nIssues and discussion: multiplayer-fabric-taskweft\n\n\n\n\n\n\nRepo\nPurpose\n\n\n\n\nmultiplayer-fabric-gateway\nElixir WebTransport gateway (WebRTC → Godot zone)\n\n\nmultiplayer-fabric-crdb\nCockroachDB with mTLS, role-separated access\n\n\nmultiplayer-fabric-uro\nPhoenix zone backend (shard registry, asset API)\n\n\nmultiplayer-fabric-baker\nHeadless Godot asset validator and exporter\n\n\nmultiplayer-fabric-zone\nGodot zone server (template_release, double precision)\n\n\nmultiplayer-fabric-observability\nVictoriaMetrics + VictoriaLogs + Tempo + OTEL Collector\n\n\nmultiplayer-fabric-infra\nTerraform for Fly.io resources\n\n\nmultiplayer-fabric-build\nV-Sekai fork of the Godot engine"
+  },
+  {
+    "objectID": "index.html#repositories",
+    "href": "index.html#repositories",
+    "title": "V-Sekai Fire — Multiplayer Fabric",
+    "section": "",
+    "text": "Repo\nPurpose\n\n\n\n\nmultiplayer-fabric-gateway\nElixir WebTransport gateway (WebRTC → Godot zone)\n\n\nmultiplayer-fabric-crdb\nCockroachDB with mTLS, role-separated access\n\n\nmultiplayer-fabric-uro\nPhoenix zone backend (shard registry, asset API)\n\n\nmultiplayer-fabric-baker\nHeadless Godot asset validator and exporter\n\n\nmultiplayer-fabric-zone\nGodot zone server (template_release, double precision)\n\n\nmultiplayer-fabric-observability\nVictoriaMetrics + VictoriaLogs + Tempo + OTEL Collector\n\n\nmultiplayer-fabric-infra\nTerraform for Fly.io resources\n\n\nmultiplayer-fabric-build\nV-Sekai fork of the Godot engine"
+  },
+  {
+    "objectID": "decisions/20260506-ghcr-package-ownership-same-repo.html",
+    "href": "decisions/20260506-ghcr-package-ownership-same-repo.html",
+    "title": "GHCR packages must be built by the repo that consumes them",
+    "section": "",
+    "text": "The zone server binary was built by multiplayer-fabric-baker and pushed to ghcr.io/v-sekai-fire/godot-zone-double. The zone deploy workflow (in multiplayer-fabric-zone) used --local-only with docker/login-action to pull that image, but received 403 Forbidden.\nGitHub Container Registry ties package write access to the repository whose GITHUB_TOKEN created it. The zone repo’s token could not push to a package owned by the baker repo, and could not pull a private package owned by another repo without package-scoped access."
+  },
+  {
+    "objectID": "decisions/20260506-ghcr-package-ownership-same-repo.html#context",
+    "href": "decisions/20260506-ghcr-package-ownership-same-repo.html#context",
+    "title": "GHCR packages must be built by the repo that consumes them",
+    "section": "",
+    "text": "The zone server binary was built by multiplayer-fabric-baker and pushed to ghcr.io/v-sekai-fire/godot-zone-double. The zone deploy workflow (in multiplayer-fabric-zone) used --local-only with docker/login-action to pull that image, but received 403 Forbidden.\nGitHub Container Registry ties package write access to the repository whose GITHUB_TOKEN created it. The zone repo’s token could not push to a package owned by the baker repo, and could not pull a private package owned by another repo without package-scoped access."
+  },
+  {
+    "objectID": "decisions/20260506-ghcr-package-ownership-same-repo.html#decision",
+    "href": "decisions/20260506-ghcr-package-ownership-same-repo.html#decision",
+    "title": "GHCR packages must be built by the repo that consumes them",
+    "section": "Decision",
+    "text": "Decision\nEach repository builds and publishes the GHCR images it directly uses in its own deploy:\n\nmultiplayer-fabric-baker builds and owns godot-editor-double.\nmultiplayer-fabric-zone builds and owns multiplayer-fabric-zone-godot (renamed from godot-zone-double to reflect ownership).\n\nworkflow_run triggers only fire within the same repository, so the zone binary build workflow must live in the zone repo for the deploy to auto-trigger after a successful build."
+  },
+  {
+    "objectID": "decisions/20260506-ghcr-package-ownership-same-repo.html#consequences",
+    "href": "decisions/20260506-ghcr-package-ownership-same-repo.html#consequences",
+    "title": "GHCR packages must be built by the repo that consumes them",
+    "section": "Consequences",
+    "text": "Consequences\n\nPackage names must reflect the owning repo to avoid confusion.\nMoving a package between repos requires deleting it (needs delete:packages API scope) and rebuilding, or renaming.\nCross-repo GHCR access requires either a PAT with read:packages scope or making the package public."
+  },
+  {
+    "objectID": "decisions/20260501-godot-double-precision-template-release-for-zone.html",
+    "href": "decisions/20260501-godot-double-precision-template-release-for-zone.html",
+    "title": "Godot double precision template_release for zone servers",
+    "section": "",
+    "text": "Zone servers run the game simulation headlessly. Two Godot build targets are candidates: editor (includes import tools) and template_release (runtime only). Precision must match the rest of the V-Sekai stack."
+  },
+  {
+    "objectID": "decisions/20260501-godot-double-precision-template-release-for-zone.html#context",
+    "href": "decisions/20260501-godot-double-precision-template-release-for-zone.html#context",
+    "title": "Godot double precision template_release for zone servers",
+    "section": "",
+    "text": "Zone servers run the game simulation headlessly. Two Godot build targets are candidates: editor (includes import tools) and template_release (runtime only). Precision must match the rest of the V-Sekai stack."
+  },
+  {
+    "objectID": "decisions/20260501-godot-double-precision-template-release-for-zone.html#decision",
+    "href": "decisions/20260501-godot-double-precision-template-release-for-zone.html#decision",
+    "title": "Godot double precision template_release for zone servers",
+    "section": "Decision",
+    "text": "Decision\nBuild zone server binaries as target=template_release precision=double with no Mono. Build from the V-Sekai fork at V-Sekai-fire/multiplayer-fabric-build@b27142e94."
+  },
+  {
+    "objectID": "decisions/20260501-godot-double-precision-template-release-for-zone.html#consequences",
+    "href": "decisions/20260501-godot-double-precision-template-release-for-zone.html#consequences",
+    "title": "Godot double precision template_release for zone servers",
+    "section": "Consequences",
+    "text": "Consequences\n\ntemplate_release has no import or export tools, making it smaller and faster to start.\nlibstdc++-static must be included in the AlmaLinux 9 build environment because template_release links libstdc++ statically.\nThe binary filename is godot.linuxbsd.template_release.double.x86_64.\n--headless flag is required at runtime.\nDouble precision matches the physics and networking precision of the rest of the stack."
+  },
+  {
+    "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html",
+    "href": "decisions/20260506-observability-stack-victoriametrics-tempo.html",
+    "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
+    "section": "",
+    "text": "The stack needs metrics, logs, and traces. Options considered: Grafana Cloud (cost), self-hosted Prometheus+Loki+Tempo (three separate apps), or a compact single-machine stack."
+  },
+  {
+    "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html#context",
+    "href": "decisions/20260506-observability-stack-victoriametrics-tempo.html#context",
+    "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
+    "section": "",
+    "text": "The stack needs metrics, logs, and traces. Options considered: Grafana Cloud (cost), self-hosted Prometheus+Loki+Tempo (three separate apps), or a compact single-machine stack."
+  },
+  {
+    "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html#decision",
+    "href": "decisions/20260506-observability-stack-victoriametrics-tempo.html#decision",
+    "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
+    "section": "Decision",
+    "text": "Decision\nRun VictoriaMetrics (metrics), VictoriaLogs (logs), and Grafana Tempo (traces) under supervisord in a single Fly Machine, with an OpenTelemetry Collector as the ingest router.\n\nOTEL Collector listens on 4317 (gRPC) and 4318 (HTTP) on the private network.\nCollector routes: metrics → VictoriaMetrics (8428 via Prometheus remote write), logs → VictoriaLogs (9428 OTLP), traces → Tempo (5317 OTLP internal).\nData persists on a 10 GB Fly volume."
+  },
+  {
+    "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html#consequences",
+    "href": "decisions/20260506-observability-stack-victoriametrics-tempo.html#consequences",
+    "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
+    "section": "Consequences",
+    "text": "Consequences\n\nOTLP ports must not be exposed publicly — they accept unauthenticated writes.\nOther Fly apps send telemetry to multiplayer-fabric-observability.internal:4317 or :4318.\nGrafana Tempo v3 config changed significantly from v2: ingester and compactor top-level keys were removed; -target=all flag is required to run all components.\nSee GHCR package ownership decision for why the zone binary image was renamed and moved to multiplayer-fabric-zone."
+  },
+  {
+    "objectID": "decisions/20260506-observability-stack-victoriatraces.html",
+    "href": "decisions/20260506-observability-stack-victoriatraces.html",
+    "title": "Replace Jaeger with VictoriaTraces for trace storage",
+    "section": "",
+    "text": "Jaeger all-in-one with Badger storage was chosen as the Apache 2.0 replacement for Tempo. However, VictoriaMetrics (the same vendor as VictoriaMetrics and VictoriaLogs already in the stack) ships VictoriaTraces — an Apache 2.0 trace backend that accepts OTLP directly and claims 3.7× less RAM and 2.6× less CPU than Tempo.\nUsing VictoriaTraces gives us a unified vendor stack (VictoriaMetrics / VictoriaLogs / VictoriaTraces), eliminates Badger’s single-node limitation, and follows the same port and CLI-flag conventions as the other Victoria services."
+  },
+  {
+    "objectID": "decisions/20260506-observability-stack-victoriatraces.html#context",
+    "href": "decisions/20260506-observability-stack-victoriatraces.html#context",
+    "title": "Replace Jaeger with VictoriaTraces for trace storage",
+    "section": "",
+    "text": "Jaeger all-in-one with Badger storage was chosen as the Apache 2.0 replacement for Tempo. However, VictoriaMetrics (the same vendor as VictoriaMetrics and VictoriaLogs already in the stack) ships VictoriaTraces — an Apache 2.0 trace backend that accepts OTLP directly and claims 3.7× less RAM and 2.6× less CPU than Tempo.\nUsing VictoriaTraces gives us a unified vendor stack (VictoriaMetrics / VictoriaLogs / VictoriaTraces), eliminates Badger’s single-node limitation, and follows the same port and CLI-flag conventions as the other Victoria services."
+  },
+  {
+    "objectID": "decisions/20260506-observability-stack-victoriatraces.html#decision",
+    "href": "decisions/20260506-observability-stack-victoriatraces.html#decision",
+    "title": "Replace Jaeger with VictoriaTraces for trace storage",
+    "section": "Decision",
+    "text": "Decision\nReplace Jaeger all-in-one with VictoriaTraces in the single-machine observability stack.\n\nVictoriaTraces listens on 10428 (HTTP, UI + query + OTLP HTTP ingest).\nOTEL Collector exports traces via otlphttp/traces to http://localhost:10428/insert/opentelemetry.\nData persists at /var/lib/victoriatraces on the shared Fly volume.\nJaeger is removed entirely; no separate query UI process is needed.\n\nPort map after this change:\n\n\n\n\n\n\n\n\nService\nPort\nPurpose\n\n\n\n\nVictoriaMetrics\n8428\nMetrics storage and PromQL\n\n\nVictoriaLogs\n9428\nLog storage and query\n\n\nVictoriaTraces\n10428\nTrace storage and query\n\n\nOTEL Collector\n4317 (gRPC), 4318 (HTTP)\nOTLP ingest, routes to the above"
+  },
+  {
+    "objectID": "decisions/20260506-observability-stack-victoriatraces.html#consequences",
+    "href": "decisions/20260506-observability-stack-victoriatraces.html#consequences",
+    "title": "Replace Jaeger with VictoriaTraces for trace storage",
+    "section": "Consequences",
+    "text": "Consequences\n\nAll four services are now Apache 2.0 and from the VictoriaMetrics ecosystem.\nVictoriaTraces query UI is at http://...:10428/select/vmui.\nfly proxy 10428:10428 replaces the former fly proxy 16686:16686 for trace inspection.\nNo explicit trace TTL is configured; add -retentionPeriod if disk pressure becomes a concern."
   }
 ]
