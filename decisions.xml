@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>V-Sekai Fire — Manuals</title>
+<link>https://v-sekai-fire.github.io/manuals/decisions.html</link>
+<atom:link href="https://v-sekai-fire.github.io/manuals/decisions.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.9.37</generator>
+<lastBuildDate>Wed, 06 May 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo</title>
+  <link>https://v-sekai-fire.github.io/manuals/decisions/20260506-observability-stack-victoriametrics-tempo.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context" class="level2">
+<h2 class="anchored" data-anchor-id="context">Context</h2>
+<p>The stack needs metrics, logs, and traces. Options considered: Grafana Cloud (cost), self-hosted Prometheus+Loki+Tempo (three separate apps), or a compact single-machine stack.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Run VictoriaMetrics (metrics), VictoriaLogs (logs), and Grafana Tempo (traces) under supervisord in a single Fly Machine, with an OpenTelemetry Collector as the ingest router.</p>
+<ul>
+<li>OTEL Collector listens on 4317 (gRPC) and 4318 (HTTP) on the private network.</li>
+<li>Collector routes: metrics → VictoriaMetrics (8428 via Prometheus remote write), logs → VictoriaLogs (9428 OTLP), traces → Tempo (5317 OTLP internal).</li>
+<li>Data persists on a 10 GB Fly volume.</li>
+</ul>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>OTLP ports must not be exposed publicly — they accept unauthenticated writes.</li>
+<li>Other Fly apps send telemetry to <code>multiplayer-fabric-observability.internal:4317</code> or <code>:4318</code>.</li>
+<li>Grafana Tempo v3 config changed significantly from v2: <code>ingester</code> and <code>compactor</code> top-level keys were removed; <code>-target=all</code> flag is required to run all components.</li>
+<li>The GHCR image <code>godot-zone-double</code> was originally owned by <code>multiplayer-fabric-baker</code>. Package ownership is tied to the creating repository’s token, so the zone binary build was moved to <code>multiplayer-fabric-zone</code> and renamed to <code>multiplayer-fabric-zone-godot</code>.</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-fire.github.io/manuals/decisions/20260506-observability-stack-victoriametrics-tempo.html</guid>
+  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>GHCR packages must be built by the repo that consumes them</title>
+  <link>https://v-sekai-fire.github.io/manuals/decisions/20260506-ghcr-package-ownership-same-repo.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context" class="level2">
+<h2 class="anchored" data-anchor-id="context">Context</h2>
+<p>The zone server binary was built by <code>multiplayer-fabric-baker</code> and pushed to <code>ghcr.io/v-sekai-fire/godot-zone-double</code>. The zone deploy workflow (in <code>multiplayer-fabric-zone</code>) used <code>--local-only</code> with <code>docker/login-action</code> to pull that image, but received 403 Forbidden.</p>
+<p>GitHub Container Registry ties package write access to the repository whose <code>GITHUB_TOKEN</code> created it. The zone repo’s token could not push to a package owned by the baker repo, and could not pull a private package owned by another repo without package-scoped access.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Each repository builds and publishes the GHCR images it directly uses in its own deploy:</p>
+<ul>
+<li><code>multiplayer-fabric-baker</code> builds and owns <code>godot-editor-double</code>.</li>
+<li><code>multiplayer-fabric-zone</code> builds and owns <code>multiplayer-fabric-zone-godot</code> (renamed from <code>godot-zone-double</code> to reflect ownership).</li>
+</ul>
+<p><code>workflow_run</code> triggers only fire within the same repository, so the zone binary build workflow must live in the zone repo for the deploy to auto-trigger after a successful build.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>Package names must reflect the owning repo to avoid confusion.</li>
+<li>Moving a package between repos requires deleting it (needs <code>delete:packages</code> API scope) and rebuilding, or renaming.</li>
+<li>Cross-repo GHCR access requires either a PAT with <code>read:packages</code> scope or making the package public.</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-fire.github.io/manuals/decisions/20260506-ghcr-package-ownership-same-repo.html</guid>
+  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Use WebTransport over QUIC for game traffic</title>
+  <link>https://v-sekai-fire.github.io/manuals/decisions/20260501-webtransport-over-quic-for-game-traffic.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context" class="level2">
+<h2 class="anchored" data-anchor-id="context">Context</h2>
+<p>The zone server needs low-latency bidirectional communication between clients and the Godot game server. HTTP/1.1 and WebSocket both run over TCP, which head-of-line blocks on packet loss. For real-time game state, this matters.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Use WebTransport (HTTP/3 over QUIC) for all game traffic. Clients connect to the Elixir gateway on UDP port 443, which proxies into the Godot zone server on UDP port 7443.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>UDP eliminates TCP head-of-line blocking.</li>
+<li>Fly.io passes UDP without DNAT, so the app must bind to the same port clients connect to.</li>
+<li>Port 443 requires running as root (or CAP_NET_BIND_SERVICE). The gateway container runs as root.</li>
+<li>Datagrams are used for game state messages. Streams are avoided for ping/pong to sidestep stream half-close deadlock (client must close write side before server response fires).</li>
+<li>Cloudflare’s proxy cannot forward QUIC/UDP. All game-traffic DNS records must be DNS-only (no proxy).</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-fire.github.io/manuals/decisions/20260501-webtransport-over-quic-for-game-traffic.html</guid>
+  <pubDate>Fri, 01 May 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Godot double precision template_release for zone servers</title>
+  <link>https://v-sekai-fire.github.io/manuals/decisions/20260501-godot-double-precision-template-release-for-zone.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context" class="level2">
+<h2 class="anchored" data-anchor-id="context">Context</h2>
+<p>Zone servers run the game simulation headlessly. Two Godot build targets are candidates: <code>editor</code> (includes import tools) and <code>template_release</code> (runtime only). Precision must match the rest of the V-Sekai stack.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Build zone server binaries as <code>target=template_release precision=double</code> with no Mono. Build from the V-Sekai fork at <code>V-Sekai-fire/multiplayer-fabric-build@b27142e94</code>.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li><code>template_release</code> has no import or export tools, making it smaller and faster to start.</li>
+<li><code>libstdc++-static</code> must be included in the AlmaLinux 9 build environment because <code>template_release</code> links libstdc++ statically.</li>
+<li>The binary filename is <code>godot.linuxbsd.template_release.double.x86_64</code>.</li>
+<li><code>--headless</code> flag is required at runtime.</li>
+<li>Double precision matches the physics and networking precision of the rest of the stack.</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-fire.github.io/manuals/decisions/20260501-godot-double-precision-template-release-for-zone.html</guid>
+  <pubDate>Fri, 01 May 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Fly.io for deployment</title>
+  <link>https://v-sekai-fire.github.io/manuals/decisions/20260501-fly-io-for-deployment.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context" class="level2">
+<h2 class="anchored" data-anchor-id="context">Context</h2>
+<p>The stack requires a platform that supports UDP (for QUIC/WebTransport), private networking between services, persistent volumes, and on-demand machines for job workloads (asset baking).</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Deploy all services on Fly.io in the <code>iad</code> (Ashburn, Virginia) region.</p>
+<ul>
+<li><strong>Machines</strong> handle deployment; Terraform (fly-apps/fly provider v0.0.21) manages resources (apps, IPs, volumes, secrets) but not machines, due to Machines API limitations in the provider.</li>
+<li><strong>Private networking</strong> uses Fly’s 6PN (WireGuard mesh). All <code>.internal</code> DNS resolves to IPv6 only, requiring <code>socket_options: [:inet6]</code> in any Erlang/Elixir TCP stack.</li>
+<li><strong>Dedicated IPv4</strong> is required for UDP. Fly passes UDP without DNAT; the app must bind to the same port clients connect to.</li>
+<li><strong>On-demand machines</strong> (Fly Machines API) are used for the baker — one machine per bake job, exits when done.</li>
+</ul>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>All services must be in the same region to communicate over the private network without egress charges.</li>
+<li><code>.flycast</code> requires <code>[[services]]</code> on the target app; <code>.internal</code> works without it.</li>
+<li>Cloudflare proxy must be disabled for UDP/QUIC endpoints; DNS-only records point directly to the Fly IP.</li>
+<li>Terraform state is stored on a <code>tfstate</code> orphan branch in the infra repo to avoid requiring a remote backend.</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-fire.github.io/manuals/decisions/20260501-fly-io-for-deployment.html</guid>
+  <pubDate>Fri, 01 May 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>CockroachDB with mTLS and role-separated access</title>
+  <link>https://v-sekai-fire.github.io/manuals/decisions/20260501-cockroachdb-with-mtls-role-separation.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context" class="level2">
+<h2 class="anchored" data-anchor-id="context">Context</h2>
+<p>The stack needs a relational database reachable by the Elixir gateway and the Phoenix zone backend. It must support schema migrations (DDL) separately from application queries (DML) to limit blast radius if application credentials are compromised.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Run a single-node CockroachDB on Fly.io with mTLS for all connections and three application roles:</p>
+<ul>
+<li><code>gateway_admin</code> — DDL access for Ecto migrations</li>
+<li><code>gateway_writer</code> — DML access for the running application</li>
+<li><code>gateway_reader</code> — read-only access</li>
+</ul>
+<p>Certs are generated by <code>gen_crdb_certs.sh</code> with 100-year validity and stored as Fly secrets. The node cert must include both <code>serverAuth</code> and <code>clientAuth</code> in <code>extendedKeyUsage</code> because CockroachDB uses the node cert for internal gRPC client authentication.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li><code>--advertise-addr</code> must be <code>localhost</code>. A flycast address routes the internal gRPC loopback through Fly’s NAT, breaking the admin UI.</li>
+<li><code>prepare: :unnamed</code> is required in Postgrex to avoid statement-cache OOM on single-node deployments.</li>
+<li>Port 26257 is never publicly exposed. Access is via Fly’s private network (6PN) using <code>socket_options: [:inet6]</code> in Ecto, because <code>.internal</code> DNS returns only AAAA records.</li>
+<li>The <code>root</code> cert is provisioned on the CRDB machine only. <code>gateway_admin</code> is the highest-privilege cert available to the application.</li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-fire.github.io/manuals/decisions/20260501-cockroachdb-with-mtls-role-separation.html</guid>
+  <pubDate>Fri, 01 May 2026 00:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>

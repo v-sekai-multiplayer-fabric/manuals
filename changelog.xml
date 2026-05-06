@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>V-Sekai Fire — Manuals</title>
+<link>https://v-sekai-fire.github.io/manuals/changelog.html</link>
+<atom:link href="https://v-sekai-fire.github.io/manuals/changelog.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.9.37</generator>
+<lastBuildDate>Wed, 06 May 2026 13:36:44 GMT</lastBuildDate>
+<item>
+  <title></title>
+  <link>https://v-sekai-fire.github.io/manuals/changelog/2026/20260506-deck-log.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="v-sekai-fire-deck-log-2026-05-06-wednesday" class="level1">
+<h1>V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)</h1>
+<p>Date: 2026-05-06</p>
+<section id="added" class="level2">
+<h2 class="anchored" data-anchor-id="added">Added</h2>
+<ul>
+<li>WebTransport gateway (Elixir) deployed at <code>gateway.chibifire.com</code> and <code>gateway-cdb4.chibifire.com</code></li>
+<li>CockroachDB with mTLS deployed as <code>multiplayer-fabric-crdb</code>; admin UI accessible via <code>flyctl proxy</code></li>
+<li>Uro zone backend deployed at <code>hub.chibifire.com</code> and <code>bake.chibifire.com</code></li>
+<li>Observability stack: VictoriaMetrics, VictoriaLogs, Grafana Tempo, OTEL Collector on single Fly Machine</li>
+<li>Baker (headless Godot asset exporter) deployed as <code>multiplayer-fabric-baker</code></li>
+<li>Zone server pipeline: Godot <code>template_release</code> binary build in <code>multiplayer-fabric-zone</code></li>
+<li>Terraform infra management in <code>multiplayer-fabric-infra</code> with state on <code>tfstate</code> branch</li>
+<li>Daily CRDB backup to Tigris via restic</li>
+<li>DNS records for <code>hub</code>, <code>bake</code>, <code>zone</code> subdomains on <code>chibifire.com</code></li>
+<li>AGENTS.md documentation across all repos</li>
+<li>This manuals repo</li>
+</ul>
+</section>
+<section id="fixed" class="level2">
+<h2 class="anchored" data-anchor-id="fixed">Fixed</h2>
+<ul>
+<li>Zone binary GHCR push: renamed image to <code>multiplayer-fabric-zone-godot</code> (package ownership tied to creating repo)</li>
+<li>Terraform: renamed <code>my-crdb-node</code> to <code>multiplayer-fabric-crdb</code> throughout state, configs, and scripts</li>
+<li>Baker deploy: dropped <code>curl</code> package (conflicts with <code>curl-minimal</code> pre-installed in AlmaLinux 9)</li>
+<li>Build CI: excluded <code>web</code> from editor merge and release jobs (web only builds <code>template_release</code>)</li>
+<li>Grafana Tempo v3: removed renamed <code>ingester</code>/<code>compactor</code> config keys; added <code>-target=all</code></li>
+</ul>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-fire.github.io/manuals/changelog/2026/20260506-deck-log.html</guid>
+  <pubDate>Wed, 06 May 2026 13:36:44 GMT</pubDate>
+</item>
+</channel>
+</rss>
