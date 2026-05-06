@@ -7,7 +7,7 @@ supersedes: 20260506-observability-stack-victoriametrics-tempo.md
 
 ## Context
 
-Grafana Tempo was chosen for trace storage in the initial stack but is licensed under AGPL-3.0, which requires any service modifications to be open-sourced. Jaeger (Apache 2.0, CNCF graduated) is the natural replacement: mature, OTLP-native since v1.35, and the standard pairing for permissive-license stacks like VictoriaMetrics.
+Grafana Tempo was chosen for trace storage in the initial stack but is licensed under AGPL-3.0, which requires any service modifications to be open-sourced. Jaeger (Apache 2.0, CNCF graduated) fits the permissive-license constraint: it is OTLP-native since v1.35 and commonly deployed alongside VictoriaMetrics.
 
 ## Decision
 

@@ -13,7 +13,7 @@ The stack needs metrics, logs, and traces. Options considered: Grafana Cloud (co
 Run VictoriaMetrics (metrics), VictoriaLogs (logs), and Grafana Tempo (traces) under supervisord in a single Fly Machine, with an OpenTelemetry Collector as the ingest router.
 
 - OTEL Collector listens on 4317 (gRPC) and 4318 (HTTP) on the private network.
-- Collector routes: metrics → VictoriaMetrics (8428 via Prometheus remote write), logs → VictoriaLogs (9428 OTLP), traces → Tempo (5317 OTLP internal).
+- Collector routes: metrics -> VictoriaMetrics (8428 via Prometheus remote write), logs -> VictoriaLogs (9428 OTLP), traces -> Tempo (5317 OTLP internal).
 - Data persists on a 10 GB Fly volume.
 
 ## Consequences

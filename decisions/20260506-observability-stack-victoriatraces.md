@@ -7,9 +7,9 @@ supersedes: 20260506-observability-stack-victoriametrics-jaeger.md
 
 ## Context
 
-Jaeger all-in-one with Badger storage was chosen as the Apache 2.0 replacement for Tempo. However, VictoriaMetrics (the same vendor as VictoriaMetrics and VictoriaLogs already in the stack) ships VictoriaTraces — an Apache 2.0 trace backend that accepts OTLP directly and claims 3.7× less RAM and 2.6× less CPU than Tempo.
+Jaeger all-in-one with Badger storage was chosen as the Apache 2.0 replacement for Tempo. VictoriaMetrics ships VictoriaTraces — an Apache 2.0 trace backend that accepts OTLP directly. VictoriaMetrics benchmarks report 3.7× less RAM and 2.6× less CPU vs Tempo.
 
-Using VictoriaTraces gives us a unified vendor stack (VictoriaMetrics / VictoriaLogs / VictoriaTraces), eliminates Badger's single-node limitation, and follows the same port and CLI-flag conventions as the other Victoria services.
+Using VictoriaTraces puts all three storage backends (metrics, logs, traces) under the same vendor, drops Badger's single-node limit, and matches the port and CLI-flag conventions already in use.
 
 ## Decision
 
@@ -31,7 +31,7 @@ Port map after this change:
 
 ## Consequences
 
-- All four services are now Apache 2.0 and from the VictoriaMetrics ecosystem.
+- All four services are now Apache 2.0; the three storage backends are from VictoriaMetrics.
 - VictoriaTraces query UI is at `http://...:10428/select/vmui`.
 - `fly proxy 10428:10428` replaces the former `fly proxy 16686:16686` for trace inspection.
 - No explicit trace TTL is configured; add `-retentionPeriod` if disk pressure becomes a concern.
