@@ -2,54 +2,58 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://v-sekai-fire.github.io/manuals/decisions/20260506-observability-stack-victoriametrics-jaeger.html</loc>
-    <lastmod>2026-05-06T16:28:44.893Z</lastmod>
+    <lastmod>2026-05-06T16:30:42.185Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fire.github.io/manuals/decisions/20260501-webtransport-over-quic-for-game-traffic.html</loc>
-    <lastmod>2026-05-06T16:28:44.893Z</lastmod>
+    <lastmod>2026-05-06T16:30:42.185Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fire.github.io/manuals/decisions/present-proposal-template.html</loc>
-    <lastmod>2026-05-06T16:28:44.893Z</lastmod>
+    <lastmod>2026-05-06T16:30:42.185Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fire.github.io/manuals/decisions/20260501-godot-double-precision-template-release-for-zone.html</loc>
-    <lastmod>2026-05-06T16:28:44.893Z</lastmod>
+    <lastmod>2026-05-06T16:30:42.185Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fire.github.io/manuals/decisions/20260506-ghcr-package-ownership-same-repo.html</loc>
-    <lastmod>2026-05-06T16:28:44.893Z</lastmod>
+    <lastmod>2026-05-06T16:30:42.185Z</lastmod>
   </url>
   <url>
-    <loc>https://v-sekai-fire.github.io/manuals/index.html</loc>
-    <lastmod>2026-05-06T16:28:44.893Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-fire.github.io/manuals/changelog/2026/20260506-deck-log.html</loc>
-    <lastmod>2026-05-06T16:28:44.893Z</lastmod>
+    <loc>https://v-sekai-fire.github.io/manuals/references.html</loc>
+    <lastmod>2026-05-06T16:30:42.185Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fire.github.io/manuals/decisions.html</loc>
-    <lastmod>2026-05-06T16:28:44.893Z</lastmod>
+    <lastmod>2026-05-06T16:30:42.185Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-fire.github.io/manuals/changelog/2026/20260506-deck-log.html</loc>
+    <lastmod>2026-05-06T16:30:42.185Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-fire.github.io/manuals/index.html</loc>
+    <lastmod>2026-05-06T16:30:42.185Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fire.github.io/manuals/changelog.html</loc>
-    <lastmod>2026-05-06T16:28:44.893Z</lastmod>
+    <lastmod>2026-05-06T16:30:42.184Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fire.github.io/manuals/decisions/20260501-fly-io-for-deployment.html</loc>
-    <lastmod>2026-05-06T16:28:44.893Z</lastmod>
+    <lastmod>2026-05-06T16:30:42.185Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fire.github.io/manuals/decisions/20260501-cockroachdb-with-mtls-role-separation.html</loc>
-    <lastmod>2026-05-06T16:28:44.893Z</lastmod>
+    <lastmod>2026-05-06T16:30:42.185Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fire.github.io/manuals/decisions/20260506-observability-stack-victoriametrics-tempo.html</loc>
-    <lastmod>2026-05-06T16:28:44.893Z</lastmod>
+    <lastmod>2026-05-06T16:30:42.185Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-fire.github.io/manuals/decisions/20260506-observability-stack-victoriatraces.html</loc>
-    <lastmod>2026-05-06T16:28:44.893Z</lastmod>
+    <lastmod>2026-05-06T16:30:42.185Z</lastmod>
   </url>
 </urlset>
