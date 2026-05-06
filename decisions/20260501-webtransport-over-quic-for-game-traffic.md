@@ -6,7 +6,7 @@ status: accepted
 
 ## Context
 
-The zone server needs low-latency bidirectional communication between clients and the Godot game server. HTTP/1.1 and WebSocket both run over TCP, which head-of-line blocks on packet loss. For real-time game state, this matters.
+The zone server needs low-latency bidirectional communication between clients and the Godot game server. HTTP/1.1 and WebSocket both run over TCP, which head-of-line blocks on packet loss and degrades real-time game state.
 
 ## Decision
 

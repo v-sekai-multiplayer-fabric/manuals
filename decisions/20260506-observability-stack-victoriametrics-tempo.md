@@ -21,4 +21,4 @@ Run VictoriaMetrics (metrics), VictoriaLogs (logs), and Grafana Tempo (traces) u
 - OTLP ports must not be exposed publicly — they accept unauthenticated writes.
 - Other Fly apps send telemetry to `multiplayer-fabric-observability.internal:4317` or `:4318`.
 - Grafana Tempo v3 config changed significantly from v2: `ingester` and `compactor` top-level keys were removed; `-target=all` flag is required to run all components.
-- The GHCR image `godot-zone-double` was originally owned by `multiplayer-fabric-baker`. Package ownership is tied to the creating repository's token, so the zone binary build was moved to `multiplayer-fabric-zone` and renamed to `multiplayer-fabric-zone-godot`.
+- See [GHCR package ownership decision](20260506-ghcr-package-ownership-same-repo.md) for why the zone binary image was renamed and moved to `multiplayer-fabric-zone`.
