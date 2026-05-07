@@ -20,6 +20,7 @@ Start the observability stack on the Fly deployment:
 Trigger a single gateway request and a single zone tick. The zone server binary includes the `opentelemetry-godot` module compiled into the engine (verify with `--test --test-case="*OTel*"` before the run). Verify each service emits OTLP spans to the Collector.
 
 Pass criteria:
+
 - [ ] VictoriaTraces UI at `http://localhost:10428/select/vmui` shows spans from at least one gateway request
 - [ ] VictoriaMetrics at port 8428 returns a non-empty result for a zone-server metric query
 - [ ] VictoriaLogs at port 9428 shows at least one log line from uro
@@ -31,13 +32,13 @@ Pass criteria:
 
 ## CRIS Score
 
-| Factor          | Score | Evidence |
-| --------------- | ----- | -------- |
+| Factor          | Score | Evidence                                                                                                                                                                            |
+| --------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **C**omplexity  | 7     | All four Victoria backends share port conventions and the OTEL Collector config is well-documented; the only unknown is Fly volume persistence under the single-machine deployment. |
-| **R**each       | 10    | Every failure in Cycles 3–10 requires trace evidence to diagnose; without this cycle no networking or physics failure is attributable. |
-| **I**mpediment  | 7     | A missing observability stack does not block Cycles 3–10 but leaves failures in Cycles 3–10 impossible to root-cause. |
-| **S**takeholder | 10    | Required for any post-mission debugging of physics desync or score write failures. |
-| **Total**       | 8.5   | Build after Cycle 1 passes, in parallel with Cycles 9 and 6–11. Must complete before Cycle 3 begins. |
+| **R**each       | 10    | Every failure in Cycles 3–10 requires trace evidence to diagnose; without this cycle no networking or physics failure is attributable.                                              |
+| **I**mpediment  | 7     | A missing observability stack does not block Cycles 3–10 but leaves failures in Cycles 3–10 impossible to root-cause.                                                               |
+| **S**takeholder | 10    | Required for any post-mission debugging of physics desync or score write failures.                                                                                                  |
+| **Total**       | 8.5   | Build after Cycle 1 passes, in parallel with Cycles 9 and 6–11. Must complete before Cycle 3 begins.                                                                                |
 
 ## The Downsides
 

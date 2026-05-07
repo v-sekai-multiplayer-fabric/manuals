@@ -22,7 +22,9 @@ status: accepted | proposed | deprecated | superseded
 ---
 
 ## Context
+
 ## Decision
+
 ## Consequences
 ```
 
@@ -35,15 +37,15 @@ elixir create_changelog_entry.exs 20260512
 
 ## Key files
 
-| Path | Purpose |
-|------|---------|
-| `_quarto.yml` | Site config |
-| `index.md` | Landing page |
-| `decisions/` | Architecture Decision Records |
-| `decisions.qmd` | ADR index |
-| `changelog/` | Changelog entries by year |
-| `changelog.qmd` | Changelog index |
-| `create_changelog_entry.exs` | Generate new changelog entry |
+| Path                         | Purpose                       |
+| ---------------------------- | ----------------------------- |
+| `_quarto.yml`                | Site config                   |
+| `index.md`                   | Landing page                  |
+| `decisions/`                 | Architecture Decision Records |
+| `decisions.qmd`              | ADR index                     |
+| `changelog/`                 | Changelog entries by year     |
+| `changelog.qmd`              | Changelog index               |
+| `create_changelog_entry.exs` | Generate new changelog entry  |
 
 ## Conventions
 

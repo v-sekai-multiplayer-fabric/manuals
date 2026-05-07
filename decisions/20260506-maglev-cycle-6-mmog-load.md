@@ -1,4 +1,4 @@
-# Maglev Cycle 3: Dual Same-Type Clients
+# Maglev Cycle 6: Dual Same-Type Clients
 
 ## The Context
 
@@ -13,6 +13,7 @@ With one Godot client verified end-to-end and the observability stack live (Cycl
 16 clients connect to the gateway simultaneously. All receive datagram state from the same zone server instance each tick. One static entity in an empty world.
 
 Pass criteria:
+
 - [ ] All 16 clients receive consistent entity state each tick for 60 seconds
 - [ ] No client observes a tick gap or duplicate
 - [ ] Zone-console shows 16 entities at 20 Hz
@@ -26,13 +27,13 @@ Pass criteria:
 
 ## CRIS Score
 
-| Factor          | Score | Evidence |
-| --------------- | ----- | -------- |
+| Factor          | Score | Evidence                                                                                                                     |
+| --------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------- |
 | **C**omplexity  | 6     | 16 same-type connections; taskweft bots are proven infrastructure but have not been combined with the gateway at this count. |
-| **R**each       | 10    | All subsequent cycles run at 16-client load. |
-| **I**mpediment  | 9     | A desync at 16 clients means the gateway's broadcast path is broken before heterogeneous input is added. |
-| **S**takeholder | 10    | Gate for Cycles 4–8. |
-| **Total**       | 8.75  | Build after Cycles 1 and 2 pass. |
+| **R**each       | 10    | All subsequent cycles run at 16-client load.                                                                                 |
+| **I**mpediment  | 9     | A desync at 16 clients means the gateway's broadcast path is broken before heterogeneous input is added.                     |
+| **S**takeholder | 10    | Gate for Cycles 7–10.                                                                                                        |
+| **Total**       | 8.75  | Build after Cycles 1 and 2 pass.                                                                                             |
 
 ## The Downsides
 
@@ -40,7 +41,7 @@ Pass criteria:
 
 ## The Road Not Taken
 
-Starting immediately with heterogeneous IK and gamepad inputs at 16-client scale was rejected — a broadcast failure at full complexity would be ambiguous between gateway capacity and input-mux issues. Cycle 3 uses uniform bots to isolate the broadcast path.
+Starting immediately with heterogeneous IK and gamepad inputs at 16-client scale was rejected — a broadcast failure at full complexity would be ambiguous between gateway capacity and input-mux issues. Cycle 6 uses uniform bots to isolate the broadcast path.
 
 ## Status
 
@@ -52,7 +53,7 @@ Status: Draft
 
 ## Tags
 
-- maglev-cycle-3, dual-client, gateway, smoke-test, galls-law, 20260506-maglev-cycle-3-dual-client, present-proposal-template
+- maglev-cycle-6, mmog-load, gateway, smoke-test, galls-law, 20260506-maglev-cycle-6-mmog-load, present-proposal-template
 
 ## Further Reading
 

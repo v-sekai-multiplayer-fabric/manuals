@@ -1,10 +1,10 @@
-# Maglev Cycle 7: Physics and VRM Loading
+# Maglev Cycle 9: Physics and VRM Loading
 
 ## The Context
 
-The gateway merges two input types at full rate after Cycle 7. This cycle loads the Maglev train scene with stationary cores on a banking train, verifies replication across clients, and confirms VRM avatar loading from the chunk store. Banking is a scene parameter change; VRM loading is verified in the same session as physics baseline.
+The gateway merges two input types at full rate after Cycle 9. This cycle loads the Maglev train scene with stationary cores on a banking train, verifies replication across clients, and confirms VRM avatar loading from the chunk store. Banking is a scene parameter change; VRM loading is verified in the same session as physics baseline.
 
-Baked assets from Cycle 6 must be available in the chunk store before this cycle begins. Banking and VRM loading are combined here to reduce the number of cycles before the first physics demo.
+Baked assets from Cycle 3 must be available in the chunk store before this cycle begins. Banking and VRM loading are combined here to reduce the number of cycles before the first physics demo.
 
 ## The Problem Statement
 
@@ -17,6 +17,7 @@ Load the Maglev train scene on the zone server. The train banks on a fixed sched
 The PCVR client sees the car as a waist-height diorama; the Steam Deck client sees the same instance as an isometric action-RPG. Both see their respective VRM avatars.
 
 Pass criteria:
+
 - [ ] Zone server loads the Maglev train scene from the chunk store
 - [ ] Core positions agree between both clients each tick for 60 seconds under continuous banking
 - [ ] Zone server tick rate holds at 20 Hz with physics active
@@ -29,17 +30,17 @@ Pass criteria:
 
 ## CRIS Score
 
-| Factor          | Score | Evidence |
-| --------------- | ----- | -------- |
+| Factor          | Score | Evidence                                                                                                                             |
+| --------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | **C**omplexity  | 6     | Physics replication to clients with different frame rates is untested, but a static scene removes the dynamic normal force variable. |
-| **R**each       | 10    | Cycle 8 cannot begin until replication itself is verified. |
-| **I**mpediment  | 9     | A replication bug here means Cycle 8 results are unreliable. |
-| **S**takeholder | 10    | Gate for Cycle 8 and beyond. |
-| **Total**       | 8.75  | Build after Cycles 5 and 6 pass. |
+| **R**each       | 10    | Cycle 10 cannot begin until replication itself is verified.                                                                          |
+| **I**mpediment  | 9     | A replication bug here means Cycle 10 results are unreliable.                                                                        |
+| **S**takeholder | 10    | Gate for Cycle 10 and beyond.                                                                                                        |
+| **Total**       | 8.75  | Build after Cycles 8 and 6 pass.                                                                                                     |
 
 ## The Downsides
 
-A passing Cycle 7 does not validate rolling physics or causal ordering; those require Cycle 8.
+A passing Cycle 9 does not validate rolling physics or causal ordering; those require Cycle 10.
 
 ## The Road Not Taken
 
@@ -56,7 +57,7 @@ Status: Draft
 
 ## Tags
 
-- maglev-cycle-7, physics-vrm, replication, galls-law, 20260506-maglev-cycle-7-physics-vrm, present-proposal-template
+- maglev-cycle-9, physics-vrm, replication, galls-law, 20260506-maglev-cycle-9-physics-vrm, present-proposal-template
 
 ## Further Reading
 

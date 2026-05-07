@@ -22,12 +22,12 @@ Replace Jaeger all-in-one with VictoriaTraces in the single-machine observabilit
 
 Port map after this change:
 
-| Service | Port | Purpose |
-|---------|------|---------|
-| VictoriaMetrics | 8428 | Metrics storage and PromQL |
-| VictoriaLogs | 9428 | Log storage and query |
-| VictoriaTraces | 10428 | Trace storage and query |
-| OTEL Collector | 4317 (gRPC), 4318 (HTTP) | OTLP ingest, routes to the above |
+| Service         | Port                     | Purpose                          |
+| --------------- | ------------------------ | -------------------------------- |
+| VictoriaMetrics | 8428                     | Metrics storage and PromQL       |
+| VictoriaLogs    | 9428                     | Log storage and query            |
+| VictoriaTraces  | 10428                    | Trace storage and query          |
+| OTEL Collector  | 4317 (gRPC), 4318 (HTTP) | OTLP ingest, routes to the above |
 
 ## Consequences
 

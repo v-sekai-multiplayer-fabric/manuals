@@ -18,6 +18,7 @@ Run `terraform apply` in `multiplayer-fabric-infra`. Verify via Fly CLI:
 - Observability app exists with persistent volume
 
 Pass criteria:
+
 - [ ] `fly status --app multiplayer-fabric-gateway` shows running; dedicated IPv4 assigned
 - [ ] CockroachDB volume attached; `fly volumes list` confirms the volume is in the correct region
 - [ ] uro app reachable on Fly's 6PN private network
@@ -29,13 +30,13 @@ Pass criteria:
 
 ## CRIS Score
 
-| Factor          | Score | Evidence |
-| --------------- | ----- | -------- |
+| Factor          | Score | Evidence                                                                                                    |
+| --------------- | ----- | ----------------------------------------------------------------------------------------------------------- |
 | **C**omplexity  | 8     | Terraform is well-understood; the only unknowns are Fly provider version quirks against the current config. |
-| **R**each       | 10    | Every subsequent cycle runs on infrastructure created here. |
-| **I**mpediment  | 10    | No Fly app can be deployed until Terraform apply succeeds. |
-| **S**takeholder | 10    | Gate for all Maglev cycles. |
-| **Total**       | 9.5   | Build before all other cycles. |
+| **R**each       | 10    | Every subsequent cycle runs on infrastructure created here.                                                 |
+| **I**mpediment  | 10    | No Fly app can be deployed until Terraform apply succeeds.                                                  |
+| **S**takeholder | 10    | Gate for all Maglev cycles.                                                                                 |
+| **Total**       | 9.5   | Build before all other cycles.                                                                              |
 
 ## The Downsides
 

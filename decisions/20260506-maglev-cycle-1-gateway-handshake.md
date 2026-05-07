@@ -19,6 +19,7 @@ The zone server is `godot.linuxbsd.template_release.double.x86_64` built from `V
 The gateway runs as root on UDP 443 (port < 1024 requires root or `CAP_NET_BIND_SERVICE`) and proxies to the zone server on UDP 7443. The Fly DNS record for the gateway endpoint is DNS-only — no Cloudflare proxy, which cannot forward QUIC/UDP. Both services deploy in the `iad` region and communicate over Fly's 6PN private network.
 
 Pass criteria:
+
 - [ ] Godot client establishes the WebTransport/QUIC connection without TLS or handshake error
 - [ ] Client receives and logs one **datagram** (not a stream) from the zone server
 - [ ] Client exits cleanly; no orphaned Godot process or open port
@@ -31,13 +32,13 @@ Every subsequent cycle extends this scene.
 
 ## CRIS Score
 
-| Factor          | Score | Evidence |
-| --------------- | ----- | -------- |
+| Factor          | Score | Evidence                                                                                                                                                                                                                                                                                                        |
+| --------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **C**omplexity  | 6     | Godot's WebTransport datagram API is documented but untested in this build config; the Fly UDP routing adds one unknown. The wtransport Rust library (v0.7.1) carries an upstream disclaimer that it is not yet considered production-ready; the WebTransport protocol itself is standardized (RFC 9220, 2023). |
-| **R**each       | 10    | Every subsequent cycle runs inside this Godot client. |
-| **I**mpediment  | 10    | Nothing else can be tested until a real Godot process receives a datagram end-to-end. |
-| **S**takeholder | 10    | Gate for all Maglev cycles. |
-| **Total**       | 9.0   | Build first. |
+| **R**each       | 10    | Every subsequent cycle runs inside this Godot client.                                                                                                                                                                                                                                                           |
+| **I**mpediment  | 10    | Nothing else can be tested until a real Godot process receives a datagram end-to-end.                                                                                                                                                                                                                           |
+| **S**takeholder | 10    | Gate for all Maglev cycles.                                                                                                                                                                                                                                                                                     |
+| **Total**       | 9.0   | Build first.                                                                                                                                                                                                                                                                                                    |
 
 ## The Downsides
 

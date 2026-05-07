@@ -1,14 +1,14 @@
-# Maglev Cycle 6: Baker Pipeline
+# Maglev Cycle 3: Baker Pipeline
 
 ## The Context
 
-The Maglev train scene and player VRM avatars must be baked before Cycle 7 (physics replication), which is the first cycle to load actual game assets into the zone server. The baker pipeline runs as an on-demand Fly Machine, depends only on the Fly infrastructure proven in Cycle 1, and can run in parallel with Cycles 3–7.
+The Maglev train scene and player VRM avatars must be baked before Cycle 9 (physics replication), which is the first cycle to load actual game assets into the zone server. The baker pipeline runs as an on-demand Fly Machine, depends only on the Fly infrastructure proven in Cycle 1, and can run in parallel with Cycles 6–9.
 
 `multiplayer-fabric-baker` uses Godot in headless editor mode (`godot.linuxbsd.editor.double.x86_64`, built from `multiplayer-fabric-baker` via `ghcr.io/v-sekai-fire/godot-editor-double:latest`) to validate and export scenes. `aria-storage` chunks the output using casync/desync `.caibx` format with zstd compression, uploads chunks to the zone-backend chunk store, and posts the `.caibx` index to uro at `/storage/:id/bake`.
 
 ## The Problem Statement
 
-The Cyberprep train environment (MToon shaders, banking train geometry) and the PCVR and Steam Deck VRM avatars have not been validated and stored through the baker pipeline under the Fly deployment. Without baked assets in the chunk store, the zone server in Cycle 7 cannot load the scene.
+The Cyberprep train environment (MToon shaders, banking train geometry) and the PCVR and Steam Deck VRM avatars have not been validated and stored through the baker pipeline under the Fly deployment. Without baked assets in the chunk store, the zone server in Cycle 9 cannot load the scene.
 
 ## Design
 
@@ -26,9 +26,10 @@ flyctl machine run registry.fly.io/multiplayer-fabric-baker:latest \
 ```
 
 Pass criteria:
+
 - [ ] Both bake jobs exit 0
 - [ ] `.caibx` index appears in uro at `/storage/:id/bake` for each asset
-- [ ] Zone server can fetch and assemble the train scene from the chunk store before Cycle 7 begins
+- [ ] Zone server can fetch and assemble the train scene from the chunk store before Cycle 9 begins
 
 ## Estimate
 
@@ -36,21 +37,21 @@ Pass criteria:
 
 ## CRIS Score
 
-| Factor          | Score | Evidence |
-| --------------- | ----- | -------- |
+| Factor          | Score | Evidence                                                                                                                                      |
+| --------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | **C**omplexity  | 7     | The baker pipeline is in production use; the only unknowns are the Maglev-specific MToon shader configuration and VRM avatar export settings. |
-| **R**each       | 10    | Cycles 8–9 cannot load game assets without baked chunk store entries. |
-| **I**mpediment  | 9     | A bake failure before Cycle 7 blocks the entire physics and scenario track. |
-| **S**takeholder | 10    | Required before the first physics cycle and the full Maglev mission scenario. |
-| **Total**       | 8.75  | Build after Cycle 1 passes, in parallel with Cycles 3–7. |
+| **R**each       | 10    | Cycles 10–4 cannot load game assets without baked chunk store entries.                                                                        |
+| **I**mpediment  | 9     | A bake failure before Cycle 9 blocks the entire physics and scenario track.                                                                   |
+| **S**takeholder | 10    | Required before the first physics cycle and the full Maglev mission scenario.                                                                 |
+| **Total**       | 8.75  | Build after Cycle 1 passes, in parallel with Cycles 6–9.                                                                                      |
 
 ## The Downsides
 
-Building the Cyberprep environment with MToon shaders tuned for both Steam Deck and PCVR requires dedicated art work. Bake failures surface late if the pipeline is not tested early; running this cycle in parallel with Cycles 3–7 surfaces them while networking cycles are still running.
+Building the Cyberprep environment with MToon shaders tuned for both Steam Deck and PCVR requires dedicated art work. Bake failures surface late if the pipeline is not tested early; running this cycle in parallel with Cycles 6–9 surfaces them while networking cycles are still running.
 
 ## The Road Not Taken
 
-Deferring the bake to just before Cycle 7 was rejected — a failed bake stalls the physics track after the networking cycles that preceded Cycle 7 have already completed.
+Deferring the bake to just before Cycle 9 was rejected — a failed bake stalls the physics track after the networking cycles that preceded Cycle 9 have already completed.
 
 ## Status
 
@@ -63,7 +64,7 @@ Status: Draft
 
 ## Tags
 
-- maglev-cycle-6, baker, aria-storage, vrm, galls-law, 20260506-maglev-cycle-6-baker, present-proposal-template
+- maglev-cycle-3, baker, aria-storage, vrm, galls-law, 20260506-maglev-cycle-3-baker, present-proposal-template
 
 ## Further Reading
 

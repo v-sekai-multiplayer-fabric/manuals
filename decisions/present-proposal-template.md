@@ -14,12 +14,12 @@ Detail the proposed solution precisely enough that it could be implemented witho
 
 ## CRIS Score
 
-| Factor          | Score | Evidence |
-| --------------- | ----- | -------- |
-| **C**omplexity  | 0–10  | [10 = simple, well-understood; 0 = novel or high-risk — why] |
-| **R**each       | 0–10  | [10 = affects everyone; 0 = affects almost no one — why] |
-| **I**mpediment  | 0–10  | [10 = total blocker with no workaround; 0 = trivial to work around — why] |
-| **S**takeholder | 0–10  | [10 = critical dependency for a major project; 0 = no project depends on it — why] |
+| Factor          | Score | Evidence                                                                                             |
+| --------------- | ----- | ---------------------------------------------------------------------------------------------------- |
+| **C**omplexity  | 0–10  | [10 = simple, well-understood; 0 = novel or high-risk — why]                                         |
+| **R**each       | 0–10  | [10 = affects everyone; 0 = affects almost no one — why]                                             |
+| **I**mpediment  | 0–10  | [10 = total blocker with no workaround; 0 = trivial to work around — why]                            |
+| **S**takeholder | 0–10  | [10 = critical dependency for a major project; 0 = no project depends on it — why]                   |
 | **Total**       |       | [Average of four factors (0–10); 8–10 = build now, 6–8 = schedule soon, 4–6 = evaluate, 0–4 = defer] |
 
 ## The Downsides

@@ -1,8 +1,8 @@
-# Maglev Cycle 8: Dynamic Physics and Causal Ordering
+# Maglev Cycle 10: Dynamic Physics and Causal Ordering
 
 ## The Context
 
-With replication and banking proven in Cycle 7, Cycle 8 releases the cores to roll and runs the full mission. Causal ordering (VClock.le gating on core-slot events) is verified in the same run since mission events are its natural trigger.
+With replication and banking proven in Cycle 9, Cycle 10 releases the cores to roll and runs the full mission. Causal ordering (VClock.le gating on core-slot events) is verified in the same run since mission events are its natural trigger.
 
 Cycle 2 (observability) must be live before this cycle runs — a desync or ordering failure here without traces is undiagnosable.
 
@@ -19,6 +19,7 @@ Load the Maglev train scene. The train banks on a fixed schedule. Quantum Data-C
 The PCVR client sees the car as a waist-height diorama; the Steam Deck client sees the same instance as an isometric action-RPG.
 
 Pass criteria:
+
 - [ ] No entity desync between any of the 16 clients over the 3-minute window
 - [ ] Core positions agree within one physics tick across all clients at mission end
 - [ ] Zone server tick rate holds at 20 Hz under banking motion, drone AI, and 16-client load
@@ -26,25 +27,25 @@ Pass criteria:
 - [ ] No QueueOp accepted out of causal order
 - [ ] `multiplayer-fabric-predictive-bvh` computes at least 2 distinct interest zones across the 16 clients; zone-console confirms all 16 entities visible
 
-The Cyberprep environment with MToon shaders tuned for both targets is the first art cost in the cycle sequence and cannot begin until Cycle 5 is stable.
+The Cyberprep environment with MToon shaders tuned for both targets is the first art cost in the cycle sequence and cannot begin until Cycle 8 is stable.
 
 ## Estimate
 
-**10 days** (2026-06-16 → 2026-06-30). VClock and DisjointRanges are formally verified in `multiplayer-fabric-predictive-bvh`; the work is wiring them to live core-slot events and confirming no out-of-order acceptance over a 3-minute run. Rolling physics under a banking normal force has no prior baseline; estimating equal to Cycle 7.
+**10 days** (2026-06-16 → 2026-06-30). VClock and DisjointRanges are formally verified in `multiplayer-fabric-predictive-bvh`; the work is wiring them to live core-slot events and confirming no out-of-order acceptance over a 3-minute run. Rolling physics under a banking normal force has no prior baseline; estimating equal to Cycle 9.
 
 ## CRIS Score
 
-| Factor          | Score | Evidence |
-| --------------- | ----- | -------- |
+| Factor          | Score | Evidence                                                                                                                                  |
+| --------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | **C**omplexity  | 6     | Rolling physics under a dynamic normal force, combined with cross-zone causal ordering of core-slot events, is untested in this codebase. |
-| **R**each       | 10    | All gameplay built on this stack requires authoritative physics replication under dynamic load. |
-| **I**mpediment  | 9     | Physics desync here blocks game design; fixing it likely requires changes to the replication layer, not just parameters. |
-| **S**takeholder | 10    | Required for the full Maglev mission scenario. |
-| **Total**       | 8.25  | Build after Cycles 7 and 2 pass. |
+| **R**each       | 10    | All gameplay built on this stack requires authoritative physics replication under dynamic load.                                           |
+| **I**mpediment  | 9     | Physics desync here blocks game design; fixing it likely requires changes to the replication layer, not just parameters.                  |
+| **S**takeholder | 10    | Required for the full Maglev mission scenario.                                                                                            |
+| **Total**       | 8.25  | Build after Cycles 9 and 2 pass.                                                                                                          |
 
 ## The Downsides
 
-A physics or ordering failure here could be replication, tick rate, dynamic normal force, or VClock gating; Cycles 1–7 narrow but do not eliminate that ambiguity.
+A physics or ordering failure here could be replication, tick rate, dynamic normal force, or VClock gating; Cycles 1–9 narrow but do not eliminate that ambiguity.
 
 ## The Road Not Taken
 
@@ -61,7 +62,7 @@ Status: Draft
 
 ## Tags
 
-- maglev-cycle-8, dynamic-physics, causal-ordering, replication, galls-law, 20260506-maglev-cycle-8-dynamic-physics-score, present-proposal-template
+- maglev-cycle-10, dynamic-physics, causal-ordering, replication, galls-law, 20260506-maglev-cycle-10-dynamic-physics-score, present-proposal-template
 
 ## Further Reading
 
