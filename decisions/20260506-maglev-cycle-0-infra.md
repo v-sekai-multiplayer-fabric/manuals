@@ -23,6 +23,10 @@ Pass criteria:
 - [ ] uro app reachable on Fly's 6PN private network
 - [ ] Secrets for mTLS certs present (`fly secrets list` shows expected keys for gateway and uro)
 
+## Estimate
+
+**1 day** (2026-05-06 → 2026-05-06). The infra repo has a complete Terraform config with DNS, cert renewal, and CockroachDB volume (20+ commits on 2026-05-05). This cycle is a validation run, not a build.
+
 ## CRIS Score
 
 | Factor          | Score | Evidence |

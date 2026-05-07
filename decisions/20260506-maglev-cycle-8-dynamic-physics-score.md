@@ -28,6 +28,10 @@ Pass criteria:
 
 The Cyberprep environment with MToon shaders tuned for both targets is the first art cost in the cycle sequence and cannot begin until Cycle 5 is stable.
 
+## Estimate
+
+**10 days** (2026-06-16 → 2026-06-30). VClock and DisjointRanges are formally verified in `multiplayer-fabric-predictive-bvh`; the work is wiring them to live core-slot events and confirming no out-of-order acceptance over a 3-minute run. Rolling physics under a banking normal force has no prior baseline; estimating equal to Cycle 7.
+
 ## CRIS Score
 
 | Factor          | Score | Evidence |

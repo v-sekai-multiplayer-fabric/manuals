@@ -23,6 +23,10 @@ Pass criteria:
 - [ ] VRM avatars (PCVR and Steam Deck) load from the chunk store without error; humanoid skeleton root present
 - [ ] No entity desync over the run
 
+## Estimate
+
+**10 days** (2026-06-02 → 2026-06-16). First cycle to load game assets and run physics. The zone server initial deploy took 2 days; adding a physics scene, banking animation, and VRM loading from the chunk store is the first substantial game dev work with no prior baseline. Projecting 2× the zone-console build time (6 working days) plus physics integration overhead.
+
 ## CRIS Score
 
 | Factor          | Score | Evidence |

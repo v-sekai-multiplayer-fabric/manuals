@@ -30,6 +30,10 @@ Pass criteria:
 - [ ] `.caibx` index appears in uro at `/storage/:id/bake` for each asset
 - [ ] Zone server can fetch and assemble the train scene from the chunk store before Cycle 7 begins
 
+## Estimate
+
+**3 days** (2026-05-09 → 2026-05-13, parallel). The baker pipeline is in production on Fly (14 days of commits 2026-04-23 to 2026-05-06). The work is Maglev-specific bake config (MToon shader settings, VRM export params) and a Fly Machine invocation test. Art assets are a separate art track not counted here.
+
 ## CRIS Score
 
 | Factor          | Score | Evidence |

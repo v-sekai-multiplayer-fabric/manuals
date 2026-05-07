@@ -18,6 +18,10 @@ Pass criteria:
 - [ ] At least one entity visible in the TUI entity list
 - [ ] Clean disconnect on exit with no orphaned connection
 
+## Estimate
+
+**2 days** (2026-05-09 → 2026-05-12, parallel). Zone-console was built from scratch in 6 working days (2026-04-21–28). The work here is connecting the existing TUI to the deployed Fly gateway rather than a local target — config and endpoint change only.
+
 ## CRIS Score
 
 | Factor          | Score | Evidence |

@@ -20,6 +20,10 @@ Pass criteria:
 - [ ] No gamepad datagram dropped over 60 seconds at 10 Hz
 - [ ] No gateway crash or restart
 
+## Estimate
+
+**5 days** (2026-05-19 → 2026-05-26). The IK datagram format is new but the gateway routing path is identical to gamepad. The interaction system (`xr_controller_interaction_helper.gd`) is solved; the work is serialization format definition and gateway route registration.
+
 ## CRIS Score
 
 | Factor          | Score | Evidence |

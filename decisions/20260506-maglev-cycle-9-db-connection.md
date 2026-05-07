@@ -18,6 +18,10 @@ Pass criteria:
 - [ ] `gateway_writer` role has DML access; `gateway_admin` is not used at runtime
 - [ ] Connection reuse works across multiple sequential writes (`prepare: :unnamed` confirmed)
 
+## Estimate
+
+**1 day** (2026-05-09, parallel). The uro CockroachDB connection is already working on Fly (commit "Fix CockroachDB connection on Fly: inet6 socket + unnamed prepare", 2026-05-05). This cycle validates the existing connection against the pass criteria checklist.
+
 ## CRIS Score
 
 | Factor          | Score | Evidence |

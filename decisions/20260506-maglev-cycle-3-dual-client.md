@@ -20,6 +20,10 @@ Pass criteria:
 - [ ] All 14 bots disconnect and reconnect simultaneously; gateway recovers within 5 seconds and all clients resync without a restart
 - [ ] Under 100 ms injected latency and 2% packet loss, no client desyncs over 30 seconds
 
+## Estimate
+
+**5 days** (2026-05-13 → 2026-05-19). Taskweft bots are proven (93 PropCheck properties passing). The work is wiring 14 bots to the gateway and adding the reconnect storm and network condition harnesses. No prior multi-bot gateway test exists in the history; projecting from the gateway build pace.
+
 ## CRIS Score
 
 | Factor          | Score | Evidence |
