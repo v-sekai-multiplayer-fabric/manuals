@@ -350,7 +350,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Documentation for the multiplayer fabric stack: a WebTransport-based game server platform built on Godot, Elixir, and CockroachDB, deployed on Fly.io.</p>
 <ul>
 <li>Source code: <a href="https://github.com/V-Sekai-fire">V-Sekai-fire on GitHub</a></li>
-<li>Issues and discussion: <a href="https://github.com/V-Sekai-fire/multiplayer-fabric-taskweft">multiplayer-fabric-taskweft</a></li>
+<li>Issues and discussion: <a href="https://github.com/V-Sekai-fire/multiplayer-fabric-taskweft">taskweft</a></li>
 <li>Top-level monorepo: <a href="https://github.com/V-Sekai-fire/multiplayer-fabric">multiplayer-fabric</a> (this is the umbrella that registers every repo below as a submodule)</li>
 </ul>
 <section id="where-things-live" class="level2">
@@ -392,7 +392,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> multiplayer-fabric</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> submodule update <span class="at">--init</span> <span class="at">--recursive</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>On Windows use WSL2 (Ubuntu); the local workflow is bash-first (POSIX shebangs, <code>/tmp</code> paths, symlinks, <code>lsof</code>, UNIX docker socket).</p>
-<p>Engine builds via <code>gscons</code> (macOS arm64), <code>gmscons</code> (Windows x86_64 cross-compile), or <code>gescons</code> (web wasm32) from <code>multiplayer-fabric-merge</code> after checking out the <code>multiplayer-fabric-base</code> branch. Maglev cycle smoke tests live in <a href="https://github.com/V-Sekai-fire/multiplayer-fabric-cycle-tests"><code>multiplayer-fabric-cycle-tests</code></a>. See the AGENTS.md “Maglev cycle workflow” section for details.</p>
+<p>Engine builds via <code>gscons</code> (macOS arm64), <code>gmscons</code> (Windows x86_64 cross-compile), or <code>gescons</code> (web wasm32) from <code>merge</code> after checking out the <code>multiplayer-fabric-base</code> branch. Maglev cycle smoke tests live in <a href="https://github.com/V-Sekai-fire/multiplayer-fabric-cycle-tests"><code>cycle-tests</code></a>. See the AGENTS.md “Maglev cycle workflow” section for details.</p>
 </section>
 <section id="repositories" class="level2">
 <h2 class="anchored" data-anchor-id="repositories">Repositories</h2>
@@ -407,19 +407,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-gateway">multiplayer-fabric-gateway</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-gateway">gateway</a></td>
 <td>Elixir WebTransport gateway on UDP 443 — entry point for all clients</td>
 </tr>
 <tr class="even">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-zone">multiplayer-fabric-zone</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-zone">zone</a></td>
 <td>Headless Godot zone server (template_release, double precision)</td>
 </tr>
 <tr class="odd">
 <td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-zone-backend">multiplayer-fabric-zone-backend</a></td>
-<td>Phoenix backend (uro): shard registry, asset API. Submodule path: <code>multiplayer-fabric-uro</code></td>
+<td>Phoenix backend (uro): shard registry, asset API. Submodule path: <code>uro</code></td>
 </tr>
 <tr class="even">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-zone-console">multiplayer-fabric-zone-console</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-zone-console">zone-console</a></td>
 <td>Operator console for zone server health and shard rotations</td>
 </tr>
 <tr class="odd">
@@ -427,11 +427,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>CockroachDB with mTLS, role-separated access (gateway_writer / gateway_reader / gateway_admin / root)</td>
 </tr>
 <tr class="even">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-baker">multiplayer-fabric-baker</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-baker">baker</a></td>
 <td>On-demand Fly Machine that validates and exports Godot assets via aria-storage</td>
 </tr>
 <tr class="odd">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-observability">multiplayer-fabric-observability</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-observability">observability</a></td>
 <td>VictoriaMetrics (8428) + VictoriaLogs (9428) + VictoriaTraces (10428) + OTEL Collector (4317/4318) on supervisord</td>
 </tr>
 </tbody>
@@ -448,19 +448,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-godot">multiplayer-fabric-godot</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-godot">godot</a></td>
 <td>V-Sekai fork of the Godot engine — feature branches per topic, assembled output lives on <code>multiplayer-fabric-base</code></td>
 </tr>
 <tr class="even">
 <td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-godot-maglev">multiplayer-fabric-godot-maglev</a></td>
-<td>Canonical assembled engine snapshot used as <code>git subrepo</code> source by <code>multiplayer-fabric-build</code></td>
+<td>Canonical assembled engine snapshot used as <code>git subrepo</code> source by <code>build</code></td>
 </tr>
 <tr class="odd">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-merge">multiplayer-fabric-merge</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-merge">merge</a></td>
 <td><code>gitassembly</code> recipe + <code>update_godot_v_sekai.exs</code> driver that composes the engine from its feature branches</td>
 </tr>
 <tr class="even">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-build">multiplayer-fabric-build</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-build">build</a></td>
 <td>Engine build orchestrator (Justfile + per-platform CI matrix); vendors engine source under <code>godot/</code> via git-subrepo</td>
 </tr>
 <tr class="odd">
@@ -472,15 +472,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Godot project demonstrating + testing the OTel module in isolation</td>
 </tr>
 <tr class="odd">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-webtransport">multiplayer-fabric-webtransport</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-webtransport">webtransport</a></td>
 <td>Elixir bindings for the Rust <a href="https://github.com/BiagioFesta/wtransport">wtransport</a> WebTransport library</td>
 </tr>
 <tr class="even">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-interaction-system">multiplayer-fabric-interaction-system</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-interaction-system">interaction-system</a></td>
 <td>XR controller / 6-DOF IK helper addon</td>
 </tr>
 <tr class="odd">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-interaction-system-project">multiplayer-fabric-interaction-system-project</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-interaction-system-project">interaction-system-project</a></td>
 <td>Godot project that exercises the interaction-system addon</td>
 </tr>
 </tbody>
@@ -497,15 +497,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-taskweft">multiplayer-fabric-taskweft</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-taskweft">taskweft</a></td>
 <td>Re-entrant temporal HTN planner + ReBAC engine (Elixir/C++20 NIFs)</td>
 </tr>
 <tr class="even">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-predictive-bvh">multiplayer-fabric-predictive-bvh</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-predictive-bvh">predictive-bvh</a></td>
 <td>Predictive BVH adapter for spatial queries — used by the zone server’s broadphase</td>
 </tr>
 <tr class="odd">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-predictive-bvh-research">multiplayer-fabric-predictive-bvh-research</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-predictive-bvh-research">predictive-bvh-research</a></td>
 <td>Lean 4 formalization + correctness proofs for the predictive BVH</td>
 </tr>
 <tr class="even">
@@ -513,12 +513,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>casync/desync chunked content-addressable storage (Elixir wrapper around vendored Go binary)</td>
 </tr>
 <tr class="odd">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-humanoid-project">multiplayer-fabric-humanoid-project</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-humanoid-project">humanoid-project</a></td>
 <td>Humanoid avatars + animations (<code>mire.vrm</code> is the canonical Maglev test avatar)</td>
 </tr>
 <tr class="even">
 <td><a href="https://github.com/V-Sekai-fire/elixir-turboquant-llm">elixir-turboquant-llm</a></td>
-<td>Quantized LLM inference NIF (Elixir / llama.cpp). Submodule path: <code>multiplayer-fabric-llm</code></td>
+<td>Quantized LLM inference NIF (Elixir / llama.cpp). Submodule path: <code>llm</code></td>
 </tr>
 </tbody>
 </table>
@@ -534,27 +534,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-infra">multiplayer-fabric-infra</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-infra">infra</a></td>
 <td>Terraform for Fly.io resources (apps, IPs, volumes, secrets) + read-only verify workflows</td>
 </tr>
 <tr class="even">
-<td><a href="https://github.com/V-Sekai-fire/docker-multiplayer-fabric">docker-multiplayer-fabric</a></td>
+<td><a href="https://github.com/V-Sekai-fire/docker-multiplayer-fabric">docker</a></td>
 <td>Dockerfiles for zone-fabric, baker, uro runtime images</td>
 </tr>
 <tr class="odd">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-hosting">multiplayer-fabric-hosting</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-hosting">hosting</a></td>
 <td>Self-hosted hosting recipes (Caddy, versitygw, docker-compose stack)</td>
 </tr>
 <tr class="even">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-generate-secrets">multiplayer-fabric-generate-secrets</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-generate-secrets">generate-secrets</a></td>
 <td>Shared secret-generation helpers (mTLS PKI bootstrap, JWT keys)</td>
 </tr>
 <tr class="odd">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-elf-programs">multiplayer-fabric-elf-programs</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-elf-programs">elf-programs</a></td>
 <td>RISC-V ELF programs run inside the engine’s <code>module_sandbox</code></td>
 </tr>
 <tr class="even">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-casync-seed">multiplayer-fabric-casync-seed</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-casync-seed">casync-seed</a></td>
 <td>Pre-baked casync chunk store seed for fast cold-start asset assembly</td>
 </tr>
 <tr class="odd">
@@ -575,7 +575,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-cycle-tests">multiplayer-fabric-cycle-tests</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-cycle-tests">cycle-tests</a></td>
 <td>Maglev cycle smoke tests — minimal headless Godot scripts, one per cycle</td>
 </tr>
 </tbody>
@@ -593,10 +593,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td><a href="https://github.com/V-Sekai-fire/manuals">manuals</a></td>
-<td>This site (Quarto). Submodule path: <code>multiplayer-fabric-manuals</code></td>
+<td>This site (Quarto). Submodule path: <code>manuals</code></td>
 </tr>
 <tr class="even">
-<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-skills">multiplayer-fabric-skills</a></td>
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-skills">skills</a></td>
 <td>Reusable Claude Code skills shared across the fabric repos</td>
 </tr>
 </tbody>

@@ -309,26 +309,26 @@ ul.task-list li input[type="checkbox"] {
 <section id="added" class="level2">
 <h2 class="anchored" data-anchor-id="added">Added</h2>
 <ul>
-<li>Maglev cycle 0 (infra) <strong>verified pass</strong> — all 4 pass criteria confirmed against the live Fly API via the <code>verify_fly_state</code> workflow on <code>multiplayer-fabric-infra</code>. Gateway machine <code>e7845e1ef35768</code> started + IPv4 <code>213.188.205.180</code>; CRDB volume <code>crdb_data</code> 10GB iad attached; uro deploy succeeded; mTLS secrets present</li>
-<li>Maglev cycle 1 (gateway handshake) <strong>verified pass</strong> — <code>multiplayer-fabric-cycle-tests/cycle-1-gateway-handshake/cycle1.gd</code> completes a real-internet WebTransport/QUIC handshake against <code>gateway.chibifire.com:443</code>, sends a ping datagram, receives the gateway’s pong reply (~880 ms round-trip), exits 0</li>
-<li>New repo <code>multiplayer-fabric-cycle-tests</code> — minimal headless Godot <code>SceneTree</code> per cycle that exercises pass criteria against live infrastructure; registered as submodule</li>
+<li>Maglev cycle 0 (infra) <strong>verified pass</strong> — all 4 pass criteria confirmed against the live Fly API via the <code>verify_fly_state</code> workflow on <code>infra</code>. Gateway machine <code>e7845e1ef35768</code> started + IPv4 <code>213.188.205.180</code>; CRDB volume <code>crdb_data</code> 10GB iad attached; uro deploy succeeded; mTLS secrets present</li>
+<li>Maglev cycle 1 (gateway handshake) <strong>verified pass</strong> — <code>cycle-tests/cycle-1-gateway-handshake/cycle1.gd</code> completes a real-internet WebTransport/QUIC handshake against <code>gateway.chibifire.com:443</code>, sends a ping datagram, receives the gateway’s pong reply (~880 ms round-trip), exits 0</li>
+<li>New repo <code>cycle-tests</code> — minimal headless Godot <code>SceneTree</code> per cycle that exercises pass criteria against live infrastructure; registered as submodule</li>
 <li>New repo <code>multiplayer-fabric-godot-maglev</code> — canonical engine source for the build repo’s <code>git subrepo</code>, holding the assembled <code>multiplayer-fabric-base</code> and <code>multiplayer-fabric</code> branches</li>
-<li><code>multiplayer-fabric-observability</code> registered as submodule (previously missing — only ADRs existed)</li>
-<li>Cycle 2 producer-side OTel export wired in three apps: gateway (<code>gateway.dispatch</code> span around <code>Gateway.Router.handle/1</code>), uro (auto-instrumented Phoenix + Ecto via <code>:opentelemetry_phoenix</code> + <code>:opentelemetry_ecto</code>), zone (engine’s <code>module_open_telemetry</code> initialized in bootstrapped <code>project/main.gd</code>); all ship to <code>multiplayer-fabric-observability.internal:4318</code></li>
+<li><code>observability</code> registered as submodule (previously missing — only ADRs existed)</li>
+<li>Cycle 2 producer-side OTel export wired in three apps: gateway (<code>gateway.dispatch</code> span around <code>Gateway.Router.handle/1</code>), uro (auto-instrumented Phoenix + Ecto via <code>:opentelemetry_phoenix</code> + <code>:opentelemetry_ecto</code>), zone (engine’s <code>module_open_telemetry</code> initialized in bootstrapped <code>project/main.gd</code>); all ship to <code>observability.internal:4318</code></li>
 <li>Bootstrapped zone Godot project — <code>project/project.godot</code> + <code>project/main.gd</code> (the directory was an empty stub before)</li>
-<li><code>master</code> branch on <code>multiplayer-fabric-godot</code> pinned to merge-base <code>835e2dcbba</code> so future assemblies start from a stable upstream point</li>
+<li><code>master</code> branch on <code>godot</code> pinned to merge-base <code>835e2dcbba</code> so future assemblies start from a stable upstream point</li>
 <li>10 single-topic feature branches replacing the kitchen-sink <code>feat/engine-patches</code>: <code>feat/engine-misc</code>, <code>feat/tapered-capsule-shape</code>, <code>feat/crypto-extensions</code>, <code>feat/predictive-bvh</code>, <code>feat/uds-test-stability</code>, <code>feat/misc-cleanup</code>, <code>feat/lint-cleanup</code>, <code>feat/ci-fixes</code>, <code>feat/agents-docs</code>, <code>feat/fork-scaffolding</code> (last is now unused)</li>
-<li>Read-only verification workflows on <code>multiplayer-fabric-infra</code>: <code>verify_fly_state.yml</code>, <code>start_fly_apps.yml</code>, <code>verify_observability.yml</code> — query Fly + Victoria* APIs and upload state as JSON artifacts so cycle verification doesn’t depend on log scraping or local flyctl auth</li>
+<li>Read-only verification workflows on <code>infra</code>: <code>verify_fly_state.yml</code>, <code>start_fly_apps.yml</code>, <code>verify_observability.yml</code> — query Fly + Victoria* APIs and upload state as JSON artifacts so cycle verification doesn’t depend on log scraping or local flyctl auth</li>
 </ul>
 </section>
 <section id="changed" class="level2">
 <h2 class="anchored" data-anchor-id="changed">Changed</h2>
 <ul>
-<li><code>multiplayer-fabric-build/godot/.gitrepo</code> switched source from <code>multiplayer-fabric-godot @ multiplayer-fabric</code> (vendored via stale pinned SHA) to <code>multiplayer-fabric-godot-maglev @ multiplayer-fabric-base</code> (canonical assembled output)</li>
-<li><code>multiplayer-fabric-build</code> test workflows consolidated: 6 per-feature-branch <code>test-*.yaml</code> files → one <code>test-feature-branches.yaml</code> with <code>{branch, platform}</code> matrix (396 → 73 lines)</li>
-<li>Baker + zone GHCR Godot binary builders now track <code>multiplayer-fabric-build/main</code> instead of stale pinned commit <code>b27142e94c</code> — picks up engine updates on next cron tick or <code>workflow_dispatch</code></li>
-<li><code>docker-multiplayer-fabric</code> zone-fabric image switched from Mono Godot (with <code>GodotSharp</code> + .NET 8 runtime) to non-Mono GDScript build (<code>precision=double</code>); matches the assembled engine</li>
-<li>Branch protection on <code>multiplayer-fabric-godot/multiplayer-fabric</code> removed so <code>update_godot_v_sekai.exs</code> doesn’t trip the bypass warning on every assembly run</li>
+<li><code>build/godot/.gitrepo</code> switched source from <code>godot @ multiplayer-fabric</code> (vendored via stale pinned SHA) to <code>multiplayer-fabric-godot-maglev @ multiplayer-fabric-base</code> (canonical assembled output)</li>
+<li><code>build</code> test workflows consolidated: 6 per-feature-branch <code>test-*.yaml</code> files → one <code>test-feature-branches.yaml</code> with <code>{branch, platform}</code> matrix (396 → 73 lines)</li>
+<li>Baker + zone GHCR Godot binary builders now track <code>build/main</code> instead of stale pinned commit <code>b27142e94c</code> — picks up engine updates on next cron tick or <code>workflow_dispatch</code></li>
+<li><code>docker</code> zone-fabric image switched from Mono Godot (with <code>GodotSharp</code> + .NET 8 runtime) to non-Mono GDScript build (<code>precision=double</code>); matches the assembled engine</li>
+<li>Branch protection on <code>godot/multiplayer-fabric</code> removed so <code>update_godot_v_sekai.exs</code> doesn’t trip the bypass warning on every assembly run</li>
 </ul>
 </section>
 <section id="fixed" class="level2">
@@ -346,7 +346,7 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><code>stage multiplayer-fabric remotes/v-sekai-fire/multiplayer-fabric</code> line from <code>gitassembly</code> — <code>multiplayer-fabric-base</code> is now the canonical assembled output; the redundant publish stage is gone</li>
 <li><code>feat/engine-patches</code> no longer referenced in <code>gitassembly</code> — superseded by the 10 split feature branches; kept as historical ref upstream</li>
-<li>6 stale per-feature-branch test workflows on <code>multiplayer-fabric-build</code>: <code>test-engine-patches.yaml</code>, <code>test-module-http3.yaml</code>, <code>test-module-multiplayer-fabric.yaml</code>, <code>test-module-speech.yaml</code>, <code>test-multiplayer-fabric.yaml</code>, <code>test-open-telemetry.yaml</code> — replaced by the consolidated matrix workflow</li>
+<li>6 stale per-feature-branch test workflows on <code>build</code>: <code>test-engine-patches.yaml</code>, <code>test-module-http3.yaml</code>, <code>test-module-multiplayer-fabric.yaml</code>, <code>test-module-speech.yaml</code>, <code>test-multiplayer-fabric.yaml</code>, <code>test-open-telemetry.yaml</code> — replaced by the consolidated matrix workflow</li>
 <li><code>feat/fork-scaffolding</code> from the active assembly path — <code>feat/fix-picosocks-cmsghdr-mingw</code> already provides equivalent CI/Docker scaffolding (14 of 16 files overlapped)</li>
 </ul>
 
