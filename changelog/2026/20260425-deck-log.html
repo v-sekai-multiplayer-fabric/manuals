@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – V-Sekai Fire — Manuals</title>
+<title>deck-log – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,29 +26,27 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-3c28f507822a6aba878936ee8b27b32a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-b2059c1d83ca13157c7a4652faea9fa0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-3c28f507822a6aba878936ee8b27b32a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-3c28f507822a6aba878936ee8b27b32a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-b2059c1d83ca13157c7a4652faea9fa0.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-3c28f507822a6aba878936ee8b27b32a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -76,67 +74,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-title',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="alternate" type="application/rss+xml" title="V-Sekai Fire — Manuals" href="changelog.xml" data-external="1"></head>
+</head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -307,7 +247,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">V-Sekai Fire — Manuals</span>
     </a>
   </div>
@@ -318,15 +258,15 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./changelog.html" aria-current="page"> 
+    <a class="nav-link" href="../../changelog.html"> 
 <span class="menu-text">Changes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./decisions.html"> 
+    <a class="nav-link" href="../../decisions.html"> 
 <span class="menu-text">Decisions</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./references.html"> 
+    <a class="nav-link" href="../../references.html"> 
 <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -341,99 +281,104 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#v-sekai-fire-deck-log-2026-04-25-saturday" id="toc-v-sekai-fire-deck-log-2026-04-25-saturday" class="nav-link active" data-scroll-target="#v-sekai-fire-deck-log-2026-04-25-saturday">V-Sekai Fire Deck Log — 2026-04-25 (Saturday)</a>
+  <ul class="collapse">
+  <li><a href="#added" id="toc-added" class="nav-link" data-scroll-target="#added">Added</a></li>
+  <li><a href="#changed" id="toc-changed" class="nav-link" data-scroll-target="#changed">Changed</a></li>
+  <li><a href="#fixed" id="toc-fixed" class="nav-link" data-scroll-target="#fixed">Fixed</a></li>
+  <li><a href="#security" id="toc-security" class="nav-link" data-scroll-target="#security">Security</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/V-Sekai-fire/manuals/edit/main/changelog/2026/20260425-deck-log.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Changelog</h1>
-</div>
-
-
-
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<p>All notable changes are documented here. Format based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>.</p>
-<p><strong>Added</strong> — new features. <strong>Changed</strong> — changes in existing functionality. <strong>Fixed</strong> — bug fixes. <strong>Removed</strong> — removed features.</p>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
 
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-      <option value="" disabled="" selected="" hidden="">Order By</option>
-      <option value="index" data-direction="asc">Default</option>
-      <option value="listing-title-sort" data-direction="asc">
-        Title
-      </option>
-    </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
-</div>
-<table class="quarto-listing-table table">
-<thead>
-<tr>
 
-<th>
-<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
-</th>
+<section id="v-sekai-fire-deck-log-2026-04-25-saturday" class="level1">
+<h1>V-Sekai Fire Deck Log — 2026-04-25 (Saturday)</h1>
+<p>Date: 2026-04-25</p>
+<p>Backdated from <code>multiplayer-fabric/CHANGELOG.md</code> <code>[0.2.0]</code> through <code>[0.5.0]</code> — all four releases shipped on the same day.</p>
+<section id="added" class="level2">
+<h2 class="anchored" data-anchor-id="added">Added</h2>
+<ul>
+<li>taskweft HRR property tests (67 properties) — all green after fixes</li>
+<li><code>Taskweft.Test.DBHelpers</code> — auto-detects <code>multiplayer-fabric-hosting/certs/crdb/</code> TLS certs; replaces hardcoded <code>sslmode=disable</code> URL in all three prop test files</li>
+<li>Module-level Postgrex pool in each prop test module (<code>setup_all</code>) — eliminates per-<code>forall</code>-iteration TLS connection overhead that caused 60 s ExUnit timeouts during PropCheck shrinking</li>
+<li>Zone backend <code>/api/v1</code> prefix moved into Phoenix router (<code>scope "/api/v1"</code>); Caddy no longer strips the prefix. 6/6 QA tests green on production</li>
+<li>Playwright tests:
+<ul>
+<li><code>wt_browser.spec.ts</code> — browser WebTransport datagram echo PASS 1.4 s</li>
+<li><code>godot_web_init.spec.ts</code> — threaded wasm64 engine loads PASS 1.1 s</li>
+<li><code>godot_wt_e2e.spec.ts</code> — Godot web export WebTransportPeer end-to-end datagram echo PASS 3.3 s (4 C++ bugs fixed to reach green)</li>
+</ul></li>
+<li><code>operator_camera.gd</code> — 2.5D top-down operator camera with twist/swing [0, 1] per axis (Survey mode: Q/E snap, scroll zoom, WASD pan; Follow mode: Blue Archive smooth entity tracking). Input actions added to <code>project.godot</code>. See <code>20260425-operator-camera-2-5d.md</code></li>
+<li><code>window.__camera_state</code> exported via <code>JavaScriptBridge.eval()</code> for Playwright inspection without a full Godot web build</li>
+<li>Playwright operator camera test (<code>operator_camera.spec.ts</code>) — Layer 1 JS simulation 7/7 pass; Layer 2 Godot web export test scaffolded (skipped until export built)</li>
+<li><code>WasmEquiv.lean</code> — <code>vm_deterministic</code> proves compile-once libriscv VM correctness across native and Emscripten WASM hosts</li>
+<li>ADRs: Three.js WebGPU observer (Stage 1), Three.js player (Stage 2), dual-client test, headless test matrix, build cache pipeline, CRIS scoring, jellyfish game, jellyfish pass condition, operator overlay, operator camera</li>
+<li><code>headless_log_observer.gd</code> — corrected default port to UDP 7443; added <code>--host</code>, <code>--port</code>, <code>--dump-json</code>, <code>--frames</code> CLI flags. Exit 0 on entities received, exit 1 on timeout</li>
+<li><code>fabric_client.gd</code> — <code>send_player_input(cmd, pos, extra)</code> generic CH_PLAYER write path. Default port corrected to 7443</li>
+<li><code>observer.tscn</code> — <code>XROrigin3D</code> + <code>XRCamera3D</code> + left/right <code>XRController3D</code> added; port corrected to 7443</li>
+<li><code>fabric_player_xr.gd</code> — OpenXR initialisation with silent desktop fallback</li>
+<li><code>test_operator_camera.gd</code> — headless quaternion unit tests (4/4 pass): downward look, 90° twist, swing elevation constant, equivalence to old Euler hierarchy</li>
+<li><code>headless_go.spec.ts</code> — Playwright Phase 1 GO spec; spawns <code>godot --headless</code> observer and asserts <code>entities.length &gt; 0</code> from <code>--dump-json</code> output</li>
+<li><code>headless_tests.yml</code> — GitHub Actions workflow scaffolding for GO branch protection check (requires full Docker Compose stack to pass)</li>
+<li>ADRs: Godot native headless observer (<code>20260425-godot-observer.md</code>), Godot native PCVR player (<code>20260425-godot-player.md</code>). Supersede Three.js ADRs</li>
+<li>Lean proofs (<code>multiplayer-fabric-taskweft/lean/</code>): <code>ZoneProtocol</code> (port assignment, 100-byte packet layout), <code>ZoneObserver</code> (exit semantics, step monotonicity), <code>ZonePlayer</code> (CH_PLAYER cmd distinctness, camera swing invariant across all operator inputs)</li>
+</ul>
+</section>
+<section id="changed" class="level2">
+<h2 class="anchored" data-anchor-id="changed">Changed</h2>
+<ul>
+<li>Client strategy: Godot wasm32/wasm64 web export dropped. Two clients replace it — Godot native PCVR (VR + entity control) and Three.js WebGPU (browser observer + WebXR). See <code>20260425-threejs-observer.md</code></li>
+<li><code>observer.tscn</code> — <code>SpectatorRig</code> replaced by <code>OperatorRig</code> with <code>operator_camera.gd</code>; <code>StatusHUD</code> re-parented to new camera path</li>
+<li><code>operator_camera.gd</code> — swing-twist orientation now built as a single <code>Quaternion</code> (<code>twist_q * swing_q</code>) on <code>CameraPivot</code> instead of Euler angles split across pivot and arm. <code>SpringArm3D</code> carries no rotation</li>
+<li>Client strategy updated: Three.js ADRs superseded by Godot native observer and player. Three.js browser client moved to SOMEDAY</li>
+<li><code>runner.yml</code> — <code>always()</code> added to <code>docker-images</code> and <code>headless-tests</code> so sibling job failures (android, ios, etc.) do not skip them</li>
+<li><code>gitassembly</code> — checkpointed <code>multiplayer-fabric</code> stage to start from remote HEAD; reassembled and pushed via <code>update_godot_v_sekai.exs</code></li>
+</ul>
+</section>
+<section id="fixed" class="level2">
+<h2 class="anchored" data-anchor-id="fixed">Fixed</h2>
+<ul>
+<li><code>Storage.query_all/3</code> — <code>Enum.map(nil, ...)</code> crash on DML statements (INSERT/UPDATE/DELETE return <code>rows: nil</code> in Postgrex). Fixed with <code>rows || []</code></li>
+<li>Four transaction rollback tests — <code>raise "rollback"</code> inside <code>rescue _ -&gt; :ok</code> committed instead of rolling back. Fixed with <code>Postgrex.rollback(conn, :rollback)</code></li>
+<li><code>references.bib</code> — non-ASCII bytes (en dashes, smart quotes, invalid Win-1252 sequences) replaced with ASCII equivalents</li>
+<li><code>_server_path_callback</code> — prefer <code>p_path_app_ctx</code> over <code>p_stream_ctx-&gt;path_callback_ctx</code> (proved by Lean <code>fixed_sctx</code> theorem)</li>
+<li><code>wt_server_demo.gd</code> — mirror received packet’s <code>transfer_mode</code> before <code>put_packet</code> (default RELIABLE routed echo to streams; datagrams need UNRELIABLE)</li>
+<li><code>transport_peer.spec.ts</code> shape mismatch: <code>data.zones</code> → <code>data.shards</code></li>
+<li>Zone registration: <code>last_put_at</code> on create, <code>created_at</code> field fix, PubSub rescue in zone controller</li>
+<li>Caddyfile: added <code>handle /socket/*</code> reverse proxy; socket path was 404</li>
+<li><code>gescons</code> alias updated: <code>threads=yes arch=wasm64</code> to match GHA web build</li>
+<li><code>quic_picoquic_backend.cpp:589</code> — <code>SESSION_H3_SETTINGS</code> reference after the enum value was removed in the WebTransport audit (<code>6feefaf0b9</code>)</li>
+<li>WebTransport audit fixes: datagram reader exclusive-lock bug (new reader per iteration → single reader reuse); <code>incoming</code> queue mutex for picoquic cross-thread safety; <code>SESSION_H3_SETTINGS</code> dead state removed from <code>SessionState</code></li>
+<li><code>quic_web_glue.js</code> — Lean 4 proofs (<code>WebTransport.lean</code>) for state machine acyclicity, queue discipline, and reader exclusivity invariant</li>
+<li><code>operator_camera.gd</code> — <code>delta</code> parameter bug in <code>_apply_swing_twist</code> (was using <code>get_process_delta_time()</code> instead of passed <code>delta</code>)</li>
+<li><code>multiplayer-fabric-godot</code> local branches — tracking corrected from <code>origin/master</code> to their own <code>origin/feat/*</code> remotes</li>
+<li><code>multiplayer-fabric-base</code> local — reset to <code>origin/multiplayer-fabric-base</code> (local was stale reassembly before <code>scu_build=yes</code> fixes were applied)</li>
+<li>Stale stashes dropped from <code>multiplayer-fabric-godot</code> (libriscv Win32 files already committed; openvr mode-change noise; empty archived-branch stash)</li>
+</ul>
+</section>
+<section id="security" class="level2">
+<h2 class="anchored" data-anchor-id="security">Security</h2>
+<ul>
+<li>Rotated Cloudflare Turnstile keys (were plaintext in <code>.env</code>)</li>
+</ul>
 
-</tr>
-</thead>
-<tbody class="list">
 
-<tr data-index="0" data-listing-file-modified-sort="1778159963166" data-listing-reading-time-sort="4" data-listing-word-count-sort="604" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-07 (Thursday)" data-listing-filename-sort="20260507-deck-log.md">
-<td>
-<a href="./changelog/2026/20260507-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-07 (Thursday)</a>
-</td>
+</section>
+</section>
 
-</tr>
-
-<tr data-index="1" data-listing-file-modified-sort="1778159963166" data-listing-reading-time-sort="2" data-listing-word-count-sort="244" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)" data-listing-filename-sort="20260506-deck-log.md">
-<td>
-<a href="./changelog/2026/20260506-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-05-06 (Wednesday)</a>
-</td>
-
-</tr>
-
-<tr data-index="2" data-listing-file-modified-sort="1778159963166" data-listing-reading-time-sort="4" data-listing-word-count-sort="775" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-25 (Saturday)" data-listing-filename-sort="20260425-deck-log.md">
-<td>
-<a href="./changelog/2026/20260425-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-25 (Saturday)</a>
-</td>
-
-</tr>
-
-<tr data-index="3" data-listing-file-modified-sort="1778159963166" data-listing-reading-time-sort="1" data-listing-word-count-sort="80" data-listing-title-sort="V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)" data-listing-filename-sort="20260421-deck-log.md">
-<td>
-<a href="./changelog/2026/20260421-deck-log.html" class="title listing-title">V-Sekai Fire Deck Log — 2026-04-21 (Tuesday)</a>
-</td>
-
-</tr>
-
-</tbody>
-</table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -855,7 +800,7 @@ window.Quarto = {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/V-Sekai-fire/manuals/edit/main/changelog.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/V-Sekai-fire/manuals/edit/main/changelog/2026/20260425-deck-log.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
