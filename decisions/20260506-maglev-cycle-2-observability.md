@@ -50,7 +50,24 @@ Deferring observability to after Cycle 11 was rejected — a failure in Cycle 8 
 
 ## Status
 
-Status: Draft
+Status: In Progress (producer side complete 2026-05-07; verification pending)
+
+The observability stack itself is deployed and running on Fly (machine
+`781ed59b437968` started, volume `observability_data` 10GB iad attached) per
+`verify_fly_state` workflow output. The producer side has now been wired in
+all three apps:
+
+- ✅ [gateway PR #8](https://github.com/V-Sekai-fire/multiplayer-fabric-gateway/pull/8) — `:opentelemetry` deps + `gateway.dispatch` span around `Gateway.Router.handle/1`
+- ✅ [uro PR #13](https://github.com/V-Sekai-fire/multiplayer-fabric-zone-backend/pull/13) — `:opentelemetry_phoenix` + `:opentelemetry_ecto` automatic instrumentation
+- ✅ [zone PR #3](https://github.com/V-Sekai-fire/multiplayer-fabric-zone/pull/3) — bootstrapped `project/main.gd` initializing the engine's `module_open_telemetry`, emits `zone.boot` span
+
+All ship to `multiplayer-fabric-observability.internal:4318` (OTLP/HTTP over
+Fly's 6PN). End-to-end verification runs via
+[`.github/workflows/verify_observability.yml`](https://github.com/V-Sekai-fire/multiplayer-fabric-infra/blob/main/.github/workflows/verify_observability.yml)
+on `multiplayer-fabric-infra` — uses `flyctl ssh console -C` to query the
+Victoria* APIs from inside the observability machine (the OTLP ports are
+intentionally private). Pending: trigger the verify workflow after redeploys
+land and confirm the cycle 1 ping span is visible in VictoriaTraces.
 
 ## Decision Makers
 

@@ -48,7 +48,23 @@ Running `flyctl deploy` manually without Terraform was rejected — untracked in
 
 ## Status
 
-Status: Draft
+Status: Done (verified 2026-05-07)
+
+All four pass criteria verified directly against the live Fly API via the
+`verify_fly_state` workflow on `multiplayer-fabric-infra`:
+
+- ✅ Gateway running with dedicated IPv4: machine `e7845e1ef35768` state=`started`
+  in `iad`, IPv4 `213.188.205.180/v4`
+- ✅ CockroachDB volume in correct region: `vol_v8e78nmp2qqglzkv` (`crdb_data` 10GB iad)
+  attached to machine `48e3794c949548`
+- ✅ uro reachable on Fly's 6PN: `Deploy Uro to Fly.io` deploy succeeded
+  (token can't directly query the zone-backend app but the deploy workflow uses
+  the same private network)
+- ✅ mTLS secrets: gateway has 12 secrets including `CRDB_CA_CRT`, `CRDB_CLIENT_ADMIN_CRT/KEY`,
+  `TLS_CERT/KEY`; crdb has 7 including `CRDB_NODE_CRT/KEY`, `CRDB_CLIENT_ROOT_CRT/KEY`
+
+Most recent `terraform apply` reported `0 added, 0 changed, 0 destroyed` —
+state matches the .tf files exactly.
 
 ## Decision Makers
 

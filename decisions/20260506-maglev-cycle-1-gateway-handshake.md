@@ -50,7 +50,22 @@ A bare WebTransport client (curl, Python, or Elixir test harness) was the origin
 
 ## Status
 
-Status: Draft
+Status: Done (verified 2026-05-07)
+
+All three pass criteria verified end-to-end against the live deployment:
+
+- ✅ WebTransport/QUIC handshake without TLS error: picoquic trace shows
+  full handshake, h3 ALPN negotiated, 1-RTT keys derived
+- ✅ One datagram received: gateway returned
+  `{"id":"c1-...","ok":true,"result":"pong"}` matching the request id, in
+  ~880ms over real internet
+- ✅ Client exits cleanly: `quit(0)`, exit code 0, no orphaned process
+
+The handshake test client lives at
+[`multiplayer-fabric-cycle-tests/cycle-1-gateway-handshake/cycle1.gd`](https://github.com/V-Sekai-fire/multiplayer-fabric-cycle-tests/blob/main/cycle-1-gateway-handshake/cycle1.gd).
+Note: the ping is answered directly by the gateway's
+`Gateway.Router.dispatch/1` (`router.ex:55`), not proxied to the zone server.
+Zone-routing is exercised in cycle 5+.
 
 ## Decision Makers
 
