@@ -358,87 +358,87 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even">
 <td>3</td>
-<td>6</td>
-<td>16 clients (14 taskweft bots + PCVR + Steam Deck); broadcast at MMOG load</td>
-<td>1, 2</td>
-<td><a href="../decisions/20260506-maglev-cycle-3-dual-client.html">cycle-3</a></td>
-</tr>
-<tr class="odd">
-<td>4</td>
-<td>7</td>
-<td>IK routing and merge: format proven at 1 Hz, merge logic at 10 Hz</td>
-<td>3</td>
-<td><a href="../decisions/20260506-maglev-cycle-4-ik-routing.html">cycle-4</a></td>
-</tr>
-<tr class="even">
-<td>5</td>
-<td>6</td>
-<td>Full headset-rate IK merged without head-of-line blocking</td>
-<td>4</td>
-<td><a href="../decisions/20260506-maglev-cycle-5-ik-merge.html">cycle-5</a></td>
-</tr>
-<tr class="odd">
-<td>6</td>
 <td>7</td>
 <td>Baker: train scene + VRM avatars via aria-storage → uro (parallel)</td>
 <td>1</td>
-<td><a href="../decisions/20260506-maglev-cycle-6-baker.html">cycle-6</a></td>
+<td><a href="../decisions/20260506-maglev-cycle-3-baker.html">cycle-3</a></td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>8</td>
+<td>Direct uro → CockroachDB connection; mTLS, IPv6, prepare:unnamed (parallel)</td>
+<td>1</td>
+<td><a href="../decisions/20260506-maglev-cycle-4-db-connection.html">cycle-4</a></td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>7</td>
+<td>Zone-console (ratatui TUI) connects and shows tick rate (parallel)</td>
+<td>1</td>
+<td><a href="../decisions/20260506-maglev-cycle-5-zone-console.html">cycle-5</a></td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>6</td>
+<td>16 clients (14 taskweft bots + PCVR + Steam Deck); broadcast at MMOG load</td>
+<td>1, 2</td>
+<td><a href="../decisions/20260506-maglev-cycle-6-mmog-load.html">cycle-6</a></td>
 </tr>
 <tr class="even">
 <td>7</td>
+<td>7</td>
+<td>IK routing and merge: format proven at 1 Hz, merge logic at 10 Hz</td>
 <td>6</td>
-<td>Banking train + stationary cores replicate; VRM avatars load from chunk store</td>
-<td>5, 6</td>
-<td><a href="../decisions/20260506-maglev-cycle-7-physics-vrm.html">cycle-7</a></td>
+<td><a href="../decisions/20260506-maglev-cycle-7-ik-routing.html">cycle-7</a></td>
 </tr>
 <tr class="odd">
 <td>8</td>
 <td>6</td>
-<td>Rolling cores under banking + causal ordering of core-slot events</td>
-<td>7, 2</td>
-<td><a href="../decisions/20260506-maglev-cycle-8-dynamic-physics-score.html">cycle-8</a></td>
+<td>Full headset-rate IK merged without head-of-line blocking</td>
+<td>7</td>
+<td><a href="../decisions/20260506-maglev-cycle-8-ik-merge.html">cycle-8</a></td>
 </tr>
 <tr class="even">
 <td>9</td>
-<td>8</td>
-<td>Direct uro → CockroachDB connection; mTLS, IPv6, prepare:unnamed (parallel)</td>
-<td>1</td>
-<td><a href="../decisions/20260506-maglev-cycle-9-db-connection.html">cycle-9</a></td>
+<td>6</td>
+<td>Banking train + stationary cores replicate; VRM avatars load from chunk store</td>
+<td>8, 3</td>
+<td><a href="../decisions/20260506-maglev-cycle-9-physics-vrm.html">cycle-9</a></td>
 </tr>
 <tr class="odd">
 <td>10</td>
 <td>6</td>
-<td>Full causal write: persona zone commits; uro persists score</td>
-<td>8, 9</td>
-<td><a href="../decisions/20260506-maglev-cycle-10-db-write.html">cycle-10</a></td>
+<td>Rolling cores under banking + causal ordering of core-slot events</td>
+<td>9, 2, 5</td>
+<td><a href="../decisions/20260506-maglev-cycle-10-dynamic-physics-score.html">cycle-10</a></td>
 </tr>
 <tr class="even">
 <td>11</td>
-<td>7</td>
-<td>Zone-console (ratatui TUI) connects and shows tick rate (parallel)</td>
-<td>1</td>
-<td><a href="../decisions/20260506-maglev-cycle-11-zone-console.html">cycle-11</a></td>
+<td>6</td>
+<td>Full causal write: persona zone commits; uro persists score</td>
+<td>10, 4</td>
+<td><a href="../decisions/20260506-maglev-cycle-11-db-write.html">cycle-11</a></td>
 </tr>
 <tr class="odd">
 <td>12</td>
 <td>3</td>
 <td>Game cycle planning: scoped ADRs and estimates for drone AI, combat, grab, slot, timer, camera modes</td>
-<td>7</td>
+<td>9</td>
 <td><a href="../decisions/20260506-maglev-cycle-12-game-planning.html">cycle-12</a></td>
 </tr>
 </tbody>
 </table>
-<p>Taskweft-confirmed ordering: 12 infrastructure cycles (0–11), then Cycle 12 (game planning). 12 cycles total (8 sequential, 4 parallel). Cycle 0 gates everything. Parallel tracks 2, 6, 9, 11 all start after Cycle 1; Cycle 2 (observability) must complete before Cycle 3, and Cycle 6 (baker) must complete before Cycle 7; bake jobs (1–3 h) always complete before the networking cycles (≥1 day each). Cycles 4 and 7 each absorb what were previously two separate cycles, reducing the number of cycles between each demoable milestone.</p>
-<p>Cycle 4 combines 1 Hz routing and 10 Hz merge into one cycle; Cycle 5 adds full headset rate. If the team is confident in the merge after Cycle 4, Cycle 5 can be skipped.</p>
-<p><code>multiplayer-fabric-predictive-bvh</code> (interest management via predictive BVH) is exercised in Cycle 8: with 16 moving clients the BVH computes at least 2 distinct interest zones, verified in zone-console. Full cross-zone interest management (multiple zone servers) is left for a separate cycle series.</p>
+<p>Taskweft-confirmed ordering: 13 cycles (0–12) running in number order. Cycle 0 gates everything. Parallel tracks 2–5 all start after Cycle 1; Cycle 2 (observability) must complete before Cycle 6; Cycle 3 (baker) must complete before Cycle 9; Cycle 5 (zone-console) must complete before Cycle 10; bake jobs (1–3 h) always complete before the networking cycles (≥1 day each).</p>
+<p>Cycle 7 combines 1 Hz routing and 10 Hz merge into one cycle; Cycle 8 adds full headset rate. If the team is confident in the merge after Cycle 7, Cycle 8 can be skipped.</p>
+<p><code>multiplayer-fabric-predictive-bvh</code> (interest management via predictive BVH) is exercised in Cycle 10: with 16 moving clients the BVH computes at least 2 distinct interest zones, verified in zone-console. Full cross-zone interest management (multiple zone servers) is left for a separate cycle series.</p>
 </section>
 <section id="cris-score" class="level2">
 <h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 53%">
-<col style="width: 17%">
-<col style="width: 28%">
+<col style="width: 9%">
+<col style="width: 3%">
+<col style="width: 87%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -478,7 +478,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="the-downsides" class="level2">
 <h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>Cycle 8 requires Cyberprep art assets and MToon shaders tuned for both targets before it can run. Physics replication will stress WebTransport bandwidth. If the persona zone goes down, that player’s attributes are offline until it recovers. The shared-world UX for a standing VR player and a seated thumbstick player needs a separate design pass that cannot begin until Cycle 8 is stable.</p>
+<p>Cycle 10 requires Cyberprep art assets and MToon shaders tuned for both targets before it can run. Physics replication will stress WebTransport bandwidth. If the persona zone goes down, that player’s attributes are offline until it recovers. The shared-world UX for a standing VR player and a seated thumbstick player needs a separate design pass that cannot begin until Cycle 10 is stable.</p>
 <p>Three gaps against industry par remain out of scope for this smoke test. Network condition simulation (artificial latency, jitter, packet loss) is standard in Unity Netcode, Photon, and Mirror but is not injected in these cycles. Reconnect storm testing — all 16 clients disconnecting and reconnecting simultaneously — is absent; VRChat’s largest outage traced to this failure mode. Automated CI/CD execution is also absent; industry runs a 5-minute smoke gate on every deploy, whereas these cycles are human-run, week-scale exercises.</p>
 </section>
 <section id="the-road-not-taken" class="level2">

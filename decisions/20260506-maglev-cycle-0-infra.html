@@ -329,7 +329,13 @@ ul.task-list li input[type="checkbox"] {
 <li>uro app exists and is reachable on the 6PN private network</li>
 <li>Observability app exists with persistent volume</li>
 </ul>
-<p>Pass criteria: - [ ] <code>fly status --app multiplayer-fabric-gateway</code> shows running; dedicated IPv4 assigned - [ ] CockroachDB volume attached; <code>fly volumes list</code> confirms the volume is in the correct region - [ ] uro app reachable on Fly’s 6PN private network - [ ] Secrets for mTLS certs present (<code>fly secrets list</code> shows expected keys for gateway and uro)</p>
+<p>Pass criteria:</p>
+<ul class="task-list">
+<li><label><input type="checkbox"><code>fly status --app multiplayer-fabric-gateway</code> shows running; dedicated IPv4 assigned</label></li>
+<li><label><input type="checkbox">CockroachDB volume attached; <code>fly volumes list</code> confirms the volume is in the correct region</label></li>
+<li><label><input type="checkbox">uro app reachable on Fly’s 6PN private network</label></li>
+<li><label><input type="checkbox">Secrets for mTLS certs present (<code>fly secrets list</code> shows expected keys for gateway and uro)</label></li>
+</ul>
 </section>
 <section id="estimate" class="level2">
 <h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
@@ -339,9 +345,9 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 53%">
-<col style="width: 17%">
-<col style="width: 28%">
+<col style="width: 11%">
+<col style="width: 3%">
+<col style="width: 84%">
 </colgroup>
 <thead>
 <tr class="header">

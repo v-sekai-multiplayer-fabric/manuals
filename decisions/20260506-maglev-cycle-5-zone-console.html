@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>maglev-cycle-6-baker – V-Sekai Fire — Manuals</title>
+<title>maglev-cycle-5-zone-console – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -22,41 +22,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -321,7 +286,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#maglev-cycle-6-baker-pipeline" id="toc-maglev-cycle-6-baker-pipeline" class="nav-link active" data-scroll-target="#maglev-cycle-6-baker-pipeline">Maglev Cycle 6: Baker Pipeline</a>
+  <li><a href="#maglev-cycle-5-zone-console-tui-observer" id="toc-maglev-cycle-5-zone-console-tui-observer" class="nav-link active" data-scroll-target="#maglev-cycle-5-zone-console-tui-observer">Maglev Cycle 5: Zone-Console TUI Observer</a>
   <ul class="collapse">
   <li><a href="#the-context" id="toc-the-context" class="nav-link" data-scroll-target="#the-context">The Context</a></li>
   <li><a href="#the-problem-statement" id="toc-the-problem-statement" class="nav-link" data-scroll-target="#the-problem-statement">The Problem Statement</a></li>
@@ -336,7 +301,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further Reading</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/V-Sekai-fire/manuals/edit/main/decisions/20260506-maglev-cycle-6-baker.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/V-Sekai-fire/manuals/edit/main/decisions/20260506-maglev-cycle-5-zone-console.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
@@ -345,42 +310,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="maglev-cycle-6-baker-pipeline" class="level1">
-<h1>Maglev Cycle 6: Baker Pipeline</h1>
+<section id="maglev-cycle-5-zone-console-tui-observer" class="level1">
+<h1>Maglev Cycle 5: Zone-Console TUI Observer</h1>
 <section id="the-context" class="level2">
 <h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>The Maglev train scene and player VRM avatars must be baked before Cycle 7 (physics replication), which is the first cycle to load actual game assets into the zone server. The baker pipeline runs as an on-demand Fly Machine, depends only on the Fly infrastructure proven in Cycle 1, and can run in parallel with Cycles 3–7.</p>
-<p><code>multiplayer-fabric-baker</code> uses Godot in headless editor mode (<code>godot.linuxbsd.editor.double.x86_64</code>, built from <code>multiplayer-fabric-baker</code> via <code>ghcr.io/v-sekai-fire/godot-editor-double:latest</code>) to validate and export scenes. <code>aria-storage</code> chunks the output using casync/desync <code>.caibx</code> format with zstd compression, uploads chunks to the zone-backend chunk store, and posts the <code>.caibx</code> index to uro at <code>/storage/:id/bake</code>.</p>
+<p><code>multiplayer-fabric-zone-console</code> is a ratatui TUI that observes the zone over WebTransport. It is in the production stack and is the operator’s primary visibility into zone health during and after mission cycles. Cycle 5 depends only on Cycle 1 (zone server live) and runs in parallel with the game-logic track.</p>
 </section>
 <section id="the-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>The Cyberprep train environment (MToon shaders, banking train geometry) and the PCVR and Steam Deck VRM avatars have not been validated and stored through the baker pipeline under the Fly deployment. Without baked assets in the chunk store, the zone server in Cycle 7 cannot load the scene.</p>
+<p>The zone-console has not connected to the zone server under the Fly deployment and confirmed it can display entity state and tick rate. Without a passing Cycle 5, operators have no real-time view into the zone during Cycles 9–10, where physics desync and causal ordering failures are the primary risks.</p>
 </section>
 <section id="design" class="level2">
 <h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>Trigger two bake jobs via the Fly Machines API:</p>
-<ol type="1">
-<li><strong>Train environment bake</strong>: <code>multiplayer-fabric-baker</code> validates the Maglev train scene, exports it, chunks it with aria-storage, and posts the index to uro.</li>
-<li><strong>Avatar bake</strong>: same pipeline for the PCVR player VRM and the Steam Deck player VRM.</li>
-</ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">flyctl</span> machine run registry.fly.io/multiplayer-fabric-baker:latest <span class="dt">\</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--app</span> multiplayer-fabric-baker <span class="dt">\</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--env</span> ASSET_ID=<span class="op">&lt;</span>uuid<span class="op">&gt;</span> <span class="dt">\</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--env</span> URO_URL=https://hub.chibifire.com <span class="dt">\</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--</span> avatar scenes/<span class="op">&lt;</span>uuid<span class="op">&gt;</span>.tscn out/<span class="op">&lt;</span>uuid<span class="op">&gt;</span>.scn</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Pass criteria: - [ ] Both bake jobs exit 0 - [ ] <code>.caibx</code> index appears in uro at <code>/storage/:id/bake</code> for each asset - [ ] Zone server can fetch and assemble the train scene from the chunk store before Cycle 7 begins</p>
+<p>Start zone-console targeting the Fly zone server. Confirm the TUI displays: connected status, current tick rate (targeting 20 Hz), and at least one entity visible in the entity list.</p>
+<p>Pass criteria:</p>
+<ul class="task-list">
+<li><label><input type="checkbox">zone-console connects without error</label></li>
+<li><label><input type="checkbox">Tick rate displayed at 15 Hz or above (full 20 Hz target confirmed in Cycle 10)</label></li>
+<li><label><input type="checkbox">At least one entity visible in the TUI entity list</label></li>
+<li><label><input type="checkbox">Clean disconnect on exit with no orphaned connection</label></li>
+</ul>
 </section>
 <section id="estimate" class="level2">
 <h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
-<p><strong>3 days</strong> (2026-05-09 → 2026-05-13, parallel). The baker pipeline is in production on Fly (14 days of commits 2026-04-23 to 2026-05-06). The work is Maglev-specific bake config (MToon shader settings, VRM export params) and a Fly Machine invocation test. Art assets are a separate art track not counted here.</p>
+<p><strong>2 days</strong> (2026-05-09 → 2026-05-12, parallel). Zone-console was built from scratch in 6 working days (2026-04-21–28). The work here is connecting the existing TUI to the deployed Fly gateway rather than a local target — config and endpoint change only.</p>
 </section>
 <section id="cris-score" class="level2">
 <h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 53%">
-<col style="width: 17%">
-<col style="width: 28%">
+<col style="width: 12%">
+<col style="width: 4%">
+<col style="width: 83%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -393,38 +354,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td><strong>C</strong>omplexity</td>
 <td>7</td>
-<td>The baker pipeline is in production use; the only unknowns are the Maglev-specific MToon shader configuration and VRM avatar export settings.</td>
+<td>WebTransport observer is simpler than the game clients; the risk is ratatui rendering on headless CI.</td>
 </tr>
 <tr class="even">
 <td><strong>R</strong>each</td>
-<td>10</td>
-<td>Cycles 8–9 cannot load game assets without baked chunk store entries.</td>
+<td>9</td>
+<td>Operators need this during Cycles 4–2 to confirm tick rate holds under dynamic physics load.</td>
 </tr>
 <tr class="odd">
 <td><strong>I</strong>mpediment</td>
-<td>9</td>
-<td>A bake failure before Cycle 7 blocks the entire physics and scenario track.</td>
+<td>7</td>
+<td>A missing observer does not block gameplay but leaves Cycles 4–2 without operator-facing monitoring.</td>
 </tr>
 <tr class="even">
 <td><strong>S</strong>takeholder</td>
 <td>10</td>
-<td>Required before the first physics cycle and the full Maglev mission scenario.</td>
+<td>Operator visibility tool for the production stack.</td>
 </tr>
 <tr class="odd">
 <td><strong>Total</strong></td>
-<td>8.75</td>
-<td>Build after Cycle 1 passes, in parallel with Cycles 3–7.</td>
+<td>8.25</td>
+<td>Build after Cycle 1 passes, in parallel with Cycles 6–11.</td>
 </tr>
 </tbody>
 </table>
 </section>
 <section id="the-downsides" class="level2">
 <h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>Building the Cyberprep environment with MToon shaders tuned for both Steam Deck and PCVR requires dedicated art work. Bake failures surface late if the pipeline is not tested early; running this cycle in parallel with Cycles 3–7 surfaces them while networking cycles are still running.</p>
+<p>A passing Cycle 5 does not validate zone-console under load; the full 20 Hz tick rate and entity count targets are confirmed during Cycle 10.</p>
 </section>
 <section id="the-road-not-taken" class="level2">
 <h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<p>Deferring the bake to just before Cycle 7 was rejected — a failed bake stalls the physics track after the networking cycles that preceded Cycle 7 have already completed.</p>
+<p>Deferring to after Cycle 10 was rejected — the observer is needed during Cycle 10 to confirm tick rate holds at 20 Hz under dynamic physics load.</p>
 </section>
 <section id="status" class="level2">
 <h2 class="anchored" data-anchor-id="status">Status</h2>
@@ -434,31 +395,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
 <ul>
 <li>Lead Architect / Fabric Maintainer</li>
-<li>Game Director</li>
 </ul>
 </section>
 <section id="tags" class="level2">
 <h2 class="anchored" data-anchor-id="tags">Tags</h2>
 <ul>
-<li>maglev-cycle-6, baker, aria-storage, vrm, galls-law, 20260506-maglev-cycle-6-baker, present-proposal-template</li>
+<li>maglev-cycle-5, zone-console, ratatui, observer, galls-law, 20260506-maglev-cycle-5-zone-console, present-proposal-template</li>
 </ul>
 </section>
 <section id="further-reading" class="level2">
 <h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
-<pre><code>@techreport{20260501_fly,
-  title       = {Fly.io for deployment},
+<pre><code>@techreport{20260506_cycle1,
+  title       = {Maglev Cycle 1: Godot Client Gateway Handshake},
   institution = {V-Sekai Fire},
   year        = {2026},
   type        = {Architecture Decision Record},
-  note        = {decisions/20260501-fly-io-for-deployment.md}
+  note        = {decisions/20260506-maglev-cycle-1-gateway-handshake.md}
 }
 
-@techreport{20260506_ghcr,
-  title       = {GHCR packages must be built by the repo that consumes them},
+@techreport{20260501_webtransport,
+  title       = {Use WebTransport over QUIC for game traffic},
   institution = {V-Sekai Fire},
   year        = {2026},
   type        = {Architecture Decision Record},
-  note        = {decisions/20260506-ghcr-package-ownership-same-repo.md}
+  note        = {decisions/20260501-webtransport-over-quic-for-game-traffic.md}
 }
 
 @misc{v_sekai_2026,
@@ -893,7 +853,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/V-Sekai-fire/manuals/edit/main/decisions/20260506-maglev-cycle-6-baker.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/V-Sekai-fire/manuals/edit/main/decisions/20260506-maglev-cycle-5-zone-console.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

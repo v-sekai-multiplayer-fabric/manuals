@@ -330,7 +330,13 @@ ul.task-list li input[type="checkbox"] {
 <li>OTEL Collector on 4317 (gRPC) and 4318 (HTTP), routing to all three backends</li>
 </ul>
 <p>Trigger a single gateway request and a single zone tick. The zone server binary includes the <code>opentelemetry-godot</code> module compiled into the engine (verify with <code>--test --test-case="*OTel*"</code> before the run). Verify each service emits OTLP spans to the Collector.</p>
-<p>Pass criteria: - [ ] VictoriaTraces UI at <code>http://localhost:10428/select/vmui</code> shows spans from at least one gateway request - [ ] VictoriaMetrics at port 8428 returns a non-empty result for a zone-server metric query - [ ] VictoriaLogs at port 9428 shows at least one log line from uro - [ ] All four services are Apache 2.0 (no Tempo, no Jaeger)</p>
+<p>Pass criteria:</p>
+<ul class="task-list">
+<li><label><input type="checkbox">VictoriaTraces UI at <code>http://localhost:10428/select/vmui</code> shows spans from at least one gateway request</label></li>
+<li><label><input type="checkbox">VictoriaMetrics at port 8428 returns a non-empty result for a zone-server metric query</label></li>
+<li><label><input type="checkbox">VictoriaLogs at port 9428 shows at least one log line from uro</label></li>
+<li><label><input type="checkbox">All four services are Apache 2.0 (no Tempo, no Jaeger)</label></li>
+</ul>
 </section>
 <section id="estimate" class="level2">
 <h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
@@ -340,9 +346,9 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 53%">
-<col style="width: 17%">
-<col style="width: 28%">
+<col style="width: 7%">
+<col style="width: 2%">
+<col style="width: 89%">
 </colgroup>
 <thead>
 <tr class="header">
