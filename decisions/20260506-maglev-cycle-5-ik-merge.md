@@ -13,9 +13,9 @@ Cycle 4 confirms routing and merge at 10 Hz. Cycle 5 raises the PCVR client to o
 The PCVR client sends 6-DOF IK datagrams at full headset rate. The Steam Deck client sends gamepad datagrams at normal cadence. Both arrive on UDP 443. The gateway merges them per tick and forwards to the zone server on UDP 7443. The world is static.
 
 Pass criteria:
-- Zone server processes ticks containing both input types without stalls or skipped events
-- No gamepad datagram is silently dropped over 60 seconds under full IK load
-- Gateway CPU stays within budget under both streams at full rate
+- [ ] Zone server processes ticks containing both input types without stalls or skipped events
+- [ ] No gamepad datagram is silently dropped over 60 seconds under full IK load
+- [ ] Gateway CPU stays within budget under both streams at full rate
 
 ## CRIS Score
 

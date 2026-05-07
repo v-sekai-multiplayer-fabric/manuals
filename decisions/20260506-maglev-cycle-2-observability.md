@@ -20,10 +20,10 @@ Start the observability stack on the Fly deployment:
 Trigger a single gateway request and a single zone tick. The zone server binary includes the `opentelemetry-godot` module compiled into the engine (verify with `--test --test-case="*OTel*"` before the run). Verify each service emits OTLP spans to the Collector.
 
 Pass criteria:
-- VictoriaTraces UI at `http://localhost:10428/select/vmui` shows spans from at least one gateway request
-- VictoriaMetrics at port 8428 returns a non-empty result for a zone-server metric query
-- VictoriaLogs at port 9428 shows at least one log line from uro
-- All four services are Apache 2.0 (no Tempo, no Jaeger)
+- [ ] VictoriaTraces UI at `http://localhost:10428/select/vmui` shows spans from at least one gateway request
+- [ ] VictoriaMetrics at port 8428 returns a non-empty result for a zone-server metric query
+- [ ] VictoriaLogs at port 9428 shows at least one log line from uro
+- [ ] All four services are Apache 2.0 (no Tempo, no Jaeger)
 
 ## CRIS Score
 

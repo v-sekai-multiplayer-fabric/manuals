@@ -13,10 +13,10 @@ The zone-console has not connected to the zone server under the Fly deployment a
 Start zone-console targeting the Fly zone server. Confirm the TUI displays: connected status, current tick rate (targeting 20 Hz), and at least one entity visible in the entity list.
 
 Pass criteria:
-- zone-console connects without error
-- Tick rate displayed at 15 Hz or above (full 20 Hz target confirmed in Cycle 8)
-- At least one entity visible in the TUI entity list
-- Clean disconnect on exit with no orphaned connection
+- [ ] zone-console connects without error
+- [ ] Tick rate displayed at 15 Hz or above (full 20 Hz target confirmed in Cycle 8)
+- [ ] At least one entity visible in the TUI entity list
+- [ ] Clean disconnect on exit with no orphaned connection
 
 ## CRIS Score
 

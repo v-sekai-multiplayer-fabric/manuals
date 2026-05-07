@@ -19,12 +19,12 @@ Load the Maglev train scene. The train banks on a fixed schedule. Quantum Data-C
 The PCVR client sees the car as a waist-height diorama; the Steam Deck client sees the same instance as an isometric action-RPG.
 
 Pass criteria:
-- No entity desync between any of the 16 clients over the 3-minute window
-- Core positions agree within one physics tick across all clients at mission end
-- Zone server tick rate holds at 20 Hz under banking motion, drone AI, and 16-client load
-- Every core-slot `QueueOp` reaches the persona zone; VClock values advance monotonically
-- No QueueOp accepted out of causal order
-- `multiplayer-fabric-predictive-bvh` computes at least 2 distinct interest zones across the 16 clients; zone-console confirms all 16 entities visible
+- [ ] No entity desync between any of the 16 clients over the 3-minute window
+- [ ] Core positions agree within one physics tick across all clients at mission end
+- [ ] Zone server tick rate holds at 20 Hz under banking motion, drone AI, and 16-client load
+- [ ] Every core-slot `QueueOp` reaches the persona zone; VClock values advance monotonically
+- [ ] No QueueOp accepted out of causal order
+- [ ] `multiplayer-fabric-predictive-bvh` computes at least 2 distinct interest zones across the 16 clients; zone-console confirms all 16 entities visible
 
 The Cyberprep environment with MToon shaders tuned for both targets is the first art cost in the cycle sequence and cannot begin until Cycle 5 is stable.
 

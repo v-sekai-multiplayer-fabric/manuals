@@ -13,12 +13,12 @@ With one Godot client verified end-to-end and the observability stack live (Cycl
 16 clients connect to the gateway simultaneously. All receive datagram state from the same zone server instance each tick. One static entity in an empty world.
 
 Pass criteria:
-- All 16 clients receive consistent entity state each tick for 60 seconds
-- No client observes a tick gap or duplicate
-- Zone-console shows 16 entities at 20 Hz
-- Gateway process memory stays flat under 16 connections
-- All 14 bots disconnect and reconnect simultaneously; gateway recovers within 5 seconds and all clients resync without a restart
-- Under 100 ms injected latency and 2% packet loss, no client desyncs over 30 seconds
+- [ ] All 16 clients receive consistent entity state each tick for 60 seconds
+- [ ] No client observes a tick gap or duplicate
+- [ ] Zone-console shows 16 entities at 20 Hz
+- [ ] Gateway process memory stays flat under 16 connections
+- [ ] All 14 bots disconnect and reconnect simultaneously; gateway recovers within 5 seconds and all clients resync without a restart
+- [ ] Under 100 ms injected latency and 2% packet loss, no client desyncs over 30 seconds
 
 ## CRIS Score
 

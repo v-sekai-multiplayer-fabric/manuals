@@ -21,9 +21,9 @@ spatial zone  →  QueueOp(VClock)  →  persona zone commits
 ```
 
 Pass criteria:
-- Committed score appears in CockroachDB within one tick of mission end
-- `RelReplica.stale` correctly reflects the write on all nodes in the interest band
-- No write occurs from any zone other than the persona authority
+- [ ] Committed score appears in CockroachDB within one tick of mission end
+- [ ] `RelReplica.stale` correctly reflects the write on all nodes in the interest band
+- [ ] No write occurs from any zone other than the persona authority
 
 ## CRIS Score
 

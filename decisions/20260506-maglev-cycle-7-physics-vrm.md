@@ -17,11 +17,11 @@ Load the Maglev train scene on the zone server. The train banks on a fixed sched
 The PCVR client sees the car as a waist-height diorama; the Steam Deck client sees the same instance as an isometric action-RPG. Both see their respective VRM avatars.
 
 Pass criteria:
-- Zone server loads the Maglev train scene from the chunk store
-- Core positions agree between both clients each tick for 60 seconds under continuous banking
-- Zone server tick rate holds at 20 Hz with physics active
-- VRM avatars (PCVR and Steam Deck) load from the chunk store without error; humanoid skeleton root present
-- No entity desync over the run
+- [ ] Zone server loads the Maglev train scene from the chunk store
+- [ ] Core positions agree between both clients each tick for 60 seconds under continuous banking
+- [ ] Zone server tick rate holds at 20 Hz with physics active
+- [ ] VRM avatars (PCVR and Steam Deck) load from the chunk store without error; humanoid skeleton root present
+- [ ] No entity desync over the run
 
 ## CRIS Score
 

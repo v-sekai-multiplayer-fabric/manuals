@@ -15,10 +15,10 @@ The PCVR client — running the solved `multiplayer-fabric-interaction-system` a
 The 1 Hz phase confirms the IK datagram format parses correctly. The 10 Hz phase confirms the gateway's merge logic is correct under concurrent input before full rate is introduced.
 
 Pass criteria:
-- Zone server receives and logs at least one IK datagram without parse error at 1 Hz
-- Zone server receives a merged tick containing both input types at 10 Hz
-- No gamepad datagram dropped over 60 seconds at 10 Hz
-- No gateway crash or restart
+- [ ] Zone server receives and logs at least one IK datagram without parse error at 1 Hz
+- [ ] Zone server receives a merged tick containing both input types at 10 Hz
+- [ ] No gamepad datagram dropped over 60 seconds at 10 Hz
+- [ ] No gateway crash or restart
 
 ## CRIS Score
 

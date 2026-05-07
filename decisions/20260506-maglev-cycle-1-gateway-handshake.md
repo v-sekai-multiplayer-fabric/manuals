@@ -19,9 +19,9 @@ The zone server is `godot.linuxbsd.template_release.double.x86_64` built from `V
 The gateway runs as root on UDP 443 (port < 1024 requires root or `CAP_NET_BIND_SERVICE`) and proxies to the zone server on UDP 7443. The Fly DNS record for the gateway endpoint is DNS-only — no Cloudflare proxy, which cannot forward QUIC/UDP. Both services deploy in the `iad` region and communicate over Fly's 6PN private network.
 
 Pass criteria:
-- Godot client establishes the WebTransport/QUIC connection without TLS or handshake error
-- Client receives and logs one **datagram** (not a stream) from the zone server
-- Client exits cleanly; no orphaned Godot process or open port
+- [ ] Godot client establishes the WebTransport/QUIC connection without TLS or handshake error
+- [ ] Client receives and logs one **datagram** (not a stream) from the zone server
+- [ ] Client exits cleanly; no orphaned Godot process or open port
 
 Every subsequent cycle extends this scene.
 

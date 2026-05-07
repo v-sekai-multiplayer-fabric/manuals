@@ -26,9 +26,9 @@ flyctl machine run registry.fly.io/multiplayer-fabric-baker:latest \
 ```
 
 Pass criteria:
-- Both bake jobs exit 0
-- `.caibx` index appears in uro at `/storage/:id/bake` for each asset
-- Zone server can fetch and assemble the train scene from the chunk store before Cycle 7 begins
+- [ ] Both bake jobs exit 0
+- [ ] `.caibx` index appears in uro at `/storage/:id/bake` for each asset
+- [ ] Zone server can fetch and assemble the train scene from the chunk store before Cycle 7 begins
 
 ## CRIS Score
 

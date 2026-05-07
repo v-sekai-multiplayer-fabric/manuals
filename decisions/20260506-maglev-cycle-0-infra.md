@@ -18,10 +18,10 @@ Run `terraform apply` in `multiplayer-fabric-infra`. Verify via Fly CLI:
 - Observability app exists with persistent volume
 
 Pass criteria:
-- `fly status --app multiplayer-fabric-gateway` shows running; dedicated IPv4 assigned
-- CockroachDB volume attached; `fly volumes list` confirms the volume is in the correct region
-- uro app reachable on Fly's 6PN private network
-- Secrets for mTLS certs present (`fly secrets list` shows expected keys for gateway and uro)
+- [ ] `fly status --app multiplayer-fabric-gateway` shows running; dedicated IPv4 assigned
+- [ ] CockroachDB volume attached; `fly volumes list` confirms the volume is in the correct region
+- [ ] uro app reachable on Fly's 6PN private network
+- [ ] Secrets for mTLS certs present (`fly secrets list` shows expected keys for gateway and uro)
 
 ## CRIS Score
 
