@@ -30,8 +30,9 @@ Each layer is a separate cycle — a working system and a gate before the next b
 | 9  | 8 | Direct uro → CockroachDB connection; mTLS, IPv6, prepare:unnamed (parallel)    | 1    | [cycle-9](20260506-maglev-cycle-9-db-connection.md) |
 | 10 | 6 | Full causal write: persona zone commits; uro persists score                     | 8, 9 | [cycle-10](20260506-maglev-cycle-10-db-write.md) |
 | 11 | 7 | Zone-console (ratatui TUI) connects and shows tick rate (parallel)              | 1    | [cycle-11](20260506-maglev-cycle-11-zone-console.md) |
+| 12 | 3 | Game cycle planning: scoped ADRs and estimates for drone AI, combat, grab, slot, timer, camera modes | 7 | [cycle-12](20260506-maglev-cycle-12-game-planning.md) |
 
-Taskweft-confirmed ordering: 12 cycles total (8 sequential, 4 parallel). Cycle 0 gates everything. Parallel tracks 2, 6, 9, 11 all start after Cycle 1; Cycle 2 (observability) must complete before Cycle 3, and Cycle 6 (baker) must complete before Cycle 7; bake jobs (1–3 h) always complete before the networking cycles (≥1 day each). Cycles 4 and 7 each absorb what were previously two separate cycles, reducing the number of cycles between each demoable milestone.
+Taskweft-confirmed ordering: 12 infrastructure cycles (0–11), then Cycle 12 (game planning). 12 cycles total (8 sequential, 4 parallel). Cycle 0 gates everything. Parallel tracks 2, 6, 9, 11 all start after Cycle 1; Cycle 2 (observability) must complete before Cycle 3, and Cycle 6 (baker) must complete before Cycle 7; bake jobs (1–3 h) always complete before the networking cycles (≥1 day each). Cycles 4 and 7 each absorb what were previously two separate cycles, reducing the number of cycles between each demoable milestone.
 
 Cycle 4 combines 1 Hz routing and 10 Hz merge into one cycle; Cycle 5 adds full headset rate. If the team is confident in the merge after Cycle 4, Cycle 5 can be skipped.
 

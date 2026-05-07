@@ -25,6 +25,10 @@ Pass criteria:
 - [ ] VictoriaLogs at port 9428 shows at least one log line from uro
 - [ ] All four services are Apache 2.0 (no Tempo, no Jaeger)
 
+## Estimate
+
+**3 days** (2026-05-09 → 2026-05-13, parallel). VictoriaMetrics/Logs/Traces share a config pattern; the only unknown is Fly volume persistence. Comparable to the zone-console Fly deploy (2 days of config commits on 2026-04-24–25).
+
 ## CRIS Score
 
 | Factor          | Score | Evidence |

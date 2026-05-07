@@ -17,6 +17,10 @@ Pass criteria:
 - [ ] No gamepad datagram is silently dropped over 60 seconds under full IK load
 - [ ] Gateway CPU stays within budget under both streams at full rate
 
+## Estimate
+
+**5 days** (2026-05-26 → 2026-06-02). The merge path is an extension of Cycle 4; the risk is head-of-line behaviour under load, which requires profiling time. A hardware re-run on physical Meta Quest hardware before Cycle 7 adds 1 day outside this window.
+
 ## CRIS Score
 
 | Factor          | Score | Evidence |

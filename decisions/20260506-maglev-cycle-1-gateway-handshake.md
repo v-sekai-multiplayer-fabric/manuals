@@ -25,6 +25,10 @@ Pass criteria:
 
 Every subsequent cycle extends this scene.
 
+## Estimate
+
+**2 days** (2026-05-07 → 2026-05-08). The gateway was built from scratch in one day (25+ commits on 2026-05-05); the zone server initial deploy took two days (2026-05-05–06). The remaining work is a minimal headless Godot scene that connects and logs one datagram.
+
 ## CRIS Score
 
 | Factor          | Score | Evidence |

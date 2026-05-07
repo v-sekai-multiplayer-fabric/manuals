@@ -25,6 +25,10 @@ Pass criteria:
 - [ ] `RelReplica.stale` correctly reflects the write on all nodes in the interest band
 - [ ] No write occurs from any zone other than the persona authority
 
+## Estimate
+
+**5 days** (2026-06-30 → 2026-07-07). The Ecto write path to CockroachDB is proven in Cycle 9; the work is the persona zone commit flow, VClock gating on the write side, and RelReplica broadcast. No prior end-to-end causal write exists in the history.
+
 ## CRIS Score
 
 | Factor          | Score | Evidence |
