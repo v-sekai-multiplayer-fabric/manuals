@@ -8,14 +8,14 @@ The Maglev train scene and player VRM avatars must be baked before Cycle 9 (phys
 
 ## The Problem Statement
 
-The Cyberprep train environment (MToon shaders, banking train geometry) and the PCVR and Steam Deck VRM avatars have not been validated and stored through the baker pipeline under the Fly deployment. Without baked assets in the chunk store, the zone server in Cycle 9 cannot load the scene.
+The Cyberprep train environment (MToon shaders, banking train geometry) and the test VRM avatar have not been validated and stored through the baker pipeline under the Fly deployment. Without baked assets in the chunk store, the zone server in Cycle 9 cannot load the scene.
 
 ## Design
 
 Trigger two bake jobs via the Fly Machines API:
 
-1. **Train environment bake**: `multiplayer-fabric-baker` validates the Maglev train scene, exports it, chunks it with aria-storage, and posts the index to uro.
-2. **Avatar bake**: same pipeline for the PCVR player VRM and the Steam Deck player VRM.
+1. **Train environment bake**: `multiplayer-fabric-baker` validates the Maglev train scene (greybox CSG geometry is acceptable for cycle validation), exports it, chunks it with aria-storage, and posts the index to uro.
+2. **Avatar bake**: same pipeline for `multiplayer-fabric-humanoid-project/humanoid/art/mire/mire.vrm` (51 MB), used by both PCVR and Steam Deck clients in Cycle 9.
 
 ```bash
 flyctl machine run registry.fly.io/multiplayer-fabric-baker:latest \
@@ -33,7 +33,7 @@ Pass criteria:
 
 ## Estimate
 
-**3 days** (2026-05-09 → 2026-05-13, parallel). The baker pipeline is in production on Fly (14 days of commits 2026-04-23 to 2026-05-06). The work is Maglev-specific bake config (MToon shader settings, VRM export params) and a Fly Machine invocation test. Art assets are a separate art track not counted here.
+**3 days** (2026-05-09 → 2026-05-13, parallel). The baker pipeline is in production on Fly (14 days of commits 2026-04-23 to 2026-05-06). The work is Maglev-specific bake config (MToon shader settings, VRM export params) and a Fly Machine invocation test. `mire.vrm` and a greyboxed train scene are the placeholder inputs, so no art track blocks this cycle.
 
 ## CRIS Score
 

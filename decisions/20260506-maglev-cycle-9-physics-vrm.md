@@ -12,16 +12,16 @@ Physics replication to clients with different frame rates requires validation be
 
 ## Design
 
-Load the Maglev train scene on the zone server. The train banks on a fixed schedule. Quantum Data-Cores sit stationary on the floor under authoritative physics (held by a constraint). The zone server sends datagram state each tick; both clients display the core and avatar positions.
+Load the Maglev train scene (greyboxed for this cycle: a CSG floor + banking pivot is sufficient) on the zone server. The train banks on a fixed schedule. Quantum Data-Cores sit stationary on the floor under authoritative physics (held by a constraint). The zone server sends datagram state each tick; both clients display the core and avatar positions.
 
-The PCVR client sees the car as a waist-height diorama; the Steam Deck client sees the same instance as an isometric action-RPG. Both see their respective VRM avatars.
+The PCVR client sees the car as a waist-height diorama; the Steam Deck client sees the same instance as an isometric action-RPG. Both load `mire.vrm` (baked in Cycle 3 from `multiplayer-fabric-humanoid-project/humanoid/art/mire/mire.vrm`) as the avatar.
 
 Pass criteria:
 
 - [ ] Zone server loads the Maglev train scene from the chunk store
 - [ ] Core positions agree between both clients each tick for 60 seconds under continuous banking
 - [ ] Zone server tick rate holds at 20 Hz with physics active
-- [ ] VRM avatars (PCVR and Steam Deck) load from the chunk store without error; humanoid skeleton root present
+- [ ] `mire.vrm` loads from the chunk store on both clients without error; humanoid skeleton root present
 - [ ] No entity desync over the run
 
 ## Estimate
