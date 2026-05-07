@@ -1,11 +1,5 @@
 [
   {
-    "listing": "/changelog.html",
-    "items": [
-      "/changelog/2026/20260506-deck-log.html"
-    ]
-  },
-  {
     "listing": "/decisions.html",
     "items": [
       "/decisions/present-proposal-template.html",
@@ -21,6 +15,7 @@
       "/decisions/20260506-maglev-cycle-4-ik-routing.html",
       "/decisions/20260506-maglev-cycle-3-dual-client.html",
       "/decisions/20260506-maglev-cycle-2-observability.html",
+      "/decisions/20260506-maglev-cycle-12-game-planning.html",
       "/decisions/20260506-maglev-cycle-11-zone-console.html",
       "/decisions/20260506-maglev-cycle-10-db-write.html",
       "/decisions/20260506-maglev-cycle-1-gateway-handshake.html",
@@ -30,6 +25,12 @@
       "/decisions/20260501-godot-double-precision-template-release-for-zone.html",
       "/decisions/20260501-fly-io-for-deployment.html",
       "/decisions/20260501-cockroachdb-with-mtls-role-separation.html"
+    ]
+  },
+  {
+    "listing": "/changelog.html",
+    "items": [
+      "/changelog/2026/20260506-deck-log.html"
     ]
   }
 ]

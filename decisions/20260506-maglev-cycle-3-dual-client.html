@@ -291,6 +291,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#the-context" id="toc-the-context" class="nav-link" data-scroll-target="#the-context">The Context</a></li>
   <li><a href="#the-problem-statement" id="toc-the-problem-statement" class="nav-link" data-scroll-target="#the-problem-statement">The Problem Statement</a></li>
   <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design">Design</a></li>
+  <li><a href="#estimate" id="toc-estimate" class="nav-link" data-scroll-target="#estimate">Estimate</a></li>
   <li><a href="#cris-score" id="toc-cris-score" class="nav-link" data-scroll-target="#cris-score">CRIS Score</a></li>
   <li><a href="#the-downsides" id="toc-the-downsides" class="nav-link" data-scroll-target="#the-downsides">The Downsides</a></li>
   <li><a href="#the-road-not-taken" id="toc-the-road-not-taken" class="nav-link" data-scroll-target="#the-road-not-taken">The Road Not Taken</a></li>
@@ -323,6 +324,10 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="design">Design</h2>
 <p>16 clients connect to the gateway simultaneously. All receive datagram state from the same zone server instance each tick. One static entity in an empty world.</p>
 <p>Pass criteria: - [ ] All 16 clients receive consistent entity state each tick for 60 seconds - [ ] No client observes a tick gap or duplicate - [ ] Zone-console shows 16 entities at 20 Hz - [ ] Gateway process memory stays flat under 16 connections - [ ] All 14 bots disconnect and reconnect simultaneously; gateway recovers within 5 seconds and all clients resync without a restart - [ ] Under 100 ms injected latency and 2% packet loss, no client desyncs over 30 seconds</p>
+</section>
+<section id="estimate" class="level2">
+<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
+<p><strong>5 days</strong> (2026-05-13 → 2026-05-19). Taskweft bots are proven (93 PropCheck properties passing). The work is wiring 14 bots to the gateway and adding the reconnect storm and network condition harnesses. No prior multi-bot gateway test exists in the history; projecting from the gateway build pace.</p>
 </section>
 <section id="cris-score" class="level2">
 <h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
