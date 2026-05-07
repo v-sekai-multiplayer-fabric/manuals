@@ -354,14 +354,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="the-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>The Cyberprep train environment (MToon shaders, banking train geometry) and the PCVR and Steam Deck VRM avatars have not been validated and stored through the baker pipeline under the Fly deployment. Without baked assets in the chunk store, the zone server in Cycle 9 cannot load the scene.</p>
+<p>The Cyberprep train environment (MToon shaders, banking train geometry) and the test VRM avatar have not been validated and stored through the baker pipeline under the Fly deployment. Without baked assets in the chunk store, the zone server in Cycle 9 cannot load the scene.</p>
 </section>
 <section id="design" class="level2">
 <h2 class="anchored" data-anchor-id="design">Design</h2>
 <p>Trigger two bake jobs via the Fly Machines API:</p>
 <ol type="1">
-<li><strong>Train environment bake</strong>: <code>multiplayer-fabric-baker</code> validates the Maglev train scene, exports it, chunks it with aria-storage, and posts the index to uro.</li>
-<li><strong>Avatar bake</strong>: same pipeline for the PCVR player VRM and the Steam Deck player VRM.</li>
+<li><strong>Train environment bake</strong>: <code>multiplayer-fabric-baker</code> validates the Maglev train scene (greybox CSG geometry is acceptable for cycle validation), exports it, chunks it with aria-storage, and posts the index to uro.</li>
+<li><strong>Avatar bake</strong>: same pipeline for <code>multiplayer-fabric-humanoid-project/humanoid/art/mire/mire.vrm</code> (51 MB), used by both PCVR and Steam Deck clients in Cycle 9.</li>
 </ol>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">flyctl</span> machine run registry.fly.io/multiplayer-fabric-baker:latest <span class="dt">\</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--app</span> multiplayer-fabric-baker <span class="dt">\</span></span>
@@ -377,7 +377,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="estimate" class="level2">
 <h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
-<p><strong>3 days</strong> (2026-05-09 → 2026-05-13, parallel). The baker pipeline is in production on Fly (14 days of commits 2026-04-23 to 2026-05-06). The work is Maglev-specific bake config (MToon shader settings, VRM export params) and a Fly Machine invocation test. Art assets are a separate art track not counted here.</p>
+<p><strong>3 days</strong> (2026-05-09 → 2026-05-13, parallel). The baker pipeline is in production on Fly (14 days of commits 2026-04-23 to 2026-05-06). The work is Maglev-specific bake config (MToon shader settings, VRM export params) and a Fly Machine invocation test. <code>mire.vrm</code> and a greyboxed train scene are the placeholder inputs, so no art track blocks this cycle.</p>
 </section>
 <section id="cris-score" class="level2">
 <h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
