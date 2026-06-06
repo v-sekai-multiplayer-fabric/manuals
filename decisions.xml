@@ -20,6 +20,7 @@
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>The manuals repo now commits binary assets alongside prose, starting with screenshots under <code>decisions/attachments/</code>. Ad-hoc names like <code>image.png</code> collide, sort poorly, and lose their provenance once they leave the page that referenced them. What naming convention should committed assets follow so they stay unique, sortable, and self-describing?</p>
@@ -90,6 +91,7 @@
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <section id="context" class="level2">
 <h2 class="anchored" data-anchor-id="context">Context</h2>
 <p>Developers build the V-Sekai multiplayer-fabric Godot engine on two hosts from one workstation: <strong>Windows (PowerShell + MinGW)</strong> and <strong>WSL / Linux (<code>linuxbsd</code>)</strong>. Without a shared, persistent compiler cache, each host rebuilds from scratch and cache hits are lost whenever a checkout is moved or renamed.</p>
@@ -450,6 +452,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>The capabilities table lists features with a free-text status (“working”, “loses about 90%”). Free text does not say whether a feature is a throwaway experiment, a committed part of the product, or a nice-to-have. The team needs one shared vocabulary for how far along and how committed a feature is, so planning and the docs agree on what “done” means for each one.</p>
@@ -519,6 +522,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
 
 
+<p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> proposed</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>The <a href="../decisions/20260606-presence-marker-representation.html">presence marker decision</a> calls for a vague ghostly humanoid that conveys position and heading. CHI-298 proposed fitting personas with SOMA (unifying parametric body models) and ANNY; the Linear issue is canceled, but the concept is the natural basis for that ghostly form. We track only three points (head and two hands), so a full posed body is under-constrained and risks the uncanny valley. Which body model do we use, and how much of the body do we show?</p>
@@ -607,6 +611,7 @@ Stein, Jan-Philipp, and Peter Ohler. 2017. <span>“Venturing into the Uncanny V
 
 
 
+<p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> proposed</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>The <a href="../decisions/20260606-multiplayer-presence-demo-orbs.html">orb presence demo</a> draws each participant as head and hand orb clusters. In review, the orbs read as too similar: a head cluster and a hand cluster look alike, so they are easy to conflate, and a bare cluster conveys position better than heading. The 3-point model and the networking are sound; the visual marker is the weak part. What should the default marker be?</p>
@@ -681,6 +686,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 
+<p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> superseded by 20260606-presence-marker-representation.md</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>The <code>xr-grid</code> debug scene shows one skinned-mesh hero asset (a rigged mesh with a skeleton, not a VRM) on the grid as a visual landmark; it does not represent a player. Around it float clusters of small colored orbs, each encoding the pose (translation and orientation) of one tracked point — head, hand, hand — for a remote participant. What is the smallest piece that proves shared presence at the scale of a full V-Sekai Discord call?</p>
@@ -753,6 +759,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>The engine fork carries many feature branches (cassie, resonance audio, native media, speech, spatial audio, the fabric modules) that the <code>merge</code> recipe assembles onto a base. If that base tracks a moving upstream, every assembly can shift under the patches, so a green build one day can break the next from upstream churn alone. What base should the feature branches and the assembly build on?</p>
@@ -815,6 +822,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>The <a href="../decisions/20260606-multiplayer-presence-demo-orbs.html">presence demo</a> sends head and hand poses to peers over the <a href="../decisions/20260606-webtransport-http3-transport.html">WebTransport transport</a>. How are those poses sourced, encoded, and sent?</p>
@@ -872,6 +880,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 
+<p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> proposed</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>We want a small workspace where friends make tiny art-games together, watch them, and improve them on a tight loop. Players show up in the space as tracker orbs (the <a href="../decisions/20260606-multiplayer-presence-demo-orbs.html">presence demo</a>), with drawing pens (<a href="../decisions/20260606-feature-classification-poc-baseline-stretch.html">cassie</a>) as a stretch goal. Before building the workspace out, we need the smallest end-to-end thread that proves the loop runs at all. What is that thread?</p>
@@ -954,6 +963,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>The <code>manuals</code> repo had no branch protection on <code>main</code>. Changes landed by pushing directly or by manually merging pull requests one at a time, with no serialization between concurrent PRs. As the number of in-flight documentation PRs grows, two PRs can each pass against an older <code>main</code> and then conflict or break the Quarto build once both land. How should changes reach <code>main</code> so that every merge is reviewable and tested against the tip it will actually join?</p>
@@ -1018,6 +1028,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>The runtime first deployed on Fly.io (see the superseded Fly.io decision and Maglev Cycle 0). The project is moving to a self-hosted Harvester HCI cluster, where each service runs as a qcow2 VM image driven by podman quadlets. This records that Fly.io is no longer the deployment target.</p>
@@ -1074,6 +1085,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>The zone server renders shared social-VR scenes where sound sources need to be localized in 3D for every listener. Two things drive presence: binaural HRTF rendering so a source is heard at the correct azimuth and elevation over headphones, and audio probes that capture how a room colors and occludes sound so a source baked behind a wall does not leak through it. Godot’s built-in <code>AudioServer</code> does stereo panning and attenuation, but it has no HRTF path and no probe-based spatialization. How should the engine produce HRTF spatial audio with environmental probes?</p>
@@ -1138,6 +1150,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>The repository map in <code>index.md</code> described a single org, <code>V-Sekai-fire</code>, built around a <code>multiplayer-fabric</code> submodule umbrella whose repos were named <code>multiplayer-fabric-*</code>. The stack has since grown a second GitHub org, <a href="https://github.com/v-sekai-multiplayer-fabric"><code>v-sekai-multiplayer-fabric</code></a>, which now hosts the engine, the Harvester VM images, the rendering and USD research, and these manuals. The two orgs use different repo names, and the old repos do not redirect into the new org. The documentation map had drifted far enough from reality that a reader could not find the live repos.</p>
@@ -1277,6 +1290,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
 <p>The stack needs a client/server transport that carries reliable control messages and high-rate unreliable state over one connection, on both native and web clients. Which transport does the engine provide?</p>
@@ -1339,6 +1353,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <section id="context" class="level2">
 <h2 class="anchored" data-anchor-id="context">Context</h2>
 <p>The zone server binary was built by <code>multiplayer-fabric-baker</code> and pushed to <code>ghcr.io/v-sekai-fire/godot-zone-double</code>. The zone deploy workflow (in <code>multiplayer-fabric-zone</code>) used <code>--local-only</code> with <code>docker/login-action</code> to pull that image, but received 403 Forbidden.</p>
@@ -1377,6 +1392,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> superseded by 20260606-self-host-on-harvester-hci.md</p>
 <section id="the-context" class="level2">
 <h2 class="anchored" data-anchor-id="the-context">The Context</h2>
 <p>All Fly services — gateway, zone, uro, CockroachDB, observability stack — depend on Terraform having created their Fly apps, dedicated IPs, volumes, and secrets. Without applied Terraform state, no Fly app exists to deploy to and no subsequent cycle can run.</p>
@@ -1522,6 +1538,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> rejected</p>
 <section id="the-context" class="level2">
 <h2 class="anchored" data-anchor-id="the-context">The Context</h2>
 <p>With replication and banking proven in Cycle 9, Cycle 10 releases the cores to roll and runs the full mission. Causal ordering (VClock.le gating on core-slot events) is verified in the same run since mission events are its natural trigger.</p>
@@ -1644,6 +1661,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> rejected</p>
 <section id="the-context" class="level2">
 <h2 class="anchored" data-anchor-id="the-context">The Context</h2>
 <p>With causal ordering confirmed in Cycle 10 and the DB connection verified in Cycle 4, Cycle 11 activates persistence: the persona zone commits the score and <code>multiplayer-fabric-uro</code> writes it to CockroachDB.</p>
@@ -1762,6 +1780,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> rejected</p>
 <section id="the-context" class="level2">
 <h2 class="anchored" data-anchor-id="the-context">The Context</h2>
 <p>Cycles 0–5 prove the networking, physics, and persistence layers. Cycle 9 is the first cycle to run a real physics scene with assets; by the time it passes, the team has actual frame budget data from zone-console, a working grab-ready physics scene, and the interaction system (<code>xr_controller_interaction_helper.gd</code>) half-integrated. That is the earliest point at which game cycle estimates are reliable.</p>
@@ -1925,6 +1944,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <section id="the-context" class="level2">
 <h2 class="anchored" data-anchor-id="the-context">The Context</h2>
 <p>The clients in this stack are Godot engine processes built from <code>multiplayer-fabric-godot</code> (branch <code>multiplayer-fabric</code>, <code>template_release double</code>). The Godot WebTransport implementation, its thread model, and its datagram API underpin all subsequent cycles; a curl or test-harness ping tests the gateway in isolation and leaves those untouched.</p>

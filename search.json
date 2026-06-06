@@ -11,14 +11,14 @@
     "href": "decisions/20260506-maglev-cycle-9-physics-vrm.html",
     "title": "Maglev Cycle 9: Physics and VRM Loading",
     "section": "",
-    "text": "The gateway merges two input types at full rate after Cycle 9. This cycle loads the Maglev train scene with stationary cores on a banking train, verifies replication across clients, and confirms VRM avatar loading from the chunk store. Banking is a scene parameter change; VRM loading is verified in the same session as physics baseline.\nBaked assets from Cycle 3 must be available in the chunk store before this cycle begins. Banking and VRM loading are combined here to reduce the number of cycles before the first physics demo."
+    "text": "Tier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-9-physics-vrm.html#the-context",
     "href": "decisions/20260506-maglev-cycle-9-physics-vrm.html#the-context",
     "title": "Maglev Cycle 9: Physics and VRM Loading",
-    "section": "",
-    "text": "The gateway merges two input types at full rate after Cycle 9. This cycle loads the Maglev train scene with stationary cores on a banking train, verifies replication across clients, and confirms VRM avatar loading from the chunk store. Banking is a scene parameter change; VRM loading is verified in the same session as physics baseline.\nBaked assets from Cycle 3 must be available in the chunk store before this cycle begins. Banking and VRM loading are combined here to reduce the number of cycles before the first physics demo."
+    "section": "The Context",
+    "text": "The Context\nThe gateway merges two input types at full rate after Cycle 9. This cycle loads the Maglev train scene with stationary cores on a banking train, verifies replication across clients, and confirms VRM avatar loading from the chunk store. Banking is a scene parameter change; VRM loading is verified in the same session as physics baseline.\nBaked assets from Cycle 3 must be available in the chunk store before this cycle begins. Banking and VRM loading are combined here to reduce the number of cycles before the first physics demo."
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-9-physics-vrm.html#the-problem-statement",
@@ -95,14 +95,14 @@
     "href": "decisions/20260506-maglev-cycle-0-infra.html",
     "title": "Maglev Cycle 0: Terraform Fly.io Infrastructure",
     "section": "",
-    "text": "All Fly services — gateway, zone, uro, CockroachDB, observability stack — depend on Terraform having created their Fly apps, dedicated IPs, volumes, and secrets. Without applied Terraform state, no Fly app exists to deploy to and no subsequent cycle can run."
+    "text": "Tier: baseline · Status: superseded by 20260606-self-host-on-harvester-hci.md"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-0-infra.html#the-context",
     "href": "decisions/20260506-maglev-cycle-0-infra.html#the-context",
     "title": "Maglev Cycle 0: Terraform Fly.io Infrastructure",
-    "section": "",
-    "text": "All Fly services — gateway, zone, uro, CockroachDB, observability stack — depend on Terraform having created their Fly apps, dedicated IPs, volumes, and secrets. Without applied Terraform state, no Fly app exists to deploy to and no subsequent cycle can run."
+    "section": "The Context",
+    "text": "The Context\nAll Fly services — gateway, zone, uro, CockroachDB, observability stack — depend on Terraform having created their Fly apps, dedicated IPs, volumes, and secrets. Without applied Terraform state, no Fly app exists to deploy to and no subsequent cycle can run."
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-0-infra.html#the-problem-statement",
@@ -179,14 +179,14 @@
     "href": "decisions/20260506-maglev-cycle-6-mmog-load.html",
     "title": "Maglev Cycle 6: Dual Same-Type Clients",
     "section": "",
-    "text": "With one Godot client verified end-to-end and the observability stack live (Cycle 2), the next question is whether the gateway can multiplex two same-type connections into one zone server tick while keeping both clients synchronized. Observability must be running before this cycle begins — a broadcast failure here is unattributable without gateway traces."
+    "text": "Tier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-6-mmog-load.html#the-context",
     "href": "decisions/20260506-maglev-cycle-6-mmog-load.html#the-context",
     "title": "Maglev Cycle 6: Dual Same-Type Clients",
-    "section": "",
-    "text": "With one Godot client verified end-to-end and the observability stack live (Cycle 2), the next question is whether the gateway can multiplex two same-type connections into one zone server tick while keeping both clients synchronized. Observability must be running before this cycle begins — a broadcast failure here is unattributable without gateway traces."
+    "section": "The Context",
+    "text": "The Context\nWith one Godot client verified end-to-end and the observability stack live (Cycle 2), the next question is whether the gateway can multiplex two same-type connections into one zone server tick while keeping both clients synchronized. Observability must be running before this cycle begins — a broadcast failure here is unattributable without gateway traces."
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-6-mmog-load.html#the-problem-statement",
@@ -263,14 +263,14 @@
     "href": "decisions/20260606-art-game-loop-steel-thread.html",
     "title": "Recursive art-game loop and its minimal steel thread",
     "section": "",
-    "text": "We want a small workspace where friends make tiny art-games together, watch them, and improve them on a tight loop. Players show up in the space as tracker orbs (the presence demo), with drawing pens (cassie) as a stretch goal. Before building the workspace out, we need the smallest end-to-end thread that proves the loop runs at all. What is that thread?"
+    "text": "Tier: proof of concept · Status: proposed"
   },
   {
     "objectID": "decisions/20260606-art-game-loop-steel-thread.html#context-and-problem-statement",
     "href": "decisions/20260606-art-game-loop-steel-thread.html#context-and-problem-statement",
     "title": "Recursive art-game loop and its minimal steel thread",
-    "section": "",
-    "text": "We want a small workspace where friends make tiny art-games together, watch them, and improve them on a tight loop. Players show up in the space as tracker orbs (the presence demo), with drawing pens (cassie) as a stretch goal. Before building the workspace out, we need the smallest end-to-end thread that proves the loop runs at all. What is that thread?"
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nWe want a small workspace where friends make tiny art-games together, watch them, and improve them on a tight loop. Players show up in the space as tracker orbs (the presence demo), with drawing pens (cassie) as a stretch goal. Before building the workspace out, we need the smallest end-to-end thread that proves the loop runs at all. What is that thread?"
   },
   {
     "objectID": "decisions/20260606-art-game-loop-steel-thread.html#decision-drivers",
@@ -305,14 +305,14 @@
     "href": "decisions/20260506-maglev-cycle-8-ik-merge.html",
     "title": "Maglev Cycle 8: Full-Rate IK Merge",
     "section": "",
-    "text": "Cycle 7 confirms routing and merge at 10 Hz. Cycle 8 raises the PCVR client to operating rate — continuous 6-DOF IK at headset cadence — alongside full-rate gamepad input, and verifies the gateway merges both without head-of-line blocking."
+    "text": "Tier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-8-ik-merge.html#the-context",
     "href": "decisions/20260506-maglev-cycle-8-ik-merge.html#the-context",
     "title": "Maglev Cycle 8: Full-Rate IK Merge",
-    "section": "",
-    "text": "Cycle 7 confirms routing and merge at 10 Hz. Cycle 8 raises the PCVR client to operating rate — continuous 6-DOF IK at headset cadence — alongside full-rate gamepad input, and verifies the gateway merges both without head-of-line blocking."
+    "section": "The Context",
+    "text": "The Context\nCycle 7 confirms routing and merge at 10 Hz. Cycle 8 raises the PCVR client to operating rate — continuous 6-DOF IK at headset cadence — alongside full-rate gamepad input, and verifies the gateway merges both without head-of-line blocking."
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-8-ik-merge.html#the-problem-statement",
@@ -389,14 +389,14 @@
     "href": "decisions/20260606-compiling-godot-engine.html",
     "title": "Compiling the Godot engine",
     "section": "",
-    "text": "Developers build the V-Sekai multiplayer-fabric Godot engine on two hosts from one workstation: Windows (PowerShell + MinGW) and WSL / Linux (linuxbsd). Without a shared, persistent compiler cache, each host rebuilds from scratch and cache hits are lost whenever a checkout is moved or renamed."
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-compiling-godot-engine.html#context",
     "href": "decisions/20260606-compiling-godot-engine.html#context",
     "title": "Compiling the Godot engine",
-    "section": "",
-    "text": "Developers build the V-Sekai multiplayer-fabric Godot engine on two hosts from one workstation: Windows (PowerShell + MinGW) and WSL / Linux (linuxbsd). Without a shared, persistent compiler cache, each host rebuilds from scratch and cache hits are lost whenever a checkout is moved or renamed."
+    "section": "Context",
+    "text": "Context\nDevelopers build the V-Sekai multiplayer-fabric Godot engine on two hosts from one workstation: Windows (PowerShell + MinGW) and WSL / Linux (linuxbsd). Without a shared, persistent compiler cache, each host rebuilds from scratch and cache hits are lost whenever a checkout is moved or renamed."
   },
   {
     "objectID": "decisions/20260606-compiling-godot-engine.html#decision",
@@ -424,14 +424,14 @@
     "href": "decisions/20260506-maglev-cycle-7-ik-routing.html",
     "title": "Maglev Cycle 7: IK Routing and Merge",
     "section": "",
-    "text": "Two same-type Godot clients share a zone after Cycle 6. Cycle 7 swaps one Steam Deck client for a PCVR client and confirms that a single 6-DOF IK datagram travels through the gateway and reaches the zone server. The rate and merge logic are not yet in scope."
+    "text": "Tier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-7-ik-routing.html#the-context",
     "href": "decisions/20260506-maglev-cycle-7-ik-routing.html#the-context",
     "title": "Maglev Cycle 7: IK Routing and Merge",
-    "section": "",
-    "text": "Two same-type Godot clients share a zone after Cycle 6. Cycle 7 swaps one Steam Deck client for a PCVR client and confirms that a single 6-DOF IK datagram travels through the gateway and reaches the zone server. The rate and merge logic are not yet in scope."
+    "section": "The Context",
+    "text": "The Context\nTwo same-type Godot clients share a zone after Cycle 6. Cycle 7 swaps one Steam Deck client for a PCVR client and confirms that a single 6-DOF IK datagram travels through the gateway and reaches the zone server. The rate and merge logic are not yet in scope."
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-7-ik-routing.html#the-problem-statement",
@@ -508,14 +508,14 @@
     "href": "decisions/20260501-godot-double-precision-template-release-for-zone.html",
     "title": "Godot double precision template_release for zone servers",
     "section": "",
-    "text": "Zone servers run the game simulation headlessly. Two Godot build targets are candidates: editor (includes import tools) and template_release (runtime only). Precision must match the rest of the V-Sekai stack."
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260501-godot-double-precision-template-release-for-zone.html#context",
     "href": "decisions/20260501-godot-double-precision-template-release-for-zone.html#context",
     "title": "Godot double precision template_release for zone servers",
-    "section": "",
-    "text": "Zone servers run the game simulation headlessly. Two Godot build targets are candidates: editor (includes import tools) and template_release (runtime only). Precision must match the rest of the V-Sekai stack."
+    "section": "Context",
+    "text": "Context\nZone servers run the game simulation headlessly. Two Godot build targets are candidates: editor (includes import tools) and template_release (runtime only). Precision must match the rest of the V-Sekai stack."
   },
   {
     "objectID": "decisions/20260501-godot-double-precision-template-release-for-zone.html#decision",
@@ -536,14 +536,14 @@
     "href": "decisions/20260606-require-pr-and-merge-queue-on-main.html",
     "title": "Require pull requests and a merge queue on main",
     "section": "",
-    "text": "The manuals repo had no branch protection on main. Changes landed by pushing directly or by manually merging pull requests one at a time, with no serialization between concurrent PRs. As the number of in-flight documentation PRs grows, two PRs can each pass against an older main and then conflict or break the Quarto build once both land. How should changes reach main so that every merge is reviewable and tested against the tip it will actually join?"
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-require-pr-and-merge-queue-on-main.html#context-and-problem-statement",
     "href": "decisions/20260606-require-pr-and-merge-queue-on-main.html#context-and-problem-statement",
     "title": "Require pull requests and a merge queue on main",
-    "section": "",
-    "text": "The manuals repo had no branch protection on main. Changes landed by pushing directly or by manually merging pull requests one at a time, with no serialization between concurrent PRs. As the number of in-flight documentation PRs grows, two PRs can each pass against an older main and then conflict or break the Quarto build once both land. How should changes reach main so that every merge is reviewable and tested against the tip it will actually join?"
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe manuals repo had no branch protection on main. Changes landed by pushing directly or by manually merging pull requests one at a time, with no serialization between concurrent PRs. As the number of in-flight documentation PRs grows, two PRs can each pass against an older main and then conflict or break the Quarto build once both land. How should changes reach main so that every merge is reviewable and tested against the tip it will actually join?"
   },
   {
     "objectID": "decisions/20260606-require-pr-and-merge-queue-on-main.html#decision-drivers",
@@ -578,14 +578,14 @@
     "href": "decisions/20260506-maglev-cycle-12-game-planning.html",
     "title": "Maglev Cycle 12: Game Cycle Planning",
     "section": "",
-    "text": "Cycles 0–5 prove the networking, physics, and persistence layers. Cycle 9 is the first cycle to run a real physics scene with assets; by the time it passes, the team has actual frame budget data from zone-console, a working grab-ready physics scene, and the interaction system (xr_controller_interaction_helper.gd) half-integrated. That is the earliest point at which game cycle estimates are reliable."
+    "text": "Tier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-12-game-planning.html#the-context",
     "href": "decisions/20260506-maglev-cycle-12-game-planning.html#the-context",
     "title": "Maglev Cycle 12: Game Cycle Planning",
-    "section": "",
-    "text": "Cycles 0–5 prove the networking, physics, and persistence layers. Cycle 9 is the first cycle to run a real physics scene with assets; by the time it passes, the team has actual frame budget data from zone-console, a working grab-ready physics scene, and the interaction system (xr_controller_interaction_helper.gd) half-integrated. That is the earliest point at which game cycle estimates are reliable."
+    "section": "The Context",
+    "text": "The Context\nCycles 0–5 prove the networking, physics, and persistence layers. Cycle 9 is the first cycle to run a real physics scene with assets; by the time it passes, the team has actual frame budget data from zone-console, a working grab-ready physics scene, and the interaction system (xr_controller_interaction_helper.gd) half-integrated. That is the earliest point at which game cycle estimates are reliable."
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-12-game-planning.html#the-problem-statement",
@@ -662,14 +662,14 @@
     "href": "decisions/20260606-webtransport-http3-transport.html",
     "title": "WebTransport over HTTP/3 transport",
     "section": "",
-    "text": "The stack needs a client/server transport that carries reliable control messages and high-rate unreliable state over one connection, on both native and web clients. Which transport does the engine provide?"
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-webtransport-http3-transport.html#context-and-problem-statement",
     "href": "decisions/20260606-webtransport-http3-transport.html#context-and-problem-statement",
     "title": "WebTransport over HTTP/3 transport",
-    "section": "",
-    "text": "The stack needs a client/server transport that carries reliable control messages and high-rate unreliable state over one connection, on both native and web clients. Which transport does the engine provide?"
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe stack needs a client/server transport that carries reliable control messages and high-rate unreliable state over one connection, on both native and web clients. Which transport does the engine provide?"
   },
   {
     "objectID": "decisions/20260606-webtransport-http3-transport.html#decision-drivers",
@@ -704,14 +704,14 @@
     "href": "decisions/20260606-archival-file-naming-convention.html",
     "title": "Archival file naming convention for committed assets",
     "section": "",
-    "text": "The manuals repo now commits binary assets alongside prose, starting with screenshots under decisions/attachments/. Ad-hoc names like image.png collide, sort poorly, and lose their provenance once they leave the page that referenced them. What naming convention should committed assets follow so they stay unique, sortable, and self-describing?"
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-archival-file-naming-convention.html#context-and-problem-statement",
     "href": "decisions/20260606-archival-file-naming-convention.html#context-and-problem-statement",
     "title": "Archival file naming convention for committed assets",
-    "section": "",
-    "text": "The manuals repo now commits binary assets alongside prose, starting with screenshots under decisions/attachments/. Ad-hoc names like image.png collide, sort poorly, and lose their provenance once they leave the page that referenced them. What naming convention should committed assets follow so they stay unique, sortable, and self-describing?"
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe manuals repo now commits binary assets alongside prose, starting with screenshots under decisions/attachments/. Ad-hoc names like image.png collide, sort poorly, and lose their provenance once they leave the page that referenced them. What naming convention should committed assets follow so they stay unique, sortable, and self-describing?"
   },
   {
     "objectID": "decisions/20260606-archival-file-naming-convention.html#decision-drivers",
@@ -746,14 +746,14 @@
     "href": "decisions/20260506-maglev-cycle-5-zone-console.html",
     "title": "Maglev Cycle 5: Zone-Console TUI Observer",
     "section": "",
-    "text": "multiplayer-fabric-zone-console is a ratatui TUI that observes the zone over WebTransport. It is in the production stack and is the operator’s primary visibility into zone health during and after mission cycles. Cycle 5 depends only on Cycle 1 (zone server live) and runs in parallel with the game-logic track."
+    "text": "Tier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-5-zone-console.html#the-context",
     "href": "decisions/20260506-maglev-cycle-5-zone-console.html#the-context",
     "title": "Maglev Cycle 5: Zone-Console TUI Observer",
-    "section": "",
-    "text": "multiplayer-fabric-zone-console is a ratatui TUI that observes the zone over WebTransport. It is in the production stack and is the operator’s primary visibility into zone health during and after mission cycles. Cycle 5 depends only on Cycle 1 (zone server live) and runs in parallel with the game-logic track."
+    "section": "The Context",
+    "text": "The Context\nmultiplayer-fabric-zone-console is a ratatui TUI that observes the zone over WebTransport. It is in the production stack and is the operator’s primary visibility into zone health during and after mission cycles. Cycle 5 depends only on Cycle 1 (zone server live) and runs in parallel with the game-logic track."
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-5-zone-console.html#the-problem-statement",
@@ -830,14 +830,14 @@
     "href": "decisions/20260506-ghcr-package-ownership-same-repo.html",
     "title": "GHCR packages must be built by the repo that consumes them",
     "section": "",
-    "text": "The zone server binary was built by multiplayer-fabric-baker and pushed to ghcr.io/v-sekai-fire/godot-zone-double. The zone deploy workflow (in multiplayer-fabric-zone) used --local-only with docker/login-action to pull that image, but received 403 Forbidden.\nGitHub Container Registry ties package write access to the repository whose GITHUB_TOKEN created it. The zone repo’s token could not push to a package owned by the baker repo, and could not pull a private package owned by another repo without package-scoped access."
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260506-ghcr-package-ownership-same-repo.html#context",
     "href": "decisions/20260506-ghcr-package-ownership-same-repo.html#context",
     "title": "GHCR packages must be built by the repo that consumes them",
-    "section": "",
-    "text": "The zone server binary was built by multiplayer-fabric-baker and pushed to ghcr.io/v-sekai-fire/godot-zone-double. The zone deploy workflow (in multiplayer-fabric-zone) used --local-only with docker/login-action to pull that image, but received 403 Forbidden.\nGitHub Container Registry ties package write access to the repository whose GITHUB_TOKEN created it. The zone repo’s token could not push to a package owned by the baker repo, and could not pull a private package owned by another repo without package-scoped access."
+    "section": "Context",
+    "text": "Context\nThe zone server binary was built by multiplayer-fabric-baker and pushed to ghcr.io/v-sekai-fire/godot-zone-double. The zone deploy workflow (in multiplayer-fabric-zone) used --local-only with docker/login-action to pull that image, but received 403 Forbidden.\nGitHub Container Registry ties package write access to the repository whose GITHUB_TOKEN created it. The zone repo’s token could not push to a package owned by the baker repo, and could not pull a private package owned by another repo without package-scoped access."
   },
   {
     "objectID": "decisions/20260506-ghcr-package-ownership-same-repo.html#decision",
@@ -858,14 +858,14 @@
     "href": "decisions/20260506-maglev-cycle-3-baker.html",
     "title": "Maglev Cycle 3: Baker Pipeline",
     "section": "",
-    "text": "The Maglev train scene and player VRM avatars must be baked before Cycle 9 (physics replication), which is the first cycle to load actual game assets into the zone server. The baker pipeline runs as an on-demand Fly Machine, depends only on the Fly infrastructure proven in Cycle 1, and can run in parallel with Cycles 6–9.\nmultiplayer-fabric-baker uses Godot in headless editor mode (godot.linuxbsd.editor.double.x86_64, built from multiplayer-fabric-baker via ghcr.io/v-sekai-fire/godot-editor-double:latest) to validate and export scenes. aria-storage chunks the output using casync/desync .caibx format with zstd compression, uploads chunks to the zone-backend chunk store, and posts the .caibx index to uro at /storage/:id/bake."
+    "text": "Tier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-3-baker.html#the-context",
     "href": "decisions/20260506-maglev-cycle-3-baker.html#the-context",
     "title": "Maglev Cycle 3: Baker Pipeline",
-    "section": "",
-    "text": "The Maglev train scene and player VRM avatars must be baked before Cycle 9 (physics replication), which is the first cycle to load actual game assets into the zone server. The baker pipeline runs as an on-demand Fly Machine, depends only on the Fly infrastructure proven in Cycle 1, and can run in parallel with Cycles 6–9.\nmultiplayer-fabric-baker uses Godot in headless editor mode (godot.linuxbsd.editor.double.x86_64, built from multiplayer-fabric-baker via ghcr.io/v-sekai-fire/godot-editor-double:latest) to validate and export scenes. aria-storage chunks the output using casync/desync .caibx format with zstd compression, uploads chunks to the zone-backend chunk store, and posts the .caibx index to uro at /storage/:id/bake."
+    "section": "The Context",
+    "text": "The Context\nThe Maglev train scene and player VRM avatars must be baked before Cycle 9 (physics replication), which is the first cycle to load actual game assets into the zone server. The baker pipeline runs as an on-demand Fly Machine, depends only on the Fly infrastructure proven in Cycle 1, and can run in parallel with Cycles 6–9.\nmultiplayer-fabric-baker uses Godot in headless editor mode (godot.linuxbsd.editor.double.x86_64, built from multiplayer-fabric-baker via ghcr.io/v-sekai-fire/godot-editor-double:latest) to validate and export scenes. aria-storage chunks the output using casync/desync .caibx format with zstd compression, uploads chunks to the zone-backend chunk store, and posts the .caibx index to uro at /storage/:id/bake."
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-3-baker.html#the-problem-statement",
@@ -942,14 +942,14 @@
     "href": "decisions/20260606-pin-engine-to-frozen-godot-4-7.html",
     "title": "Pin the engine to a frozen Godot 4.7 commit",
     "section": "",
-    "text": "The engine fork carries many feature branches (cassie, resonance audio, native media, speech, spatial audio, the fabric modules) that the merge recipe assembles onto a base. If that base tracks a moving upstream, every assembly can shift under the patches, so a green build one day can break the next from upstream churn alone. What base should the feature branches and the assembly build on?"
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-pin-engine-to-frozen-godot-4-7.html#context-and-problem-statement",
     "href": "decisions/20260606-pin-engine-to-frozen-godot-4-7.html#context-and-problem-statement",
     "title": "Pin the engine to a frozen Godot 4.7 commit",
-    "section": "",
-    "text": "The engine fork carries many feature branches (cassie, resonance audio, native media, speech, spatial audio, the fabric modules) that the merge recipe assembles onto a base. If that base tracks a moving upstream, every assembly can shift under the patches, so a green build one day can break the next from upstream churn alone. What base should the feature branches and the assembly build on?"
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe engine fork carries many feature branches (cassie, resonance audio, native media, speech, spatial audio, the fabric modules) that the merge recipe assembles onto a base. If that base tracks a moving upstream, every assembly can shift under the patches, so a green build one day can break the next from upstream churn alone. What base should the feature branches and the assembly build on?"
   },
   {
     "objectID": "decisions/20260606-pin-engine-to-frozen-godot-4-7.html#decision-drivers",
@@ -984,7 +984,7 @@
     "href": "decisions/20260506-observability-stack-victoriatraces.html",
     "title": "Replace Jaeger with VictoriaTraces for trace storage",
     "section": "",
-    "text": "Deployment note: the stack now runs on the Harvester cluster; it has moved off Fly.io (see self-host on Harvester HCI). The Fly volume and fly proxy references below are from the original deployment."
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260506-observability-stack-victoriatraces.html#context",
@@ -1012,14 +1012,14 @@
     "href": "decisions/20260506-observability-stack-victoriametrics-tempo.html",
     "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
     "section": "",
-    "text": "The stack needs metrics, logs, and traces. Options considered: Grafana Cloud (cost), self-hosted Prometheus+Loki+Tempo (three separate apps), or a compact single-machine stack."
+    "text": "Tier: baseline · Status: superseded by 20260506-observability-stack-victoriametrics-jaeger.md"
   },
   {
     "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html#context",
     "href": "decisions/20260506-observability-stack-victoriametrics-tempo.html#context",
     "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
-    "section": "",
-    "text": "The stack needs metrics, logs, and traces. Options considered: Grafana Cloud (cost), self-hosted Prometheus+Loki+Tempo (three separate apps), or a compact single-machine stack."
+    "section": "Context",
+    "text": "Context\nThe stack needs metrics, logs, and traces. Options considered: Grafana Cloud (cost), self-hosted Prometheus+Loki+Tempo (three separate apps), or a compact single-machine stack."
   },
   {
     "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html#decision",
@@ -1292,14 +1292,14 @@
     "href": "decisions/20260606-multiplayer-presence-demo-orbs.html",
     "title": "Minimal multiplayer presence demo with head and hand orbs",
     "section": "",
-    "text": "The xr-grid debug scene shows one skinned-mesh hero asset (a rigged mesh with a skeleton, not a VRM) on the grid as a visual landmark; it does not represent a player. Around it float clusters of small colored orbs, each encoding the pose (translation and orientation) of one tracked point — head, hand, hand — for a remote participant. What is the smallest piece that proves shared presence at the scale of a full V-Sekai Discord call?\n\n\n\nThe xr-grid debug scene, 2026-06-06: a skinned-mesh hero asset as a visual landmark, with each remote participant drawn as head and hand orientation-and-translation orb clusters. (V-Sekai Multiplayer Fabric 2026)"
+    "text": "Tier: proof of concept · Status: superseded by 20260606-presence-marker-representation.md"
   },
   {
     "objectID": "decisions/20260606-multiplayer-presence-demo-orbs.html#context-and-problem-statement",
     "href": "decisions/20260606-multiplayer-presence-demo-orbs.html#context-and-problem-statement",
     "title": "Minimal multiplayer presence demo with head and hand orbs",
-    "section": "",
-    "text": "The xr-grid debug scene shows one skinned-mesh hero asset (a rigged mesh with a skeleton, not a VRM) on the grid as a visual landmark; it does not represent a player. Around it float clusters of small colored orbs, each encoding the pose (translation and orientation) of one tracked point — head, hand, hand — for a remote participant. What is the smallest piece that proves shared presence at the scale of a full V-Sekai Discord call?\n\n\n\nThe xr-grid debug scene, 2026-06-06: a skinned-mesh hero asset as a visual landmark, with each remote participant drawn as head and hand orientation-and-translation orb clusters. (V-Sekai Multiplayer Fabric 2026)"
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe xr-grid debug scene shows one skinned-mesh hero asset (a rigged mesh with a skeleton, not a VRM) on the grid as a visual landmark; it does not represent a player. Around it float clusters of small colored orbs, each encoding the pose (translation and orientation) of one tracked point — head, hand, hand — for a remote participant. What is the smallest piece that proves shared presence at the scale of a full V-Sekai Discord call?\n\n\n\nThe xr-grid debug scene, 2026-06-06: a skinned-mesh hero asset as a visual landmark, with each remote participant drawn as head and hand orientation-and-translation orb clusters. (V-Sekai Multiplayer Fabric 2026)"
   },
   {
     "objectID": "decisions/20260606-multiplayer-presence-demo-orbs.html#decision-drivers",
@@ -1327,14 +1327,14 @@
     "href": "decisions/20260506-maglev-intercept-smoke-test.html",
     "title": "Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test",
     "section": "",
-    "text": "The stack: multiplayer-fabric-gateway (Elixir, UDP 443 → zone UDP 7443, WebTransport/QUIC datagrams), multiplayer-fabric-zone (headless Godot template_release double), multiplayer-fabric-uro (Phoenix shard registry and asset API), single-node CockroachDB on Fly’s 6PN private network.\nZone authority is geometric — ZoneRange.contains(hilbert3D(pos)) determines ownership, gossip-learned, with uniqueness proven under DisjointRanges. Scores and persistent player state sit in a reserved logical partition of the 30-bit Hilbert space (the persona partition), governed by the same invariant as spatial zones. This is the first attempt to load all four layers together under cross-platform input."
+    "text": "Tier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-intercept-smoke-test.html#the-context",
     "href": "decisions/20260506-maglev-intercept-smoke-test.html#the-context",
     "title": "Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test",
-    "section": "",
-    "text": "The stack: multiplayer-fabric-gateway (Elixir, UDP 443 → zone UDP 7443, WebTransport/QUIC datagrams), multiplayer-fabric-zone (headless Godot template_release double), multiplayer-fabric-uro (Phoenix shard registry and asset API), single-node CockroachDB on Fly’s 6PN private network.\nZone authority is geometric — ZoneRange.contains(hilbert3D(pos)) determines ownership, gossip-learned, with uniqueness proven under DisjointRanges. Scores and persistent player state sit in a reserved logical partition of the 30-bit Hilbert space (the persona partition), governed by the same invariant as spatial zones. This is the first attempt to load all four layers together under cross-platform input."
+    "section": "The Context",
+    "text": "The Context\nThe stack: multiplayer-fabric-gateway (Elixir, UDP 443 → zone UDP 7443, WebTransport/QUIC datagrams), multiplayer-fabric-zone (headless Godot template_release double), multiplayer-fabric-uro (Phoenix shard registry and asset API), single-node CockroachDB on Fly’s 6PN private network.\nZone authority is geometric — ZoneRange.contains(hilbert3D(pos)) determines ownership, gossip-learned, with uniqueness proven under DisjointRanges. Scores and persistent player state sit in a reserved logical partition of the 30-bit Hilbert space (the persona partition), governed by the same invariant as spatial zones. This is the first attempt to load all four layers together under cross-platform input."
   },
   {
     "objectID": "decisions/20260506-maglev-intercept-smoke-test.html#the-problem-statement",
@@ -1404,14 +1404,14 @@
     "href": "decisions/20260501-fly-io-for-deployment.html",
     "title": "Fly.io for deployment",
     "section": "",
-    "text": "The stack requires a platform that supports UDP (for QUIC/WebTransport), private networking between services, persistent volumes, and on-demand machines for job workloads (asset baking)."
+    "text": "Tier: baseline · Status: superseded by 20260606-self-host-on-harvester-hci.md"
   },
   {
     "objectID": "decisions/20260501-fly-io-for-deployment.html#context",
     "href": "decisions/20260501-fly-io-for-deployment.html#context",
     "title": "Fly.io for deployment",
-    "section": "",
-    "text": "The stack requires a platform that supports UDP (for QUIC/WebTransport), private networking between services, persistent volumes, and on-demand machines for job workloads (asset baking)."
+    "section": "Context",
+    "text": "Context\nThe stack requires a platform that supports UDP (for QUIC/WebTransport), private networking between services, persistent volumes, and on-demand machines for job workloads (asset baking)."
   },
   {
     "objectID": "decisions/20260501-fly-io-for-deployment.html#decision",
@@ -1432,14 +1432,14 @@
     "href": "decisions/20260606-presence-demo-networking-internals.html",
     "title": "Presence demo pose networking",
     "section": "",
-    "text": "The presence demo sends head and hand poses to peers over the WebTransport transport. How are those poses sourced, encoded, and sent?"
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-presence-demo-networking-internals.html#context-and-problem-statement",
     "href": "decisions/20260606-presence-demo-networking-internals.html#context-and-problem-statement",
     "title": "Presence demo pose networking",
-    "section": "",
-    "text": "The presence demo sends head and hand poses to peers over the WebTransport transport. How are those poses sourced, encoded, and sent?"
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe presence demo sends head and hand poses to peers over the WebTransport transport. How are those poses sourced, encoded, and sent?"
   },
   {
     "objectID": "decisions/20260606-presence-demo-networking-internals.html#decision-drivers",
@@ -1467,14 +1467,14 @@
     "href": "decisions/20260606-org-split-v-sekai-multiplayer-fabric.html",
     "title": "Two-org split between V-Sekai-fire and v-sekai-multiplayer-fabric",
     "section": "",
-    "text": "The repository map in index.md described a single org, V-Sekai-fire, built around a multiplayer-fabric submodule umbrella whose repos were named multiplayer-fabric-*. The stack has since grown a second GitHub org, v-sekai-multiplayer-fabric, which now hosts the engine, the Harvester VM images, the rendering and USD research, and these manuals. The two orgs use different repo names, and the old repos do not redirect into the new org. The documentation map had drifted far enough from reality that a reader could not find the live repos.\nHow should the manuals represent the stack while both orgs are in active use?"
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-org-split-v-sekai-multiplayer-fabric.html#context-and-problem-statement",
     "href": "decisions/20260606-org-split-v-sekai-multiplayer-fabric.html#context-and-problem-statement",
     "title": "Two-org split between V-Sekai-fire and v-sekai-multiplayer-fabric",
-    "section": "",
-    "text": "The repository map in index.md described a single org, V-Sekai-fire, built around a multiplayer-fabric submodule umbrella whose repos were named multiplayer-fabric-*. The stack has since grown a second GitHub org, v-sekai-multiplayer-fabric, which now hosts the engine, the Harvester VM images, the rendering and USD research, and these manuals. The two orgs use different repo names, and the old repos do not redirect into the new org. The documentation map had drifted far enough from reality that a reader could not find the live repos.\nHow should the manuals represent the stack while both orgs are in active use?"
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe repository map in index.md described a single org, V-Sekai-fire, built around a multiplayer-fabric submodule umbrella whose repos were named multiplayer-fabric-*. The stack has since grown a second GitHub org, v-sekai-multiplayer-fabric, which now hosts the engine, the Harvester VM images, the rendering and USD research, and these manuals. The two orgs use different repo names, and the old repos do not redirect into the new org. The documentation map had drifted far enough from reality that a reader could not find the live repos.\nHow should the manuals represent the stack while both orgs are in active use?"
   },
   {
     "objectID": "decisions/20260606-org-split-v-sekai-multiplayer-fabric.html#decision-drivers",
@@ -1509,14 +1509,14 @@
     "href": "decisions/20260501-webtransport-over-quic-for-game-traffic.html",
     "title": "Use WebTransport over QUIC for game traffic",
     "section": "",
-    "text": "The zone server needs low-latency bidirectional communication between clients and the Godot game server. HTTP/1.1 and WebSocket both run over TCP, which head-of-line blocks on packet loss and degrades real-time game state."
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#context",
     "href": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#context",
     "title": "Use WebTransport over QUIC for game traffic",
-    "section": "",
-    "text": "The zone server needs low-latency bidirectional communication between clients and the Godot game server. HTTP/1.1 and WebSocket both run over TCP, which head-of-line blocks on packet loss and degrades real-time game state."
+    "section": "Context",
+    "text": "Context\nThe zone server needs low-latency bidirectional communication between clients and the Godot game server. HTTP/1.1 and WebSocket both run over TCP, which head-of-line blocks on packet loss and degrades real-time game state."
   },
   {
     "objectID": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#decision",
@@ -1537,14 +1537,14 @@
     "href": "decisions/20260606-spatial-audio-patched-resonance-audio.html",
     "title": "Spatial audio via a patched Resonance Audio (HRTF and audio probes)",
     "section": "",
-    "text": "The zone server renders shared social-VR scenes where sound sources need to be localized in 3D for every listener. Two things drive presence: binaural HRTF rendering so a source is heard at the correct azimuth and elevation over headphones, and audio probes that capture how a room colors and occludes sound so a source baked behind a wall does not leak through it. Godot’s built-in AudioServer does stereo panning and attenuation, but it has no HRTF path and no probe-based spatialization. How should the engine produce HRTF spatial audio with environmental probes?"
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-spatial-audio-patched-resonance-audio.html#context-and-problem-statement",
     "href": "decisions/20260606-spatial-audio-patched-resonance-audio.html#context-and-problem-statement",
     "title": "Spatial audio via a patched Resonance Audio (HRTF and audio probes)",
-    "section": "",
-    "text": "The zone server renders shared social-VR scenes where sound sources need to be localized in 3D for every listener. Two things drive presence: binaural HRTF rendering so a source is heard at the correct azimuth and elevation over headphones, and audio probes that capture how a room colors and occludes sound so a source baked behind a wall does not leak through it. Godot’s built-in AudioServer does stereo panning and attenuation, but it has no HRTF path and no probe-based spatialization. How should the engine produce HRTF spatial audio with environmental probes?"
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe zone server renders shared social-VR scenes where sound sources need to be localized in 3D for every listener. Two things drive presence: binaural HRTF rendering so a source is heard at the correct azimuth and elevation over headphones, and audio probes that capture how a room colors and occludes sound so a source baked behind a wall does not leak through it. Godot’s built-in AudioServer does stereo panning and attenuation, but it has no HRTF path and no probe-based spatialization. How should the engine produce HRTF spatial audio with environmental probes?"
   },
   {
     "objectID": "decisions/20260606-spatial-audio-patched-resonance-audio.html#decision-drivers",
@@ -1579,14 +1579,14 @@
     "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html",
     "title": "Feature classification — proof of concept, baseline, stretch",
     "section": "",
-    "text": "The capabilities table lists features with a free-text status (“working”, “loses about 90%”). Free text does not say whether a feature is a throwaway experiment, a committed part of the product, or a nice-to-have. The team needs one shared vocabulary for how far along and how committed a feature is, so planning and the docs agree on what “done” means for each one."
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html#context-and-problem-statement",
     "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html#context-and-problem-statement",
     "title": "Feature classification — proof of concept, baseline, stretch",
-    "section": "",
-    "text": "The capabilities table lists features with a free-text status (“working”, “loses about 90%”). Free text does not say whether a feature is a throwaway experiment, a committed part of the product, or a nice-to-have. The team needs one shared vocabulary for how far along and how committed a feature is, so planning and the docs agree on what “done” means for each one."
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe capabilities table lists features with a free-text status (“working”, “loses about 90%”). Free text does not say whether a feature is a throwaway experiment, a committed part of the product, or a nice-to-have. The team needs one shared vocabulary for how far along and how committed a feature is, so planning and the docs agree on what “done” means for each one."
   },
   {
     "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html#decision-drivers",
@@ -1614,14 +1614,14 @@
     "href": "decisions/20260501-cockroachdb-with-mtls-role-separation.html",
     "title": "CockroachDB with mTLS and role-separated access",
     "section": "",
-    "text": "The stack needs a relational database reachable by the Elixir gateway and the Phoenix zone backend. It must support schema migrations (DDL) separately from application queries (DML) to limit blast radius if application credentials are compromised."
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#context",
     "href": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#context",
     "title": "CockroachDB with mTLS and role-separated access",
-    "section": "",
-    "text": "The stack needs a relational database reachable by the Elixir gateway and the Phoenix zone backend. It must support schema migrations (DDL) separately from application queries (DML) to limit blast radius if application credentials are compromised."
+    "section": "Context",
+    "text": "Context\nThe stack needs a relational database reachable by the Elixir gateway and the Phoenix zone backend. It must support schema migrations (DDL) separately from application queries (DML) to limit blast radius if application credentials are compromised."
   },
   {
     "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#decision",
@@ -1642,14 +1642,14 @@
     "href": "decisions/20260506-observability-stack-victoriametrics-jaeger.html",
     "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Jaeger",
     "section": "",
-    "text": "Grafana Tempo was chosen for trace storage in the initial stack but is licensed under AGPL-3.0, which requires any service modifications to be open-sourced. Jaeger (Apache 2.0, CNCF graduated) fits the permissive-license constraint: it is OTLP-native since v1.35 and commonly deployed alongside VictoriaMetrics."
+    "text": "Tier: baseline · Status: superseded by 20260506-observability-stack-victoriatraces.md"
   },
   {
     "objectID": "decisions/20260506-observability-stack-victoriametrics-jaeger.html#context",
     "href": "decisions/20260506-observability-stack-victoriametrics-jaeger.html#context",
     "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Jaeger",
-    "section": "",
-    "text": "Grafana Tempo was chosen for trace storage in the initial stack but is licensed under AGPL-3.0, which requires any service modifications to be open-sourced. Jaeger (Apache 2.0, CNCF graduated) fits the permissive-license constraint: it is OTLP-native since v1.35 and commonly deployed alongside VictoriaMetrics."
+    "section": "Context",
+    "text": "Context\nGrafana Tempo was chosen for trace storage in the initial stack but is licensed under AGPL-3.0, which requires any service modifications to be open-sourced. Jaeger (Apache 2.0, CNCF graduated) fits the permissive-license constraint: it is OTLP-native since v1.35 and commonly deployed alongside VictoriaMetrics."
   },
   {
     "objectID": "decisions/20260506-observability-stack-victoriametrics-jaeger.html#decision",
@@ -1670,14 +1670,14 @@
     "href": "decisions/20260506-maglev-cycle-10-dynamic-physics-score.html",
     "title": "Maglev Cycle 10: Dynamic Physics and Causal Ordering",
     "section": "",
-    "text": "With replication and banking proven in Cycle 9, Cycle 10 releases the cores to roll and runs the full mission. Causal ordering (VClock.le gating on core-slot events) is verified in the same run since mission events are its natural trigger.\nCycle 2 (observability) must be live before this cycle runs — a desync or ordering failure here without traces is undiagnosable."
+    "text": "Tier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-10-dynamic-physics-score.html#the-context",
     "href": "decisions/20260506-maglev-cycle-10-dynamic-physics-score.html#the-context",
     "title": "Maglev Cycle 10: Dynamic Physics and Causal Ordering",
-    "section": "",
-    "text": "With replication and banking proven in Cycle 9, Cycle 10 releases the cores to roll and runs the full mission. Causal ordering (VClock.le gating on core-slot events) is verified in the same run since mission events are its natural trigger.\nCycle 2 (observability) must be live before this cycle runs — a desync or ordering failure here without traces is undiagnosable."
+    "section": "The Context",
+    "text": "The Context\nWith replication and banking proven in Cycle 9, Cycle 10 releases the cores to roll and runs the full mission. Causal ordering (VClock.le gating on core-slot events) is verified in the same run since mission events are its natural trigger.\nCycle 2 (observability) must be live before this cycle runs — a desync or ordering failure here without traces is undiagnosable."
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-10-dynamic-physics-score.html#the-problem-statement",
@@ -1754,14 +1754,14 @@
     "href": "decisions/20260506-maglev-cycle-1-gateway-handshake.html",
     "title": "Maglev Cycle 1: Godot Client Gateway Handshake",
     "section": "",
-    "text": "The clients in this stack are Godot engine processes built from multiplayer-fabric-godot (branch multiplayer-fabric, template_release double). The Godot WebTransport implementation, its thread model, and its datagram API underpin all subsequent cycles; a curl or test-harness ping tests the gateway in isolation and leaves those untouched.\nCycle 0 (Terraform) must pass before this cycle begins — the Fly apps, dedicated IPv4, and secrets that this cycle depends on are created by Terraform."
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-1-gateway-handshake.html#the-context",
     "href": "decisions/20260506-maglev-cycle-1-gateway-handshake.html#the-context",
     "title": "Maglev Cycle 1: Godot Client Gateway Handshake",
-    "section": "",
-    "text": "The clients in this stack are Godot engine processes built from multiplayer-fabric-godot (branch multiplayer-fabric, template_release double). The Godot WebTransport implementation, its thread model, and its datagram API underpin all subsequent cycles; a curl or test-harness ping tests the gateway in isolation and leaves those untouched.\nCycle 0 (Terraform) must pass before this cycle begins — the Fly apps, dedicated IPv4, and secrets that this cycle depends on are created by Terraform."
+    "section": "The Context",
+    "text": "The Context\nThe clients in this stack are Godot engine processes built from multiplayer-fabric-godot (branch multiplayer-fabric, template_release double). The Godot WebTransport implementation, its thread model, and its datagram API underpin all subsequent cycles; a curl or test-harness ping tests the gateway in isolation and leaves those untouched.\nCycle 0 (Terraform) must pass before this cycle begins — the Fly apps, dedicated IPv4, and secrets that this cycle depends on are created by Terraform."
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-1-gateway-handshake.html#the-problem-statement",
@@ -1838,14 +1838,14 @@
     "href": "decisions/20260606-presence-marker-representation.html",
     "title": "Human-readable presence markers with an orb debug mode",
     "section": "",
-    "text": "The orb presence demo draws each participant as head and hand orb clusters. In review, the orbs read as too similar: a head cluster and a hand cluster look alike, so they are easy to conflate, and a bare cluster conveys position better than heading. The 3-point model and the networking are sound; the visual marker is the weak part. What should the default marker be?\n\n\n\nThe xr-grid debug scene: each remote participant drawn as head and hand orb clusters. These become the debug mode. (V-Sekai Multiplayer Fabric 2026)"
+    "text": "Tier: proof of concept · Status: proposed"
   },
   {
     "objectID": "decisions/20260606-presence-marker-representation.html#context-and-problem-statement",
     "href": "decisions/20260606-presence-marker-representation.html#context-and-problem-statement",
     "title": "Human-readable presence markers with an orb debug mode",
-    "section": "",
-    "text": "The orb presence demo draws each participant as head and hand orb clusters. In review, the orbs read as too similar: a head cluster and a hand cluster look alike, so they are easy to conflate, and a bare cluster conveys position better than heading. The 3-point model and the networking are sound; the visual marker is the weak part. What should the default marker be?\n\n\n\nThe xr-grid debug scene: each remote participant drawn as head and hand orb clusters. These become the debug mode. (V-Sekai Multiplayer Fabric 2026)"
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe orb presence demo draws each participant as head and hand orb clusters. In review, the orbs read as too similar: a head cluster and a hand cluster look alike, so they are easy to conflate, and a bare cluster conveys position better than heading. The 3-point model and the networking are sound; the visual marker is the weak part. What should the default marker be?\n\n\n\nThe xr-grid debug scene: each remote participant drawn as head and hand orb clusters. These become the debug mode. (V-Sekai Multiplayer Fabric 2026)"
   },
   {
     "objectID": "decisions/20260606-presence-marker-representation.html#decision-drivers",
@@ -1880,14 +1880,14 @@
     "href": "decisions/20260506-maglev-cycle-4-db-connection.html",
     "title": "Maglev Cycle 4: CockroachDB Connection",
     "section": "",
-    "text": "Cycle 10 confirms cross-zone causal ordering via VClock.le gating. Cycle 4 verifies the database write path independently: multiplayer-fabric-uro writes a single test record to CockroachDB over Fly’s 6PN without any game logic or causal path involved."
+    "text": "Tier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-4-db-connection.html#the-context",
     "href": "decisions/20260506-maglev-cycle-4-db-connection.html#the-context",
     "title": "Maglev Cycle 4: CockroachDB Connection",
-    "section": "",
-    "text": "Cycle 10 confirms cross-zone causal ordering via VClock.le gating. Cycle 4 verifies the database write path independently: multiplayer-fabric-uro writes a single test record to CockroachDB over Fly’s 6PN without any game logic or causal path involved."
+    "section": "The Context",
+    "text": "The Context\nCycle 10 confirms cross-zone causal ordering via VClock.le gating. Cycle 4 verifies the database write path independently: multiplayer-fabric-uro writes a single test record to CockroachDB over Fly’s 6PN without any game logic or causal path involved."
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-4-db-connection.html#the-problem-statement",
@@ -1964,14 +1964,14 @@
     "href": "decisions/20260606-self-host-on-harvester-hci.html",
     "title": "Self-host on Harvester HCI instead of Fly.io",
     "section": "",
-    "text": "The runtime first deployed on Fly.io (see the superseded Fly.io decision and Maglev Cycle 0). The project is moving to a self-hosted Harvester HCI cluster, where each service runs as a qcow2 VM image driven by podman quadlets. This records that Fly.io is no longer the deployment target."
+    "text": "Tier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-self-host-on-harvester-hci.html#context-and-problem-statement",
     "href": "decisions/20260606-self-host-on-harvester-hci.html#context-and-problem-statement",
     "title": "Self-host on Harvester HCI instead of Fly.io",
-    "section": "",
-    "text": "The runtime first deployed on Fly.io (see the superseded Fly.io decision and Maglev Cycle 0). The project is moving to a self-hosted Harvester HCI cluster, where each service runs as a qcow2 VM image driven by podman quadlets. This records that Fly.io is no longer the deployment target."
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe runtime first deployed on Fly.io (see the superseded Fly.io decision and Maglev Cycle 0). The project is moving to a self-hosted Harvester HCI cluster, where each service runs as a qcow2 VM image driven by podman quadlets. This records that Fly.io is no longer the deployment target."
   },
   {
     "objectID": "decisions/20260606-self-host-on-harvester-hci.html#decision-drivers",
@@ -2006,14 +2006,14 @@
     "href": "decisions/20260506-maglev-cycle-11-db-write.html",
     "title": "Maglev Cycle 11: CockroachDB Score Write",
     "section": "",
-    "text": "With causal ordering confirmed in Cycle 10 and the DB connection verified in Cycle 4, Cycle 11 activates persistence: the persona zone commits the score and multiplayer-fabric-uro writes it to CockroachDB."
+    "text": "Tier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-11-db-write.html#the-context",
     "href": "decisions/20260506-maglev-cycle-11-db-write.html#the-context",
     "title": "Maglev Cycle 11: CockroachDB Score Write",
-    "section": "",
-    "text": "With causal ordering confirmed in Cycle 10 and the DB connection verified in Cycle 4, Cycle 11 activates persistence: the persona zone commits the score and multiplayer-fabric-uro writes it to CockroachDB."
+    "section": "The Context",
+    "text": "The Context\nWith causal ordering confirmed in Cycle 10 and the DB connection verified in Cycle 4, Cycle 11 activates persistence: the persona zone commits the score and multiplayer-fabric-uro writes it to CockroachDB."
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-11-db-write.html#the-problem-statement",
@@ -2090,14 +2090,14 @@
     "href": "decisions/20260606-ghostly-presence-body-model.html",
     "title": "Ghostly partial-body presence avatar from ANNY via SOMA-X",
     "section": "",
-    "text": "The presence marker decision calls for a vague ghostly humanoid that conveys position and heading. CHI-298 proposed fitting personas with SOMA (unifying parametric body models) and ANNY; the Linear issue is canceled, but the concept is the natural basis for that ghostly form. We track only three points (head and two hands), so a full posed body is under-constrained and risks the uncanny valley. Which body model do we use, and how much of the body do we show?"
+    "text": "Tier: proof of concept · Status: proposed"
   },
   {
     "objectID": "decisions/20260606-ghostly-presence-body-model.html#context-and-problem-statement",
     "href": "decisions/20260606-ghostly-presence-body-model.html#context-and-problem-statement",
     "title": "Ghostly partial-body presence avatar from ANNY via SOMA-X",
-    "section": "",
-    "text": "The presence marker decision calls for a vague ghostly humanoid that conveys position and heading. CHI-298 proposed fitting personas with SOMA (unifying parametric body models) and ANNY; the Linear issue is canceled, but the concept is the natural basis for that ghostly form. We track only three points (head and two hands), so a full posed body is under-constrained and risks the uncanny valley. Which body model do we use, and how much of the body do we show?"
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe presence marker decision calls for a vague ghostly humanoid that conveys position and heading. CHI-298 proposed fitting personas with SOMA (unifying parametric body models) and ANNY; the Linear issue is canceled, but the concept is the natural basis for that ghostly form. We track only three points (head and two hands), so a full posed body is under-constrained and risks the uncanny valley. Which body model do we use, and how much of the body do we show?"
   },
   {
     "objectID": "decisions/20260606-ghostly-presence-body-model.html#decision-drivers",
@@ -2132,7 +2132,7 @@
     "href": "decisions/20260506-maglev-cycle-2-observability.html",
     "title": "Maglev Cycle 2: Observability Stack",
     "section": "",
-    "text": "Deployment note: the stack now runs on the Harvester cluster; it has moved off Fly.io (see self-host on Harvester HCI). The Fly-specific details below are from the original deployment."
+    "text": "Tier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-2-observability.html#the-context",
