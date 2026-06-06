@@ -78,15 +78,24 @@ def _resolve(from_dir, target):
     return joined
 
 
+def _project_root():
+    # Quarto sets QUARTO_PROJECT_DIR for filters; the filter's own cwd is the
+    # document's directory, so anchor scanning to the project root instead.
+    return os.environ.get("QUARTO_PROJECT_DIR") or "."
+
+
 def _scan():
-    """Map every page key to its title and the set of page keys it links to."""
+    """Map every page key (relative to the project root) to its title and the set
+    of page keys it links to, independent of the filter's working directory."""
+    root = _project_root()
     graph = {}
-    paths = set(glob.glob("**/*.md", recursive=True)) | set(glob.glob("**/*.qmd", recursive=True))
+    paths = set(glob.glob(os.path.join(root, "**", "*.md"), recursive=True)) | set(
+        glob.glob(os.path.join(root, "**", "*.qmd"), recursive=True)
+    )
     for path in paths:
-        p = _posix(path)
-        if any(p.startswith(d) for d in _SKIP_DIRS):
+        key = _strip_ext(_posix(os.path.relpath(path, root)))
+        if any((key + "/").startswith(d) for d in _SKIP_DIRS):
             continue
-        key = _key(p)
         from_dir = posixpath.dirname(key)
         try:
             text = open(path, encoding="utf-8").read()
