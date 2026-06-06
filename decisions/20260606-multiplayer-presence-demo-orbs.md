@@ -50,15 +50,27 @@ Scope of the demo:
   signature is the identity mark. Unsigned participants stay anonymous orbs.
 - Built on [xr-grid](https://github.com/v-sekai-multiplayer-fabric/xr-grid).
 
+### Networking
+
+Godot's high-level networking is vetoed for this demo. Automatic scene
+replication (the `MultiplayerSpawner` and `MultiplayerSynchronizer` nodes and the
+`SceneMultiplayer` replicator) is not used. Orb poses go over low-level, explicit
+RPC calls instead, so the demo controls exactly what is sent each tick and how it
+is encoded. See the [networking technical details](20260606-presence-demo-networking-internals.md).
+
 ### Consequences
 
 - Good: presence and gesture for many people at low per-player cost.
 - Good: identity is opt-in through signing, so there is no login step.
 - Bad: orbs are not full avatars, so the demo does not exercise avatar networking
   or IK.
-- Bad: pen signing depends on cassie, which is a proof-of-concept capability
-  (patch surface creation loses about 90%), so the signing path is the weakest
-  link.
+- Neutral: pen signing depends on cassie, whose pen stroke creation is solid, so
+  signing (which only needs strokes) is reliable. Only cassie's patch surface
+  creation is buggy (loses about 90%), and signing does not depend on that.
+- Neutral: explicit RPC means hand-rolling the encoding, send rate, and
+  interpolation. That cost is the point. Pose streams have to be fast and
+  succinct, so they need a compact binary wire format. If it could be easy it
+  would be JSON, and JSON is too fat for high-rate pose updates.
 
 ### Confirmation
 
