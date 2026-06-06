@@ -846,6 +846,76 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
   <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>Archival file naming convention for committed assets</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-archival-file-naming-convention.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The manuals repo now commits binary assets alongside prose, starting with screenshots under <code>decisions/attachments/</code>. Ad-hoc names like <code>image.png</code> collide, sort poorly, and lose their provenance once they leave the page that referenced them. What naming convention should committed assets follow so they stay unique, sortable, and self-describing?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>Names should be unique and not collide across decisions.</li>
+<li>Names should sort chronologically and read as self-describing.</li>
+<li>Names should survive being copied out of the repo (provenance in the name).</li>
+<li>The convention should match established digital-preservation guidance.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Keep source names (<code>image.png</code>, <code>screenshot (1).png</code>).</li>
+<li>Content hash names (<code>a1b2c3.png</code>).</li>
+<li>A Library of Congress style descriptive convention.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “A Library of Congress style descriptive convention”, because it follows recognized preservation guidance and yields names that sort and explain themselves.</p>
+<p>The pattern:</p>
+<pre><code>YYYYMMDD_project_description_NNNN.ext</code></pre>
+<p>Following the Library of Congress file-naming guidance:</p>
+<ul>
+<li>Lowercase ASCII only; no spaces or special characters.</li>
+<li>ISO 8601 date first (<code>YYYYMMDD</code>) so names sort chronologically.</li>
+<li>Facets separated by underscores (<code>_</code>); words within a facet by hyphens (<code>-</code>).</li>
+<li>A zero-padded sequence (<code>NNNN</code>) to keep same-day captures unique and ordered.</li>
+<li>Descriptive but reasonably short.</li>
+</ul>
+<p>Example, used for the first committed screenshot:</p>
+<pre><code>20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png</code></pre>
+<p>Each committed asset also gets a BibTeX entry in <code>references.bib</code> recording its capture date and archived path, so the References page lists it.</p>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good: assets are unique, sort by date, and carry their provenance in the name.</li>
+<li>Good: the convention matches preservation practice and is mechanical to apply.</li>
+<li>Bad: names are longer than source names, and renaming on import is a manual step.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>Assets under <code>decisions/attachments/</code> match <code>YYYYMMDD_project_description_NNNN.ext</code> and have a matching <code>references.bib</code> entry. The first example is <code>20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png</code>, cited from the <a href="../decisions/20260606-multiplayer-presence-demo-orbs.html">presence-demo decision</a>.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>Based on the Library of Congress guidance on file naming for digital preservation (descriptive, no spaces, lowercase, ISO dates, zero-padded sequences).</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-archival-file-naming-convention.html</guid>
+  <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Replace Jaeger with VictoriaTraces for trace storage</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-observability-stack-victoriatraces.html</link>
   <description><![CDATA[ 
@@ -1330,7 +1400,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/present-proposal-template.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:47:02 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:50:44 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1555,7 +1625,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-intercept-smoke-test.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:47:02 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:50:44 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1677,7 +1747,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-9-physics-vrm.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:47:02 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:50:44 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1794,126 +1864,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-8-ik-merge.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:47:02 GMT</pubDate>
-</item>
-<item>
-  <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-7-ik-routing.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="maglev-cycle-7-ik-routing-and-merge" class="level1">
-<h1>Maglev Cycle 7: IK Routing and Merge</h1>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>Two same-type Godot clients share a zone after Cycle 6. Cycle 7 swaps one Steam Deck client for a PCVR client and confirms that a single 6-DOF IK datagram travels through the gateway and reaches the zone server. The rate and merge logic are not yet in scope.</p>
-</section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>A PCVR client’s IK datagram format differs structurally from a gamepad datagram. The gateway has never parsed one. Before testing merge behaviour at full IK rate, the routing path itself must be shown to work for at least one IK datagram.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>The PCVR client — running the solved <code>multiplayer-fabric-interaction-system</code> addon via <code>xr_controller_interaction_helper.gd</code> and <code>xr_action_host.gd</code> — starts at 1 Hz IK and ramps to 10 Hz. The Steam Deck client sends gamepad datagrams at normal cadence. The gateway routes and merges both streams to the zone server on UDP 7443. The world is static.</p>
-<p>The 1 Hz phase confirms the IK datagram format parses correctly. The 10 Hz phase confirms the gateway’s merge logic is correct under concurrent input before full rate is introduced.</p>
-<p>Pass criteria:</p>
-<ul class="task-list">
-<li><label><input type="checkbox">Zone server receives and logs at least one IK datagram without parse error at 1 Hz</label></li>
-<li><label><input type="checkbox">Zone server receives a merged tick containing both input types at 10 Hz</label></li>
-<li><label><input type="checkbox">No gamepad datagram dropped over 60 seconds at 10 Hz</label></li>
-<li><label><input type="checkbox">No gateway crash or restart</label></li>
-</ul>
-</section>
-<section id="estimate" class="level2">
-<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
-<p><strong>5 days</strong> (2026-05-19 → 2026-05-26). The IK datagram format is new but the gateway routing path is identical to gamepad. The interaction system (<code>xr_controller_interaction_helper.gd</code>) is solved; the work is serialization format definition and gateway route registration.</p>
-</section>
-<section id="cris-score" class="level2">
-<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 10%">
-<col style="width: 3%">
-<col style="width: 86%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Factor</th>
-<th>Score</th>
-<th>Evidence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>C</strong>omplexity</td>
-<td>7</td>
-<td>IK datagram format is new to the gateway but the routing path is identical to gamepad; one datagram per second removes rate risk.</td>
-</tr>
-<tr class="even">
-<td><strong>R</strong>each</td>
-<td>10</td>
-<td>Cycle 8 (full-rate IK) cannot begin without a proven merge baseline.</td>
-</tr>
-<tr class="odd">
-<td><strong>I</strong>mpediment</td>
-<td>9</td>
-<td>A parse failure here blocks all cross-platform work.</td>
-</tr>
-<tr class="even">
-<td><strong>S</strong>takeholder</td>
-<td>10</td>
-<td>Gate for Cycle 8 and all subsequent cross-platform cycles.</td>
-</tr>
-<tr class="odd">
-<td><strong>Total</strong></td>
-<td>9.0</td>
-<td>Build after Cycle 6 passes.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>10 Hz IK does not trigger head-of-line pressure; that stress test is Cycle 8 at full headset rate.</p>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<p>Going straight to full headset rate was rejected — a routing bug and a head-of-line bug at the same time are harder to separate than routing at 1 Hz and merge at 10 Hz in one cycle.</p>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Status: Draft</p>
-</section>
-<section id="decision-makers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
-<ul>
-<li>Lead Architect / Fabric Maintainer</li>
-</ul>
-</section>
-<section id="tags" class="level2">
-<h2 class="anchored" data-anchor-id="tags">Tags</h2>
-<ul>
-<li>maglev-cycle-7, ik-routing-merge, heterogeneous-input, galls-law, 20260506-maglev-cycle-7-ik-routing-merge, present-proposal-template</li>
-</ul>
-</section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
-<pre><code>@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}</code></pre>
-
-
-</section>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-7-ik-routing.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:47:02 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:50:44 GMT</pubDate>
 </item>
 </channel>
 </rss>

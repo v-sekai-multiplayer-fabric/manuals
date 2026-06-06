@@ -2,158 +2,162 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/references.html</loc>
-    <lastmod>2026-06-06T15:46:20.204Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.149Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-9-physics-vrm.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-0-infra.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-11-db-write.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-4-db-connection.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-7-ik-routing.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260501-godot-double-precision-template-release-for-zone.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-require-pr-and-merge-queue-on-main.html</loc>
-    <lastmod>2026-06-06T15:46:20.201Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.146Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-12-game-planning.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-feature-classification-poc-baseline-stretch.html</loc>
-    <lastmod>2026-06-06T15:46:20.201Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-5-zone-console.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-ghcr-package-ownership-same-repo.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-3-baker.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260501-fly-io-for-deployment.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-intercept-smoke-test.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-multiplayer-presence-demo-orbs.html</loc>
-    <lastmod>2026-06-06T15:46:20.201Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260507-deck-log.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260421-deck-log.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260425-deck-log.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/index.html</loc>
-    <lastmod>2026-06-06T15:46:20.204Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260506-deck-log.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260606-deck-log.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/present-proposal-template.html</loc>
-    <lastmod>2026-06-06T15:46:20.204Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-observability-stack-victoriametrics-tempo.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-observability-stack-victoriatraces.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-pin-engine-to-frozen-godot-4-7.html</loc>
-    <lastmod>2026-06-06T15:46:20.201Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-org-split-v-sekai-multiplayer-fabric.html</loc>
-    <lastmod>2026-06-06T15:46:20.201Z</lastmod>
-  </url>
-  <url>
-    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260501-webtransport-over-quic-for-game-traffic.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-spatial-audio-patched-resonance-audio.html</loc>
-    <lastmod>2026-06-06T15:46:20.201Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.146Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260501-webtransport-over-quic-for-game-traffic.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-org-split-v-sekai-multiplayer-fabric.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-pin-engine-to-frozen-godot-4-7.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-observability-stack-victoriatraces.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-observability-stack-victoriametrics-tempo.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/present-proposal-template.html</loc>
+    <lastmod>2026-06-06T15:49:57.149Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260606-deck-log.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260506-deck-log.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/index.html</loc>
+    <lastmod>2026-06-06T15:49:57.149Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260425-deck-log.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260421-deck-log.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260507-deck-log.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-multiplayer-presence-demo-orbs.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-intercept-smoke-test.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260501-fly-io-for-deployment.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-3-baker.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-ghcr-package-ownership-same-repo.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-5-zone-console.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
+  </url>
+  <url>
+    <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-archival-file-naming-convention.html</loc>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260501-cockroachdb-with-mtls-role-separation.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-observability-stack-victoriametrics-jaeger.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-10-dynamic-physics-score.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-1-gateway-handshake.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-compiling-godot-engine.html</loc>
-    <lastmod>2026-06-06T15:46:20.201Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-8-ik-merge.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-6-mmog-load.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-2-observability.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.145Z</lastmod>
   </url>
   <url>
     <loc>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog.html</loc>
-    <lastmod>2026-06-06T15:46:20.200Z</lastmod>
+    <lastmod>2026-06-06T15:49:57.144Z</lastmod>
   </url>
 </urlset>
