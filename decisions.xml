@@ -138,6 +138,62 @@
   <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>Self-host on Harvester HCI instead of Fly.io</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-self-host-on-harvester-hci.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The runtime first deployed on Fly.io (see the superseded Fly.io decision and Maglev Cycle 0). The project is moving to a self-hosted Harvester HCI cluster, where each service runs as a qcow2 VM image driven by podman quadlets. This records that Fly.io is no longer the deployment target.</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>Own the cluster, its cost, and its control.</li>
+<li>Ship each service as a VM image run by podman quadlets.</li>
+<li>Reuse the existing image build pipeline.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Stay on Fly.io.</li>
+<li>Self-host on Harvester HCI.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “Self-host on Harvester HCI”. Fly.io is no longer used. Deployment is OpenTofu in <a href="https://github.com/v-sekai-multiplayer-fabric/infra">infra</a> onto a Harvester cluster, with each service a qcow2 image (<code>linux-base-image</code> plus the per-service <code>*-image</code> repos) run as a podman quadlet.</p>
+<p>This supersedes <a href="../decisions/20260501-fly-io-for-deployment.html">Fly.io for deployment</a> and <a href="../decisions/20260506-maglev-cycle-0-infra.html">Maglev Cycle 0: Terraform Fly.io Infrastructure</a>.</p>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good: full control of the cluster, and the VM-image pipeline already exists.</li>
+<li>Bad: we operate our own HCI cluster.</li>
+<li>Bad: the migration is mid-pivot (see the infra repo’s <code>docs/migration-status.md</code>), so some older records still mention Fly until each service moves.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>The infra repo provisions Harvester VMs via OpenTofu and podman quadlets, and creates no Fly.io resources.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>The VM images live in the <code>*-image</code> repos; the engine is <a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">pinned to a frozen Godot 4.7 commit</a>.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-self-host-on-harvester-hci.html</guid>
+  <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Require pull requests and a merge queue on main</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-require-pr-and-merge-queue-on-main.html</link>
   <description><![CDATA[ 
@@ -1989,137 +2045,6 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-6-mmog-load.html</guid>
-  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Maglev Cycle 5: Zone-Console TUI Observer</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-5-zone-console.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p><code>multiplayer-fabric-zone-console</code> is a ratatui TUI that observes the zone over WebTransport. It is in the production stack and is the operator’s primary visibility into zone health during and after mission cycles. Cycle 5 depends only on Cycle 1 (zone server live) and runs in parallel with the game-logic track.</p>
-</section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>The zone-console has not connected to the zone server under the Fly deployment and confirmed it can display entity state and tick rate. Without a passing Cycle 5, operators have no real-time view into the zone during Cycles 9–10, where physics desync and causal ordering failures are the primary risks.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>Start zone-console targeting the Fly zone server. Confirm the TUI displays: connected status, current tick rate (targeting 20 Hz), and at least one entity visible in the entity list.</p>
-<p>Pass criteria:</p>
-<ul class="task-list">
-<li><label><input type="checkbox">zone-console connects without error</label></li>
-<li><label><input type="checkbox">Tick rate displayed at 15 Hz or above (full 20 Hz target confirmed in Cycle 10)</label></li>
-<li><label><input type="checkbox">At least one entity visible in the TUI entity list</label></li>
-<li><label><input type="checkbox">Clean disconnect on exit with no orphaned connection</label></li>
-</ul>
-</section>
-<section id="estimate" class="level2">
-<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
-<p><strong>2 days</strong> (2026-05-09 → 2026-05-12, parallel). Zone-console was built from scratch in 6 working days (2026-04-21–28). The work here is connecting the existing TUI to the deployed Fly gateway rather than a local target — config and endpoint change only.</p>
-</section>
-<section id="cris-score" class="level2">
-<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 12%">
-<col style="width: 4%">
-<col style="width: 83%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Factor</th>
-<th>Score</th>
-<th>Evidence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>C</strong>omplexity</td>
-<td>7</td>
-<td>WebTransport observer is simpler than the game clients; the risk is ratatui rendering on headless CI.</td>
-</tr>
-<tr class="even">
-<td><strong>R</strong>each</td>
-<td>9</td>
-<td>Operators need this during Cycles 4–2 to confirm tick rate holds under dynamic physics load.</td>
-</tr>
-<tr class="odd">
-<td><strong>I</strong>mpediment</td>
-<td>7</td>
-<td>A missing observer does not block gameplay but leaves Cycles 4–2 without operator-facing monitoring.</td>
-</tr>
-<tr class="even">
-<td><strong>S</strong>takeholder</td>
-<td>10</td>
-<td>Operator visibility tool for the production stack.</td>
-</tr>
-<tr class="odd">
-<td><strong>Total</strong></td>
-<td>8.25</td>
-<td>Build after Cycle 1 passes, in parallel with Cycles 6–11.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>A passing Cycle 5 does not validate zone-console under load; the full 20 Hz tick rate and entity count targets are confirmed during Cycle 10.</p>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<p>Deferring to after Cycle 10 was rejected — the observer is needed during Cycle 10 to confirm tick rate holds at 20 Hz under dynamic physics load.</p>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Status: Draft</p>
-</section>
-<section id="decision-makers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
-<ul>
-<li>Lead Architect / Fabric Maintainer</li>
-</ul>
-</section>
-<section id="tags" class="level2">
-<h2 class="anchored" data-anchor-id="tags">Tags</h2>
-<ul>
-<li>maglev-cycle-5, zone-console, ratatui, observer, galls-law, 20260506-maglev-cycle-5-zone-console, present-proposal-template</li>
-</ul>
-</section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
-<pre><code>@techreport{20260506_cycle1,
-  title       = {Maglev Cycle 1: Godot Client Gateway Handshake},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260506-maglev-cycle-1-gateway-handshake.md}
-}
-
-@techreport{20260501_webtransport,
-  title       = {Use WebTransport over QUIC for game traffic},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260501-webtransport-over-quic-for-game-traffic.md}
-}
-
-@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}</code></pre>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-5-zone-console.html</guid>
   <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
 </item>
 </channel>
