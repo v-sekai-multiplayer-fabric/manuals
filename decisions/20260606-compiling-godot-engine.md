@@ -15,9 +15,13 @@ from scratch and cache hits are lost whenever a checkout is moved or renamed.
 ## Decision
 
 Standardise on [`sccache`](https://github.com/mozilla/sccache) as the compiler
-launcher plus SCons's own `CacheDir`, both pointed at a single physical directory
-on the `E:` drive so Windows and WSL share one store. Wrap the build in a
-`gscons` shell function on each host.
+launcher plus SCons's own `CacheDir`, both pointed at one shared cache directory
+reachable from both hosts. Wrap the build in a `gscons` shell function on each
+host. Two environment variables parameterise the setup, so this guide hardcodes
+no absolute paths:
+
+- `GODOT_SRC` — the engine checkout root.
+- `GODOT_BUILD_CACHE` — the shared cache directory.
 
 ### Prerequisites
 
@@ -34,50 +38,54 @@ Verify `sccache --version` resolves in each shell. The verified setup uses
 
 ### Shared cache layout
 
-WSL mounts `E:` at `/mnt/e`, so the same files back both build hosts:
+Both the sccache object cache and the SCons `CacheDir` live under
+`GODOT_BUILD_CACHE`:
 
-| Purpose              | Windows path                       | WSL path                               |
-| -------------------- | ---------------------------------- | -------------------------------------- |
-| sccache object cache | `E:\godot-build-cache\sccache`     | `/mnt/e/godot-build-cache/sccache`     |
-| SCons `CacheDir`     | `E:\godot-build-cache\scons_cache` | `/mnt/e/godot-build-cache/scons_cache` |
+| Purpose              | Path                             |
+| -------------------- | -------------------------------- |
+| sccache object cache | `$GODOT_BUILD_CACHE/sccache`     |
+| SCons `CacheDir`     | `$GODOT_BUILD_CACHE/scons_cache` |
 
-`sccache` keys include the compiler, target triple, and flags, so MinGW and Linux
-objects coexist in the same store without colliding — they simply do not hit each
-other. Sharing the location keeps cache management to one directory.
+To share one store between Windows and WSL, set `GODOT_BUILD_CACHE` to a location
+both can reach — on a combined workstation that is usually a drive WSL mounts
+under `/mnt`. `sccache` keys include the compiler, target triple, and flags, so
+MinGW and Linux objects coexist in the same store without colliding.
 
 `SCCACHE_BASEDIRS` (the equivalent of ccache's `CCACHE_BASEDIR`) strips a leading
-absolute prefix before hashing so hits survive a moved/renamed checkout. Set it to
-the checkout root. Paths must be **absolute**; separate multiple dirs with `;` on
+absolute prefix before hashing so hits survive a moved/renamed checkout. Point it
+at `GODOT_SRC`. Paths must be **absolute**; separate multiple dirs with `;` on
 Windows and `:` elsewhere (longest matching prefix wins). The server reads it at
 startup — run `sccache --stop-server` after changing it.
 
 ### Windows — PowerShell profile
 
-Add to `Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1`:
+Set `GODOT_SRC` and `GODOT_BUILD_CACHE` to your locations, then add to
+`Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1`:
 
 ```powershell
-# Shared build cache on E: — same physical dir as WSL (/mnt/e/godot-build-cache).
-$env:SCCACHE_DIR = "E:\godot-build-cache\sccache"
+if (-not $env:GODOT_SRC) { $env:GODOT_SRC = "$env:USERPROFILE\godot" }
+if (-not $env:GODOT_BUILD_CACHE) { $env:GODOT_BUILD_CACHE = "$env:LOCALAPPDATA\godot-build" }
+$env:SCCACHE_DIR = "$env:GODOT_BUILD_CACHE\sccache"
 $env:SCCACHE_CACHE_SIZE = "20G"
-# Strip the checkout root from compile paths so cache hits survive a moved/renamed build dir.
-$env:SCCACHE_BASEDIRS = "E:\godot"
-New-Item -ItemType Directory -Force -Path $env:SCCACHE_DIR, "E:\godot-build-cache\scons_cache" | Out-Null
-function gscons { python -m SCons platform=windows use_mingw=yes compiledb=yes target=editor precision=double c_compiler_launcher=sccache cpp_compiler_launcher=sccache cache_path=E:/godot-build-cache/scons_cache -j16 @args }
+$env:SCCACHE_BASEDIRS = $env:GODOT_SRC
+New-Item -ItemType Directory -Force -Path $env:SCCACHE_DIR, "$env:GODOT_BUILD_CACHE\scons_cache" | Out-Null
+function gscons { python -m SCons platform=windows use_mingw=yes compiledb=yes target=editor precision=double c_compiler_launcher=sccache cpp_compiler_launcher=sccache "cache_path=$env:GODOT_BUILD_CACHE/scons_cache" -j16 @args }
 ```
 
 ### WSL / Linux — `~/.bashrc`
 
 ```bash
-# Godot V-Sekai linuxbsd build.
-# Uses sccache as the compiler launcher to cache object compilation.
-export SCCACHE_DIR="${SCCACHE_DIR:-/mnt/e/godot-build-cache/sccache}"
+# Godot V-Sekai linuxbsd build. sccache caches object compilation.
+export GODOT_SRC="${GODOT_SRC:-$HOME/godot}"                       # engine checkout
+export GODOT_BUILD_CACHE="${GODOT_BUILD_CACHE:-$HOME/.cache/godot-build}"  # shared cache
+export SCCACHE_DIR="${SCCACHE_DIR:-$GODOT_BUILD_CACHE/sccache}"
 export SCCACHE_CACHE_SIZE="${SCCACHE_CACHE_SIZE:-20G}"
 # Strip the checkout root from compile paths so cache hits survive a moved/renamed build dir.
-export SCCACHE_BASEDIRS="${SCCACHE_BASEDIRS:-/mnt/e/godot}"
+export SCCACHE_BASEDIRS="${SCCACHE_BASEDIRS:-$GODOT_SRC}"
 gscons() {
     python3 -m SCons compiledb=yes target=editor precision=double \
         c_compiler_launcher=sccache cpp_compiler_launcher=sccache \
-        cache_path=/mnt/e/godot-build-cache/scons_cache debug_symbols=yes tests=yes -j$(nproc) "$@"
+        "cache_path=$GODOT_BUILD_CACHE/scons_cache" debug_symbols=yes tests=yes -j$(nproc) "$@"
 }
 ```
 
@@ -85,7 +93,7 @@ Open a fresh shell (or `source ~/.bashrc` / `. $PROFILE`) so `gscons` is defined
 
 ### Building
 
-From the engine checkout (`E:\godot` / `/mnt/e/godot`):
+From your engine checkout (`$GODOT_SRC`):
 
 ```sh
 gscons                      # full editor build
@@ -116,11 +124,12 @@ hit rate and finishes substantially faster. The store is capped at
 
 ## Consequences
 
-- One cache directory on `E:` serves both hosts; management is a single location.
+- One cache directory (`GODOT_BUILD_CACHE`) serves both hosts; management is a
+  single location.
 - The engine `SConstruct` recognises only `cache_path` and `cache_limit` for the
   SCons cache. `scons_cache=` is **not** valid and is silently ignored.
-- WSL builds run against `/mnt/e`, whose 9p mount is slower than native ext4 —
-  the trade-off accepted for a shared cache.
+- If the shared cache lives on a Windows drive mounted into WSL, that mount is
+  slower than native ext4 — the trade-off accepted for sharing one store.
 - Common failures: no hits between builds → server started before the env vars,
   run `sccache --stop-server`; no hits after relocating a checkout → set
   `SCCACHE_BASEDIRS` to the checkout root.
