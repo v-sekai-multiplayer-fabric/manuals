@@ -69,7 +69,7 @@ single build, reset first: `sccache --zero-stats; <build>; sccache --show-stats`
 - Bad: the counters are per-server-session — they reset when the sccache server
   restarts or on `--zero-stats`, so they are not lifetime bucket totals.
 - Bad: `--show-stats` alone does not prove S3 connectivity; only a compile (or a
-  full build) exercises read/write. `Cache errors = 0` *after* a build is the real
+  full build) exercises read/write. `Cache errors = 0` _after_ a build is the real
   confirmation that auth and the endpoint are correct.
 
 ### Confirmation
