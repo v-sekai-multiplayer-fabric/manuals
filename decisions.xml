@@ -846,6 +846,88 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
   <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>Recursive art-game loop and its minimal steel thread</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-art-game-loop-steel-thread.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>We want a small workspace where friends make tiny art-games together, watch them, and improve them on a tight loop. Players show up in the space as tracker orbs (the <a href="../decisions/20260606-multiplayer-presence-demo-orbs.html">presence demo</a>), with drawing pens (<a href="../decisions/20260606-feature-classification-poc-baseline-stretch.html">cassie</a>) as a stretch goal. Before building the workspace out, we need the smallest end-to-end thread that proves the loop runs at all. What is that thread?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>A tight, local-first feedback loop friends can actually turn.</li>
+<li>Visible results each pass, so friction is obvious.</li>
+<li>One friction note and one patch at a time, not a backlog.</li>
+<li>The smallest path that touches every link from runtime to verified change.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Build the full tool-chain and content pipeline first.</li>
+<li>A minimal steel thread that exercises every link once, then grow it.</li>
+<li>Hand-run the loop with no tooling.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “A minimal steel thread that exercises every link once”, because it proves the whole loop end to end before we invest in any one part.</p>
+<section id="the-recursive-art-game-loop" class="level3">
+<h3 class="anchored" data-anchor-id="the-recursive-art-game-loop">The recursive art-game loop</h3>
+<ol type="1">
+<li>Friends create a tiny art-game.</li>
+<li>They play and observe it, capturing friction.</li>
+<li>We patch the art-game or the tools.</li>
+<li>We replay the improved version.</li>
+<li>Repeat.</li>
+</ol>
+<p>Players appear as tracker orbs; drawing pens are a stretch goal layered on once the loop turns.</p>
+</section>
+<section id="the-minimal-steel-thread" class="level3">
+<h3 class="anchored" data-anchor-id="the-minimal-steel-thread">The minimal steel thread</h3>
+<ol type="1">
+<li>Start a local Godot runtime/editor.</li>
+<li>Connect <a href="https://github.com/v-sekai-multiplayer-fabric/vsekai-godot-mcp">Godot MCP</a>.</li>
+<li>Run one <a href="https://github.com/v-sekai-multiplayer-fabric/godot-sandbox-programs">Godot Sandbox</a> command/program.</li>
+<li>Create or modify one visible art object.</li>
+<li>Record one friction note.</li>
+<li>Patch one tiny behavior in the art-game or tools.</li>
+<li>Re-run and verify the visible result changed.</li>
+</ol>
+<p>This builds on the <a href="https://github.com/v-sekai-multiplayer-fabric/friends-art-game-loop">friends-art-game-loop</a> workspace.</p>
+</section>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good: every link from runtime to verified change is exercised once, so gaps surface early.</li>
+<li>Good: the loop produces a visible change and one friction note per pass, which keeps scope honest.</li>
+<li>Bad: the first thread is deliberately thin and does no real game design yet.</li>
+<li>Bad: it leans on Godot MCP and the sandbox, so a break in either stalls the loop.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>The steel thread completes from a cold local editor through to a re-run that shows a changed visible result, with one friction note and one patch recorded.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>This composes the <a href="../decisions/20260606-multiplayer-presence-demo-orbs.html">presence demo</a> (tracker orbs) and the cassie pen (stretch) into a working loop, run through Godot MCP and the Godot Sandbox.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-art-game-loop-steel-thread.html</guid>
+  <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Archival file naming convention for committed assets</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-archival-file-naming-convention.html</link>
   <description><![CDATA[ 
@@ -1400,7 +1482,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/present-proposal-template.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:50:44 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:53:39 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1625,7 +1707,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-intercept-smoke-test.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:50:44 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:53:39 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1747,124 +1829,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-9-physics-vrm.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:50:44 GMT</pubDate>
-</item>
-<item>
-  <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-8-ik-merge.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="maglev-cycle-8-full-rate-ik-merge" class="level1">
-<h1>Maglev Cycle 8: Full-Rate IK Merge</h1>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>Cycle 7 confirms routing and merge at 10 Hz. Cycle 8 raises the PCVR client to operating rate — continuous 6-DOF IK at headset cadence — alongside full-rate gamepad input, and verifies the gateway merges both without head-of-line blocking.</p>
-</section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>6-DOF IK datagrams arrive an order of magnitude more frequently than gamepad events. The gateway’s merge path must handle that rate differential without blocking lower-frequency gamepad events. A head-of-line stall on the IK queue would delay or drop gamepad events silently.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>The PCVR client sends 6-DOF IK datagrams at full headset rate. The Steam Deck client sends gamepad datagrams at normal cadence. Both arrive on UDP 443. The gateway merges them per tick and forwards to the zone server on UDP 7443. The world is static.</p>
-<p>Pass criteria:</p>
-<ul class="task-list">
-<li><label><input type="checkbox">Zone server processes ticks containing both input types without stalls or skipped events</label></li>
-<li><label><input type="checkbox">No gamepad datagram is silently dropped over 60 seconds under full IK load</label></li>
-<li><label><input type="checkbox">Gateway CPU stays within budget under both streams at full rate</label></li>
-</ul>
-</section>
-<section id="estimate" class="level2">
-<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
-<p><strong>5 days</strong> (2026-05-26 → 2026-06-02). The merge path is an extension of Cycle 7; the risk is head-of-line behaviour under load, which requires profiling time. A hardware re-run on physical Meta Quest hardware before Cycle 9 adds 1 day outside this window.</p>
-</section>
-<section id="cris-score" class="level2">
-<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 3%">
-<col style="width: 87%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Factor</th>
-<th>Score</th>
-<th>Evidence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>C</strong>omplexity</td>
-<td>6</td>
-<td>Merging a continuous high-frequency IK stream with low-frequency gamepad input without head-of-line effects is untested in this codebase.</td>
-</tr>
-<tr class="even">
-<td><strong>R</strong>each</td>
-<td>10</td>
-<td>Cross-platform play at operating rate requires this path; Cycles 9 and beyond add physics and persistence on top of it.</td>
-</tr>
-<tr class="odd">
-<td><strong>I</strong>mpediment</td>
-<td>9</td>
-<td>A head-of-line bug here makes physics results in Cycle 9 and beyond unreliable for the gamepad client.</td>
-</tr>
-<tr class="even">
-<td><strong>S</strong>takeholder</td>
-<td>10</td>
-<td>Gate for cross-platform physics and score.</td>
-</tr>
-<tr class="odd">
-<td><strong>Total</strong></td>
-<td>8.25</td>
-<td>Build after Cycle 7 passes.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>The Meta XR Simulator on macOS covers the initial run, but Cycle 8 must be re-run on physical hardware before Cycle 9 begins — the simulator does not reproduce real headset IK datagram rates under motion.</p>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<p>Skipping Cycles 7 and 5 together was rejected — a failure at full rate conflates routing bugs with rate bugs, leaving both unattributable.</p>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Status: Draft</p>
-</section>
-<section id="decision-makers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
-<ul>
-<li>Lead Architect / Fabric Maintainer</li>
-</ul>
-</section>
-<section id="tags" class="level2">
-<h2 class="anchored" data-anchor-id="tags">Tags</h2>
-<ul>
-<li>maglev-cycle-8, ik-merge, heterogeneous-input, galls-law, 20260506-maglev-cycle-8-ik-merge, present-proposal-template</li>
-</ul>
-</section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
-<pre><code>@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}</code></pre>
-
-
-</section>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-8-ik-merge.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:50:44 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:53:39 GMT</pubDate>
 </item>
 </channel>
 </rss>
