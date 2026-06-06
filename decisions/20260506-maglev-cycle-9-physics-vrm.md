@@ -1,7 +1,7 @@
 ---
 title: "Maglev Cycle 9: Physics and VRM Loading"
 date: 2026-05-06
-status: proposed
+status: rejected
 tier: baseline
 ---
 
