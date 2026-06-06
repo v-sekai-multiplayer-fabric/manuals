@@ -38,5 +38,6 @@ format:
 
 filters:
   - quarto
+  - filters/decision-meta.lua
 
 freeze: true
