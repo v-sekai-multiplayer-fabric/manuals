@@ -358,10 +358,10 @@ ul.task-list li input[type="checkbox"] {
 <section id="considered-options" class="level2">
 <h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
 <ul>
-<li><strong>Run by hand in a terminal</strong> — dies with the shell; no restart; no boot start.</li>
-<li><strong>Scheduled Task (logon trigger)</strong> — runs in the user session and needs no service wrapper, but it is not a true service (no SCM state, weaker restart semantics), and registering one was denied by policy on this machine.</li>
-<li><strong><code>sc.exe create</code> directly</strong> — the SCM expects a process that implements the service protocol; a bare exe started this way is killed as non-responsive.</li>
-<li><strong><a href="https://nssm.cc/">nssm</a> (Non-Sucking Service Manager) wrapping the program</strong> — a thin supervisor that <em>is</em> a proper service and keeps an ordinary foreground process alive, restarting it on exit.</li>
+<li>Running by hand in a terminal ties the process to that shell: no restart and no boot start.</li>
+<li>A Scheduled Task on a logon trigger runs in the user session and needs no service wrapper, but it is not a true service (no SCM state, weaker restart semantics), and registering one was denied by policy on this machine.</li>
+<li>Calling <code>sc.exe create</code> directly does not work because the SCM expects a process that implements the service protocol; a bare exe started this way is killed as non-responsive.</li>
+<li>Wrapping the program with <a href="https://nssm.cc/">nssm</a> (the Non-Sucking Service Manager) puts a thin supervisor in front of it that <em>is</em> a proper service and keeps an ordinary foreground process alive, restarting it on exit.</li>
 </ul>
 </section>
 <section id="decision-outcome" class="level2">
@@ -369,10 +369,10 @@ ul.task-list li input[type="checkbox"] {
 <p>Chosen option: <strong>nssm-supervised foreground processes, one Windows service per instance.</strong> nssm satisfies the SCM, so each target runs as a real auto-start/auto-restart service while staying an ordinary executable.</p>
 <p>The pattern has four parts:</p>
 <ol type="1">
-<li><p><strong>Run the target in the foreground</strong> — a supervisor can only watch a process that does not fork-and-exit. For sccache that means <code>SCCACHE_START_SERVER=1</code> + <code>SCCACHE_NO_DAEMON=1</code> and invoking the bare binary (not <code>--start-server</code>, which always daemonizes). Most servers (Godot <code>--headless</code>, <code>cockroach start</code>, zone daemons) are already foreground.</p></li>
-<li><p><strong>A per-instance launcher script</strong> sets that instance’s environment and execs the program by <strong>absolute path</strong> — services run as <em>LocalSystem</em>, whose <code>PATH</code> does not include user shims (e.g.&nbsp;scoop). Secrets are read at runtime from their existing secured file (for sccache, the object-store keys come from the <code>do-tor1</code> AWS profile in <code>~/.aws/credentials</code>, exported as <code>AWS_ACCESS_KEY_ID</code>/<code>AWS_SECRET_ACCESS_KEY</code> because sccache’s S3 backend ignores AWS <em>profiles</em>). Nothing secret is written to disk by the script.</p></li>
-<li><p><strong>An elevated installer script</strong> registers each service with nssm, sets it to <code>SERVICE_AUTO_START</code>, enables restart-on-exit with a throttle/delay, points stdout/stderr at rotating log files, and starts it. It is idempotent (stop + remove + reinstall) and writes a transcript so the result can be reviewed after the separate elevated window closes.</p></li>
-<li><p><strong>Instance isolation by port (and namespace)</strong> — each instance listens on its own loopback port; clients select an instance by port. Loopback is not session-isolated, so a LocalSystem service in session 0 is reachable from the user session. sccache additionally uses a distinct S3 key prefix per instance.</p></li>
+<li><p>Run the target in the foreground, since a supervisor can only watch a process that does not fork-and-exit. For sccache that means <code>SCCACHE_START_SERVER=1</code> + <code>SCCACHE_NO_DAEMON=1</code> and invoking the bare binary (not <code>--start-server</code>, which always daemonizes). Most servers (Godot <code>--headless</code>, <code>cockroach start</code>, zone daemons) are already foreground.</p></li>
+<li><p>A per-instance launcher script sets that instance’s environment and execs the program by <strong>absolute path</strong> — services run as <em>LocalSystem</em>, whose <code>PATH</code> does not include user shims (e.g.&nbsp;scoop). Secrets are read at runtime from their existing secured file (for sccache, the object-store keys come from the <code>do-tor1</code> AWS profile in <code>~/.aws/credentials</code>, exported as <code>AWS_ACCESS_KEY_ID</code>/<code>AWS_SECRET_ACCESS_KEY</code> because sccache’s S3 backend ignores AWS <em>profiles</em>). Nothing secret is written to disk by the script.</p></li>
+<li><p>An elevated installer script registers each service with nssm, sets it to <code>SERVICE_AUTO_START</code>, enables restart-on-exit with a throttle/delay, points stdout/stderr at rotating log files, and starts it. It is idempotent (stop + remove + reinstall) and writes a transcript so the result can be reviewed after the separate elevated window closes.</p></li>
+<li><p>Instance isolation comes from the port (and namespace): each instance listens on its own loopback port; clients select an instance by port. Loopback is not session-isolated, so a LocalSystem service in session 0 is reachable from the user session. sccache additionally uses a distinct S3 key prefix per instance.</p></li>
 </ol>
 <section id="worked-example-the-sccache-services" class="level3">
 <h3 class="anchored" data-anchor-id="worked-example-the-sccache-services">Worked example — the sccache services</h3>
@@ -413,10 +413,10 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="applying-the-pattern-elsewhere">Applying the pattern elsewhere</h3>
 <p>The same launcher + installer shape runs other dev infrastructure as services:</p>
 <ul>
-<li><strong>Godot dedicated servers</strong> — one service per instance, each on its own port; the launcher passes <code>--headless</code> and the scene/port arguments.</li>
-<li><strong>Zone servers</strong> — one service per zone/world, isolated by port, supervised and restarted independently so one zone crashing does not take down the others.</li>
-<li><strong>Zone backends</strong> — the per-zone backend daemons (state/persistence/matchmaking workers) behind those zone servers, each its own service with its own port and runtime-read credentials.</li>
-<li><strong>CockroachDB</strong> — a <code>cockroach start</code> (or <code>start-single-node</code>) service; secrets (certs/join tokens) read at runtime, data dir as an absolute path.</li>
+<li>Godot dedicated servers get one service per instance, each on its own port; the launcher passes <code>--headless</code> and the scene/port arguments.</li>
+<li>Zone servers get one service per zone/world, isolated by port, supervised and restarted independently so one zone crashing does not take down the others.</li>
+<li>Zone backends are the per-zone backend daemons (state/persistence/matchmaking workers) behind those zone servers, each its own service with its own port and runtime-read credentials.</li>
+<li>CockroachDB runs as a <code>cockroach start</code> (or <code>start-single-node</code>) service, with secrets (certs/join tokens) read at runtime and the data dir as an absolute path.</li>
 </ul>
 </section>
 <section id="consequences" class="level3">

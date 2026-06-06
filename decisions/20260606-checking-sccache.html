@@ -392,9 +392,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Chosen option: “Read <code>sccache --show-stats</code>”, because it surfaces the cache backend and health in one command without secrets or log parsing.</p>
 <p>Check three lines of the output:</p>
 <ul>
-<li><strong><code>Cache location</code></strong> — must be <code>s3, name: chibifire-sccache</code> (with the project’s key prefix, e.g.&nbsp;<code>/godot/</code>). If it says <code>Local disk</code>, the <code>SCCACHE_*</code> env vars are not set in that shell and the shared cache is not in use.</li>
-<li><strong><code>Cache errors</code></strong> (and read/write errors) — must be <code>0</code>. Non-zero means a credentials, endpoint, or connectivity problem.</li>
-<li><strong><code>Cache hits</code> vs <code>Cache misses</code></strong> — the payoff; the hit rate rises across builds.</li>
+<li><code>Cache location</code> must be <code>s3, name: chibifire-sccache</code> (with the project’s key prefix, e.g.&nbsp;<code>/godot/</code>). If it says <code>Local disk</code>, the <code>SCCACHE_*</code> env vars are not set in that shell and the shared cache is not in use.</li>
+<li><code>Cache errors</code> (and read/write errors) must be <code>0</code>. Non-zero means a credentials, endpoint, or connectivity problem.</li>
+<li><code>Cache hits</code> versus <code>Cache misses</code> are the payoff; the hit rate rises across builds.</li>
 </ul>
 <p>On Windows this is wrapped as a <code>sccheck</code> PowerShell function (alias <code>scc</code>) in the user profile; aliases cannot carry logic, hence a function plus a <code>Set-Alias</code> shim:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> sccheck <span class="op">{</span></span>
