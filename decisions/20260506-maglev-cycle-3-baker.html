@@ -360,8 +360,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="design">Design</h2>
 <p>Trigger two bake jobs via the Fly Machines API:</p>
 <ol type="1">
-<li><strong>Train environment bake</strong>: <code>multiplayer-fabric-baker</code> validates the Maglev train scene (greybox CSG geometry is acceptable for cycle validation), exports it, chunks it with aria-storage, and posts the index to uro.</li>
-<li><strong>Avatar bake</strong>: same pipeline for <code>multiplayer-fabric-humanoid-project/humanoid/art/mire/mire.vrm</code> (51 MB), used by both PCVR and Steam Deck clients in Cycle 9.</li>
+<li>Train environment bake: <code>multiplayer-fabric-baker</code> validates the Maglev train scene (greybox CSG geometry is acceptable for cycle validation), exports it, chunks it with aria-storage, and posts the index to uro.</li>
+<li>Avatar bake: same pipeline for <code>multiplayer-fabric-humanoid-project/humanoid/art/mire/mire.vrm</code> (51 MB), used by both PCVR and Steam Deck clients in Cycle 9.</li>
 </ol>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">flyctl</span> machine run registry.fly.io/multiplayer-fabric-baker:latest <span class="dt">\</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--app</span> multiplayer-fabric-baker <span class="dt">\</span></span>
