@@ -34,12 +34,12 @@ commitment, not just maturity, which is what planning needs.
 
 The tiers:
 
-1. **Proof of concept** — demonstrates the idea works end to end, in partial or
-   throwaway form. May be unreliable or lossy, and nothing depends on it yet.
-2. **Baseline** — the committed minimum the product ships. Works reliably across
-   the target platforms. This is the bar.
-3. **Stretch goal** — beyond baseline. Pursued if time allows; cutting it does not
-   block the release.
+1. A proof of concept demonstrates the idea works end to end, in partial or
+   throwaway form. It may be unreliable or lossy, and nothing depends on it yet.
+2. The baseline is the committed minimum the product ships. It works reliably
+   across the target platforms, and is the bar.
+3. A stretch goal goes beyond baseline. It is pursued if time allows; cutting it
+   does not block the release.
 
 Each feature in the [capabilities table](../index.md#capabilities-and-where-they-live)
 carries one tier. A feature moves between tiers as it matures or as commitment

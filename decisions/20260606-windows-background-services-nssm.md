@@ -46,15 +46,17 @@ _Force New Window_ mode, so any elevation is an interactive UAC prompt.
 
 ## Considered Options
 
-- **Run by hand in a terminal** — dies with the shell; no restart; no boot start.
-- **Scheduled Task (logon trigger)** — runs in the user session and needs no
-  service wrapper, but it is not a true service (no SCM state, weaker restart
-  semantics), and registering one was denied by policy on this machine.
-- **`sc.exe create` directly** — the SCM expects a process that implements the
-  service protocol; a bare exe started this way is killed as non-responsive.
-- **[nssm](https://nssm.cc/) (Non-Sucking Service Manager) wrapping the program**
-  — a thin supervisor that _is_ a proper service and keeps an ordinary foreground
-  process alive, restarting it on exit.
+- Running by hand in a terminal ties the process to that shell: no restart and no
+  boot start.
+- A Scheduled Task on a logon trigger runs in the user session and needs no service
+  wrapper, but it is not a true service (no SCM state, weaker restart semantics),
+  and registering one was denied by policy on this machine.
+- Calling `sc.exe create` directly does not work because the SCM expects a process
+  that implements the service protocol; a bare exe started this way is killed as
+  non-responsive.
+- Wrapping the program with [nssm](https://nssm.cc/) (the Non-Sucking Service
+  Manager) puts a thin supervisor in front of it that _is_ a proper service and
+  keeps an ordinary foreground process alive, restarting it on exit.
 
 ## Decision Outcome
 
@@ -64,13 +66,13 @@ auto-start/auto-restart service while staying an ordinary executable.
 
 The pattern has four parts:
 
-1. **Run the target in the foreground** — a supervisor can only watch a process
+1. Run the target in the foreground, since a supervisor can only watch a process
    that does not fork-and-exit. For sccache that means
    `SCCACHE_START_SERVER=1` + `SCCACHE_NO_DAEMON=1` and invoking the bare binary
    (not `--start-server`, which always daemonizes). Most servers (Godot
    `--headless`, `cockroach start`, zone daemons) are already foreground.
 
-2. **A per-instance launcher script** sets that instance's environment and execs
+2. A per-instance launcher script sets that instance's environment and execs
    the program by **absolute path** — services run as _LocalSystem_, whose `PATH`
    does not include user shims (e.g. scoop). Secrets are read at runtime from
    their existing secured file (for sccache, the object-store keys come from the
@@ -78,13 +80,13 @@ The pattern has four parts:
    `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY` because sccache's S3 backend
    ignores AWS _profiles_). Nothing secret is written to disk by the script.
 
-3. **An elevated installer script** registers each service with nssm, sets it to
+3. An elevated installer script registers each service with nssm, sets it to
    `SERVICE_AUTO_START`, enables restart-on-exit with a throttle/delay, points
    stdout/stderr at rotating log files, and starts it. It is idempotent
    (stop + remove + reinstall) and writes a transcript so the result can be
    reviewed after the separate elevated window closes.
 
-4. **Instance isolation by port (and namespace)** — each instance listens on its
+4. Instance isolation comes from the port (and namespace): each instance listens on its
    own loopback port; clients select an instance by port. Loopback is not
    session-isolated, so a LocalSystem service in session 0 is reachable from the
    user session. sccache additionally uses a distinct S3 key prefix per instance.
@@ -111,15 +113,15 @@ server restarts described in
 
 The same launcher + installer shape runs other dev infrastructure as services:
 
-- **Godot dedicated servers** — one service per instance, each on its own port;
-  the launcher passes `--headless` and the scene/port arguments.
-- **Zone servers** — one service per zone/world, isolated by port, supervised and
+- Godot dedicated servers get one service per instance, each on its own port; the
+  launcher passes `--headless` and the scene/port arguments.
+- Zone servers get one service per zone/world, isolated by port, supervised and
   restarted independently so one zone crashing does not take down the others.
-- **Zone backends** — the per-zone backend daemons (state/persistence/matchmaking
+- Zone backends are the per-zone backend daemons (state/persistence/matchmaking
   workers) behind those zone servers, each its own service with its own port and
   runtime-read credentials.
-- **CockroachDB** — a `cockroach start` (or `start-single-node`) service; secrets
-  (certs/join tokens) read at runtime, data dir as an absolute path.
+- CockroachDB runs as a `cockroach start` (or `start-single-node`) service, with
+  secrets (certs/join tokens) read at runtime and the data dir as an absolute path.
 
 ### Consequences
 

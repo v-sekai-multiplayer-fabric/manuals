@@ -39,12 +39,13 @@ and health in one command without secrets or log parsing.
 
 Check three lines of the output:
 
-- **`Cache location`** — must be `s3, name: chibifire-sccache` (with the project's
-  key prefix, e.g. `/godot/`). If it says `Local disk`, the `SCCACHE_*` env vars are
+- `Cache location` must be `s3, name: chibifire-sccache` (with the project's key
+  prefix, e.g. `/godot/`). If it says `Local disk`, the `SCCACHE_*` env vars are
   not set in that shell and the shared cache is not in use.
-- **`Cache errors`** (and read/write errors) — must be `0`. Non-zero means a
+- `Cache errors` (and read/write errors) must be `0`. Non-zero means a
   credentials, endpoint, or connectivity problem.
-- **`Cache hits` vs `Cache misses`** — the payoff; the hit rate rises across builds.
+- `Cache hits` versus `Cache misses` are the payoff; the hit rate rises across
+  builds.
 
 On Windows this is wrapped as a `sccheck` PowerShell function (alias `scc`) in the
 user profile; aliases cannot carry logic, hence a function plus a `Set-Alias` shim:
