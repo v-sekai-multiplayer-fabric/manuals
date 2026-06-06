@@ -4,14 +4,7 @@
     "href": "references.html",
     "title": "References",
     "section": "",
-    "text": "Manuals › References"
-  },
-  {
-    "objectID": "references.html#backlinks",
-    "href": "references.html#backlinks",
-    "title": "References",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nV-Sekai — Multiplayer Fabric"
+    "text": "Manuals › References\n\n\nAcademy Software Foundation. 2026. MaterialX: An Open Standard for Network-Based CG Object Looks. https://materialx.org/.\n\n\nAhmed, Dewan T., and Shervin Shirmohammadi. 2008. “A Dynamic Area of Interest Management and Collaboration Model for P2P MMOGs.” Proceedings of the 12th IEEE/ACM International Symposium on Distributed Simulation and Real-Time Applications (DS-RT ’08), 27–34. https://doi.org/10.1109/DS-RT.2008.26.\n\n\nAhmed, Dewan T., and Shervin Shirmohammadi. 2009. “Zoning Issues and Area of Interest Management in Massively Multiplayer Online Games.” In Handbook of Multimedia for Digital Entertainment and Arts. Springer. https://doi.org/10.1007/978-0-387-89024-1_8.\n\n\nApple Inc. 2026. FoundationDB. https://github.com/apple/foundationdb.\n\n\n“Aspects of Visual Avatar Appearance: Self-Representation, Display Type, and Uncanny Valley.” 2021. The Visual Computer, ahead of print. https://doi.org/10.1007/s00371-021-02151-0.\n\n\nBaughman, Nathaniel E., Marc Liberatore, and Brian Neil Levine. 2007. “Cheat-Proof Playout for Centralized and Peer-to-Peer Gaming.” IEEE/ACM Transactions on Networking 15 (1). https://doi.org/10.1109/TNET.2006.886289.\n\n\nBeskow, Paul B., Knut-Helge Vik, Pål Halvorsen, and Carsten Griwodz. 2009. “The Partial Migration of Game State and Dynamic Server Selection to Reduce Latency.” Multimedia Tools and Applications 45 (1–3): 83–107. https://doi.org/10.1007/s11042-009-0287-7.\n\n\nBharambe, Ashwin R., Venkata N. Padmanabhan, and Srinivasan Seshan. 2004. “Supporting Spectators in Online Multiplayer Games.” Proceedings of the 3rd Workshop on Hot Topics in Networks (HotNets-III). https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/hotnets2004.pdf.\n\n\nBoulanger, Jean-Sébastien, Jörg Kienzle, and Clark Verbrugge. 2006. “Comparing Interest Management Algorithms for Massively Multiplayer Games.” Proceedings of the 5th ACM SIGCOMM Workshop on Network and System Support for Games (NetGames ’06). https://doi.org/10.1145/1230040.1230046.\n\n\nBraud, Tristan, Ahmad Alhilal, and Pan Hui. 2021. “Talaria: In-Engine Synchronisation for Seamless Migration of Mobile Edge Gaming Instances.” Proceedings of the 17th International Conference on Emerging Networking EXperiments and Technologies (CoNEXT ’21), 375–81. https://doi.org/10.1145/3485983.3494848.\n\n\nBukhsh, Ossama. 2026. Tropes: A Directory of AI Writing Tells. https://tropes.fyi/.\n\n\nCockroach Labs. 2020. Parallel Commits TLA+ Specification. https://github.com/v-sekai/cockroach/blob/release-22.1-oxide/docs/tla-plus/ParallelCommits/ParallelCommits.tla.\n\n\nCockroach Labs. 2026. CockroachDB. https://www.cockroachlabs.com/.\n\n\nCockroachDB Manual Deployment. 2026. https://www.cockroachlabs.com/docs/v22.1/manual-deployment.html.\n\n\nCronin, Eric, Brian Filstrup, and Sugih Jamin. 2003. “Cheat-Proofing Dead Reckoned Multiplayer Games.” Workshop on Anti-Cheating in Online Games (ADCOG), Co-Located with ACM SIGCOMM.\n\n\nDokku Documentation. 2026. http://dokku.viewdocs.io/dokku/.\n\n\nExit Games. 2026. Photon PUN2: Regions and Best Region. https://doc.photonengine.com/pun/current/connection-and-authentication/regions.\n\n\nFoundationDB Fault Tolerance. 2026. https://apple.github.io/foundationdb/fault-tolerance.html.\n\n\nFrindell, Alan, Eric Kinnear, and Victor Vassiliev. 2023. WebTransport over HTTP/3. RFC 9220, IETF. https://www.rfc-editor.org/rfc/rfc9220.\n\n\nGDScript Documentation. 2026. https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/gdscript_basics.html.\n\n\nGodot Engine. 2026. https://godotengine.org/.\n\n\nGodot Engine Contributors. 2022. Add WebTransport Support (Proposal #3899). https://github.com/godotengine/godot-proposals/issues/3899.\n\n\nGodot Engine contributors. 2026. Godot 4.x Dynamic BVH Broadphase: Node Expansion Constants. https://github.com/godotengine/godot/blob/master/servers/physics_3d/godot_broad_phase_3d_bvh.h.\n\n\nGodot Engine Documentation. 2026. https://docs.godotengine.org/.\n\n\nGoogle. 2018. Resonance Audio: Multi-Platform Spatial Audio SDK. https://resonance-audio.github.io/resonance-audio/.\n\n\nGuinness World Records, and Daybreak Game Company. 2022. Most Players Simultaneously in a First-Person Shooter Battle: Planetside 2 World Record. https://www.guinnessworldrecords.com/world-records/most-players-simultaneously-in-a-fps-battle.\n\n\nHelm Documentation. 2026. https://helm.sh/docs/.\n\n\nJacobson, Van, and Michael J. Karels. 1988. “Congestion Avoidance and Control.” Proceedings of SIGCOMM ’88, 314–29. https://doi.org/10.1145/52324.52356.\n\n\nKarn, Phil, and Craig Partridge. 1987. “Improving Round-Trip Time Estimates in Reliable Transport Protocols.” Proceedings of ACM SIGCOMM ’87, 2–7. https://doi.org/10.1145/55483.55484.\n\n\nKhronos Group. 2026. Vulkan Video. https://www.khronos.org/blog/an-introduction-to-vulkan-video.\n\n\nKulkarni, Sandeep, Murat Demirbas, Deepak Madappa, Bharadwaj Avva, and Marcelo Leone. 2014. “Logical Physical Clocks and Consistent Snapshots in Globally Distributed Databases.” Stabilization, Safety, and Security of Distributed Systems (SSS 2014). https://doi.org/10.1007/978-3-319-11764-5_14.\n\n\nLazaridis, Lazaros, Maria Papatsimouli, Konstantinos F. Kollias, Panagiotis Sarigiannidis, and George F. Fragulis. 2021. “Hitboxes: A Survey about Collision Detection in Video Games.” HCI in Games: Experience Design and Game Mechanics, Lecture notes in computer science, vol. 12789: 307–20. https://doi.org/10.1007/978-3-030-77277-2_24.\n\n\nLee, Steven W. K., and Rocky K. C. Chang. 2018. “Enhancing the Experience of Multiplayer Shooter Games via Advanced Lag Compensation.” Proceedings of the 9th ACM Multimedia Systems Conference (MMSys ’18), 284–93. https://doi.org/10.1145/3204949.3204971.\n\n\nLengyel, Eric. 2017. “GPU-Centered Font Rendering Directly from Glyph Outlines.” Journal of Computer Graphics Techniques (JCGT) 6 (2): 31–47. https://jcgt.org/published/0006/02/02/.\n\n\nLiu, Elvis S., and Georgios K. Theodoropoulos. 2014. “Interest Management for Distributed Virtual Environments: A Survey.” ACM Computing Surveys 46 (4). https://doi.org/10.1145/2535417.\n\n\nLiu, Shengmei, Xiaokun Xu, and Mark Claypool. 2022. “A Survey and Taxonomy of Latency Compensation Techniques for Network Computer Games.” ACM Computing Surveys 54 (11s). https://doi.org/10.1145/3519023.\n\n\nMADR: Markdown Any Decision Records. 2026. https://adr.github.io/madr/.\n\n\nMills, David, Juergen Martin, Jack Burbank, and William Kasch. 2010. Network Time Protocol Version 4: Protocol and Algorithms Specification. RFC No. 5905. IETF. https://doi.org/10.17487/RFC5905.\n\n\nMorgan, Graham, Kier Storey, and Fengyun Lu. 2004. “Expanding Spheres: A Collision Detection Algorithm for Interest Management in Networked Games.” Entertainment Computing – ICEC 2004, Lecture notes in computer science, vol. 3166: 507–16. https://doi.org/10.1007/978-3-540-28643-1_56.\n\n\nMori, Masahiro, Karl F. MacDorman, and Norri Kageki. 2012. “The Uncanny Valley [from the Field].” IEEE Robotics & Automation Magazine 19 (2): 98–100. https://doi.org/10.1109/MRA.2012.2192811.\n\n\nMoura, Leonardo de, and Sebastian Ullrich. 2021. “The Lean 4 Theorem Prover and Programming Language.” Automated Deduction – CADE 28. https://doi.org/10.1007/978-3-030-79876-5_37.\n\n\nMozilla. 2026. Sccache: Shared Compilation Cache. https://github.com/mozilla/sccache.\n\n\nNAVER. 2026. ANNY: A Differentiable Human Body Model. https://github.com/naver/anny.\n\n\nNVIDIA Labs. 2026. SOMA-X: Unifying Parametric Human Body Models. https://github.com/NVlabs/SOMA-X.\n\n\nPixar Animation Studios, and Alliance for OpenUSD. 2026. OpenUSD: Universal Scene Description. https://openusd.org/.\n\n\nSalzman, Lee. 2026. ENet: Reliable UDP Networking Library. http://enet.bespin.org/.\n\n\nSchwind, Valentin, Katrin Wolf, and Niels Henze. 2018. “Implications of the Uncanny Valley of Avatars and Virtual Characters for Human-Computer Interaction.” Human–Computer Interaction. https://www.semanticscholar.org/paper/bbcb5ed4d1d26f9767dbdffb9bb4b60b668a49cb.\n\n\nStein, Jan-Philipp, and Peter Ohler. 2017. “Venturing into the Uncanny Valley of Mind — the Influence of Mind Attribution on the Acceptance of Human-Like Characters in a Virtual Reality Setting.” Cognition 160: 43–50. https://doi.org/10.1016/j.cognition.2016.12.010.\n\n\nSUSE Rancher. 2026. Harvester: Open-Source Hyperconverged Infrastructure. https://harvesterhci.io/.\n\n\nSystemd Service Unit Documentation. 2026. https://www.freedesktop.org/software/systemd/man/systemd.service.html.\n\n\nTailscale Funnel Documentation. 2026. https://tailscale.com/kb/1132/tailscale-funnel/.\n\n\nThe mathlib Community. 2020. “The Lean Mathematical Library.” Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs. https://doi.org/10.1145/3372885.3373824.\n\n\nThe Twelve-Factor App: Config. 2026. https://12factor.net/config.\n\n\nVRChat School. 2026. VRChat Network Sync and IK Update Rate. https://vrchatschool.com/network-sync/.\n\n\nV-Sekai Multiplayer Fabric. 2026. xr-grid Debug Scene: Hero-Asset Landmark with Head and Hand Orientation-and-Translation Orbs.\n\n\nZhou, Jingyu, Meng Xu, Alexander Shraer, et al. 2021. “FoundationDB: A Distributed Unbundled Transactional Key Value Store.” Proceedings of the 2021 ACM SIGMOD International Conference on Management of Data. https://doi.org/10.1145/3448016.3457559."
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-9-physics-vrm.html",
@@ -98,13 +91,6 @@
     "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
-    "objectID": "decisions/20260506-maglev-cycle-9-physics-vrm.html#backlinks",
-    "href": "decisions/20260506-maglev-cycle-9-physics-vrm.html#backlinks",
-    "title": "Maglev Cycle 9: Physics and VRM Loading",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
-  },
-  {
     "objectID": "decisions/20260506-maglev-cycle-0-infra.html",
     "href": "decisions/20260506-maglev-cycle-0-infra.html",
     "title": "Maglev Cycle 0: Terraform Fly.io Infrastructure",
@@ -189,13 +175,6 @@
     "text": "Further Reading\n@techreport{20260501_fly,\n  title       = {Fly.io for deployment},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-fly-io-for-deployment.md}\n}\n\n@techreport{20260501_crdb,\n  title       = {CockroachDB with mTLS and role-separated access},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-cockroachdb-with-mtls-role-separation.md}\n}\n\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
-    "objectID": "decisions/20260506-maglev-cycle-0-infra.html#backlinks",
-    "href": "decisions/20260506-maglev-cycle-0-infra.html#backlinks",
-    "title": "Maglev Cycle 0: Terraform Fly.io Infrastructure",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test\nSelf-host on Harvester HCI instead of Fly.io"
-  },
-  {
     "objectID": "decisions/20260506-maglev-cycle-6-mmog-load.html",
     "href": "decisions/20260506-maglev-cycle-6-mmog-load.html",
     "title": "Maglev Cycle 6: Dual Same-Type Clients",
@@ -278,13 +257,6 @@
     "title": "Maglev Cycle 6: Dual Same-Type Clients",
     "section": "Further Reading",
     "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
-  },
-  {
-    "objectID": "decisions/20260506-maglev-cycle-6-mmog-load.html#backlinks",
-    "href": "decisions/20260506-maglev-cycle-6-mmog-load.html#backlinks",
-    "title": "Maglev Cycle 6: Dual Same-Type Clients",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
   },
   {
     "objectID": "decisions/20260606-art-game-loop-steel-thread.html",
@@ -413,13 +385,6 @@
     "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
-    "objectID": "decisions/20260506-maglev-cycle-8-ik-merge.html#backlinks",
-    "href": "decisions/20260506-maglev-cycle-8-ik-merge.html#backlinks",
-    "title": "Maglev Cycle 8: Full-Rate IK Merge",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
-  },
-  {
     "objectID": "decisions/20260606-compiling-godot-engine.html",
     "href": "decisions/20260606-compiling-godot-engine.html",
     "title": "Compiling the Godot engine",
@@ -537,13 +502,6 @@
     "title": "Maglev Cycle 7: IK Routing and Merge",
     "section": "Further Reading",
     "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
-  },
-  {
-    "objectID": "decisions/20260506-maglev-cycle-7-ik-routing.html#backlinks",
-    "href": "decisions/20260506-maglev-cycle-7-ik-routing.html#backlinks",
-    "title": "Maglev Cycle 7: IK Routing and Merge",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
   },
   {
     "objectID": "decisions/20260501-godot-double-precision-template-release-for-zone.html",
@@ -700,13 +658,6 @@
     "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
-    "objectID": "decisions/20260506-maglev-cycle-12-game-planning.html#backlinks",
-    "href": "decisions/20260506-maglev-cycle-12-game-planning.html#backlinks",
-    "title": "Maglev Cycle 12: Game Cycle Planning",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
-  },
-  {
     "objectID": "decisions/20260606-webtransport-http3-transport.html",
     "href": "decisions/20260606-webtransport-http3-transport.html",
     "title": "WebTransport over HTTP/3 transport",
@@ -747,13 +698,6 @@
     "title": "WebTransport over HTTP/3 transport",
     "section": "More Information",
     "text": "More Information\nPose streaming for the presence demo rides this transport; see presence demo pose networking. The engine is pinned to a frozen Godot 4.7 commit."
-  },
-  {
-    "objectID": "decisions/20260606-webtransport-http3-transport.html#backlinks",
-    "href": "decisions/20260606-webtransport-http3-transport.html#backlinks",
-    "title": "WebTransport over HTTP/3 transport",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nPresence demo pose networking"
   },
   {
     "objectID": "decisions/20260606-archival-file-naming-convention.html",
@@ -882,13 +826,6 @@
     "text": "Further Reading\n@techreport{20260506_cycle1,\n  title       = {Maglev Cycle 1: Godot Client Gateway Handshake},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260506-maglev-cycle-1-gateway-handshake.md}\n}\n\n@techreport{20260501_webtransport,\n  title       = {Use WebTransport over QUIC for game traffic},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-webtransport-over-quic-for-game-traffic.md}\n}\n\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
-    "objectID": "decisions/20260506-maglev-cycle-5-zone-console.html#backlinks",
-    "href": "decisions/20260506-maglev-cycle-5-zone-console.html#backlinks",
-    "title": "Maglev Cycle 5: Zone-Console TUI Observer",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
-  },
-  {
     "objectID": "decisions/20260506-ghcr-package-ownership-same-repo.html",
     "href": "decisions/20260506-ghcr-package-ownership-same-repo.html",
     "title": "GHCR packages must be built by the repo that consumes them",
@@ -915,13 +852,6 @@
     "title": "GHCR packages must be built by the repo that consumes them",
     "section": "Consequences",
     "text": "Consequences\n\nPackage names must reflect the owning repo to avoid confusion.\nMoving a package between repos requires deleting it (needs delete:packages API scope) and rebuilding, or renaming.\nCross-repo GHCR access requires either a PAT with read:packages scope or making the package public."
-  },
-  {
-    "objectID": "decisions/20260506-ghcr-package-ownership-same-repo.html#backlinks",
-    "href": "decisions/20260506-ghcr-package-ownership-same-repo.html#backlinks",
-    "title": "GHCR packages must be built by the repo that consumes them",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nObservability stack with VictoriaMetrics, VictoriaLogs, and Tempo"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-3-baker.html",
@@ -1008,13 +938,6 @@
     "text": "Further Reading\n@techreport{20260501_fly,\n  title       = {Fly.io for deployment},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-fly-io-for-deployment.md}\n}\n\n@techreport{20260506_ghcr,\n  title       = {GHCR packages must be built by the repo that consumes them},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260506-ghcr-package-ownership-same-repo.md}\n}\n\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
-    "objectID": "decisions/20260506-maglev-cycle-3-baker.html#backlinks",
-    "href": "decisions/20260506-maglev-cycle-3-baker.html#backlinks",
-    "title": "Maglev Cycle 3: Baker Pipeline",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
-  },
-  {
     "objectID": "decisions/20260606-pin-engine-to-frozen-godot-4-7.html",
     "href": "decisions/20260606-pin-engine-to-frozen-godot-4-7.html",
     "title": "Pin the engine to a frozen Godot 4.7 commit",
@@ -1057,13 +980,6 @@
     "text": "More Information\nThis pin is why the spatial audio decision notes the module targets a fixed engine API. The exact upstream commit that master mirrors lives in the godot fork’s git history."
   },
   {
-    "objectID": "decisions/20260606-pin-engine-to-frozen-godot-4-7.html#backlinks",
-    "href": "decisions/20260606-pin-engine-to-frozen-godot-4-7.html#backlinks",
-    "title": "Pin the engine to a frozen Godot 4.7 commit",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nSelf-host on Harvester HCI instead of Fly.io\nWebTransport over HTTP/3 transport"
-  },
-  {
     "objectID": "decisions/20260506-observability-stack-victoriatraces.html",
     "href": "decisions/20260506-observability-stack-victoriatraces.html",
     "title": "Replace Jaeger with VictoriaTraces for trace storage",
@@ -1092,13 +1008,6 @@
     "text": "Consequences\n\nAll four services are now Apache 2.0; the three storage backends are from VictoriaMetrics.\nVictoriaTraces query UI is at http://...:10428/select/vmui.\nfly proxy 10428:10428 replaces the former fly proxy 16686:16686 for trace inspection.\nNo explicit trace TTL is configured; add -retentionPeriod if disk pressure becomes a concern."
   },
   {
-    "objectID": "decisions/20260506-observability-stack-victoriatraces.html#backlinks",
-    "href": "decisions/20260506-observability-stack-victoriatraces.html#backlinks",
-    "title": "Replace Jaeger with VictoriaTraces for trace storage",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nObservability stack with VictoriaMetrics, VictoriaLogs, and Jaeger"
-  },
-  {
     "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html",
     "href": "decisions/20260506-observability-stack-victoriametrics-tempo.html",
     "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
@@ -1125,13 +1034,6 @@
     "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
     "section": "Consequences",
     "text": "Consequences\n\nOTLP ports must not be exposed publicly — they accept unauthenticated writes.\nOther Fly apps send telemetry to multiplayer-fabric-observability.internal:4317 or :4318.\nGrafana Tempo v3 config changed significantly from v2: ingester and compactor top-level keys were removed; -target=all flag is required to run all components.\nSee GHCR package ownership decision for why the zone binary image was renamed and moved to multiplayer-fabric-zone."
-  },
-  {
-    "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html#backlinks",
-    "href": "decisions/20260506-observability-stack-victoriametrics-tempo.html#backlinks",
-    "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nObservability stack with VictoriaMetrics, VictoriaLogs, and Jaeger"
   },
   {
     "objectID": "decisions/present-proposal-template.html",
@@ -1257,14 +1159,7 @@
     "href": "decisions.html",
     "title": "Decisions",
     "section": "",
-    "text": "Manuals › Decisions"
-  },
-  {
-    "objectID": "decisions.html#backlinks",
-    "href": "decisions.html#backlinks",
-    "title": "Decisions",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nV-Sekai — Multiplayer Fabric"
+    "text": "Manuals › Decisions\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDate\n\n\n\nTier\n\n\n\nStatus\n\n\n\nFile\n\n\n\n\n\n\n\n\n[Proposal Title]\n\n\n \n\n\n \n\n\n \n\n\npresent-proposal-template.md\n\n\n\n\n\n\nArchival file naming convention for committed assets\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-archival-file-naming-convention.md\n\n\n\n\n\n\nCompiling the Godot engine\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-compiling-godot-engine.md\n\n\n\n\n\n\nFeature classification — proof of concept, baseline, stretch\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-feature-classification-poc-baseline-stretch.md\n\n\n\n\n\n\nGhostly partial-body presence avatar from ANNY via SOMA-X\n\n\nJun 6, 2026\n\n\nproof of concept\n\n\nproposed\n\n\n20260606-ghostly-presence-body-model.md\n\n\n\n\n\n\nHuman-readable presence markers with an orb debug mode\n\n\nJun 6, 2026\n\n\nproof of concept\n\n\nproposed\n\n\n20260606-presence-marker-representation.md\n\n\n\n\n\n\nMinimal multiplayer presence demo with head and hand orbs\n\n\nJun 6, 2026\n\n\nproof of concept\n\n\nsuperseded by 20260606-presence-marker-representation.md\n\n\n20260606-multiplayer-presence-demo-orbs.md\n\n\n\n\n\n\nPin the engine to a frozen Godot 4.7 commit\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-pin-engine-to-frozen-godot-4-7.md\n\n\n\n\n\n\nPresence demo pose networking\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-presence-demo-networking-internals.md\n\n\n\n\n\n\nRecursive art-game loop and its minimal steel thread\n\n\nJun 6, 2026\n\n\nproof of concept\n\n\nproposed\n\n\n20260606-art-game-loop-steel-thread.md\n\n\n\n\n\n\nRequire pull requests and a merge queue on main\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-require-pr-and-merge-queue-on-main.md\n\n\n\n\n\n\nSelf-host on Harvester HCI instead of Fly.io\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-self-host-on-harvester-hci.md\n\n\n\n\n\n\nSpatial audio via a patched Resonance Audio (HRTF and audio probes)\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-spatial-audio-patched-resonance-audio.md\n\n\n\n\n\n\nTwo-org split between V-Sekai-fire and v-sekai-multiplayer-fabric\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-org-split-v-sekai-multiplayer-fabric.md\n\n\n\n\n\n\nWebTransport over HTTP/3 transport\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-webtransport-http3-transport.md\n\n\n\n\n\n\nGHCR packages must be built by the repo that consumes them\n\n\nMay 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260506-ghcr-package-ownership-same-repo.md\n\n\n\n\n\n\nMaglev Cycle 0: Terraform Fly.io Infrastructure\n\n\nMay 6, 2026\n\n\nbaseline\n\n\nsuperseded by 20260606-self-host-on-harvester-hci.md\n\n\n20260506-maglev-cycle-0-infra.md\n\n\n\n\n\n\nMaglev Cycle 10: Dynamic Physics and Causal Ordering\n\n\nMay 6, 2026\n\n\nbaseline\n\n\nrejected\n\n\n20260506-maglev-cycle-10-dynamic-physics-score.md\n\n\n\n\n\n\nMaglev Cycle 11: CockroachDB Score Write\n\n\nMay 6, 2026\n\n\nbaseline\n\n\nrejected\n\n\n20260506-maglev-cycle-11-db-write.md\n\n\n\n\n\n\nMaglev Cycle 12: Game Cycle Planning\n\n\nMay 6, 2026\n\n\nbaseline\n\n\nrejected\n\n\n20260506-maglev-cycle-12-game-planning.md\n\n\n\n\n\n\nMaglev Cycle 1: Godot Client Gateway Handshake\n\n\nMay 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260506-maglev-cycle-1-gateway-handshake.md\n\n\n\n\n\n\nMaglev Cycle 2: Observability Stack\n\n\nMay 6, 2026\n\n\nbaseline\n\n\nrejected\n\n\n20260506-maglev-cycle-2-observability.md\n\n\n\n\n\n\nMaglev Cycle 3: Baker Pipeline\n\n\nMay 6, 2026\n\n\nbaseline\n\n\nrejected\n\n\n20260506-maglev-cycle-3-baker.md\n\n\n\n\n\n\nMaglev Cycle 4: CockroachDB Connection\n\n\nMay 6, 2026\n\n\nbaseline\n\n\nrejected\n\n\n20260506-maglev-cycle-4-db-connection.md\n\n\n\n\n\n\nMaglev Cycle 5: Zone-Console TUI Observer\n\n\nMay 6, 2026\n\n\nbaseline\n\n\nrejected\n\n\n20260506-maglev-cycle-5-zone-console.md\n\n\n\n\n\n\nMaglev Cycle 6: Dual Same-Type Clients\n\n\nMay 6, 2026\n\n\nbaseline\n\n\nrejected\n\n\n20260506-maglev-cycle-6-mmog-load.md\n\n\n\n\n\n\nMaglev Cycle 7: IK Routing and Merge\n\n\nMay 6, 2026\n\n\nbaseline\n\n\nrejected\n\n\n20260506-maglev-cycle-7-ik-routing.md\n\n\n\n\n\n\nMaglev Cycle 8: Full-Rate IK Merge\n\n\nMay 6, 2026\n\n\nbaseline\n\n\nrejected\n\n\n20260506-maglev-cycle-8-ik-merge.md\n\n\n\n\n\n\nMaglev Cycle 9: Physics and VRM Loading\n\n\nMay 6, 2026\n\n\nbaseline\n\n\nrejected\n\n\n20260506-maglev-cycle-9-physics-vrm.md\n\n\n\n\n\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test\n\n\nMay 6, 2026\n\n\nbaseline\n\n\nrejected\n\n\n20260506-maglev-intercept-smoke-test.md\n\n\n\n\n\n\nObservability stack with VictoriaMetrics, VictoriaLogs, and Jaeger\n\n\nMay 6, 2026\n\n\nbaseline\n\n\nsuperseded by 20260506-observability-stack-victoriatraces.md\n\n\n20260506-observability-stack-victoriametrics-jaeger.md\n\n\n\n\n\n\nObservability stack with VictoriaMetrics, VictoriaLogs, and Tempo\n\n\nMay 6, 2026\n\n\nbaseline\n\n\nsuperseded by 20260506-observability-stack-victoriametrics-jaeger.md\n\n\n20260506-observability-stack-victoriametrics-tempo.md\n\n\n\n\n\n\nReplace Jaeger with VictoriaTraces for trace storage\n\n\nMay 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260506-observability-stack-victoriatraces.md\n\n\n\n\n\n\nCockroachDB with mTLS and role-separated access\n\n\nMay 1, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260501-cockroachdb-with-mtls-role-separation.md\n\n\n\n\n\n\nFly.io for deployment\n\n\nMay 1, 2026\n\n\nbaseline\n\n\nsuperseded by 20260606-self-host-on-harvester-hci.md\n\n\n20260501-fly-io-for-deployment.md\n\n\n\n\n\n\nGodot double precision template_release for zone servers\n\n\nMay 1, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260501-godot-double-precision-template-release-for-zone.md\n\n\n\n\n\n\nUse WebTransport over QUIC for game traffic\n\n\nMay 1, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260501-webtransport-over-quic-for-game-traffic.md\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
@@ -1428,13 +1323,6 @@
     "text": "Decision Outcome\nChosen option: “Head plus two hand orbs per participant”, because three tracked points convey presence and gesture cheaply enough to scale to a whole call.\n\nEvery participant, including the local player, is three orb clusters (head, hand, hand), each encoding a pose. The hero asset stays as a landmark only.\nThe room scales to a Discord call’s worth of participants.\nIdentity is opt-in: a participant signs with the cassie pen; unsigned ones stay anonymous orbs.\nPoses go over low-level WebTransport datagrams, not high-level replication.\nBuilt on xr-grid.\n\n\nConsequences\n\nGood: presence and gesture for many people at low per-player cost.\nGood: identity is opt-in, so there is no login step.\nBad: orbs are not full avatars, so avatar networking and IK go unexercised.\nNeutral: signing rides cassie’s pen stroke creation, which is solid; only its patch surface creation is buggy, and signing does not use that.\n\n\n\nConfirmation\nA session shows multiple participants as head and hand orb clusters tracking their poses at call scale, and signing produces a visible mark by that participant."
   },
   {
-    "objectID": "decisions/20260606-multiplayer-presence-demo-orbs.html#backlinks",
-    "href": "decisions/20260606-multiplayer-presence-demo-orbs.html#backlinks",
-    "title": "Minimal multiplayer presence demo with head and hand orbs",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nArchival file naming convention for committed assets\nRecursive art-game loop and its minimal steel thread\nPresence demo pose networking\nHuman-readable presence markers with an orb debug mode"
-  },
-  {
     "objectID": "decisions/20260506-maglev-intercept-smoke-test.html",
     "href": "decisions/20260506-maglev-intercept-smoke-test.html",
     "title": "Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test",
@@ -1540,13 +1428,6 @@
     "text": "Consequences\n\nAll services must be in the same region to communicate over the private network without egress charges.\n.flycast requires [[services]] on the target app; .internal works without it.\nCloudflare proxy must be disabled for UDP/QUIC endpoints; DNS-only records point directly to the Fly IP.\nTerraform state is stored on a tfstate orphan branch in the infra repo to avoid requiring a remote backend."
   },
   {
-    "objectID": "decisions/20260501-fly-io-for-deployment.html#backlinks",
-    "href": "decisions/20260501-fly-io-for-deployment.html#backlinks",
-    "title": "Fly.io for deployment",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nSelf-host on Harvester HCI instead of Fly.io"
-  },
-  {
     "objectID": "decisions/20260606-presence-demo-networking-internals.html",
     "href": "decisions/20260606-presence-demo-networking-internals.html",
     "title": "Presence demo pose networking",
@@ -1580,13 +1461,6 @@
     "title": "Presence demo pose networking",
     "section": "Decision Outcome",
     "text": "Decision Outcome\nChosen option: “Hand-rolled compact binary over WebTransport datagrams”.\n\nPose source: XRPositionalTracker / XRHandTracker / XRPose (servers/xr/) give a Transform3D, velocity, and tracking confidence; a hand has 26 joints.\nEncoding: a compact binary layout, not MultiplayerAPI’s Variant encoding, which is too fat for high-rate poses.\nVetoed: the high-level nodes in modules/multiplayer (MultiplayerSynchronizer, MultiplayerSpawner, SceneReplicationInterface).\nIdentity: the cassie pen supplies optional signing (stretch).\n\n\nConsequences\n\nGood: poses ride compact datagrams on the same WebTransport the gateway uses.\nBad: the encoding, send rate, and interpolation are hand-written and maintained.\n\n\n\nConfirmation\nThe demo reads local head and hand poses, sends them as datagrams, and a remote peer renders orbs from the decoded transforms."
-  },
-  {
-    "objectID": "decisions/20260606-presence-demo-networking-internals.html#backlinks",
-    "href": "decisions/20260606-presence-demo-networking-internals.html#backlinks",
-    "title": "Presence demo pose networking",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nMinimal multiplayer presence demo with head and hand orbs\nHuman-readable presence markers with an orb debug mode\nWebTransport over HTTP/3 transport"
   },
   {
     "objectID": "decisions/20260606-org-split-v-sekai-multiplayer-fabric.html",
@@ -1701,13 +1575,6 @@
     "text": "More Information\nResonance Audio is Google’s open-source spatial audio SDK (https://resonance-audio.github.io/resonance-audio/), now archived and no longer maintained upstream, so the fork is the de facto source. “Patched” here means the fork carries local changes to build it as an engine module and to wire its HRTF and probe paths to the spatial-audio server. The engine itself is pinned to a frozen Godot 4.7 commit, so the module targets a fixed engine API."
   },
   {
-    "objectID": "decisions/20260606-spatial-audio-patched-resonance-audio.html#backlinks",
-    "href": "decisions/20260606-spatial-audio-patched-resonance-audio.html#backlinks",
-    "title": "Spatial audio via a patched Resonance Audio (HRTF and audio probes)",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nPin the engine to a frozen Godot 4.7 commit"
-  },
-  {
     "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html",
     "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html",
     "title": "Feature classification — proof of concept, baseline, stretch",
@@ -1741,13 +1608,6 @@
     "title": "Feature classification — proof of concept, baseline, stretch",
     "section": "Decision Outcome",
     "text": "Decision Outcome\nChosen option: “A three-tier commitment classification”, because it captures commitment, not just maturity, which is what planning needs.\nThe tiers:\n\nProof of concept — demonstrates the idea works end to end, in partial or throwaway form. May be unreliable or lossy, and nothing depends on it yet.\nBaseline — the committed minimum the product ships. Works reliably across the target platforms. This is the bar.\nStretch goal — beyond baseline. Pursued if time allows; cutting it does not block the release.\n\nEach feature in the capabilities table carries one tier. A feature moves between tiers as it matures or as commitment changes; the tier is the current call, not a permanent label.\n\nInitial triage\n\nNative video playback — baseline.\nScene baking via OpenUSD — baseline.\nSpatial audio (HRTF + audio probes) — baseline.\nSpeech — baseline.\nPen stroke creation (cassie) — proof of concept (patch surface creation loses about 90%).\n\n\n\nConsequences\n\nGood: planning and docs share one word per feature for its commitment level.\nGood: the tier is a small, reversible edit as features move.\nBad: a tier is a judgement call and can drift from reality if the table is not kept current.\n\n\n\nConfirmation\nThe capabilities table has a Tier column, and every row carries one of the three tiers. New capabilities are added with a tier."
-  },
-  {
-    "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html#backlinks",
-    "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html#backlinks",
-    "title": "Feature classification — proof of concept, baseline, stretch",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nRecursive art-game loop and its minimal steel thread\nMinimal multiplayer presence demo with head and hand orbs\nPresence demo pose networking\nHuman-readable presence markers with an orb debug mode"
   },
   {
     "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html",
@@ -1804,13 +1664,6 @@
     "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Jaeger",
     "section": "Consequences",
     "text": "Consequences\n\nJaeger UI replaces the Tempo query endpoint: fly proxy 16686:16686 instead of fly proxy 3200:3200.\nBadger is ephemeral-safe only with --badger.ephemeral=false; this flag must be set or traces are lost on restart.\nNo explicit trace TTL is configured; traces accumulate until disk pressure. Add --badger.span-store-ttl if retention limits are needed.\nJaeger’s Badger backend does not support distributed mode; acceptable for a single-machine stack."
-  },
-  {
-    "objectID": "decisions/20260506-observability-stack-victoriametrics-jaeger.html#backlinks",
-    "href": "decisions/20260506-observability-stack-victoriametrics-jaeger.html#backlinks",
-    "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Jaeger",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nObservability stack with VictoriaMetrics, VictoriaLogs, and Tempo\nReplace Jaeger with VictoriaTraces for trace storage"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-10-dynamic-physics-score.html",
@@ -1897,13 +1750,6 @@
     "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
-    "objectID": "decisions/20260506-maglev-cycle-10-dynamic-physics-score.html#backlinks",
-    "href": "decisions/20260506-maglev-cycle-10-dynamic-physics-score.html#backlinks",
-    "title": "Maglev Cycle 10: Dynamic Physics and Causal Ordering",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
-  },
-  {
     "objectID": "decisions/20260506-maglev-cycle-1-gateway-handshake.html",
     "href": "decisions/20260506-maglev-cycle-1-gateway-handshake.html",
     "title": "Maglev Cycle 1: Godot Client Gateway Handshake",
@@ -1988,13 +1834,6 @@
     "text": "Further Reading\n@techreport{20260501_webtransport,\n  title       = {Use WebTransport over QUIC for game traffic},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-webtransport-over-quic-for-game-traffic.md}\n}\n\n@techreport{20260501_godot_precision,\n  title       = {Godot double precision template\\_release for zone servers},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-godot-double-precision-template-release-for-zone.md}\n}\n\n@techreport{20260501_fly,\n  title       = {Fly.io for deployment},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-fly-io-for-deployment.md}\n}\n\n@techreport{20260506_ghcr,\n  title       = {GHCR packages must be built by the repo that consumes them},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260506-ghcr-package-ownership-same-repo.md}\n}\n\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
-    "objectID": "decisions/20260506-maglev-cycle-1-gateway-handshake.html#backlinks",
-    "href": "decisions/20260506-maglev-cycle-1-gateway-handshake.html#backlinks",
-    "title": "Maglev Cycle 1: Godot Client Gateway Handshake",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
-  },
-  {
     "objectID": "decisions/20260606-presence-marker-representation.html",
     "href": "decisions/20260606-presence-marker-representation.html",
     "title": "Human-readable presence markers with an orb debug mode",
@@ -2035,13 +1874,6 @@
     "title": "Human-readable presence markers with an orb debug mode",
     "section": "More Information",
     "text": "More Information\nSupersedes Minimal multiplayer presence demo with head and hand orbs. The orb representation is retained as the debug mode. UX input from Joseph. Refined by Ghostly partial-body presence avatar from ANNY via SOMA-X."
-  },
-  {
-    "objectID": "decisions/20260606-presence-marker-representation.html#backlinks",
-    "href": "decisions/20260606-presence-marker-representation.html#backlinks",
-    "title": "Human-readable presence markers with an orb debug mode",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nGhostly partial-body presence avatar from ANNY via SOMA-X\nMinimal multiplayer presence demo with head and hand orbs"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-4-db-connection.html",
@@ -2128,13 +1960,6 @@
     "text": "Further Reading\n@techreport{20260501_crdb,\n  title       = {CockroachDB with mTLS and role-separated access},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-cockroachdb-with-mtls-role-separation.md}\n}\n\n@techreport{20260501_fly,\n  title       = {Fly.io for deployment},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-fly-io-for-deployment.md}\n}\n\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
-    "objectID": "decisions/20260506-maglev-cycle-4-db-connection.html#backlinks",
-    "href": "decisions/20260506-maglev-cycle-4-db-connection.html#backlinks",
-    "title": "Maglev Cycle 4: CockroachDB Connection",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
-  },
-  {
     "objectID": "decisions/20260606-self-host-on-harvester-hci.html",
     "href": "decisions/20260606-self-host-on-harvester-hci.html",
     "title": "Self-host on Harvester HCI instead of Fly.io",
@@ -2175,13 +2000,6 @@
     "title": "Self-host on Harvester HCI instead of Fly.io",
     "section": "More Information",
     "text": "More Information\nThe VM images live in the *-image repos; the engine is pinned to a frozen Godot 4.7 commit."
-  },
-  {
-    "objectID": "decisions/20260606-self-host-on-harvester-hci.html#backlinks",
-    "href": "decisions/20260606-self-host-on-harvester-hci.html#backlinks",
-    "title": "Self-host on Harvester HCI instead of Fly.io",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nFly.io for deployment\nMaglev Cycle 0: Terraform Fly.io Infrastructure\nMaglev Cycle 2: Observability Stack\nReplace Jaeger with VictoriaTraces for trace storage"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-11-db-write.html",
@@ -2268,13 +2086,6 @@
     "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
-    "objectID": "decisions/20260506-maglev-cycle-11-db-write.html#backlinks",
-    "href": "decisions/20260506-maglev-cycle-11-db-write.html#backlinks",
-    "title": "Maglev Cycle 11: CockroachDB Score Write",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
-  },
-  {
     "objectID": "decisions/20260606-ghostly-presence-body-model.html",
     "href": "decisions/20260606-ghostly-presence-body-model.html",
     "title": "Ghostly partial-body presence avatar from ANNY via SOMA-X",
@@ -2315,13 +2126,6 @@
     "title": "Ghostly partial-body presence avatar from ANNY via SOMA-X",
     "section": "More Information",
     "text": "More Information\nRefines the presence marker decision and revives CHI-298. Models: ANNY, SOMA-X."
-  },
-  {
-    "objectID": "decisions/20260606-ghostly-presence-body-model.html#backlinks",
-    "href": "decisions/20260606-ghostly-presence-body-model.html#backlinks",
-    "title": "Ghostly partial-body presence avatar from ANNY via SOMA-X",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nHuman-readable presence markers with an orb debug mode"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-2-observability.html",
@@ -2408,24 +2212,10 @@
     "text": "Further Reading\n@techreport{20260506_observability_victoriatraces,\n  title       = {Replace Jaeger with VictoriaTraces for trace storage},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260506-observability-stack-victoriatraces.md}\n}\n\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
-    "objectID": "decisions/20260506-maglev-cycle-2-observability.html#backlinks",
-    "href": "decisions/20260506-maglev-cycle-2-observability.html#backlinks",
-    "title": "Maglev Cycle 2: Observability Stack",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
-  },
-  {
     "objectID": "changelog.html",
     "href": "changelog.html",
     "title": "Changelog",
     "section": "",
-    "text": "Manuals › Changelog\nAll notable changes are documented here. Format based on Keep a Changelog.\nAdded — new features. Changed — changes in existing functionality. Fixed — bug fixes. Removed — removed features."
-  },
-  {
-    "objectID": "changelog.html#backlinks",
-    "href": "changelog.html#backlinks",
-    "title": "Changelog",
-    "section": "Backlinks",
-    "text": "Backlinks\n\nV-Sekai — Multiplayer Fabric"
+    "text": "Manuals › Changelog\nAll notable changes are documented here. Format based on Keep a Changelog.\nAdded — new features. Changed — changes in existing functionality. Fixed — bug fixes. Removed — removed features.\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\n\n\n\n\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\n\n\n\n\n\n\nV-Sekai Fire Deck Log — 2026-05-07 (Thursday)\n\n\n\n\n\n\nV-Sekai Fire Deck Log — 2026-05-06 (Wednesday)\n\n\n\n\n\n\nV-Sekai Fire Deck Log — 2026-04-25 (Saturday)\n\n\n\n\n\n\nV-Sekai Fire Deck Log — 2026-04-21 (Tuesday)\n\n\n\n\n\n\nNo matching items"
   }
 ]

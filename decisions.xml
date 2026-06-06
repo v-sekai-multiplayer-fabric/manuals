@@ -511,15 +511,6 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
 </section>
 </section>
-<section id="backlinks" class="level2">
-<h2 class="anchored" data-anchor-id="backlinks">Backlinks</h2>
-<ul>
-<li><p><a href="20260606-art-game-loop-steel-thread.html">Recursive art-game loop and its minimal steel thread</a></p></li>
-<li><p><a href="20260606-multiplayer-presence-demo-orbs.html">Minimal multiplayer presence demo with head and hand orbs</a></p></li>
-<li><p><a href="20260606-presence-demo-networking-internals.html">Presence demo pose networking</a></p></li>
-<li><p><a href="20260606-presence-marker-representation.html">Human-readable presence markers with an orb debug mode</a></p></li>
-</ul>
-</section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-feature-classification-poc-baseline-stretch.html</guid>
@@ -595,12 +586,6 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 <p>Refines the <a href="../decisions/20260606-presence-marker-representation.html">presence marker decision</a> and revives <a href="https://linear.app/chibifire/issue/CHI-298/use-soma-and-anny-to-fit-concepts-to-personas">CHI-298</a>. Models: <a href="https://github.com/naver/anny">ANNY</a>, <a href="https://github.com/NVlabs/SOMA-X">SOMA-X</a>.</p>
 
 
-</section>
-<section id="backlinks" class="level2">
-<h2 class="anchored" data-anchor-id="backlinks">Backlinks</h2>
-<ul>
-<li><p><a href="20260606-presence-marker-representation.html">Human-readable presence markers with an orb debug mode</a></p></li>
-</ul>
 
 </section>
 
@@ -686,13 +671,6 @@ Stein, Jan-Philipp, and Peter Ohler. 2017. <span>“Venturing into the Uncanny V
 <p>Supersedes <a href="../decisions/20260606-multiplayer-presence-demo-orbs.html">Minimal multiplayer presence demo with head and hand orbs</a>. The orb representation is retained as the debug mode. UX input from Joseph. Refined by <a href="../decisions/20260606-ghostly-presence-body-model.html">Ghostly partial-body presence avatar from ANNY via SOMA-X</a>.</p>
 
 
-</section>
-<section id="backlinks" class="level2">
-<h2 class="anchored" data-anchor-id="backlinks">Backlinks</h2>
-<ul>
-<li><p><a href="20260606-ghostly-presence-body-model.html">Ghostly partial-body presence avatar from ANNY via SOMA-X</a></p></li>
-<li><p><a href="20260606-multiplayer-presence-demo-orbs.html">Minimal multiplayer presence demo with head and hand orbs</a></p></li>
-</ul>
 
 </section>
 
@@ -766,17 +744,8 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 <p>A session shows multiple participants as head and hand orb clusters tracking their poses at call scale, and signing produces a visible mark by that participant.</p>
 
 
-</section>
-</section>
-<section id="backlinks" class="level2">
-<h2 class="anchored" data-anchor-id="backlinks">Backlinks</h2>
-<ul>
-<li><p><a href="20260606-archival-file-naming-convention.html">Archival file naming convention for committed assets</a></p></li>
-<li><p><a href="20260606-art-game-loop-steel-thread.html">Recursive art-game loop and its minimal steel thread</a></p></li>
-<li><p><a href="20260606-presence-demo-networking-internals.html">Presence demo pose networking</a></p></li>
-<li><p><a href="20260606-presence-marker-representation.html">Human-readable presence markers with an orb debug mode</a></p></li>
-</ul>
 
+</section>
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
@@ -846,13 +815,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 </section>
-<section id="backlinks" class="level2">
-<h2 class="anchored" data-anchor-id="backlinks">Backlinks</h2>
-<ul>
-<li><p><a href="20260606-self-host-on-harvester-hci.html">Self-host on Harvester HCI instead of Fly.io</a></p></li>
-<li><p><a href="20260606-webtransport-http3-transport.html">WebTransport over HTTP/3 transport</a></p></li>
-</ul>
-</section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-pin-engine-to-frozen-godot-4-7.html</guid>
@@ -911,14 +873,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 </section>
-</section>
-<section id="backlinks" class="level2">
-<h2 class="anchored" data-anchor-id="backlinks">Backlinks</h2>
-<ul>
-<li><p><a href="20260606-multiplayer-presence-demo-orbs.html">Minimal multiplayer presence demo with head and hand orbs</a></p></li>
-<li><p><a href="20260606-presence-marker-representation.html">Human-readable presence markers with an orb debug mode</a></p></li>
-<li><p><a href="20260606-webtransport-http3-transport.html">WebTransport over HTTP/3 transport</a></p></li>
-</ul>
 </section>
 
  ]]></description>
@@ -1128,15 +1082,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 </section>
-<section id="backlinks" class="level2">
-<h2 class="anchored" data-anchor-id="backlinks">Backlinks</h2>
-<ul>
-<li><p><a href="20260501-fly-io-for-deployment.html">Fly.io for deployment</a></p></li>
-<li><p><a href="20260506-maglev-cycle-0-infra.html">Maglev Cycle 0: Terraform Fly.io Infrastructure</a></p></li>
-<li><p><a href="20260506-maglev-cycle-2-observability.html">Maglev Cycle 2: Observability Stack</a></p></li>
-<li><p><a href="20260506-observability-stack-victoriatraces.html">Replace Jaeger with VictoriaTraces for trace storage</a></p></li>
-</ul>
-</section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-self-host-on-harvester-hci.html</guid>
@@ -1202,12 +1147,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 <p>Resonance Audio is Google’s open-source spatial audio SDK (<a href="https://resonance-audio.github.io/resonance-audio/" class="uri">https://resonance-audio.github.io/resonance-audio/</a>), now archived and no longer maintained upstream, so the fork is the de facto source. “Patched” here means the fork carries local changes to build it as an engine module and to wire its HRTF and probe paths to the spatial-audio server. The engine itself is pinned to a frozen Godot 4.7 commit, so the module targets a fixed engine API.</p>
 
 
-</section>
-<section id="backlinks" class="level2">
-<h2 class="anchored" data-anchor-id="backlinks">Backlinks</h2>
-<ul>
-<li><p><a href="20260606-pin-engine-to-frozen-godot-4-7.html">Pin the engine to a frozen Godot 4.7 commit</a></p></li>
-</ul>
 </section>
 
  ]]></description>
@@ -1414,12 +1353,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 </section>
-<section id="backlinks" class="level2">
-<h2 class="anchored" data-anchor-id="backlinks">Backlinks</h2>
-<ul>
-<li><p><a href="20260606-presence-demo-networking-internals.html">Presence demo pose networking</a></p></li>
-</ul>
-</section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-webtransport-http3-transport.html</guid>
@@ -1459,12 +1392,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 </ul>
 
 
-</section>
-<section id="backlinks" class="level2">
-<h2 class="anchored" data-anchor-id="backlinks">Backlinks</h2>
-<ul>
-<li><p><a href="20260506-observability-stack-victoriametrics-tempo.html">Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo</a></p></li>
-</ul>
 </section>
 
  ]]></description>
@@ -1613,13 +1540,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 </section>
-<section id="backlinks" class="level2">
-<h2 class="anchored" data-anchor-id="backlinks">Backlinks</h2>
-<ul>
-<li><p><a href="20260506-maglev-intercept-smoke-test.html">Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test</a></p></li>
-<li><p><a href="20260606-self-host-on-harvester-hci.html">Self-host on Harvester HCI instead of Fly.io</a></p></li>
-</ul>
-</section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-0-infra.html</guid>
@@ -1744,12 +1664,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 </section>
-<section id="backlinks" class="level2">
-<h2 class="anchored" data-anchor-id="backlinks">Backlinks</h2>
-<ul>
-<li><p><a href="20260506-maglev-intercept-smoke-test.html">Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test</a></p></li>
-</ul>
-</section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-10-dynamic-physics-score.html</guid>
@@ -1869,12 +1783,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 }</code></pre>
 
 
-</section>
-<section id="backlinks" class="level2">
-<h2 class="anchored" data-anchor-id="backlinks">Backlinks</h2>
-<ul>
-<li><p><a href="20260506-maglev-intercept-smoke-test.html">Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test</a></p></li>
-</ul>
 </section>
 
  ]]></description>
@@ -2041,12 +1949,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
 
 </section>
-<section id="backlinks" class="level2">
-<h2 class="anchored" data-anchor-id="backlinks">Backlinks</h2>
-<ul>
-<li><p><a href="20260506-maglev-intercept-smoke-test.html">Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test</a></p></li>
-</ul>
-</section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-12-game-planning.html</guid>
@@ -2205,12 +2107,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 }</code></pre>
 
 
-</section>
-<section id="backlinks" class="level2">
-<h2 class="anchored" data-anchor-id="backlinks">Backlinks</h2>
-<ul>
-<li><p><a href="20260506-maglev-intercept-smoke-test.html">Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test</a></p></li>
-</ul>
 </section>
 
  ]]></description>
