@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2026-06-06">
 
-<title>maglev-cycle-1-gateway-handshake – V-Sekai Fire — Manuals</title>
+<title>Compiling the Godot engine – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -22,6 +23,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -286,175 +322,198 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#maglev-cycle-1-godot-client-gateway-handshake" id="toc-maglev-cycle-1-godot-client-gateway-handshake" class="nav-link active" data-scroll-target="#maglev-cycle-1-godot-client-gateway-handshake">Maglev Cycle 1: Godot Client Gateway Handshake</a>
+  <li><a href="#context" id="toc-context" class="nav-link active" data-scroll-target="#context">Context</a></li>
+  <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a>
   <ul class="collapse">
-  <li><a href="#the-context" id="toc-the-context" class="nav-link" data-scroll-target="#the-context">The Context</a></li>
-  <li><a href="#the-problem-statement" id="toc-the-problem-statement" class="nav-link" data-scroll-target="#the-problem-statement">The Problem Statement</a></li>
-  <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design">Design</a></li>
-  <li><a href="#estimate" id="toc-estimate" class="nav-link" data-scroll-target="#estimate">Estimate</a></li>
-  <li><a href="#cris-score" id="toc-cris-score" class="nav-link" data-scroll-target="#cris-score">CRIS Score</a></li>
-  <li><a href="#the-downsides" id="toc-the-downsides" class="nav-link" data-scroll-target="#the-downsides">The Downsides</a></li>
-  <li><a href="#the-road-not-taken" id="toc-the-road-not-taken" class="nav-link" data-scroll-target="#the-road-not-taken">The Road Not Taken</a></li>
-  <li><a href="#status" id="toc-status" class="nav-link" data-scroll-target="#status">Status</a></li>
-  <li><a href="#decision-makers" id="toc-decision-makers" class="nav-link" data-scroll-target="#decision-makers">Decision Makers</a></li>
-  <li><a href="#tags" id="toc-tags" class="nav-link" data-scroll-target="#tags">Tags</a></li>
-  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further Reading</a></li>
+  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a></li>
+  <li><a href="#shared-cache-layout" id="toc-shared-cache-layout" class="nav-link" data-scroll-target="#shared-cache-layout">Shared cache layout</a></li>
+  <li><a href="#windows-powershell-profile" id="toc-windows-powershell-profile" class="nav-link" data-scroll-target="#windows-powershell-profile">Windows — PowerShell profile</a></li>
+  <li><a href="#wsl-linux-.bashrc" id="toc-wsl-linux-.bashrc" class="nav-link" data-scroll-target="#wsl-linux-.bashrc">WSL / Linux — <code>~/.bashrc</code></a></li>
+  <li><a href="#building" id="toc-building" class="nav-link" data-scroll-target="#building">Building</a></li>
+  <li><a href="#verifying-and-maintaining-the-cache" id="toc-verifying-and-maintaining-the-cache" class="nav-link" data-scroll-target="#verifying-and-maintaining-the-cache">Verifying and maintaining the cache</a></li>
   </ul></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/V-Sekai-fire/manuals/edit/main/decisions/20260506-maglev-cycle-1-gateway-handshake.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/V-Sekai-fire/manuals/edit/main/decisions/20260606-compiling-godot-engine.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Compiling the Godot engine</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 6, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
 
 
-<section id="maglev-cycle-1-godot-client-gateway-handshake" class="level1">
-<h1>Maglev Cycle 1: Godot Client Gateway Handshake</h1>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>The clients in this stack are Godot engine processes built from <code>multiplayer-fabric-godot</code> (branch <code>multiplayer-fabric</code>, <code>template_release double</code>). The Godot WebTransport implementation, its thread model, and its datagram API underpin all subsequent cycles; a curl or test-harness ping tests the gateway in isolation and leaves those untouched.</p>
-<p>Cycle 0 (Terraform) must pass before this cycle begins — the Fly apps, dedicated IPv4, and secrets that this cycle depends on are created by Terraform.</p>
+</header>
+
+
+<section id="context" class="level2">
+<h2 class="anchored" data-anchor-id="context">Context</h2>
+<p>Developers build the V-Sekai multiplayer-fabric Godot engine on two hosts from one workstation: <strong>Windows (PowerShell + MinGW)</strong> and <strong>WSL / Linux (<code>linuxbsd</code>)</strong>. Without a shared, persistent compiler cache, each host rebuilds from scratch and cache hits are lost whenever a checkout is moved or renamed.</p>
 </section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>A Godot client running <code>multiplayer-fabric-godot</code> has not connected to <code>multiplayer-fabric-gateway</code> and received a datagram from <code>multiplayer-fabric-zone</code> under Fly’s network. Until a real Godot process completes that round trip, the client side of the stack is unvalidated.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>Build a minimal Godot scene (empty world, no avatar, no physics) that opens a WebTransport/QUIC connection to the gateway on UDP 443, waits for one datagram from the zone server, logs the receipt, and exits cleanly. Run it headlessly on a desktop to isolate client behaviour from display and input.</p>
-<p>The zone server is <code>godot.linuxbsd.template_release.double.x86_64</code> built from <code>V-Sekai-fire/multiplayer-fabric-zone</code> (the zone repo owns and publishes its own GHCR image). It runs <code>--headless</code> with an empty world and sends one datagram on connection.</p>
-<p>The gateway runs as root on UDP 443 (port &lt; 1024 requires root or <code>CAP_NET_BIND_SERVICE</code>) and proxies to the zone server on UDP 7443. The Fly DNS record for the gateway endpoint is DNS-only — no Cloudflare proxy, which cannot forward QUIC/UDP. Both services deploy in the <code>iad</code> region and communicate over Fly’s 6PN private network.</p>
-<p>Pass criteria:</p>
-<ul class="task-list">
-<li><label><input type="checkbox">Godot client establishes the WebTransport/QUIC connection without TLS or handshake error</label></li>
-<li><label><input type="checkbox">Client receives and logs one <strong>datagram</strong> (not a stream) from the zone server</label></li>
-<li><label><input type="checkbox">Client exits cleanly; no orphaned Godot process or open port</label></li>
-</ul>
-<p>Every subsequent cycle extends this scene.</p>
-</section>
-<section id="estimate" class="level2">
-<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
-<p><strong>2 days</strong> (2026-05-07 → 2026-05-08). The gateway was built from scratch in one day (25+ commits on 2026-05-05); the zone server initial deploy took two days (2026-05-05–06). The remaining work is a minimal headless Godot scene that connects and logs one datagram.</p>
-</section>
-<section id="cris-score" class="level2">
-<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Standardise on <a href="https://github.com/mozilla/sccache"><code>sccache</code></a> as the compiler launcher plus SCons’s own <code>CacheDir</code>, both pointed at a single physical directory on the <code>E:</code> drive so Windows and WSL share one store. Wrap the build in a <code>gscons</code> shell function on each host.</p>
+<section id="prerequisites" class="level3">
+<h3 class="anchored" data-anchor-id="prerequisites">Prerequisites</h3>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 4%">
-<col style="width: 1%">
-<col style="width: 93%">
+<col style="width: 11%">
+<col style="width: 43%">
+<col style="width: 44%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Factor</th>
-<th>Score</th>
-<th>Evidence</th>
+<th>Tool</th>
+<th>Windows</th>
+<th>WSL (Ubuntu 24.04)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>C</strong>omplexity</td>
-<td>6</td>
-<td>Godot’s WebTransport datagram API is documented but untested in this build config; the Fly UDP routing adds one unknown. The wtransport Rust library (v0.7.1) carries an upstream disclaimer that it is not yet considered production-ready; the WebTransport protocol itself is standardized (RFC 9220, 2023).</td>
+<td>Python 3</td>
+<td><code>scoop install python</code></td>
+<td>system <code>python3</code></td>
 </tr>
 <tr class="even">
-<td><strong>R</strong>each</td>
-<td>10</td>
-<td>Every subsequent cycle runs inside this Godot client.</td>
+<td>SCons</td>
+<td><code>python -m pip install scons</code></td>
+<td><code>python3 -m pip install scons</code></td>
 </tr>
 <tr class="odd">
-<td><strong>I</strong>mpediment</td>
-<td>10</td>
-<td>Nothing else can be tested until a real Godot process receives a datagram end-to-end.</td>
+<td>Compiler</td>
+<td>MinGW-w64 (<code>use_mingw=yes</code>)</td>
+<td><code>build-essential</code> (gcc/g++)</td>
 </tr>
 <tr class="even">
-<td><strong>S</strong>takeholder</td>
-<td>10</td>
-<td>Gate for all Maglev cycles.</td>
+<td>sccache</td>
+<td><code>scoop install sccache</code></td>
+<td><code>brew install sccache</code></td>
 </tr>
 <tr class="odd">
-<td><strong>Total</strong></td>
-<td>9.0</td>
-<td>Build first.</td>
+<td>Git</td>
+<td><code>scoop install git</code></td>
+<td>system <code>git</code></td>
 </tr>
 </tbody>
 </table>
+<p>Verify <code>sccache --version</code> resolves in each shell. The verified setup uses <strong>sccache 0.15.0</strong>.</p>
 </section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>Writing a minimal Godot scene that connects via WebTransport is more work than a curl ping test, and cannot be deferred — a non-Godot client would not catch Godot-specific datagram handling bugs before they reach Cycle 5.</p>
+<section id="shared-cache-layout" class="level3">
+<h3 class="anchored" data-anchor-id="shared-cache-layout">Shared cache layout</h3>
+<p>WSL mounts <code>E:</code> at <code>/mnt/e</code>, so the same files back both build hosts:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 36%">
+<col style="width: 41%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Purpose</th>
+<th>Windows path</th>
+<th>WSL path</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sccache object cache</td>
+<td><code>E:\godot-build-cache\sccache</code></td>
+<td><code>/mnt/e/godot-build-cache/sccache</code></td>
+</tr>
+<tr class="even">
+<td>SCons <code>CacheDir</code></td>
+<td><code>E:\godot-build-cache\scons_cache</code></td>
+<td><code>/mnt/e/godot-build-cache/scons_cache</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>sccache</code> keys include the compiler, target triple, and flags, so MinGW and Linux objects coexist in the same store without colliding — they simply do not hit each other. Sharing the location keeps cache management to one directory.</p>
+<p><code>SCCACHE_BASEDIRS</code> (the equivalent of ccache’s <code>CCACHE_BASEDIR</code>) strips a leading absolute prefix before hashing so hits survive a moved/renamed checkout. Set it to the checkout root. Paths must be <strong>absolute</strong>; separate multiple dirs with <code>;</code> on Windows and <code>:</code> elsewhere (longest matching prefix wins). The server reads it at startup — run <code>sccache --stop-server</code> after changing it.</p>
 </section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<p>A bare WebTransport client (curl, Python, or Elixir test harness) was the original Cycle 1 design but was rejected because it only tests the gateway in isolation, leaving the Godot client’s WebTransport implementation unverified until Cycle 4, where any failure would be much harder to isolate.</p>
+<section id="windows-powershell-profile" class="level3">
+<h3 class="anchored" data-anchor-id="windows-powershell-profile">Windows — PowerShell profile</h3>
+<p>Add to <code>Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Shared build cache on E: — same physical dir as WSL (/mnt/e/godot-build-cache).</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">$env</span><span class="op">:</span><span class="va">SCCACHE_DIR</span> <span class="op">=</span> <span class="st">"E:\godot-build-cache\sccache"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">$env</span><span class="op">:</span><span class="va">SCCACHE_CACHE_SIZE</span> <span class="op">=</span> <span class="st">"20G"</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Strip the checkout root from compile paths so cache hits survive a moved/renamed build dir.</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="va">$env</span><span class="op">:</span><span class="va">SCCACHE_BASEDIRS</span> <span class="op">=</span> <span class="st">"E:\godot"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">New-Item</span> <span class="op">-</span>ItemType Directory <span class="op">-</span>Force <span class="op">-</span>Path <span class="va">$env</span><span class="op">:</span><span class="va">SCCACHE_DIR</span><span class="op">,</span> <span class="st">"E:\godot-build-cache\scons_cache"</span> <span class="op">|</span> <span class="fu">Out-Null</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> gscons <span class="op">{</span> python <span class="op">-</span>m SCons platform<span class="op">=</span>windows use_mingw<span class="op">=</span>yes compiledb<span class="op">=</span>yes target<span class="op">=</span>editor precision<span class="op">=</span>double c_compiler_launcher<span class="op">=</span>sccache cpp_compiler_launcher<span class="op">=</span>sccache cache_path<span class="op">=</span>E<span class="op">:/</span>godot-build-cache<span class="op">/</span>scons_cache <span class="op">-</span>j16 @args <span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Status: Done (verified 2026-05-07)</p>
-<p>All three pass criteria verified end-to-end against the live deployment:</p>
+<section id="wsl-linux-.bashrc" class="level3">
+<h3 class="anchored" data-anchor-id="wsl-linux-.bashrc">WSL / Linux — <code>~/.bashrc</code></h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Godot V-Sekai linuxbsd build.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Uses sccache as the compiler launcher to cache object compilation.</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SCCACHE_DIR</span><span class="op">=</span><span class="st">"</span><span class="va">${SCCACHE_DIR</span><span class="op">:-</span>/mnt/e/godot-build-cache/sccache<span class="va">}</span><span class="st">"</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SCCACHE_CACHE_SIZE</span><span class="op">=</span><span class="st">"</span><span class="va">${SCCACHE_CACHE_SIZE</span><span class="op">:-</span>20G<span class="va">}</span><span class="st">"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Strip the checkout root from compile paths so cache hits survive a moved/renamed build dir.</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SCCACHE_BASEDIRS</span><span class="op">=</span><span class="st">"</span><span class="va">${SCCACHE_BASEDIRS</span><span class="op">:-</span>/mnt/e/godot<span class="va">}</span><span class="st">"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">gscons()</span> <span class="kw">{</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python3</span> <span class="at">-m</span> SCons compiledb=yes target=editor precision=double <span class="dt">\</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        c_compiler_launcher=sccache cpp_compiler_launcher=sccache <span class="dt">\</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        cache_path=/mnt/e/godot-build-cache/scons_cache debug_symbols=yes tests=yes <span class="at">-j</span><span class="va">$(</span><span class="fu">nproc</span><span class="va">)</span> <span class="st">"</span><span class="va">$@</span><span class="st">"</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Open a fresh shell (or <code>source ~/.bashrc</code> / <code>. $PROFILE</code>) so <code>gscons</code> is defined.</p>
+</section>
+<section id="building" class="level3">
+<h3 class="anchored" data-anchor-id="building">Building</h3>
+<p>From the engine checkout (<code>E:\godot</code> / <code>/mnt/e/godot</code>):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gscons</span>                      <span class="co"># full editor build</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">gscons</span> verbose=yes          <span class="co"># extra args pass straight through to SCons</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Output binary:</p>
 <ul>
-<li>✅ WebTransport/QUIC handshake without TLS error: picoquic trace shows full handshake, h3 ALPN negotiated, 1-RTT keys derived</li>
-<li>✅ One datagram received: gateway returned <code>{"id":"c1-...","ok":true,"result":"pong"}</code> matching the request id, in ~880ms over real internet</li>
-<li>✅ Client exits cleanly: <code>quit(0)</code>, exit code 0, no orphaned process</li>
+<li>Windows: <code>bin\godot.windows.editor.double.x86_64.exe</code></li>
+<li>WSL: <code>bin/godot.linuxbsd.editor.double.x86_64</code></li>
 </ul>
-<p>The handshake test client lives at <a href="https://github.com/V-Sekai-fire/multiplayer-fabric-cycle-tests/blob/main/cycle-1-gateway-handshake/cycle1.gd"><code>multiplayer-fabric-cycle-tests/cycle-1-gateway-handshake/cycle1.gd</code></a>. Note: the ping is answered directly by the gateway’s <code>Gateway.Router.dispatch/1</code> (<code>router.ex:55</code>), not proxied to the zone server. Zone-routing is exercised in cycle 5+.</p>
+<p>The two functions differ only where the platform requires it: Windows pins <code>platform=windows use_mingw=yes</code> and <code>-j16</code>; WSL infers <code>platform=linuxbsd</code>, uses <code>-j$(nproc)</code>, and adds <code>debug_symbols=yes tests=yes</code>. Both share <code>compiledb=yes target=editor precision=double</code> and the sccache launchers.</p>
 </section>
-<section id="decision-makers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
-<ul>
-<li>Lead Architect / Fabric Maintainer</li>
-</ul>
+<section id="verifying-and-maintaining-the-cache" class="level3">
+<h3 class="anchored" data-anchor-id="verifying-and-maintaining-the-cache">Verifying and maintaining the cache</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sccache</span> <span class="at">--show-stats</span>        <span class="co"># "Compile requests" / "Cache hits" climb across builds</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">sccache</span> <span class="at">--stop-server</span>       <span class="co"># apply changed SCCACHE_* env vars</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">sccache</span> <span class="at">--zero-stats</span>        <span class="co"># reset counters</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A clean first build is mostly misses; a second build of the same tree shows a high hit rate and finishes substantially faster. The store is capped at <code>SCCACHE_CACHE_SIZE</code> (20G) and evicts least-recently-used entries automatically.</p>
 </section>
-<section id="tags" class="level2">
-<h2 class="anchored" data-anchor-id="tags">Tags</h2>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
 <ul>
-<li>maglev-cycle-1, godot-client, gateway-handshake, webtransport, smoke-test, galls-law, 20260506-maglev-cycle-1-gateway-handshake, present-proposal-template</li>
+<li>One cache directory on <code>E:</code> serves both hosts; management is a single location.</li>
+<li>The engine <code>SConstruct</code> recognises only <code>cache_path</code> and <code>cache_limit</code> for the SCons cache. <code>scons_cache=</code> is <strong>not</strong> valid and is silently ignored.</li>
+<li>WSL builds run against <code>/mnt/e</code>, whose 9p mount is slower than native ext4 — the trade-off accepted for a shared cache.</li>
+<li>Common failures: no hits between builds → server started before the env vars, run <code>sccache --stop-server</code>; no hits after relocating a checkout → set <code>SCCACHE_BASEDIRS</code> to the checkout root.</li>
 </ul>
 </section>
 <section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
-<pre><code>@techreport{20260501_webtransport,
-  title       = {Use WebTransport over QUIC for game traffic},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260501-webtransport-over-quic-for-game-traffic.md}
-}
-
-@techreport{20260501_godot_precision,
-  title       = {Godot double precision template\_release for zone servers},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260501-godot-double-precision-template-release-for-zone.md}
-}
-
-@techreport{20260501_fly,
-  title       = {Fly.io for deployment},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260501-fly-io-for-deployment.md}
-}
-
-@techreport{20260506_ghcr,
-  title       = {GHCR packages must be built by the repo that consumes them},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260506-ghcr-package-ownership-same-repo.md}
-}
-
-@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}</code></pre>
+<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<ul>
+<li><a href="https://github.com/mozilla/sccache/blob/main/docs/Local.md">sccache local cache (<code>SCCACHE_DIR</code>, <code>SCCACHE_CACHE_SIZE</code>)</a></li>
+<li><a href="https://github.com/mozilla/sccache/blob/main/docs/Configuration.md">sccache configuration (<code>SCCACHE_BASEDIRS</code>)</a></li>
+<li><a href="https://github.com/godotengine/godot/blob/master/SConstruct">Godot <code>SConstruct</code></a></li>
+</ul>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -879,7 +938,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/V-Sekai-fire/manuals/edit/main/decisions/20260506-maglev-cycle-1-gateway-handshake.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/V-Sekai-fire/manuals/edit/main/decisions/20260606-compiling-godot-engine.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

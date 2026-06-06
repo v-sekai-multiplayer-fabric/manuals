@@ -9,8 +9,368 @@
 <link>https://v-sekai-fire.github.io/manuals/decisions.html</link>
 <atom:link href="https://v-sekai-fire.github.io/manuals/decisions.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.9.37</generator>
-<lastBuildDate>Wed, 06 May 2026 00:00:00 GMT</lastBuildDate>
+<generator>quarto-1.9.38</generator>
+<lastBuildDate>Sat, 06 Jun 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Compiling the Godot engine</title>
+  <link>https://v-sekai-fire.github.io/manuals/decisions/20260606-compiling-godot-engine.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context" class="level2">
+<h2 class="anchored" data-anchor-id="context">Context</h2>
+<p>Developers build the V-Sekai multiplayer-fabric Godot engine on two hosts from one workstation: <strong>Windows (PowerShell + MinGW)</strong> and <strong>WSL / Linux (<code>linuxbsd</code>)</strong>. Without a shared, persistent compiler cache, each host rebuilds from scratch and cache hits are lost whenever a checkout is moved or renamed.</p>
+</section>
+<section id="decision" class="level2">
+<h2 class="anchored" data-anchor-id="decision">Decision</h2>
+<p>Standardise on <a href="https://github.com/mozilla/sccache"><code>sccache</code></a> as the compiler launcher plus SCons’s own <code>CacheDir</code>, both pointed at a single physical directory on the <code>E:</code> drive so Windows and WSL share one store. Wrap the build in a <code>gscons</code> shell function on each host.</p>
+<section id="prerequisites" class="level3">
+<h3 class="anchored" data-anchor-id="prerequisites">Prerequisites</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 43%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Tool</th>
+<th>Windows</th>
+<th>WSL (Ubuntu 24.04)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Python 3</td>
+<td><code>scoop install python</code></td>
+<td>system <code>python3</code></td>
+</tr>
+<tr class="even">
+<td>SCons</td>
+<td><code>python -m pip install scons</code></td>
+<td><code>python3 -m pip install scons</code></td>
+</tr>
+<tr class="odd">
+<td>Compiler</td>
+<td>MinGW-w64 (<code>use_mingw=yes</code>)</td>
+<td><code>build-essential</code> (gcc/g++)</td>
+</tr>
+<tr class="even">
+<td>sccache</td>
+<td><code>scoop install sccache</code></td>
+<td><code>brew install sccache</code></td>
+</tr>
+<tr class="odd">
+<td>Git</td>
+<td><code>scoop install git</code></td>
+<td>system <code>git</code></td>
+</tr>
+</tbody>
+</table>
+<p>Verify <code>sccache --version</code> resolves in each shell. The verified setup uses <strong>sccache 0.15.0</strong>.</p>
+</section>
+<section id="shared-cache-layout" class="level3">
+<h3 class="anchored" data-anchor-id="shared-cache-layout">Shared cache layout</h3>
+<p>WSL mounts <code>E:</code> at <code>/mnt/e</code>, so the same files back both build hosts:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 36%">
+<col style="width: 41%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Purpose</th>
+<th>Windows path</th>
+<th>WSL path</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sccache object cache</td>
+<td><code>E:\godot-build-cache\sccache</code></td>
+<td><code>/mnt/e/godot-build-cache/sccache</code></td>
+</tr>
+<tr class="even">
+<td>SCons <code>CacheDir</code></td>
+<td><code>E:\godot-build-cache\scons_cache</code></td>
+<td><code>/mnt/e/godot-build-cache/scons_cache</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>sccache</code> keys include the compiler, target triple, and flags, so MinGW and Linux objects coexist in the same store without colliding — they simply do not hit each other. Sharing the location keeps cache management to one directory.</p>
+<p><code>SCCACHE_BASEDIRS</code> (the equivalent of ccache’s <code>CCACHE_BASEDIR</code>) strips a leading absolute prefix before hashing so hits survive a moved/renamed checkout. Set it to the checkout root. Paths must be <strong>absolute</strong>; separate multiple dirs with <code>;</code> on Windows and <code>:</code> elsewhere (longest matching prefix wins). The server reads it at startup — run <code>sccache --stop-server</code> after changing it.</p>
+</section>
+<section id="windows-powershell-profile" class="level3">
+<h3 class="anchored" data-anchor-id="windows-powershell-profile">Windows — PowerShell profile</h3>
+<p>Add to <code>Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Shared build cache on E: — same physical dir as WSL (/mnt/e/godot-build-cache).</span></span>
+<span id="cb1-2"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$env</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">SCCACHE_DIR</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"E:\godot-build-cache\sccache"</span></span>
+<span id="cb1-3"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$env</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">SCCACHE_CACHE_SIZE</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"20G"</span></span>
+<span id="cb1-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Strip the checkout root from compile paths so cache hits survive a moved/renamed build dir.</span></span>
+<span id="cb1-5"><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$env</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">SCCACHE_BASEDIRS</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"E:\godot"</span></span>
+<span id="cb1-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">New-Item</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>ItemType Directory <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>Force <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>Path <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$env</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">SCCACHE_DIR</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">,</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"E:\godot-build-cache\scons_cache"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">Out-Null</span></span>
+<span id="cb1-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span> gscons <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span> python <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>m SCons platform<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>windows use_mingw<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>yes compiledb<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>yes target<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>editor precision<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>double c_compiler_launcher<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>sccache cpp_compiler_launcher<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>sccache cache_path<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>E<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:/</span>godot-build-cache<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>scons_cache <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>j16 @args <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span></code></pre></div></div>
+</section>
+<section id="wsl-linux-.bashrc" class="level3">
+<h3 class="anchored" data-anchor-id="wsl-linux-.bashrc">WSL / Linux — <code>~/.bashrc</code></h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Godot V-Sekai linuxbsd build.</span></span>
+<span id="cb2-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Uses sccache as the compiler launcher to cache object compilation.</span></span>
+<span id="cb2-3"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">export</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">SCCACHE_DIR</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${SCCACHE_DIR</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:-</span>/mnt/e/godot-build-cache/sccache<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb2-4"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">export</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">SCCACHE_CACHE_SIZE</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${SCCACHE_CACHE_SIZE</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:-</span>20G<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb2-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Strip the checkout root from compile paths so cache hits survive a moved/renamed build dir.</span></span>
+<span id="cb2-6"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">export</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">SCCACHE_BASEDIRS</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${SCCACHE_BASEDIRS</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:-</span>/mnt/e/godot<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb2-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gscons()</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">{</span></span>
+<span id="cb2-8">    <span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">python3</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-m</span> SCons compiledb=yes target=editor precision=double <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb2-9">        c_compiler_launcher=sccache cpp_compiler_launcher=sccache <span class="dt" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">\</span></span>
+<span id="cb2-10">        cache_path=/mnt/e/godot-build-cache/scons_cache debug_symbols=yes tests=yes <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">-j</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$(</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">nproc</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">)</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$@</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb2-11"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">}</span></span></code></pre></div></div>
+<p>Open a fresh shell (or <code>source ~/.bashrc</code> / <code>. $PROFILE</code>) so <code>gscons</code> is defined.</p>
+</section>
+<section id="building" class="level3">
+<h3 class="anchored" data-anchor-id="building">Building</h3>
+<p>From the engine checkout (<code>E:\godot</code> / <code>/mnt/e/godot</code>):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gscons</span>                      <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># full editor build</span></span>
+<span id="cb3-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">gscons</span> verbose=yes          <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># extra args pass straight through to SCons</span></span></code></pre></div></div>
+<p>Output binary:</p>
+<ul>
+<li>Windows: <code>bin\godot.windows.editor.double.x86_64.exe</code></li>
+<li>WSL: <code>bin/godot.linuxbsd.editor.double.x86_64</code></li>
+</ul>
+<p>The two functions differ only where the platform requires it: Windows pins <code>platform=windows use_mingw=yes</code> and <code>-j16</code>; WSL infers <code>platform=linuxbsd</code>, uses <code>-j$(nproc)</code>, and adds <code>debug_symbols=yes tests=yes</code>. Both share <code>compiledb=yes target=editor precision=double</code> and the sccache launchers.</p>
+</section>
+<section id="verifying-and-maintaining-the-cache" class="level3">
+<h3 class="anchored" data-anchor-id="verifying-and-maintaining-the-cache">Verifying and maintaining the cache</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">sccache</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--show-stats</span>        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># "Compile requests" / "Cache hits" climb across builds</span></span>
+<span id="cb4-2"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">sccache</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--stop-server</span>       <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># apply changed SCCACHE_* env vars</span></span>
+<span id="cb4-3"><span class="ex" style="color: null;
+background-color: null;
+font-style: inherit;">sccache</span> <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">--zero-stats</span>        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># reset counters</span></span></code></pre></div></div>
+<p>A clean first build is mostly misses; a second build of the same tree shows a high hit rate and finishes substantially faster. The store is capped at <code>SCCACHE_CACHE_SIZE</code> (20G) and evicts least-recently-used entries automatically.</p>
+</section>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>One cache directory on <code>E:</code> serves both hosts; management is a single location.</li>
+<li>The engine <code>SConstruct</code> recognises only <code>cache_path</code> and <code>cache_limit</code> for the SCons cache. <code>scons_cache=</code> is <strong>not</strong> valid and is silently ignored.</li>
+<li>WSL builds run against <code>/mnt/e</code>, whose 9p mount is slower than native ext4 — the trade-off accepted for a shared cache.</li>
+<li>Common failures: no hits between builds → server started before the env vars, run <code>sccache --stop-server</code>; no hits after relocating a checkout → set <code>SCCACHE_BASEDIRS</code> to the checkout root.</li>
+</ul>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<ul>
+<li><a href="https://github.com/mozilla/sccache/blob/main/docs/Local.md">sccache local cache (<code>SCCACHE_DIR</code>, <code>SCCACHE_CACHE_SIZE</code>)</a></li>
+<li><a href="https://github.com/mozilla/sccache/blob/main/docs/Configuration.md">sccache configuration (<code>SCCACHE_BASEDIRS</code>)</a></li>
+<li><a href="https://github.com/godotengine/godot/blob/master/SConstruct">Godot <code>SConstruct</code></a></li>
+</ul>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-fire.github.io/manuals/decisions/20260606-compiling-godot-engine.html</guid>
+  <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Replace Jaeger with VictoriaTraces for trace storage</title>
   <link>https://v-sekai-fire.github.io/manuals/decisions/20260506-observability-stack-victoriatraces.html</link>
@@ -496,7 +856,7 @@
 
  ]]></description>
   <guid>https://v-sekai-fire.github.io/manuals/decisions/present-proposal-template.html</guid>
-  <pubDate>Thu, 07 May 2026 13:27:28 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:34:21 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -721,7 +1081,7 @@
 
  ]]></description>
   <guid>https://v-sekai-fire.github.io/manuals/decisions/20260506-maglev-intercept-smoke-test.html</guid>
-  <pubDate>Thu, 07 May 2026 13:27:28 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:34:21 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -843,7 +1203,7 @@
 
  ]]></description>
   <guid>https://v-sekai-fire.github.io/manuals/decisions/20260506-maglev-cycle-9-physics-vrm.html</guid>
-  <pubDate>Thu, 07 May 2026 13:27:28 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:34:21 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -960,7 +1320,7 @@
 
  ]]></description>
   <guid>https://v-sekai-fire.github.io/manuals/decisions/20260506-maglev-cycle-8-ik-merge.html</guid>
-  <pubDate>Thu, 07 May 2026 13:27:28 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:34:21 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1079,7 +1439,7 @@
 
  ]]></description>
   <guid>https://v-sekai-fire.github.io/manuals/decisions/20260506-maglev-cycle-7-ik-routing.html</guid>
-  <pubDate>Thu, 07 May 2026 13:27:28 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:34:21 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1199,7 +1559,7 @@
 
  ]]></description>
   <guid>https://v-sekai-fire.github.io/manuals/decisions/20260506-maglev-cycle-6-mmog-load.html</guid>
-  <pubDate>Thu, 07 May 2026 13:27:28 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:34:21 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1333,7 +1693,7 @@
 
  ]]></description>
   <guid>https://v-sekai-fire.github.io/manuals/decisions/20260506-maglev-cycle-5-zone-console.html</guid>
-  <pubDate>Thu, 07 May 2026 13:27:28 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:34:21 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1467,7 +1827,7 @@
 
  ]]></description>
   <guid>https://v-sekai-fire.github.io/manuals/decisions/20260506-maglev-cycle-4-db-connection.html</guid>
-  <pubDate>Thu, 07 May 2026 13:27:28 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:34:21 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1641,7 +2001,7 @@ font-style: inherit;">&gt;</span>.scn</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-fire.github.io/manuals/decisions/20260506-maglev-cycle-3-baker.html</guid>
-  <pubDate>Thu, 07 May 2026 13:27:28 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:34:21 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1781,7 +2141,7 @@ font-style: inherit;">&gt;</span>.scn</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-fire.github.io/manuals/decisions/20260506-maglev-cycle-2-observability.html</guid>
-  <pubDate>Thu, 07 May 2026 13:27:28 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:34:21 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1947,128 +2307,7 @@ font-style: inherit;">&gt;</span>.scn</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-fire.github.io/manuals/decisions/20260506-maglev-cycle-12-game-planning.html</guid>
-  <pubDate>Thu, 07 May 2026 13:27:28 GMT</pubDate>
-</item>
-<item>
-  <title></title>
-  <link>https://v-sekai-fire.github.io/manuals/decisions/20260506-maglev-cycle-11-db-write.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="maglev-cycle-11-cockroachdb-score-write" class="level1">
-<h1>Maglev Cycle 11: CockroachDB Score Write</h1>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>With causal ordering confirmed in Cycle 10 and the DB connection verified in Cycle 4, Cycle 11 activates persistence: the persona zone commits the score and <code>multiplayer-fabric-uro</code> writes it to CockroachDB.</p>
-</section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>The cross-zone write path — persona zone commits, uro writes via Ecto over Fly’s 6PN using the <code>gateway_writer</code> role — requires end-to-end validation. With causal ordering confirmed in Cycle 10, the only remaining unknown is whether the database write path performs correctly under mission load.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>On each core-slot event the persona zone commits the score update after the <code>VClock.le</code> check passes. On mission end <code>multiplayer-fabric-uro</code> writes the committed score to CockroachDB via Ecto over Fly’s 6PN using the <code>gateway_writer</code> role. <code>RelReplica</code> entries stamped with <code>sentAt</code> are broadcast to the interest band.</p>
-<p>Write path:</p>
-<pre><code>spatial zone  →  QueueOp(VClock)  →  persona zone commits
-              →  uro → CockroachDB (gateway_writer, Fly 6PN)
-              →  RelReplica(sentAt) broadcast to interest band</code></pre>
-<p>Pass criteria:</p>
-<ul class="task-list">
-<li><label><input type="checkbox">Committed score appears in CockroachDB within one tick of mission end</label></li>
-<li><label><input type="checkbox"><code>RelReplica.stale</code> correctly reflects the write on all nodes in the interest band</label></li>
-<li><label><input type="checkbox">No write occurs from any zone other than the persona authority</label></li>
-</ul>
-</section>
-<section id="estimate" class="level2">
-<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
-<p><strong>5 days</strong> (2026-06-30 → 2026-07-07). The Ecto write path to CockroachDB is proven in Cycle 4; the work is the persona zone commit flow, VClock gating on the write side, and RelReplica broadcast. No prior end-to-end causal write exists in the history.</p>
-</section>
-<section id="cris-score" class="level2">
-<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 11%">
-<col style="width: 3%">
-<col style="width: 84%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Factor</th>
-<th>Score</th>
-<th>Evidence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>C</strong>omplexity</td>
-<td>6</td>
-<td>The Ecto write path to CockroachDB over Fly’s 6PN under concurrent mission load is untested in this codebase.</td>
-</tr>
-<tr class="even">
-<td><strong>R</strong>each</td>
-<td>10</td>
-<td>Persistent player progression requires this path.</td>
-</tr>
-<tr class="odd">
-<td><strong>I</strong>mpediment</td>
-<td>8</td>
-<td>A broken score write does not block Cycle 10 gameplay but blocks any feature that depends on persistent state.</td>
-</tr>
-<tr class="even">
-<td><strong>S</strong>takeholder</td>
-<td>10</td>
-<td>Required for the full Maglev Intercept scenario.</td>
-</tr>
-<tr class="odd">
-<td><strong>Total</strong></td>
-<td>8.0</td>
-<td>Build after Cycles 10 and 9 pass.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>If the persona zone goes down, that player’s attributes are offline until it recovers. Replication factor ≥ 2 on the persona partition is the mitigation, deferred to a later cycle.</p>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<p>Writing scores directly from the spatial zone to CockroachDB was considered. Rejected — it violates <code>DisjointRanges</code> and allows concurrent writes to the same player record.</p>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Status: Draft</p>
-</section>
-<section id="decision-makers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
-<ul>
-<li>Lead Architect / Fabric Maintainer</li>
-</ul>
-</section>
-<section id="tags" class="level2">
-<h2 class="anchored" data-anchor-id="tags">Tags</h2>
-<ul>
-<li>maglev-cycle-11, db-write, persona-zone, cockroachdb, galls-law, 20260506-maglev-cycle-11-db-write, present-proposal-template</li>
-</ul>
-</section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
-<pre><code>@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}</code></pre>
-
-
-</section>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-fire.github.io/manuals/decisions/20260506-maglev-cycle-11-db-write.html</guid>
-  <pubDate>Thu, 07 May 2026 13:27:28 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:34:21 GMT</pubDate>
 </item>
 </channel>
 </rss>
