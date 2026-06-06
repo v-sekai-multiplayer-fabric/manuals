@@ -9,7 +9,7 @@ decision-makers: K. S. Ernest Lee
 ## Context and Problem Statement
 
 The [presence marker decision](20260606-presence-marker-representation.md) calls for
-a vague ghostly humanoid that conveys position and heading. [CHI-298](https://linear.app/chibifire/issue/CHI-298/use-soma-and-anny-to-fit-concepts-to-personas)
+a vague ghostly humanoid that conveys position and heading. CHI-298
 proposed fitting personas with SOMA (unifying parametric body models) and ANNY; the
 Linear issue is canceled, but the concept is the natural basis for that ghostly
 form. We track only three points (head and two hands), so a full posed body is
