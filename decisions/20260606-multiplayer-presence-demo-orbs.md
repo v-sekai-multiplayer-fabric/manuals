@@ -3,7 +3,7 @@ title: Minimal multiplayer presence demo with head and hand orbs
 date: 2026-06-06
 status: superseded by 20260606-presence-marker-representation.md
 tier: proof of concept
-decision-makers: K. S. Ernest Lee
+decision-makers: K. S. Ernest (iFire) Lee
 ---
 
 ## Context and Problem Statement

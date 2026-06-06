@@ -3,7 +3,7 @@ title: Ghostly partial-body presence avatar from ANNY via SOMA-X
 date: 2026-06-06
 status: proposed
 tier: proof of concept
-decision-makers: K. S. Ernest Lee
+decision-makers: K. S. Ernest (iFire) Lee
 ---
 
 ## Context and Problem Statement

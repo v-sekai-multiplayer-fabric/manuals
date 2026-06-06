@@ -3,7 +3,7 @@ title: Bound the LLM steering queue to avoid context overflow
 date: 2026-06-06
 status: accepted
 tier: baseline
-decision-makers: K. S. Ernest Lee
+decision-makers: K. S. Ernest (iFire) Lee
 ---
 
 ## Context and Problem Statement
