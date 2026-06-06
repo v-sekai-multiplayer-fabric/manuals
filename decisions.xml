@@ -82,6 +82,7 @@
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="../changelog/2026/20260606-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a></p></li>
+<li><p><a href="20260606-gitassembly-tag-release.html">Cut versioned gitassembly tag releases for the assembled engine</a></p></li>
 <li><p><a href="20260606-multiplayer-presence-demo-orbs.html">Minimal multiplayer presence demo with head and hand orbs</a></p></li>
 </ul>
 </section>
@@ -190,7 +191,7 @@
 <h3 class="anchored" data-anchor-id="engine-pick-one">1. Engine (pick one)</h3>
 <ul>
 <li>Prebuilt: pull the editor image from <a href="https://github.com/v-sekai-multiplayer-fabric/godot-images">godot-images</a> (GHCR), built at the <a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">pinned Godot 4.7 commit</a>.</li>
-<li>From source: the <a href="../decisions/20260606-compiling-godot-engine.html">compiling SOP</a> toolchain (<code>git</code>, Python 3, SCons, sccache, MinGW-w64 on Windows / <code>build-essential</code> on Linux), plus <a href="https://github.com/v-sekai-multiplayer-fabric/merge">merge</a> (Elixir <code>gitassembly</code>) to assemble <code>feat/module-xr-grid</code>, <code>feat/module-cassie</code>, and <code>feat/module-http3</code> onto the pinned base.</li>
+<li>From source: the <a href="../decisions/20260606-compiling-godot-engine.html">compiling SOP</a> toolchain (<code>git</code>, Python 3, SCons, sccache, MinGW-w64 on Windows / <code>build-essential</code> on Linux), plus <a href="https://github.com/v-sekai-multiplayer-fabric/merge">merge</a> (Elixir <code>gitassembly</code>) to assemble <code>feat/module-xr-grid</code>, <code>feat/module-cassie</code>, and <code>feat/module-http3</code> onto the pinned base. Pin to a <a href="../decisions/20260606-gitassembly-tag-release.html">gitassembly tag release</a> rather than the moving branch tips for a reproducible assembly.</li>
 </ul>
 </section>
 <section id="demo-project" class="level3">
@@ -240,6 +241,7 @@
 <ul>
 <li><p><a href="20260606-compiling-godot-engine.html">Compiling the Godot engine</a></p></li>
 <li><p><a href="20260606-ghostly-presence-body-model.html">Ghostly partial-body presence avatar from ANNY via SOMA-X</a></p></li>
+<li><p><a href="20260606-gitassembly-tag-release.html">Cut versioned gitassembly tag releases for the assembled engine</a></p></li>
 <li><p><a href="20260606-pin-engine-to-frozen-godot-4-7.html">Pin the engine to a frozen Godot 4.7 commit</a></p></li>
 <li><p><a href="20260606-presence-marker-representation.html">Human-readable presence markers with an orb debug mode</a></p></li>
 <li><p><a href="20260606-webtransport-http3-transport.html">WebTransport over HTTP/3 transport</a></p></li>
@@ -753,6 +755,80 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
   <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>Cut versioned gitassembly tag releases for the assembled engine</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-gitassembly-tag-release.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Cut versioned gitassembly tag releases for the assembled engine</em></p>
+<p><strong>Status:</strong> proposed</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The <a href="https://github.com/v-sekai-multiplayer-fabric/merge"><code>merge</code></a> <code>gitassembly</code> recipe builds the engine by merging feature branches (<code>feat/module-xr-grid</code>, <code>feat/module-cassie</code>, <code>feat/module-http3</code>, and the rest) onto the <a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">frozen Godot 4.7 base</a>. The base is pinned, but the feature branch tips are not: an assembly run today and one next week can merge different branch SHAs and produce a different engine. The <a href="../decisions/20260606-presence-demo-cold-boot-dependencies.html">cold-boot dependencies</a> refer to the branches by name, so “assemble these branches” is not yet a reproducible artifact. How do we name a fixed, shareable point of the assembled engine?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>Reproducibility: a name that resolves to one exact assembled tree, not moving tips.</li>
+<li>A single reference the demo, <code>godot-images</code>, and CI can all build from.</li>
+<li>Cheap to cut so releases keep pace with the feature branches.</li>
+<li>Provenance: the tag records the base pin and every merged branch SHA.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Keep referring to branch names (status quo); each consumer assembles the tips.</li>
+<li>Tag only the <code>godot-images</code> build output, not the source assembly.</li>
+<li>Cut a versioned tag on the assembled branch the <code>gitassembly</code> recipe produces.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “Cut a versioned tag on the assembled branch”, because it gives one immutable reference that resolves to an exact tree, while the per-branch SHAs in the recipe keep the assembly’s provenance.</p>
+<ul>
+<li>The recipe assembles the feature branches onto the pinned base and tags the result. The tag is annotated and records the base pin SHA and each merged branch SHA in its message.</li>
+<li>Tag pattern: <code>gitassembly-YYYYMMDD-NNNN</code> — ISO date first so tags sort chronologically, with a zero-padded same-day sequence, mirroring the <a href="../decisions/20260606-archival-file-naming-convention.html">archival naming convention</a>.</li>
+<li>The first tag, <code>gitassembly-20260606-0001</code>, is the cold-boot reference for the presence-marker demo: base <code>8a337510</code> (Godot <code>4.7.0-beta</code>) with <code>feat/module-xr-grid</code>, <code>feat/module-cassie</code>, and <code>feat/module-http3</code> merged.</li>
+<li>Consumers pin to a tag, not to branch names. <code>godot-images</code> builds its GHCR editor image from a tag, and the cold-boot steps reference that tag.</li>
+<li>A tag is cut whenever a merged branch advances enough to matter; the moving branches stay the development surface, and tags are the shareable checkpoints.</li>
+</ul>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good: a tag resolves to one exact assembled engine, so demo, image, and CI all build the same tree.</li>
+<li>Good: each tag carries the base and branch SHAs, so any assembly is auditable.</li>
+<li>Bad: tags must be cut deliberately, so a stale tag can lag the live branches.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p><code>git show gitassembly-20260606-0001</code> lists the base pin and the merged branch SHAs, and a <code>godot-images</code> build from that tag reproduces the same editor. The cold-boot steps and <code>godot-images</code> reference a tag rather than branch names.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>The tag sits on top of the <a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">engine pin</a>: the pin fixes the base, and the tag fixes the assembly merged onto it. It is the reproducible artifact the <a href="../decisions/20260606-presence-demo-cold-boot-dependencies.html">cold-boot dependencies</a> build from.</p>
+
+
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="20260606-archival-file-naming-convention.html">Archival file naming convention for committed assets</a></p></li>
+<li><p><a href="20260606-pin-engine-to-frozen-godot-4-7.html">Pin the engine to a frozen Godot 4.7 commit</a></p></li>
+<li><p><a href="20260606-presence-demo-cold-boot-dependencies.html">Cold-boot dependencies for the presence-marker demo</a></p></li>
+</ul>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-gitassembly-tag-release.html</guid>
+  <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Feature classification — proof of concept, baseline, stretch</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-feature-classification-poc-baseline-stretch.html</link>
   <description><![CDATA[ 
@@ -1166,6 +1242,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="../changelog/2026/20260606-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a></p></li>
+<li><p><a href="20260606-gitassembly-tag-release.html">Cut versioned gitassembly tag releases for the assembled engine</a></p></li>
 <li><p><a href="20260606-presence-demo-cold-boot-dependencies.html">Cold-boot dependencies for the presence-marker demo</a></p></li>
 <li><p><a href="20260606-self-host-on-harvester-hci.html">Self-host on Harvester HCI instead of Fly.io</a></p></li>
 <li><p><a href="20260606-spatial-audio-patched-resonance-audio.html">Spatial audio via a patched Resonance Audio (HRTF and audio probes)</a></p></li>
@@ -2101,132 +2178,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-10-dynamic-physics-score.html</guid>
-  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Maglev Cycle 11: CockroachDB Score Write</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-11-db-write.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Maglev Cycle 11: CockroachDB Score Write</em></p>
-<p><strong>Tier:</strong> baseline · <strong>Status:</strong> rejected</p>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>With causal ordering confirmed in Cycle 10 and the DB connection verified in Cycle 4, Cycle 11 activates persistence: the persona zone commits the score and <code>multiplayer-fabric-uro</code> writes it to CockroachDB.</p>
-</section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>The cross-zone write path — persona zone commits, uro writes via Ecto over Fly’s 6PN using the <code>gateway_writer</code> role — requires end-to-end validation. With causal ordering confirmed in Cycle 10, the only remaining unknown is whether the database write path performs correctly under mission load.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>On each core-slot event the persona zone commits the score update after the <code>VClock.le</code> check passes. On mission end <code>multiplayer-fabric-uro</code> writes the committed score to CockroachDB via Ecto over Fly’s 6PN using the <code>gateway_writer</code> role. <code>RelReplica</code> entries stamped with <code>sentAt</code> are broadcast to the interest band.</p>
-<p>Write path:</p>
-<pre><code>spatial zone  →  QueueOp(VClock)  →  persona zone commits
-              →  uro → CockroachDB (gateway_writer, Fly 6PN)
-              →  RelReplica(sentAt) broadcast to interest band</code></pre>
-<p>Pass criteria:</p>
-<ul class="task-list">
-<li><label><input type="checkbox">Committed score appears in CockroachDB within one tick of mission end</label></li>
-<li><label><input type="checkbox"><code>RelReplica.stale</code> correctly reflects the write on all nodes in the interest band</label></li>
-<li><label><input type="checkbox">No write occurs from any zone other than the persona authority</label></li>
-</ul>
-</section>
-<section id="estimate" class="level2">
-<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
-<p><strong>5 days</strong> (2026-06-30 → 2026-07-07). The Ecto write path to CockroachDB is proven in Cycle 4; the work is the persona zone commit flow, VClock gating on the write side, and RelReplica broadcast. No prior end-to-end causal write exists in the history.</p>
-</section>
-<section id="cris-score" class="level2">
-<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 11%">
-<col style="width: 3%">
-<col style="width: 84%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Factor</th>
-<th>Score</th>
-<th>Evidence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>C</strong>omplexity</td>
-<td>6</td>
-<td>The Ecto write path to CockroachDB over Fly’s 6PN under concurrent mission load is untested in this codebase.</td>
-</tr>
-<tr class="even">
-<td><strong>R</strong>each</td>
-<td>10</td>
-<td>Persistent player progression requires this path.</td>
-</tr>
-<tr class="odd">
-<td><strong>I</strong>mpediment</td>
-<td>8</td>
-<td>A broken score write does not block Cycle 10 gameplay but blocks any feature that depends on persistent state.</td>
-</tr>
-<tr class="even">
-<td><strong>S</strong>takeholder</td>
-<td>10</td>
-<td>Required for the full Maglev Intercept scenario.</td>
-</tr>
-<tr class="odd">
-<td><strong>Total</strong></td>
-<td>8.0</td>
-<td>Build after Cycles 10 and 9 pass.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>If the persona zone goes down, that player’s attributes are offline until it recovers. Replication factor ≥ 2 on the persona partition is the mitigation, deferred to a later cycle.</p>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<p>Writing scores directly from the spatial zone to CockroachDB was considered. Rejected — it violates <code>DisjointRanges</code> and allows concurrent writes to the same player record.</p>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Status: Draft</p>
-</section>
-<section id="decision-makers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
-<ul>
-<li>Lead Architect / Fabric Maintainer</li>
-</ul>
-</section>
-<section id="tags" class="level2">
-<h2 class="anchored" data-anchor-id="tags">Tags</h2>
-<ul>
-<li>maglev-cycle-11, db-write, persona-zone, cockroachdb, galls-law, 20260506-maglev-cycle-11-db-write, present-proposal-template</li>
-</ul>
-</section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
-<pre><code>@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}</code></pre>
-
-
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="20260506-maglev-intercept-smoke-test.html">Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test</a></p></li>
-</ul>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-11-db-write.html</guid>
   <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
 </item>
 </channel>

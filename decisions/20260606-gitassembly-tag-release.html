@@ -8,7 +8,7 @@
 
 <meta name="dcterms.date" content="2026-06-06">
 
-<title>Pin the engine to a frozen Godot 4.7 commit – V-Sekai Fire — Manuals</title>
+<title>Cut versioned gitassembly tag releases for the assembled engine – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -298,7 +298,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More Information</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260606-pin-engine-to-frozen-godot-4-7.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260606-gitassembly-tag-release.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -306,7 +306,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Pin the engine to a frozen Godot 4.7 commit</h1>
+<h1 class="title">Cut versioned gitassembly tag releases for the assembled engine</h1>
 </div>
 
 
@@ -329,65 +329,64 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Pin the engine to a frozen Godot 4.7 commit</em></p>
-<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Cut versioned gitassembly tag releases for the assembled engine</em></p>
+<p><strong>Status:</strong> proposed</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The engine fork carries many feature branches (cassie, resonance audio, native media, speech, spatial audio, the fabric modules) that the <code>merge</code> recipe assembles onto a base. If that base tracks a moving upstream, every assembly can shift under the patches, so a green build one day can break the next from upstream churn alone. What base should the feature branches and the assembly build on?</p>
+<p>The <a href="https://github.com/v-sekai-multiplayer-fabric/merge"><code>merge</code></a> <code>gitassembly</code> recipe builds the engine by merging feature branches (<code>feat/module-xr-grid</code>, <code>feat/module-cassie</code>, <code>feat/module-http3</code>, and the rest) onto the <a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">frozen Godot 4.7 base</a>. The base is pinned, but the feature branch tips are not: an assembly run today and one next week can merge different branch SHAs and produce a different engine. The <a href="../decisions/20260606-presence-demo-cold-boot-dependencies.html">cold-boot dependencies</a> refer to the branches by name, so “assemble these branches” is not yet a reproducible artifact. How do we name a fixed, shareable point of the assembled engine?</p>
 </section>
 <section id="decision-drivers" class="level2">
 <h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
 <ul>
-<li>A stable base so assembly and CI are reproducible.</li>
-<li>Patch branches that do not have to chase upstream API changes mid-cycle.</li>
-<li>A known engine version for the docs and for downstream images.</li>
+<li>Reproducibility: a name that resolves to one exact assembled tree, not moving tips.</li>
+<li>A single reference the demo, <code>godot-images</code>, and CI can all build from.</li>
+<li>Cheap to cut so releases keep pace with the feature branches.</li>
+<li>Provenance: the tag records the base pin and every merged branch SHA.</li>
 </ul>
 </section>
 <section id="considered-options" class="level2">
 <h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
 <ul>
-<li>Track upstream <code>godotengine/godot</code> <code>master</code>.</li>
-<li>Track an upstream release branch.</li>
-<li>Pin the fork’s <code>master</code> to one frozen upstream Godot 4.7 commit.</li>
+<li>Keep referring to branch names (status quo); each consumer assembles the tips.</li>
+<li>Tag only the <code>godot-images</code> build output, not the source assembly.</li>
+<li>Cut a versioned tag on the assembled branch the <code>gitassembly</code> recipe produces.</li>
 </ul>
 </section>
 <section id="decision-outcome" class="level2">
 <h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: “Pin the fork’s <code>master</code> to one frozen upstream Godot 4.7 commit”, because it gives the patch branches and the assembly a fixed target, so builds are reproducible and upstream churn cannot break an assembly.</p>
+<p>Chosen option: “Cut a versioned tag on the assembled branch”, because it gives one immutable reference that resolves to an exact tree, while the per-branch SHAs in the recipe keep the assembly’s provenance.</p>
 <ul>
-<li>The fork’s <code>master</code> is the frozen base. Its tip is <code>8a337510</code> (Godot <code>4.7.0-beta</code>, per <code>version.py</code>).</li>
-<li>Every feature branch in the <a href="https://github.com/v-sekai-multiplayer-fabric/merge"><code>merge</code></a> <code>gitassembly</code> recipe stands alone on <code>master</code>; the recipe merges them onto the assembled branch from that base.</li>
-<li>The pin moves only by a deliberate update to <code>master</code>, not by following upstream.</li>
+<li>The recipe assembles the feature branches onto the pinned base and tags the result. The tag is annotated and records the base pin SHA and each merged branch SHA in its message.</li>
+<li>Tag pattern: <code>gitassembly-YYYYMMDD-NNNN</code> — ISO date first so tags sort chronologically, with a zero-padded same-day sequence, mirroring the <a href="../decisions/20260606-archival-file-naming-convention.html">archival naming convention</a>.</li>
+<li>The first tag, <code>gitassembly-20260606-0001</code>, is the cold-boot reference for the presence-marker demo: base <code>8a337510</code> (Godot <code>4.7.0-beta</code>) with <code>feat/module-xr-grid</code>, <code>feat/module-cassie</code>, and <code>feat/module-http3</code> merged.</li>
+<li>Consumers pin to a tag, not to branch names. <code>godot-images</code> builds its GHCR editor image from a tag, and the cold-boot steps reference that tag.</li>
+<li>A tag is cut whenever a merged branch advances enough to matter; the moving branches stay the development surface, and tags are the shareable checkpoints.</li>
 </ul>
 <section id="consequences" class="level3">
 <h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
 <ul>
-<li>Good: assemblies and CI are reproducible against a fixed engine.</li>
-<li>Good: feature branches target one fixed engine API.</li>
-<li>Bad: upstream fixes after the pin are not picked up until <code>master</code> is advanced on purpose.</li>
-<li>Bad: the longer the pin sits on a beta, the larger the eventual catch-up to a later 4.7.</li>
+<li>Good: a tag resolves to one exact assembled engine, so demo, image, and CI all build the same tree.</li>
+<li>Good: each tag carries the base and branch SHAs, so any assembly is auditable.</li>
+<li>Bad: tags must be cut deliberately, so a stale tag can lag the live branches.</li>
 </ul>
 </section>
 <section id="confirmation" class="level3">
 <h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
-<p><code>version.py</code> on the fork reports <code>4.7.0-beta</code>, and the <code>gitassembly</code> recipe bases its branches on <code>master</code>. Advancing the engine is a single, reviewable change to the <code>master</code> pin.</p>
+<p><code>git show gitassembly-20260606-0001</code> lists the base pin and the merged branch SHAs, and a <code>godot-images</code> build from that tag reproduces the same editor. The cold-boot steps and <code>godot-images</code> reference a tag rather than branch names.</p>
 </section>
 </section>
 <section id="more-information" class="level2">
 <h2 class="anchored" data-anchor-id="more-information">More Information</h2>
-<p>This pin is why the <a href="../decisions/20260606-spatial-audio-patched-resonance-audio.html">spatial audio decision</a> notes the module targets a fixed engine API. The exact upstream commit that <code>master</code> mirrors lives in the godot fork’s git history.</p>
+<p>The tag sits on top of the <a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">engine pin</a>: the pin fixes the base, and the tag fixes the assembly merged onto it. It is the reproducible artifact the <a href="../decisions/20260606-presence-demo-cold-boot-dependencies.html">cold-boot dependencies</a> build from.</p>
 
 
 </section>
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
-<li><p><a href="../changelog/2026/20260606-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a></p></li>
-<li><p><a href="20260606-gitassembly-tag-release.html">Cut versioned gitassembly tag releases for the assembled engine</a></p></li>
+<li><p><a href="20260606-archival-file-naming-convention.html">Archival file naming convention for committed assets</a></p></li>
+<li><p><a href="20260606-pin-engine-to-frozen-godot-4-7.html">Pin the engine to a frozen Godot 4.7 commit</a></p></li>
 <li><p><a href="20260606-presence-demo-cold-boot-dependencies.html">Cold-boot dependencies for the presence-marker demo</a></p></li>
-<li><p><a href="20260606-self-host-on-harvester-hci.html">Self-host on Harvester HCI instead of Fly.io</a></p></li>
-<li><p><a href="20260606-spatial-audio-patched-resonance-audio.html">Spatial audio via a patched Resonance Audio (HRTF and audio probes)</a></p></li>
-<li><p><a href="20260606-webtransport-http3-transport.html">WebTransport over HTTP/3 transport</a></p></li>
 </ul>
 </section>
 
@@ -813,7 +812,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260606-pin-engine-to-frozen-godot-4-7.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260606-gitassembly-tag-release.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
