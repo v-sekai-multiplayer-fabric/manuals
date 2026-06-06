@@ -11,7 +11,7 @@
     "href": "decisions/20260506-maglev-cycle-9-physics-vrm.html",
     "title": "Maglev Cycle 9: Physics and VRM Loading",
     "section": "",
-    "text": "Manuals › Maglev Cycle 9: Physics and VRM Loading\nTier: baseline · Status: rejected"
+    "text": "Manuals › Decisions › Maglev Cycle 9: Physics and VRM Loading\nTier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-9-physics-vrm.html#the-context",
@@ -91,11 +91,18 @@
     "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
+    "objectID": "decisions/20260506-maglev-cycle-9-physics-vrm.html#related",
+    "href": "decisions/20260506-maglev-cycle-9-physics-vrm.html#related",
+    "title": "Maglev Cycle 9: Physics and VRM Loading",
+    "section": "Related",
+    "text": "Related\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
+  },
+  {
     "objectID": "decisions/20260506-maglev-cycle-0-infra.html",
     "href": "decisions/20260506-maglev-cycle-0-infra.html",
     "title": "Maglev Cycle 0: Terraform Fly.io Infrastructure",
     "section": "",
-    "text": "Manuals › Maglev Cycle 0: Terraform Fly.io Infrastructure\nTier: baseline · Status: superseded by 20260606-self-host-on-harvester-hci"
+    "text": "Manuals › Decisions › Maglev Cycle 0: Terraform Fly.io Infrastructure\nTier: baseline · Status: superseded by 20260606-self-host-on-harvester-hci"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-0-infra.html#the-context",
@@ -175,11 +182,18 @@
     "text": "Further Reading\n@techreport{20260501_fly,\n  title       = {Fly.io for deployment},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-fly-io-for-deployment.md}\n}\n\n@techreport{20260501_crdb,\n  title       = {CockroachDB with mTLS and role-separated access},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-cockroachdb-with-mtls-role-separation.md}\n}\n\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
+    "objectID": "decisions/20260506-maglev-cycle-0-infra.html#related",
+    "href": "decisions/20260506-maglev-cycle-0-infra.html#related",
+    "title": "Maglev Cycle 0: Terraform Fly.io Infrastructure",
+    "section": "Related",
+    "text": "Related\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test\nSelf-host on Harvester HCI instead of Fly.io"
+  },
+  {
     "objectID": "decisions/20260506-maglev-cycle-6-mmog-load.html",
     "href": "decisions/20260506-maglev-cycle-6-mmog-load.html",
     "title": "Maglev Cycle 6: Dual Same-Type Clients",
     "section": "",
-    "text": "Manuals › Maglev Cycle 6: Dual Same-Type Clients\nTier: baseline · Status: rejected"
+    "text": "Manuals › Decisions › Maglev Cycle 6: Dual Same-Type Clients\nTier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-6-mmog-load.html#the-context",
@@ -259,11 +273,18 @@
     "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
+    "objectID": "decisions/20260506-maglev-cycle-6-mmog-load.html#related",
+    "href": "decisions/20260506-maglev-cycle-6-mmog-load.html#related",
+    "title": "Maglev Cycle 6: Dual Same-Type Clients",
+    "section": "Related",
+    "text": "Related\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
+  },
+  {
     "objectID": "decisions/20260606-art-game-loop-steel-thread.html",
     "href": "decisions/20260606-art-game-loop-steel-thread.html",
     "title": "Recursive art-game loop and its minimal steel thread",
     "section": "",
-    "text": "Manuals › Recursive art-game loop and its minimal steel thread\nTier: proof of concept · Status: proposed"
+    "text": "Manuals › Decisions › Recursive art-game loop and its minimal steel thread\nTier: proof of concept · Status: proposed"
   },
   {
     "objectID": "decisions/20260606-art-game-loop-steel-thread.html#context-and-problem-statement",
@@ -301,11 +322,18 @@
     "text": "More Information\nThis composes the presence demo (tracker orbs) and the cassie pen (stretch) into a working loop, run through Godot MCP and the Godot Sandbox."
   },
   {
+    "objectID": "decisions/20260606-art-game-loop-steel-thread.html#related",
+    "href": "decisions/20260606-art-game-loop-steel-thread.html#related",
+    "title": "Recursive art-game loop and its minimal steel thread",
+    "section": "Related",
+    "text": "Related\n\nFeature classification — proof of concept, baseline, stretch\nMinimal multiplayer presence demo with head and hand orbs"
+  },
+  {
     "objectID": "decisions/20260506-maglev-cycle-8-ik-merge.html",
     "href": "decisions/20260506-maglev-cycle-8-ik-merge.html",
     "title": "Maglev Cycle 8: Full-Rate IK Merge",
     "section": "",
-    "text": "Manuals › Maglev Cycle 8: Full-Rate IK Merge\nTier: baseline · Status: rejected"
+    "text": "Manuals › Decisions › Maglev Cycle 8: Full-Rate IK Merge\nTier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-8-ik-merge.html#the-context",
@@ -385,11 +413,18 @@
     "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
+    "objectID": "decisions/20260506-maglev-cycle-8-ik-merge.html#related",
+    "href": "decisions/20260506-maglev-cycle-8-ik-merge.html#related",
+    "title": "Maglev Cycle 8: Full-Rate IK Merge",
+    "section": "Related",
+    "text": "Related\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
+  },
+  {
     "objectID": "decisions/20260606-compiling-godot-engine.html",
     "href": "decisions/20260606-compiling-godot-engine.html",
     "title": "Compiling the Godot engine",
     "section": "",
-    "text": "Manuals › Compiling the Godot engine\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › Compiling the Godot engine\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-compiling-godot-engine.html#context",
@@ -420,11 +455,18 @@
     "text": "Further reading\n\nsccache local cache (SCCACHE_DIR, SCCACHE_CACHE_SIZE)\nsccache configuration (SCCACHE_BASEDIRS)\nGodot SConstruct"
   },
   {
+    "objectID": "decisions/20260606-compiling-godot-engine.html#related",
+    "href": "decisions/20260606-compiling-godot-engine.html#related",
+    "title": "Compiling the Godot engine",
+    "section": "Related",
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)"
+  },
+  {
     "objectID": "decisions/20260506-maglev-cycle-7-ik-routing.html",
     "href": "decisions/20260506-maglev-cycle-7-ik-routing.html",
     "title": "Maglev Cycle 7: IK Routing and Merge",
     "section": "",
-    "text": "Manuals › Maglev Cycle 7: IK Routing and Merge\nTier: baseline · Status: rejected"
+    "text": "Manuals › Decisions › Maglev Cycle 7: IK Routing and Merge\nTier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-7-ik-routing.html#the-context",
@@ -504,11 +546,18 @@
     "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
+    "objectID": "decisions/20260506-maglev-cycle-7-ik-routing.html#related",
+    "href": "decisions/20260506-maglev-cycle-7-ik-routing.html#related",
+    "title": "Maglev Cycle 7: IK Routing and Merge",
+    "section": "Related",
+    "text": "Related\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
+  },
+  {
     "objectID": "decisions/20260501-godot-double-precision-template-release-for-zone.html",
     "href": "decisions/20260501-godot-double-precision-template-release-for-zone.html",
     "title": "Godot double precision template_release for zone servers",
     "section": "",
-    "text": "Manuals › Godot double precision template_release for zone servers\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › Godot double precision template_release for zone servers\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260501-godot-double-precision-template-release-for-zone.html#context",
@@ -536,7 +585,7 @@
     "href": "decisions/20260606-require-pr-and-merge-queue-on-main.html",
     "title": "Require pull requests and a merge queue on main",
     "section": "",
-    "text": "Manuals › Require pull requests and a merge queue on main\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › Require pull requests and a merge queue on main\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-require-pr-and-merge-queue-on-main.html#context-and-problem-statement",
@@ -574,11 +623,18 @@
     "text": "More Information\nCreated with gh api -X POST repos/v-sekai-multiplayer-fabric/manuals/rulesets. To change the policy, edit the ruleset rather than protecting the branch through the classic branch-protection API, so the two mechanisms do not overlap."
   },
   {
+    "objectID": "decisions/20260606-require-pr-and-merge-queue-on-main.html#related",
+    "href": "decisions/20260606-require-pr-and-merge-queue-on-main.html#related",
+    "title": "Require pull requests and a merge queue on main",
+    "section": "Related",
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)"
+  },
+  {
     "objectID": "decisions/20260506-maglev-cycle-12-game-planning.html",
     "href": "decisions/20260506-maglev-cycle-12-game-planning.html",
     "title": "Maglev Cycle 12: Game Cycle Planning",
     "section": "",
-    "text": "Manuals › Maglev Cycle 12: Game Cycle Planning\nTier: baseline · Status: rejected"
+    "text": "Manuals › Decisions › Maglev Cycle 12: Game Cycle Planning\nTier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-12-game-planning.html#the-context",
@@ -658,11 +714,18 @@
     "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
+    "objectID": "decisions/20260506-maglev-cycle-12-game-planning.html#related",
+    "href": "decisions/20260506-maglev-cycle-12-game-planning.html#related",
+    "title": "Maglev Cycle 12: Game Cycle Planning",
+    "section": "Related",
+    "text": "Related\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
+  },
+  {
     "objectID": "decisions/20260606-webtransport-http3-transport.html",
     "href": "decisions/20260606-webtransport-http3-transport.html",
     "title": "WebTransport over HTTP/3 transport",
     "section": "",
-    "text": "Manuals › WebTransport over HTTP/3 transport\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › WebTransport over HTTP/3 transport\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-webtransport-http3-transport.html#context-and-problem-statement",
@@ -700,11 +763,18 @@
     "text": "More Information\nPose streaming for the presence demo rides this transport; see presence demo pose networking. The engine is pinned to a frozen Godot 4.7 commit."
   },
   {
+    "objectID": "decisions/20260606-webtransport-http3-transport.html#related",
+    "href": "decisions/20260606-webtransport-http3-transport.html#related",
+    "title": "WebTransport over HTTP/3 transport",
+    "section": "Related",
+    "text": "Related\n\nPin the engine to a frozen Godot 4.7 commit\nPresence demo pose networking"
+  },
+  {
     "objectID": "decisions/20260606-archival-file-naming-convention.html",
     "href": "decisions/20260606-archival-file-naming-convention.html",
     "title": "Archival file naming convention for committed assets",
     "section": "",
-    "text": "Manuals › Archival file naming convention for committed assets\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › Archival file naming convention for committed assets\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-archival-file-naming-convention.html#context-and-problem-statement",
@@ -742,11 +812,18 @@
     "text": "More Information\nBased on the Library of Congress guidance on file naming for digital preservation (descriptive, no spaces, lowercase, ISO dates, zero-padded sequences)."
   },
   {
+    "objectID": "decisions/20260606-archival-file-naming-convention.html#related",
+    "href": "decisions/20260606-archival-file-naming-convention.html#related",
+    "title": "Archival file naming convention for committed assets",
+    "section": "Related",
+    "text": "Related\n\nMinimal multiplayer presence demo with head and hand orbs"
+  },
+  {
     "objectID": "decisions/20260506-maglev-cycle-5-zone-console.html",
     "href": "decisions/20260506-maglev-cycle-5-zone-console.html",
     "title": "Maglev Cycle 5: Zone-Console TUI Observer",
     "section": "",
-    "text": "Manuals › Maglev Cycle 5: Zone-Console TUI Observer\nTier: baseline · Status: rejected"
+    "text": "Manuals › Decisions › Maglev Cycle 5: Zone-Console TUI Observer\nTier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-5-zone-console.html#the-context",
@@ -826,11 +903,18 @@
     "text": "Further Reading\n@techreport{20260506_cycle1,\n  title       = {Maglev Cycle 1: Godot Client Gateway Handshake},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260506-maglev-cycle-1-gateway-handshake.md}\n}\n\n@techreport{20260501_webtransport,\n  title       = {Use WebTransport over QUIC for game traffic},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-webtransport-over-quic-for-game-traffic.md}\n}\n\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
+    "objectID": "decisions/20260506-maglev-cycle-5-zone-console.html#related",
+    "href": "decisions/20260506-maglev-cycle-5-zone-console.html#related",
+    "title": "Maglev Cycle 5: Zone-Console TUI Observer",
+    "section": "Related",
+    "text": "Related\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
+  },
+  {
     "objectID": "decisions/20260506-ghcr-package-ownership-same-repo.html",
     "href": "decisions/20260506-ghcr-package-ownership-same-repo.html",
     "title": "GHCR packages must be built by the repo that consumes them",
     "section": "",
-    "text": "Manuals › GHCR packages must be built by the repo that consumes them\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › GHCR packages must be built by the repo that consumes them\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260506-ghcr-package-ownership-same-repo.html#context",
@@ -854,11 +938,18 @@
     "text": "Consequences\n\nPackage names must reflect the owning repo to avoid confusion.\nMoving a package between repos requires deleting it (needs delete:packages API scope) and rebuilding, or renaming.\nCross-repo GHCR access requires either a PAT with read:packages scope or making the package public."
   },
   {
+    "objectID": "decisions/20260506-ghcr-package-ownership-same-repo.html#related",
+    "href": "decisions/20260506-ghcr-package-ownership-same-repo.html#related",
+    "title": "GHCR packages must be built by the repo that consumes them",
+    "section": "Related",
+    "text": "Related\n\nObservability stack with VictoriaMetrics, VictoriaLogs, and Tempo"
+  },
+  {
     "objectID": "decisions/20260506-maglev-cycle-3-baker.html",
     "href": "decisions/20260506-maglev-cycle-3-baker.html",
     "title": "Maglev Cycle 3: Baker Pipeline",
     "section": "",
-    "text": "Manuals › Maglev Cycle 3: Baker Pipeline\nTier: baseline · Status: rejected"
+    "text": "Manuals › Decisions › Maglev Cycle 3: Baker Pipeline\nTier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-3-baker.html#the-context",
@@ -938,11 +1029,18 @@
     "text": "Further Reading\n@techreport{20260501_fly,\n  title       = {Fly.io for deployment},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-fly-io-for-deployment.md}\n}\n\n@techreport{20260506_ghcr,\n  title       = {GHCR packages must be built by the repo that consumes them},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260506-ghcr-package-ownership-same-repo.md}\n}\n\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
+    "objectID": "decisions/20260506-maglev-cycle-3-baker.html#related",
+    "href": "decisions/20260506-maglev-cycle-3-baker.html#related",
+    "title": "Maglev Cycle 3: Baker Pipeline",
+    "section": "Related",
+    "text": "Related\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
+  },
+  {
     "objectID": "decisions/20260606-pin-engine-to-frozen-godot-4-7.html",
     "href": "decisions/20260606-pin-engine-to-frozen-godot-4-7.html",
     "title": "Pin the engine to a frozen Godot 4.7 commit",
     "section": "",
-    "text": "Manuals › Pin the engine to a frozen Godot 4.7 commit\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › Pin the engine to a frozen Godot 4.7 commit\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-pin-engine-to-frozen-godot-4-7.html#context-and-problem-statement",
@@ -980,11 +1078,18 @@
     "text": "More Information\nThis pin is why the spatial audio decision notes the module targets a fixed engine API. The exact upstream commit that master mirrors lives in the godot fork’s git history."
   },
   {
+    "objectID": "decisions/20260606-pin-engine-to-frozen-godot-4-7.html#related",
+    "href": "decisions/20260606-pin-engine-to-frozen-godot-4-7.html#related",
+    "title": "Pin the engine to a frozen Godot 4.7 commit",
+    "section": "Related",
+    "text": "Related\n\nSelf-host on Harvester HCI instead of Fly.io\nSpatial audio via a patched Resonance Audio (HRTF and audio probes)\nWebTransport over HTTP/3 transport"
+  },
+  {
     "objectID": "decisions/20260506-observability-stack-victoriatraces.html",
     "href": "decisions/20260506-observability-stack-victoriatraces.html",
     "title": "Replace Jaeger with VictoriaTraces for trace storage",
     "section": "",
-    "text": "Manuals › Replace Jaeger with VictoriaTraces for trace storage\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › Replace Jaeger with VictoriaTraces for trace storage\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260506-observability-stack-victoriatraces.html#context",
@@ -1008,11 +1113,18 @@
     "text": "Consequences\n\nAll four services are now Apache 2.0; the three storage backends are from VictoriaMetrics.\nVictoriaTraces query UI is at http://...:10428/select/vmui.\nfly proxy 10428:10428 replaces the former fly proxy 16686:16686 for trace inspection.\nNo explicit trace TTL is configured; add -retentionPeriod if disk pressure becomes a concern."
   },
   {
+    "objectID": "decisions/20260506-observability-stack-victoriatraces.html#related",
+    "href": "decisions/20260506-observability-stack-victoriatraces.html#related",
+    "title": "Replace Jaeger with VictoriaTraces for trace storage",
+    "section": "Related",
+    "text": "Related\n\nObservability stack with VictoriaMetrics, VictoriaLogs, and Jaeger\nSelf-host on Harvester HCI instead of Fly.io"
+  },
+  {
     "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html",
     "href": "decisions/20260506-observability-stack-victoriametrics-tempo.html",
     "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
     "section": "",
-    "text": "Manuals › Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo\nTier: baseline · Status: superseded by 20260506-observability-stack-victoriametrics-jaeger"
+    "text": "Manuals › Decisions › Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo\nTier: baseline · Status: superseded by 20260506-observability-stack-victoriametrics-jaeger"
   },
   {
     "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html#context",
@@ -1034,6 +1146,13 @@
     "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
     "section": "Consequences",
     "text": "Consequences\n\nOTLP ports must not be exposed publicly — they accept unauthenticated writes.\nOther Fly apps send telemetry to multiplayer-fabric-observability.internal:4317 or :4318.\nGrafana Tempo v3 config changed significantly from v2: ingester and compactor top-level keys were removed; -target=all flag is required to run all components.\nSee GHCR package ownership decision for why the zone binary image was renamed and moved to multiplayer-fabric-zone."
+  },
+  {
+    "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html#related",
+    "href": "decisions/20260506-observability-stack-victoriametrics-tempo.html#related",
+    "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
+    "section": "Related",
+    "text": "Related\n\nGHCR packages must be built by the repo that consumes them\nObservability stack with VictoriaMetrics, VictoriaLogs, and Jaeger"
   },
   {
     "objectID": "decisions/present-proposal-template.html",
@@ -1292,7 +1411,7 @@
     "href": "decisions/20260606-multiplayer-presence-demo-orbs.html",
     "title": "Minimal multiplayer presence demo with head and hand orbs",
     "section": "",
-    "text": "Manuals › Minimal multiplayer presence demo with head and hand orbs\nTier: proof of concept · Status: superseded by 20260606-presence-marker-representation"
+    "text": "Manuals › Decisions › Minimal multiplayer presence demo with head and hand orbs\nTier: proof of concept · Status: superseded by 20260606-presence-marker-representation"
   },
   {
     "objectID": "decisions/20260606-multiplayer-presence-demo-orbs.html#context-and-problem-statement",
@@ -1323,11 +1442,18 @@
     "text": "Decision Outcome\nChosen option: “Head plus two hand orbs per participant”, because three tracked points convey presence and gesture cheaply enough to scale to a whole call.\n\nEvery participant, including the local player, is three orb clusters (head, hand, hand), each encoding a pose. The hero asset stays as a landmark only.\nThe room scales to a Discord call’s worth of participants.\nIdentity is opt-in: a participant signs with the cassie pen; unsigned ones stay anonymous orbs.\nPoses go over low-level WebTransport datagrams, not high-level replication.\nBuilt on xr-grid.\n\n\nConsequences\n\nGood: presence and gesture for many people at low per-player cost.\nGood: identity is opt-in, so there is no login step.\nBad: orbs are not full avatars, so avatar networking and IK go unexercised.\nNeutral: signing rides cassie’s pen stroke creation, which is solid; only its patch surface creation is buggy, and signing does not use that.\n\n\n\nConfirmation\nA session shows multiple participants as head and hand orb clusters tracking their poses at call scale, and signing produces a visible mark by that participant."
   },
   {
+    "objectID": "decisions/20260606-multiplayer-presence-demo-orbs.html#related",
+    "href": "decisions/20260606-multiplayer-presence-demo-orbs.html#related",
+    "title": "Minimal multiplayer presence demo with head and hand orbs",
+    "section": "Related",
+    "text": "Related\n\nArchival file naming convention for committed assets\nRecursive art-game loop and its minimal steel thread\nFeature classification — proof of concept, baseline, stretch\nPresence demo pose networking\nHuman-readable presence markers with an orb debug mode"
+  },
+  {
     "objectID": "decisions/20260506-maglev-intercept-smoke-test.html",
     "href": "decisions/20260506-maglev-intercept-smoke-test.html",
     "title": "Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test",
     "section": "",
-    "text": "Manuals › Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test\nTier: baseline · Status: rejected"
+    "text": "Manuals › Decisions › Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test\nTier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-intercept-smoke-test.html#the-context",
@@ -1400,11 +1526,18 @@
     "text": "Further Reading\n@misc{gall_1975,\n  author = {Gall, John},\n  title  = {Systemantics: How Systems Work and Especially How They Fail},\n  year   = {1975}\n}\n\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
+    "objectID": "decisions/20260506-maglev-intercept-smoke-test.html#related",
+    "href": "decisions/20260506-maglev-intercept-smoke-test.html#related",
+    "title": "Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test",
+    "section": "Related",
+    "text": "Related\n\nMaglev Cycle 0: Terraform Fly.io Infrastructure\nMaglev Cycle 1: Godot Client Gateway Handshake\nMaglev Cycle 10: Dynamic Physics and Causal Ordering\nMaglev Cycle 11: CockroachDB Score Write\nMaglev Cycle 12: Game Cycle Planning\nMaglev Cycle 2: Observability Stack\nMaglev Cycle 3: Baker Pipeline\nMaglev Cycle 4: CockroachDB Connection\nMaglev Cycle 5: Zone-Console TUI Observer\nMaglev Cycle 6: Dual Same-Type Clients\nMaglev Cycle 7: IK Routing and Merge\nMaglev Cycle 8: Full-Rate IK Merge\nMaglev Cycle 9: Physics and VRM Loading"
+  },
+  {
     "objectID": "decisions/20260501-fly-io-for-deployment.html",
     "href": "decisions/20260501-fly-io-for-deployment.html",
     "title": "Fly.io for deployment",
     "section": "",
-    "text": "Manuals › Fly.io for deployment\nTier: baseline · Status: superseded by 20260606-self-host-on-harvester-hci"
+    "text": "Manuals › Decisions › Fly.io for deployment\nTier: baseline · Status: superseded by 20260606-self-host-on-harvester-hci"
   },
   {
     "objectID": "decisions/20260501-fly-io-for-deployment.html#context",
@@ -1428,11 +1561,18 @@
     "text": "Consequences\n\nAll services must be in the same region to communicate over the private network without egress charges.\n.flycast requires [[services]] on the target app; .internal works without it.\nCloudflare proxy must be disabled for UDP/QUIC endpoints; DNS-only records point directly to the Fly IP.\nTerraform state is stored on a tfstate orphan branch in the infra repo to avoid requiring a remote backend."
   },
   {
+    "objectID": "decisions/20260501-fly-io-for-deployment.html#related",
+    "href": "decisions/20260501-fly-io-for-deployment.html#related",
+    "title": "Fly.io for deployment",
+    "section": "Related",
+    "text": "Related\n\nSelf-host on Harvester HCI instead of Fly.io"
+  },
+  {
     "objectID": "decisions/20260606-presence-demo-networking-internals.html",
     "href": "decisions/20260606-presence-demo-networking-internals.html",
     "title": "Presence demo pose networking",
     "section": "",
-    "text": "Manuals › Presence demo pose networking\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › Presence demo pose networking\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-presence-demo-networking-internals.html#context-and-problem-statement",
@@ -1463,11 +1603,18 @@
     "text": "Decision Outcome\nChosen option: “Hand-rolled compact binary over WebTransport datagrams”.\n\nPose source: XRPositionalTracker / XRHandTracker / XRPose (servers/xr/) give a Transform3D, velocity, and tracking confidence; a hand has 26 joints.\nEncoding: a compact binary layout, not MultiplayerAPI’s Variant encoding, which is too fat for high-rate poses.\nVetoed: the high-level nodes in modules/multiplayer (MultiplayerSynchronizer, MultiplayerSpawner, SceneReplicationInterface).\nIdentity: the cassie pen supplies optional signing (stretch).\n\n\nConsequences\n\nGood: poses ride compact datagrams on the same WebTransport the gateway uses.\nBad: the encoding, send rate, and interpolation are hand-written and maintained.\n\n\n\nConfirmation\nThe demo reads local head and hand poses, sends them as datagrams, and a remote peer renders orbs from the decoded transforms."
   },
   {
+    "objectID": "decisions/20260606-presence-demo-networking-internals.html#related",
+    "href": "decisions/20260606-presence-demo-networking-internals.html#related",
+    "title": "Presence demo pose networking",
+    "section": "Related",
+    "text": "Related\n\nFeature classification — proof of concept, baseline, stretch\nMinimal multiplayer presence demo with head and hand orbs\nHuman-readable presence markers with an orb debug mode\nWebTransport over HTTP/3 transport"
+  },
+  {
     "objectID": "decisions/20260606-org-split-v-sekai-multiplayer-fabric.html",
     "href": "decisions/20260606-org-split-v-sekai-multiplayer-fabric.html",
     "title": "Two-org split between V-Sekai-fire and v-sekai-multiplayer-fabric",
     "section": "",
-    "text": "Manuals › Two-org split between V-Sekai-fire and v-sekai-multiplayer-fabric\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › Two-org split between V-Sekai-fire and v-sekai-multiplayer-fabric\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-org-split-v-sekai-multiplayer-fabric.html#context-and-problem-statement",
@@ -1505,11 +1652,18 @@
     "text": "More Information\nThe deployment target is also shifting, from Fly.io to a self-hosted Harvester HCI cluster running each service as a podman-quadlet VM image. See the infra repo’s docs/migration-status.md for that progress."
   },
   {
+    "objectID": "decisions/20260606-org-split-v-sekai-multiplayer-fabric.html#related",
+    "href": "decisions/20260606-org-split-v-sekai-multiplayer-fabric.html#related",
+    "title": "Two-org split between V-Sekai-fire and v-sekai-multiplayer-fabric",
+    "section": "Related",
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)"
+  },
+  {
     "objectID": "decisions/20260501-webtransport-over-quic-for-game-traffic.html",
     "href": "decisions/20260501-webtransport-over-quic-for-game-traffic.html",
     "title": "Use WebTransport over QUIC for game traffic",
     "section": "",
-    "text": "Manuals › Use WebTransport over QUIC for game traffic\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › Use WebTransport over QUIC for game traffic\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260501-webtransport-over-quic-for-game-traffic.html#context",
@@ -1537,7 +1691,7 @@
     "href": "decisions/20260606-spatial-audio-patched-resonance-audio.html",
     "title": "Spatial audio via a patched Resonance Audio (HRTF and audio probes)",
     "section": "",
-    "text": "Manuals › Spatial audio via a patched Resonance Audio (HRTF and audio probes)\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › Spatial audio via a patched Resonance Audio (HRTF and audio probes)\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-spatial-audio-patched-resonance-audio.html#context-and-problem-statement",
@@ -1575,11 +1729,18 @@
     "text": "More Information\nResonance Audio is Google’s open-source spatial audio SDK (https://resonance-audio.github.io/resonance-audio/), now archived and no longer maintained upstream, so the fork is the de facto source. “Patched” here means the fork carries local changes to build it as an engine module and to wire its HRTF and probe paths to the spatial-audio server. The engine itself is pinned to a frozen Godot 4.7 commit, so the module targets a fixed engine API."
   },
   {
+    "objectID": "decisions/20260606-spatial-audio-patched-resonance-audio.html#related",
+    "href": "decisions/20260606-spatial-audio-patched-resonance-audio.html#related",
+    "title": "Spatial audio via a patched Resonance Audio (HRTF and audio probes)",
+    "section": "Related",
+    "text": "Related\n\nPin the engine to a frozen Godot 4.7 commit"
+  },
+  {
     "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html",
     "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html",
     "title": "Feature classification — proof of concept, baseline, stretch",
     "section": "",
-    "text": "Manuals › Feature classification — proof of concept, baseline, stretch\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › Feature classification — proof of concept, baseline, stretch\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html#context-and-problem-statement",
@@ -1610,11 +1771,18 @@
     "text": "Decision Outcome\nChosen option: “A three-tier commitment classification”, because it captures commitment, not just maturity, which is what planning needs.\nThe tiers:\n\nProof of concept — demonstrates the idea works end to end, in partial or throwaway form. May be unreliable or lossy, and nothing depends on it yet.\nBaseline — the committed minimum the product ships. Works reliably across the target platforms. This is the bar.\nStretch goal — beyond baseline. Pursued if time allows; cutting it does not block the release.\n\nEach feature in the capabilities table carries one tier. A feature moves between tiers as it matures or as commitment changes; the tier is the current call, not a permanent label.\n\nInitial triage\n\nNative video playback — baseline.\nScene baking via OpenUSD — baseline.\nSpatial audio (HRTF + audio probes) — baseline.\nSpeech — baseline.\nPen stroke creation (cassie) — proof of concept (patch surface creation loses about 90%).\n\n\n\nConsequences\n\nGood: planning and docs share one word per feature for its commitment level.\nGood: the tier is a small, reversible edit as features move.\nBad: a tier is a judgement call and can drift from reality if the table is not kept current.\n\n\n\nConfirmation\nThe capabilities table has a Tier column, and every row carries one of the three tiers. New capabilities are added with a tier."
   },
   {
+    "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html#related",
+    "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html#related",
+    "title": "Feature classification — proof of concept, baseline, stretch",
+    "section": "Related",
+    "text": "Related\n\nRecursive art-game loop and its minimal steel thread\nMinimal multiplayer presence demo with head and hand orbs\nPresence demo pose networking\nHuman-readable presence markers with an orb debug mode"
+  },
+  {
     "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html",
     "href": "decisions/20260501-cockroachdb-with-mtls-role-separation.html",
     "title": "CockroachDB with mTLS and role-separated access",
     "section": "",
-    "text": "Manuals › CockroachDB with mTLS and role-separated access\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › CockroachDB with mTLS and role-separated access\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#context",
@@ -1642,7 +1810,7 @@
     "href": "decisions/20260506-observability-stack-victoriametrics-jaeger.html",
     "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Jaeger",
     "section": "",
-    "text": "Manuals › Observability stack with VictoriaMetrics, VictoriaLogs, and Jaeger\nTier: baseline · Status: superseded by 20260506-observability-stack-victoriatraces"
+    "text": "Manuals › Decisions › Observability stack with VictoriaMetrics, VictoriaLogs, and Jaeger\nTier: baseline · Status: superseded by 20260506-observability-stack-victoriatraces"
   },
   {
     "objectID": "decisions/20260506-observability-stack-victoriametrics-jaeger.html#context",
@@ -1666,11 +1834,18 @@
     "text": "Consequences\n\nJaeger UI replaces the Tempo query endpoint: fly proxy 16686:16686 instead of fly proxy 3200:3200.\nBadger is ephemeral-safe only with --badger.ephemeral=false; this flag must be set or traces are lost on restart.\nNo explicit trace TTL is configured; traces accumulate until disk pressure. Add --badger.span-store-ttl if retention limits are needed.\nJaeger’s Badger backend does not support distributed mode; acceptable for a single-machine stack."
   },
   {
+    "objectID": "decisions/20260506-observability-stack-victoriametrics-jaeger.html#related",
+    "href": "decisions/20260506-observability-stack-victoriametrics-jaeger.html#related",
+    "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Jaeger",
+    "section": "Related",
+    "text": "Related\n\nObservability stack with VictoriaMetrics, VictoriaLogs, and Tempo\nReplace Jaeger with VictoriaTraces for trace storage"
+  },
+  {
     "objectID": "decisions/20260506-maglev-cycle-10-dynamic-physics-score.html",
     "href": "decisions/20260506-maglev-cycle-10-dynamic-physics-score.html",
     "title": "Maglev Cycle 10: Dynamic Physics and Causal Ordering",
     "section": "",
-    "text": "Manuals › Maglev Cycle 10: Dynamic Physics and Causal Ordering\nTier: baseline · Status: rejected"
+    "text": "Manuals › Decisions › Maglev Cycle 10: Dynamic Physics and Causal Ordering\nTier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-10-dynamic-physics-score.html#the-context",
@@ -1750,11 +1925,18 @@
     "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
+    "objectID": "decisions/20260506-maglev-cycle-10-dynamic-physics-score.html#related",
+    "href": "decisions/20260506-maglev-cycle-10-dynamic-physics-score.html#related",
+    "title": "Maglev Cycle 10: Dynamic Physics and Causal Ordering",
+    "section": "Related",
+    "text": "Related\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
+  },
+  {
     "objectID": "decisions/20260506-maglev-cycle-1-gateway-handshake.html",
     "href": "decisions/20260506-maglev-cycle-1-gateway-handshake.html",
     "title": "Maglev Cycle 1: Godot Client Gateway Handshake",
     "section": "",
-    "text": "Manuals › Maglev Cycle 1: Godot Client Gateway Handshake\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › Maglev Cycle 1: Godot Client Gateway Handshake\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-1-gateway-handshake.html#the-context",
@@ -1834,11 +2016,18 @@
     "text": "Further Reading\n@techreport{20260501_webtransport,\n  title       = {Use WebTransport over QUIC for game traffic},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-webtransport-over-quic-for-game-traffic.md}\n}\n\n@techreport{20260501_godot_precision,\n  title       = {Godot double precision template\\_release for zone servers},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-godot-double-precision-template-release-for-zone.md}\n}\n\n@techreport{20260501_fly,\n  title       = {Fly.io for deployment},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-fly-io-for-deployment.md}\n}\n\n@techreport{20260506_ghcr,\n  title       = {GHCR packages must be built by the repo that consumes them},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260506-ghcr-package-ownership-same-repo.md}\n}\n\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
+    "objectID": "decisions/20260506-maglev-cycle-1-gateway-handshake.html#related",
+    "href": "decisions/20260506-maglev-cycle-1-gateway-handshake.html#related",
+    "title": "Maglev Cycle 1: Godot Client Gateway Handshake",
+    "section": "Related",
+    "text": "Related\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
+  },
+  {
     "objectID": "decisions/20260606-presence-marker-representation.html",
     "href": "decisions/20260606-presence-marker-representation.html",
     "title": "Human-readable presence markers with an orb debug mode",
     "section": "",
-    "text": "Manuals › Human-readable presence markers with an orb debug mode\nTier: proof of concept · Status: proposed"
+    "text": "Manuals › Decisions › Human-readable presence markers with an orb debug mode\nTier: proof of concept · Status: proposed"
   },
   {
     "objectID": "decisions/20260606-presence-marker-representation.html#context-and-problem-statement",
@@ -1876,11 +2065,18 @@
     "text": "More Information\nSupersedes Minimal multiplayer presence demo with head and hand orbs. The orb representation is retained as the debug mode. UX input from Joseph. Refined by Ghostly partial-body presence avatar from ANNY via SOMA-X."
   },
   {
+    "objectID": "decisions/20260606-presence-marker-representation.html#related",
+    "href": "decisions/20260606-presence-marker-representation.html#related",
+    "title": "Human-readable presence markers with an orb debug mode",
+    "section": "Related",
+    "text": "Related\n\nFeature classification — proof of concept, baseline, stretch\nGhostly partial-body presence avatar from ANNY via SOMA-X\nMinimal multiplayer presence demo with head and hand orbs\nPresence demo pose networking"
+  },
+  {
     "objectID": "decisions/20260506-maglev-cycle-4-db-connection.html",
     "href": "decisions/20260506-maglev-cycle-4-db-connection.html",
     "title": "Maglev Cycle 4: CockroachDB Connection",
     "section": "",
-    "text": "Manuals › Maglev Cycle 4: CockroachDB Connection\nTier: baseline · Status: rejected"
+    "text": "Manuals › Decisions › Maglev Cycle 4: CockroachDB Connection\nTier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-4-db-connection.html#the-context",
@@ -1960,11 +2156,18 @@
     "text": "Further Reading\n@techreport{20260501_crdb,\n  title       = {CockroachDB with mTLS and role-separated access},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-cockroachdb-with-mtls-role-separation.md}\n}\n\n@techreport{20260501_fly,\n  title       = {Fly.io for deployment},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-fly-io-for-deployment.md}\n}\n\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
+    "objectID": "decisions/20260506-maglev-cycle-4-db-connection.html#related",
+    "href": "decisions/20260506-maglev-cycle-4-db-connection.html#related",
+    "title": "Maglev Cycle 4: CockroachDB Connection",
+    "section": "Related",
+    "text": "Related\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
+  },
+  {
     "objectID": "decisions/20260606-self-host-on-harvester-hci.html",
     "href": "decisions/20260606-self-host-on-harvester-hci.html",
     "title": "Self-host on Harvester HCI instead of Fly.io",
     "section": "",
-    "text": "Manuals › Self-host on Harvester HCI instead of Fly.io\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › Self-host on Harvester HCI instead of Fly.io\nTier: baseline · Status: accepted"
   },
   {
     "objectID": "decisions/20260606-self-host-on-harvester-hci.html#context-and-problem-statement",
@@ -2002,11 +2205,18 @@
     "text": "More Information\nThe VM images live in the *-image repos; the engine is pinned to a frozen Godot 4.7 commit."
   },
   {
+    "objectID": "decisions/20260606-self-host-on-harvester-hci.html#related",
+    "href": "decisions/20260606-self-host-on-harvester-hci.html#related",
+    "title": "Self-host on Harvester HCI instead of Fly.io",
+    "section": "Related",
+    "text": "Related\n\nFly.io for deployment\nMaglev Cycle 0: Terraform Fly.io Infrastructure\nMaglev Cycle 2: Observability Stack\nReplace Jaeger with VictoriaTraces for trace storage\nPin the engine to a frozen Godot 4.7 commit"
+  },
+  {
     "objectID": "decisions/20260506-maglev-cycle-11-db-write.html",
     "href": "decisions/20260506-maglev-cycle-11-db-write.html",
     "title": "Maglev Cycle 11: CockroachDB Score Write",
     "section": "",
-    "text": "Manuals › Maglev Cycle 11: CockroachDB Score Write\nTier: baseline · Status: rejected"
+    "text": "Manuals › Decisions › Maglev Cycle 11: CockroachDB Score Write\nTier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-11-db-write.html#the-context",
@@ -2086,11 +2296,18 @@
     "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
+    "objectID": "decisions/20260506-maglev-cycle-11-db-write.html#related",
+    "href": "decisions/20260506-maglev-cycle-11-db-write.html#related",
+    "title": "Maglev Cycle 11: CockroachDB Score Write",
+    "section": "Related",
+    "text": "Related\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test"
+  },
+  {
     "objectID": "decisions/20260606-ghostly-presence-body-model.html",
     "href": "decisions/20260606-ghostly-presence-body-model.html",
     "title": "Ghostly partial-body presence avatar from ANNY via SOMA-X",
     "section": "",
-    "text": "Manuals › Ghostly partial-body presence avatar from ANNY via SOMA-X\nTier: proof of concept · Status: proposed"
+    "text": "Manuals › Decisions › Ghostly partial-body presence avatar from ANNY via SOMA-X\nTier: proof of concept · Status: proposed"
   },
   {
     "objectID": "decisions/20260606-ghostly-presence-body-model.html#context-and-problem-statement",
@@ -2128,11 +2345,18 @@
     "text": "More Information\nRefines the presence marker decision and revives CHI-298. Models: ANNY, SOMA-X."
   },
   {
+    "objectID": "decisions/20260606-ghostly-presence-body-model.html#related",
+    "href": "decisions/20260606-ghostly-presence-body-model.html#related",
+    "title": "Ghostly partial-body presence avatar from ANNY via SOMA-X",
+    "section": "Related",
+    "text": "Related\n\nHuman-readable presence markers with an orb debug mode"
+  },
+  {
     "objectID": "decisions/20260506-maglev-cycle-2-observability.html",
     "href": "decisions/20260506-maglev-cycle-2-observability.html",
     "title": "Maglev Cycle 2: Observability Stack",
     "section": "",
-    "text": "Manuals › Maglev Cycle 2: Observability Stack\nTier: baseline · Status: rejected"
+    "text": "Manuals › Decisions › Maglev Cycle 2: Observability Stack\nTier: baseline · Status: rejected"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-2-observability.html#the-context",
@@ -2210,6 +2434,13 @@
     "title": "Maglev Cycle 2: Observability Stack",
     "section": "Further Reading",
     "text": "Further Reading\n@techreport{20260506_observability_victoriatraces,\n  title       = {Replace Jaeger with VictoriaTraces for trace storage},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260506-observability-stack-victoriatraces.md}\n}\n\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
+  },
+  {
+    "objectID": "decisions/20260506-maglev-cycle-2-observability.html#related",
+    "href": "decisions/20260506-maglev-cycle-2-observability.html#related",
+    "title": "Maglev Cycle 2: Observability Stack",
+    "section": "Related",
+    "text": "Related\n\nMaglev Intercept: Cross-Platform Tilt-Shift Smoke Test\nSelf-host on Harvester HCI instead of Fly.io"
   },
   {
     "objectID": "changelog.html",
