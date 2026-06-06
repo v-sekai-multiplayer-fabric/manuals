@@ -32,9 +32,10 @@ Cold-boot dependencies, by layer:
   (`git`, Python 3, SCons, sccache, MinGW-w64 on Windows / `build-essential` on
   Linux), plus [merge](https://github.com/v-sekai-multiplayer-fabric/merge) (Elixir
   `gitassembly`) to assemble `feat/module-xr-grid`, `feat/module-cassie`, and
-  `feat/module-http3` onto the pinned base. Pin to a
-  [gitassembly tag release](20260606-gitassembly-tag-release.md) rather than the
-  moving branch tips for a reproducible assembly.
+  `feat/module-http3` onto the pinned base. Check out a
+  [gitassembly tag release](20260606-gitassembly-tag-release.md)
+  (`v2026.06.06.1853-multiplayer-fabric`) rather than the moving branch tips for a
+  reproducible assembly.
 
 ### 2. Demo project
 
