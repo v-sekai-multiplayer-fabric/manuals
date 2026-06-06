@@ -1,7 +1,7 @@
 ---
 title: Fly.io for deployment
 date: 2026-05-01
-status: accepted
+status: superseded by 20260606-self-host-on-harvester-hci.md
 tier: baseline
 ---
 
