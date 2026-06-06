@@ -52,14 +52,14 @@ Verify `sccache --version` resolves in each shell. The verified setup uses
 
 sccache picks its backend from environment variables. Two options:
 
-- **Shared across hosts (recommended): S3-compatible bucket** — set the
-  `SCCACHE_BUCKET` / `SCCACHE_ENDPOINT` / `SCCACHE_REGION` coordinates and point
+- To share the cache across hosts (recommended), use an S3-compatible bucket: set
+  the `SCCACHE_BUCKET` / `SCCACHE_ENDPOINT` / `SCCACHE_REGION` coordinates and point
   `AWS_PROFILE` at a profile in `~/.aws/credentials`. sccache keys include the
   compiler, target triple, and flags, so Windows/MinGW and Linux objects coexist
   in one bucket without colliding. A `SCCACHE_S3_KEY_PREFIX` namespaces these
   objects so they never collide with other projects sharing the bucket.
-- **Single host: local directory** — set `SCCACHE_DIR` and `SCCACHE_CACHE_SIZE`
-  instead; sccache uses local disk. No S3 config needed.
+- For a single host, use a local directory instead: set `SCCACHE_DIR` and
+  `SCCACHE_CACHE_SIZE`, and sccache uses local disk with no S3 config needed.
 
 > **Secrets policy:** only the bucket _name, endpoint, region, and key prefix_ —
 > none of which are secrets — appear in committed config. The access key and
@@ -183,13 +183,13 @@ _other_ host hits the same objects once they are uploaded.
 
 ## Consequences
 
-- **One object cache, not two** — sccache is the sole cache; the SCons `CacheDir`
-  is deliberately not enabled, so the same objects are never stored twice.
+- There is one object cache, not two: sccache is the sole cache; the SCons
+  `CacheDir` is deliberately not enabled, so the same objects are never stored twice.
 - One S3 bucket serves both hosts; management is a single location, and a checkout
   can move or be renamed without losing hits (`SCCACHE_BASEDIRS`).
-- **No secrets in the repo** — bucket coordinates are non-secret config. Access
+- No secrets live in the repo; bucket coordinates are non-secret config. Access
   keys live in `~/.aws/credentials` locally and in GitHub Actions secret
-  variables in CI — never in committed files or build logs.
+  variables in CI, never in committed files or build logs.
 - The engine `SConstruct` recognises only `cache_path` and `cache_limit` for the
   SCons cache. We intentionally pass neither. `scons_cache=` is **not** valid and
   is silently ignored.

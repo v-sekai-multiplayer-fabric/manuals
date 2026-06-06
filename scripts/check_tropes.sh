@@ -4,8 +4,9 @@
 #   1. Negative parallelism ("not X, but/it's Y" and the em-dash reframe), the
 #      single most common AI writing tell. Each pattern requires both halves of
 #      the parallelism so ordinary "is not X" prose does not trip it.
-#   2. Bold lead-in list items ("- **Term:** explanation" / "1. **Term.** text"),
-#      a bullet that opens with a bolded label then a colon or period.
+#   2. Bold lead-in list items ("- **Term:** explanation" / "1. **Term.** text" /
+#      "- **Term** — explanation"), a bullet that opens with a bolded label then a
+#      colon, period, or em/en-dash.
 set -uo pipefail
 
 mapfile -t files < <(git ls-files '*.md' '*.qmd')
@@ -18,10 +19,13 @@ parallelism=(
   "\bthe[[:space:]]+(question|point|issue|goal|problem)[[:space:]]+isn'?t\b"
   "\bnot[[:space:]]+[^.!?—]{1,80}—[[:space:]]*(it'?s|but|rather)\b"
 )
-# Catch the colon/period both inside the bold ("**Term:**") and after it ("**Term**:").
+# A bolded list label followed by a colon, period, or em/en-dash (or "--") is the
+# tell, whichever side the punctuation sits: "**Term:**", "**Term**:", "**Term.**",
+# "**Term**.", and "**Term** —". Drop the bold and write the item as a sentence.
 bold_list=(
   '^[[:space:]]*([-*+]|[0-9]+\.)[[:space:]]+\*\*[^*]+\*\*[[:space:]]*[:.]'
   '^[[:space:]]*([-*+]|[0-9]+\.)[[:space:]]+\*\*[^*]*[:.]\*\*'
+  '^[[:space:]]*([-*+]|[0-9]+\.)[[:space:]]+\*\*[^*]+\*\*[[:space:]]*(—|–|--)'
 )
 
 found=0
