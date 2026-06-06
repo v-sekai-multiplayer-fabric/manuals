@@ -38,6 +38,6 @@ format:
 
 filters:
   - quarto
-  - filters/decision-meta.lua
+  - filters/decision-meta.py
 
 freeze: true
