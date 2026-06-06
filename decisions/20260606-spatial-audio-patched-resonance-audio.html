@@ -363,7 +363,7 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>Good: headphone listeners get correct HRTF localization, and probes give rooms a consistent response with occlusion.</li>
 <li>Good: the module links into the double-precision fork and ships with the engine assembly.</li>
-<li>Bad: the fork carries a patch set against Resonance Audio that has to be re-based as upstream or the engine moves.</li>
+<li>Neutral: the fork carries a patch set against Resonance Audio, but the rebase burden is low. Upstream is abandoned (Google archived the project), so there are no upstream changes to track, and the engine is pinned to a frozen Godot 4.7 commit, so the module does not chase engine movement. The fork owns the code.</li>
 <li>Bad: HRTF and probe resolution add per-frame audio cost that the spatial-audio server has to budget.</li>
 </ul>
 </section>
@@ -374,7 +374,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="more-information" class="level2">
 <h2 class="anchored" data-anchor-id="more-information">More Information</h2>
-<p>Resonance Audio is Google’s open-source spatial audio SDK (<a href="https://resonance-audio.github.io/resonance-audio/" class="uri">https://resonance-audio.github.io/resonance-audio/</a>). “Patched” here means the fork carries local changes to build it as an engine module and to wire its HRTF and probe paths to the spatial-audio server.</p>
+<p>Resonance Audio is Google’s open-source spatial audio SDK (<a href="https://resonance-audio.github.io/resonance-audio/" class="uri">https://resonance-audio.github.io/resonance-audio/</a>), now archived and no longer maintained upstream, so the fork is the de facto source. “Patched” here means the fork carries local changes to build it as an engine module and to wire its HRTF and probe paths to the spatial-audio server. The engine itself is pinned to a frozen Godot 4.7 commit, so the module targets a fixed engine API.</p>
 
 
 </section>
