@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/changelog.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Sat, 06 Jun 2026 19:13:25 GMT</lastBuildDate>
+<lastBuildDate>Sat, 06 Jun 2026 19:15:51 GMT</lastBuildDate>
 <item>
   <title></title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260606-deck-log.html</link>
@@ -43,7 +43,7 @@
 <li><code>_quarto.yml</code>: URLs point at the live org; the decisions index is sortable with Tier, Status, and Date columns.</li>
 <li>Gave every decision a tier (proof of concept / baseline / stretch) and a frontmatter status; converted the maglev-cycle docs to MADR frontmatter.</li>
 <li>Generalized the build SOP onto <code>GODOT_SRC</code> / <code>GODOT_BUILD_CACHE</code> env vars, removing hardcoded absolute paths.</li>
-<li>Set decision-makers to K. S. Ernest Lee (lyuma consulted on the classification).</li>
+<li>Set decision-makers to K. S. Ernest (iFire) Lee (lyuma consulted on the classification).</li>
 <li>Noted Harvester deployment on the active observability decisions.</li>
 </ul>
 </section>
@@ -69,7 +69,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260606-deck-log.html</guid>
-  <pubDate>Sat, 06 Jun 2026 19:13:25 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 19:15:51 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -133,7 +133,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260507-deck-log.html</guid>
-  <pubDate>Sat, 06 Jun 2026 19:13:25 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 19:15:51 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -184,7 +184,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260506-deck-log.html</guid>
-  <pubDate>Sat, 06 Jun 2026 19:13:25 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 19:15:51 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -272,7 +272,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260425-deck-log.html</guid>
-  <pubDate>Sat, 06 Jun 2026 19:13:25 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 19:15:51 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -303,7 +303,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260421-deck-log.html</guid>
-  <pubDate>Sat, 06 Jun 2026 19:13:25 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 19:15:51 GMT</pubDate>
 </item>
 </channel>
 </rss>
