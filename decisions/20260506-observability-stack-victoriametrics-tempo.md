@@ -1,7 +1,7 @@
 ---
 title: Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo
 date: 2026-05-06
-status: superseded by [20260506-observability-stack-victoriametrics-jaeger.md](20260506-observability-stack-victoriametrics-jaeger.md)
+status: superseded by 20260506-observability-stack-victoriametrics-jaeger.md
 tier: baseline
 ---
 

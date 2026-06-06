@@ -1,7 +1,7 @@
 ---
 title: "Maglev Cycle 0: Terraform Fly.io Infrastructure"
 date: 2026-05-06
-status: accepted
+status: superseded by 20260606-self-host-on-harvester-hci.md
 tier: baseline
 ---
 
