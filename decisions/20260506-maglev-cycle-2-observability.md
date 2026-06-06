@@ -65,7 +65,7 @@ All ship to `multiplayer-fabric-observability.internal:4318` (OTLP/HTTP over
 Fly's 6PN). End-to-end verification runs via
 [`.github/workflows/verify_observability.yml`](https://github.com/V-Sekai-fire/multiplayer-fabric-infra/blob/main/.github/workflows/verify_observability.yml)
 on `multiplayer-fabric-infra` — uses `flyctl ssh console -C` to query the
-Victoria* APIs from inside the observability machine (the OTLP ports are
+Victoria\* APIs from inside the observability machine (the OTLP ports are
 intentionally private). Pending: trigger the verify workflow after redeploys
 land and confirm the cycle 1 ping span is visible in VictoriaTraces.
 

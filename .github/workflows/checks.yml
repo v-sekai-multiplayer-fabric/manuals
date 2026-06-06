@@ -9,16 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
       - run: pip install prek
-      - name: Run prek on the changed files
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
-        run: prek run --from-ref "$BASE_SHA" --to-ref HEAD --show-diff-on-failure --color always
+      - run: prek run --all-files --show-diff-on-failure --color always
 
   tropes:
     runs-on: ubuntu-latest
