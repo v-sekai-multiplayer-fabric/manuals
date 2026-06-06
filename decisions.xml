@@ -161,6 +161,96 @@
   <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>Cold-boot dependencies for the presence-marker demo</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-presence-demo-cold-boot-dependencies.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Cold-boot dependencies for the presence-marker demo</em></p>
+<p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> proposed</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The <a href="../decisions/20260606-presence-marker-representation.html">presence-marker demo</a> (and its <a href="../decisions/20260606-ghostly-presence-body-model.html">ghostly ANNY/SOMA-X body</a> refinement) needs a reproducible setup from nothing. What is the minimal dependency set to cold boot the development environment for it?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>A new machine should reach a running demo from a checkout and a short script.</li>
+<li>Reuse the engine and transport the stack already standardises on.</li>
+<li>Keep the heavy ML pipeline optional until the ghostly body is worked on.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Cold-boot dependencies, by layer:</p>
+<section id="engine-pick-one" class="level3">
+<h3 class="anchored" data-anchor-id="engine-pick-one">1. Engine (pick one)</h3>
+<ul>
+<li>Prebuilt: pull the editor image from <a href="https://github.com/v-sekai-multiplayer-fabric/godot-images">godot-images</a> (GHCR), built at the <a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">pinned Godot 4.7 commit</a>.</li>
+<li>From source: the <a href="../decisions/20260606-compiling-godot-engine.html">compiling SOP</a> toolchain (<code>git</code>, Python 3, SCons, sccache, MinGW-w64 on Windows / <code>build-essential</code> on Linux), plus <a href="https://github.com/v-sekai-multiplayer-fabric/merge">merge</a> (Elixir <code>gitassembly</code>) to assemble <code>feat/module-xr-grid</code>, <code>feat/module-cassie</code>, and <code>feat/module-http3</code> onto the pinned base.</li>
+</ul>
+</section>
+<section id="demo-project" class="level3">
+<h3 class="anchored" data-anchor-id="demo-project">2. Demo project</h3>
+<ul>
+<li>The <a href="https://github.com/v-sekai-multiplayer-fabric/xr-grid">xr-grid</a> checkout: the scene with the skinned-mesh hero-asset landmark and the head/hand pose orbs.</li>
+</ul>
+</section>
+<section id="networking" class="level3">
+<h3 class="anchored" data-anchor-id="networking">3. Networking</h3>
+<ul>
+<li><a href="../decisions/20260606-webtransport-http3-transport.html">WebTransport over HTTP/3</a> is compiled into the engine (<code>modules/http3</code>, picoquic), so local loopback needs nothing extra. The Elixir gateway (on V-Sekai-fire) is only needed for call-scale runs.</li>
+</ul>
+</section>
+<section id="ghostly-body-pipeline-optional-for-the-marker-upgrade" class="level3">
+<h3 class="anchored" data-anchor-id="ghostly-body-pipeline-optional-for-the-marker-upgrade">4. Ghostly body pipeline (optional, for the marker upgrade)</h3>
+<ul>
+<li>A Python 3 environment with <a href="https://github.com/naver/anny">ANNY</a> and <a href="https://github.com/NVlabs/SOMA-X">SOMA-X</a> (<code>py-soma-x</code>), PyTorch, and NVIDIA Warp on a CUDA GPU. Persona and body assets auto-download from Hugging Face.</li>
+</ul>
+</section>
+<section id="vr-runtime-optional" class="level3">
+<h3 class="anchored" data-anchor-id="vr-runtime-optional">5. VR runtime (optional)</h3>
+<ul>
+<li>An OpenXR runtime and headset for in-headset use; the desktop debug window runs without one.</li>
+</ul>
+</section>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good: layers 1–2 alone boot a local, single-peer demo; networking and the ML body pipeline are additive.</li>
+<li>Bad: the from-source path pulls in an Elixir assembly step and a GPU/PyTorch stack, so the full cold boot is heavy.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>A fresh machine reaches the desktop debug window of the xr-grid demo using the prebuilt engine plus the xr-grid checkout; adding the Python ANNY/SOMA-X stack enables the ghostly body.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>Layers reuse the <a href="../decisions/20260606-compiling-godot-engine.html">compiling SOP</a>, the <a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">engine pin</a>, and the <a href="../decisions/20260606-webtransport-http3-transport.html">WebTransport transport</a>.</p>
+
+
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="20260606-compiling-godot-engine.html">Compiling the Godot engine</a></p></li>
+<li><p><a href="20260606-ghostly-presence-body-model.html">Ghostly partial-body presence avatar from ANNY via SOMA-X</a></p></li>
+<li><p><a href="20260606-pin-engine-to-frozen-godot-4-7.html">Pin the engine to a frozen Godot 4.7 commit</a></p></li>
+<li><p><a href="20260606-presence-marker-representation.html">Human-readable presence markers with an orb debug mode</a></p></li>
+<li><p><a href="20260606-webtransport-http3-transport.html">WebTransport over HTTP/3 transport</a></p></li>
+</ul>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-presence-demo-cold-boot-dependencies.html</guid>
+  <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Compiling the Godot engine</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-compiling-godot-engine.html</link>
   <description><![CDATA[ 
@@ -654,6 +744,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="../changelog/2026/20260606-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a></p></li>
+<li><p><a href="20260606-presence-demo-cold-boot-dependencies.html">Cold-boot dependencies for the presence-marker demo</a></p></li>
 </ul>
 </section>
 
@@ -817,6 +908,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="../changelog/2026/20260606-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a></p></li>
+<li><p><a href="20260606-presence-demo-cold-boot-dependencies.html">Cold-boot dependencies for the presence-marker demo</a></p></li>
 <li><p><a href="20260606-presence-marker-representation.html">Human-readable presence markers with an orb debug mode</a></p></li>
 </ul>
 
@@ -912,6 +1004,7 @@ Stein, Jan-Philipp, and Peter Ohler. 2017. <span>“Venturing into the Uncanny V
 <li><p><a href="20260606-feature-classification-poc-baseline-stretch.html">Feature classification — proof of concept, baseline, stretch</a></p></li>
 <li><p><a href="20260606-ghostly-presence-body-model.html">Ghostly partial-body presence avatar from ANNY via SOMA-X</a></p></li>
 <li><p><a href="20260606-multiplayer-presence-demo-orbs.html">Minimal multiplayer presence demo with head and hand orbs</a></p></li>
+<li><p><a href="20260606-presence-demo-cold-boot-dependencies.html">Cold-boot dependencies for the presence-marker demo</a></p></li>
 <li><p><a href="20260606-presence-demo-networking-internals.html">Presence demo pose networking</a></p></li>
 </ul>
 
@@ -1073,6 +1166,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="../changelog/2026/20260606-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a></p></li>
+<li><p><a href="20260606-presence-demo-cold-boot-dependencies.html">Cold-boot dependencies for the presence-marker demo</a></p></li>
 <li><p><a href="20260606-self-host-on-harvester-hci.html">Self-host on Harvester HCI instead of Fly.io</a></p></li>
 <li><p><a href="20260606-spatial-audio-patched-resonance-audio.html">Spatial audio via a patched Resonance Audio (HRTF and audio probes)</a></p></li>
 <li><p><a href="20260606-webtransport-http3-transport.html">WebTransport over HTTP/3 transport</a></p></li>
@@ -1670,6 +1764,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 <ul>
 <li><p><a href="../changelog/2026/20260606-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a></p></li>
 <li><p><a href="20260606-pin-engine-to-frozen-godot-4-7.html">Pin the engine to a frozen Godot 4.7 commit</a></p></li>
+<li><p><a href="20260606-presence-demo-cold-boot-dependencies.html">Cold-boot dependencies for the presence-marker demo</a></p></li>
 <li><p><a href="20260606-presence-demo-networking-internals.html">Presence demo pose networking</a></p></li>
 </ul>
 </section>
@@ -2132,177 +2227,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-11-db-write.html</guid>
-  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Maglev Cycle 12: Game Cycle Planning</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-12-game-planning.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Maglev Cycle 12: Game Cycle Planning</em></p>
-<p><strong>Tier:</strong> baseline · <strong>Status:</strong> rejected</p>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>Cycles 0–5 prove the networking, physics, and persistence layers. Cycle 9 is the first cycle to run a real physics scene with assets; by the time it passes, the team has actual frame budget data from zone-console, a working grab-ready physics scene, and the interaction system (<code>xr_controller_interaction_helper.gd</code>) half-integrated. That is the earliest point at which game cycle estimates are reliable.</p>
-</section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>Six game systems remain unbuilt for the vertical slice and have no prior baseline in this codebase. Estimating them before Cycle 9 passes produces numbers with no evidence. Cycle 12 produces scoped ADRs and estimates for each remaining system using the Cycle 9 scene as a measured baseline.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>Run Cycle 12 immediately after Cycle 9 passes. For each of the six systems below, produce one ADR following the present-proposal-template with a pass criteria checklist, CRIS score, and estimate derived from Cycle 9 frame budget and zone-console tick data.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 21%">
-<col style="width: 57%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>System</th>
-<th>Depends on</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Drone AI</td>
-<td>Cycle 9 scene</td>
-<td>Pathfinding and attack behaviour in the zone server; no prior AI baseline</td>
-</tr>
-<tr class="even">
-<td>Combat / health</td>
-<td>Cycle 9 scene</td>
-<td>Damage model, respawn, HUD; no prior baseline</td>
-</tr>
-<tr class="odd">
-<td>Core grab mechanic</td>
-<td>Cycle 9 scene + interaction system</td>
-<td><code>xr_controller_interaction_helper.gd</code> is solved; needs wiring to rolling cores</td>
-</tr>
-<tr class="even">
-<td>Slot-into-terminal interaction</td>
-<td>Core grab</td>
-<td>Win condition trigger; same interaction system path</td>
-</tr>
-<tr class="odd">
-<td>3-minute timer and win/lose flow</td>
-<td>Slot interaction</td>
-<td>Game loop state machine; triggers Cycle 11 DB write</td>
-</tr>
-<tr class="even">
-<td>Camera modes</td>
-<td>Cycle 9 scene</td>
-<td>PCVR tilt-shift diorama rig; Steam Deck isometric rig; same instance, different viewports</td>
-</tr>
-</tbody>
-</table>
-<p>Art asset production (train geometry, drone models, terminal, Quantum Data-Core models, VRM avatars with MToon shaders) is a parallel track owned by the art team. Cycle 12 produces the art brief and schedule alongside the engineering ADRs; it does not estimate or gate on art completion.</p>
-<p>Pass criteria:</p>
-<ul class="task-list">
-<li><label><input type="checkbox">One ADR per system above, with pass criteria checklist and CRIS score</label></li>
-<li><label><input type="checkbox">Each ADR includes a working-days estimate with a stated basis in Cycle 9 measurements</label></li>
-<li><label><input type="checkbox">Art brief delivered to art team with asset list, MToon shader targets, and poly/texture budgets for both PCVR diorama and Steam Deck isometric viewports</label></li>
-<li><label><input type="checkbox">Updated project timeline incorporating all six game cycles into the Maglev Intercept sequence</label></li>
-</ul>
-</section>
-<section id="estimate" class="level2">
-<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
-<p><strong>3 days</strong> (2026-06-16 → 2026-06-19). Planning cycle only; no code. Requires Cycle 9 zone-console tick data and frame budget before it can begin.</p>
-</section>
-<section id="cris-score" class="level2">
-<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 3%">
-<col style="width: 86%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Factor</th>
-<th>Score</th>
-<th>Evidence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>C</strong>omplexity</td>
-<td>3</td>
-<td>Writing ADRs and estimates is low effort; the inputs (Cycle 9 measurements, interaction system design) are well understood by then.</td>
-</tr>
-<tr class="even">
-<td><strong>R</strong>reach</td>
-<td>10</td>
-<td>All six remaining game systems are unscoped until this cycle completes.</td>
-</tr>
-<tr class="odd">
-<td><strong>I</strong>mpediment</td>
-<td>8</td>
-<td>Starting game dev without scoped ADRs risks scope creep and unattributable failures in a system with no prior game-logic baseline.</td>
-</tr>
-<tr class="even">
-<td><strong>S</strong>takeholder</td>
-<td>10</td>
-<td>Game Director and art team both block on this cycle for production planning.</td>
-</tr>
-<tr class="odd">
-<td><strong>Total</strong></td>
-<td>7.75</td>
-<td>Build immediately after Cycle 9 passes.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>Cycle 12 produces plans, not working software. A week of slippage in Cycle 9 delays the planning cycle by the same amount.</p>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<p>Planning the game cycles now (before Cycle 9) was considered and rejected — estimates made without a running physics scene and real frame budget data have no evidence base.</p>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Status: Draft</p>
-</section>
-<section id="decision-makers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
-<ul>
-<li>Lead Architect / Fabric Maintainer</li>
-<li>Game Director</li>
-</ul>
-</section>
-<section id="tags" class="level2">
-<h2 class="anchored" data-anchor-id="tags">Tags</h2>
-<ul>
-<li>maglev-cycle-12, game-planning, vertical-slice, galls-law, 20260506-maglev-cycle-12-game-planning, present-proposal-template</li>
-</ul>
-</section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
-<pre><code>@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}</code></pre>
-
-
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="20260506-maglev-intercept-smoke-test.html">Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test</a></p></li>
-</ul>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-12-game-planning.html</guid>
   <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
 </item>
 </channel>

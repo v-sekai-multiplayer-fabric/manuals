@@ -8,7 +8,7 @@
 
 <meta name="dcterms.date" content="2026-06-06">
 
-<title>WebTransport over HTTP/3 transport – V-Sekai Fire — Manuals</title>
+<title>Cold-boot dependencies for the presence-marker demo – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -289,16 +289,20 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link active" data-scroll-target="#context-and-problem-statement">Context and Problem Statement</a></li>
   <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision Drivers</a></li>
-  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered Options</a></li>
   <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision Outcome</a>
   <ul class="collapse">
+  <li><a href="#engine-pick-one" id="toc-engine-pick-one" class="nav-link" data-scroll-target="#engine-pick-one">1. Engine (pick one)</a></li>
+  <li><a href="#demo-project" id="toc-demo-project" class="nav-link" data-scroll-target="#demo-project">2. Demo project</a></li>
+  <li><a href="#networking" id="toc-networking" class="nav-link" data-scroll-target="#networking">3. Networking</a></li>
+  <li><a href="#ghostly-body-pipeline-optional-for-the-marker-upgrade" id="toc-ghostly-body-pipeline-optional-for-the-marker-upgrade" class="nav-link" data-scroll-target="#ghostly-body-pipeline-optional-for-the-marker-upgrade">4. Ghostly body pipeline (optional, for the marker upgrade)</a></li>
+  <li><a href="#vr-runtime-optional" id="toc-vr-runtime-optional" class="nav-link" data-scroll-target="#vr-runtime-optional">5. VR runtime (optional)</a></li>
   <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
   <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
   </ul></li>
   <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More Information</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260606-webtransport-http3-transport.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260606-presence-demo-cold-boot-dependencies.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -306,7 +310,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">WebTransport over HTTP/3 transport</h1>
+<h1 class="title">Cold-boot dependencies for the presence-marker demo</h1>
 </div>
 
 
@@ -329,63 +333,80 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › WebTransport over HTTP/3 transport</em></p>
-<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Cold-boot dependencies for the presence-marker demo</em></p>
+<p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> proposed</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The stack needs a client/server transport that carries reliable control messages and high-rate unreliable state over one connection, on both native and web clients. Which transport does the engine provide?</p>
+<p>The <a href="../decisions/20260606-presence-marker-representation.html">presence-marker demo</a> (and its <a href="../decisions/20260606-ghostly-presence-body-model.html">ghostly ANNY/SOMA-X body</a> refinement) needs a reproducible setup from nothing. What is the minimal dependency set to cold boot the development environment for it?</p>
 </section>
 <section id="decision-drivers" class="level2">
 <h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
 <ul>
-<li>Unreliable datagrams for high-rate state, plus reliable streams for control.</li>
-<li>One connection for both, with native and browser support.</li>
-</ul>
-</section>
-<section id="considered-options" class="level2">
-<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
-<ul>
-<li>Standard <code>MultiplayerPeer</code> transports (ENet, WebSocket, WebRTC).</li>
-<li>WebTransport over HTTP/3 / QUIC.</li>
+<li>A new machine should reach a running demo from a checkout and a short script.</li>
+<li>Reuse the engine and transport the stack already standardises on.</li>
+<li>Keep the heavy ML pipeline optional until the ghostly body is worked on.</li>
 </ul>
 </section>
 <section id="decision-outcome" class="level2">
 <h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: “WebTransport over HTTP/3”, provided by the engine’s <code>modules/http3</code> (on <code>feat/module-http3</code>):</p>
+<p>Cold-boot dependencies, by layer:</p>
+<section id="engine-pick-one" class="level3">
+<h3 class="anchored" data-anchor-id="engine-pick-one">1. Engine (pick one)</h3>
 <ul>
-<li><code>quic_picoquic_backend.{cpp,h}</code> — native QUIC via picoquic.</li>
-<li><code>quic_web_backend.cpp</code> + <code>quic_web_glue.js</code> — the web/wasm backend.</li>
-<li><code>http3_client.{cpp,h}</code>, <code>quic_client.{cpp,h}</code>, <code>quic_server.h</code>.</li>
-<li>Classes <code>HTTP3Client</code>, <code>QUICClient</code>, <code>QUICServer</code>, <code>WebTransportPeer</code>.</li>
-<li>Demos: <code>modules/http3/demo/wt_client_test.gd</code>, <code>wt_server_demo.gd</code>, <code>wt_browser_test.html</code>.</li>
-<li><code>lean/http3/PollingTermination.lean</code> proves the poll loop terminates.</li>
+<li>Prebuilt: pull the editor image from <a href="https://github.com/v-sekai-multiplayer-fabric/godot-images">godot-images</a> (GHCR), built at the <a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">pinned Godot 4.7 commit</a>.</li>
+<li>From source: the <a href="../decisions/20260606-compiling-godot-engine.html">compiling SOP</a> toolchain (<code>git</code>, Python 3, SCons, sccache, MinGW-w64 on Windows / <code>build-essential</code> on Linux), plus <a href="https://github.com/v-sekai-multiplayer-fabric/merge">merge</a> (Elixir <code>gitassembly</code>) to assemble <code>feat/module-xr-grid</code>, <code>feat/module-cassie</code>, and <code>feat/module-http3</code> onto the pinned base.</li>
 </ul>
-<p>One QUIC connection carries reliable streams and unreliable datagrams, so control messages and high-rate state share a connection.</p>
+</section>
+<section id="demo-project" class="level3">
+<h3 class="anchored" data-anchor-id="demo-project">2. Demo project</h3>
+<ul>
+<li>The <a href="https://github.com/v-sekai-multiplayer-fabric/xr-grid">xr-grid</a> checkout: the scene with the skinned-mesh hero-asset landmark and the head/hand pose orbs.</li>
+</ul>
+</section>
+<section id="networking" class="level3">
+<h3 class="anchored" data-anchor-id="networking">3. Networking</h3>
+<ul>
+<li><a href="../decisions/20260606-webtransport-http3-transport.html">WebTransport over HTTP/3</a> is compiled into the engine (<code>modules/http3</code>, picoquic), so local loopback needs nothing extra. The Elixir gateway (on V-Sekai-fire) is only needed for call-scale runs.</li>
+</ul>
+</section>
+<section id="ghostly-body-pipeline-optional-for-the-marker-upgrade" class="level3">
+<h3 class="anchored" data-anchor-id="ghostly-body-pipeline-optional-for-the-marker-upgrade">4. Ghostly body pipeline (optional, for the marker upgrade)</h3>
+<ul>
+<li>A Python 3 environment with <a href="https://github.com/naver/anny">ANNY</a> and <a href="https://github.com/NVlabs/SOMA-X">SOMA-X</a> (<code>py-soma-x</code>), PyTorch, and NVIDIA Warp on a CUDA GPU. Persona and body assets auto-download from Hugging Face.</li>
+</ul>
+</section>
+<section id="vr-runtime-optional" class="level3">
+<h3 class="anchored" data-anchor-id="vr-runtime-optional">5. VR runtime (optional)</h3>
+<ul>
+<li>An OpenXR runtime and headset for in-headset use; the desktop debug window runs without one.</li>
+</ul>
+</section>
 <section id="consequences" class="level3">
 <h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
 <ul>
-<li>Good: datagrams suit high-rate state; one connection serves native and browser.</li>
-<li>Bad: the fork carries a picoquic backend and a QUIC stack to maintain.</li>
+<li>Good: layers 1–2 alone boot a local, single-peer demo; networking and the ML body pipeline are additive.</li>
+<li>Bad: the from-source path pulls in an Elixir assembly step and a GPU/PyTorch stack, so the full cold boot is heavy.</li>
 </ul>
 </section>
 <section id="confirmation" class="level3">
 <h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
-<p>The <code>modules/http3</code> demos open a WebTransport client and server over QUIC.</p>
+<p>A fresh machine reaches the desktop debug window of the xr-grid demo using the prebuilt engine plus the xr-grid checkout; adding the Python ANNY/SOMA-X stack enables the ghostly body.</p>
 </section>
 </section>
 <section id="more-information" class="level2">
 <h2 class="anchored" data-anchor-id="more-information">More Information</h2>
-<p>Pose streaming for the presence demo rides this transport; see <a href="../decisions/20260606-presence-demo-networking-internals.html">presence demo pose networking</a>. The engine is <a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">pinned to a frozen Godot 4.7 commit</a>.</p>
+<p>Layers reuse the <a href="../decisions/20260606-compiling-godot-engine.html">compiling SOP</a>, the <a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">engine pin</a>, and the <a href="../decisions/20260606-webtransport-http3-transport.html">WebTransport transport</a>.</p>
 
 
 </section>
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
-<li><p><a href="../changelog/2026/20260606-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a></p></li>
+<li><p><a href="20260606-compiling-godot-engine.html">Compiling the Godot engine</a></p></li>
+<li><p><a href="20260606-ghostly-presence-body-model.html">Ghostly partial-body presence avatar from ANNY via SOMA-X</a></p></li>
 <li><p><a href="20260606-pin-engine-to-frozen-godot-4-7.html">Pin the engine to a frozen Godot 4.7 commit</a></p></li>
-<li><p><a href="20260606-presence-demo-cold-boot-dependencies.html">Cold-boot dependencies for the presence-marker demo</a></p></li>
-<li><p><a href="20260606-presence-demo-networking-internals.html">Presence demo pose networking</a></p></li>
+<li><p><a href="20260606-presence-marker-representation.html">Human-readable presence markers with an orb debug mode</a></p></li>
+<li><p><a href="20260606-webtransport-http3-transport.html">WebTransport over HTTP/3 transport</a></p></li>
 </ul>
 </section>
 
@@ -811,7 +832,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260606-webtransport-http3-transport.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260606-presence-demo-cold-boot-dependencies.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
