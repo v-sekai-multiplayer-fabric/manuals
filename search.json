@@ -1859,7 +1859,7 @@
     "href": "decisions/20260606-presence-marker-representation.html#considered-options",
     "title": "Human-readable presence markers with an orb debug mode",
     "section": "Considered Options",
-    "text": "Considered Options\n\nRaw orb clusters as the default (current).\nA vague ghostly or cartoony head plus distinct hand markers that show heading.\nA floating “TV head” showing the user’s Steam avatar (the “Lord Kanti” look)."
+    "text": "Considered Options\n\nRaw orb clusters as the default (current).\nA vague ghostly or cartoony head plus distinct hand markers that show heading.\nA floating “TV head” showing the user’s Steam avatar."
   },
   {
     "objectID": "decisions/20260606-presence-marker-representation.html#decision-outcome",

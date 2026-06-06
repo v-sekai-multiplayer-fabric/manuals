@@ -521,7 +521,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The <a href="../decisions/20260606-presence-marker-representation.html">presence marker decision</a> calls for a vague ghostly humanoid that conveys position and heading. <a href="https://linear.app/chibifire/issue/CHI-298/use-soma-and-anny-to-fit-concepts-to-personas">CHI-298</a> proposed fitting personas with SOMA (unifying parametric body models) and ANNY; the Linear issue is canceled, but the concept is the natural basis for that ghostly form. We track only three points (head and two hands), so a full posed body is under-constrained and risks the uncanny valley. Which body model do we use, and how much of the body do we show?</p>
+<p>The <a href="../decisions/20260606-presence-marker-representation.html">presence marker decision</a> calls for a vague ghostly humanoid that conveys position and heading. CHI-298 proposed fitting personas with SOMA (unifying parametric body models) and ANNY; the Linear issue is canceled, but the concept is the natural basis for that ghostly form. We track only three points (head and two hands), so a full posed body is under-constrained and risks the uncanny valley. Which body model do we use, and how much of the body do we show?</p>
 </section>
 <section id="decision-drivers" class="level2">
 <h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
@@ -631,7 +631,7 @@ Stein, Jan-Philipp, and Peter Ohler. 2017. <span>“Venturing into the Uncanny V
 <ul>
 <li>Raw orb clusters as the default (current).</li>
 <li>A vague ghostly or cartoony head plus distinct hand markers that show heading.</li>
-<li>A floating “TV head” showing the user’s Steam avatar (the “Lord Kanti” look).</li>
+<li>A floating “TV head” showing the user’s Steam avatar.</li>
 </ul>
 </section>
 <section id="decision-outcome" class="level2">
