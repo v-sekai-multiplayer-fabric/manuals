@@ -326,7 +326,7 @@
     "href": "decisions/20260606-art-game-loop-steel-thread.html#related",
     "title": "Recursive art-game loop and its minimal steel thread",
     "section": "Related",
-    "text": "Related\n\nFeature classification — proof of concept, baseline, stretch\nMinimal multiplayer presence demo with head and hand orbs"
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nFeature classification — proof of concept, baseline, stretch\nMinimal multiplayer presence demo with head and hand orbs"
   },
   {
     "objectID": "decisions/20260606-bounded-llm-steering-queue.html",
@@ -375,7 +375,7 @@
     "href": "decisions/20260606-bounded-llm-steering-queue.html#related",
     "title": "Bound the LLM steering queue to avoid context overflow",
     "section": "Related",
-    "text": "Related\n\nRequire pull requests and a merge queue on main"
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nRequire pull requests and a merge queue on main"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-4-db-connection.html",
@@ -515,7 +515,7 @@
     "href": "decisions/20260606-presence-marker-representation.html#related",
     "title": "Human-readable presence markers with an orb debug mode",
     "section": "Related",
-    "text": "Related\n\nFeature classification — proof of concept, baseline, stretch\nGhostly partial-body presence avatar from ANNY via SOMA-X\nMinimal multiplayer presence demo with head and hand orbs\nPresence demo pose networking"
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nFeature classification — proof of concept, baseline, stretch\nGhostly partial-body presence avatar from ANNY via SOMA-X\nMinimal multiplayer presence demo with head and hand orbs\nPresence demo pose networking"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-1-gateway-handshake.html",
@@ -802,7 +802,7 @@
     "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html#related",
     "title": "Feature classification — proof of concept, baseline, stretch",
     "section": "Related",
-    "text": "Related\n\nRecursive art-game loop and its minimal steel thread\nMinimal multiplayer presence demo with head and hand orbs\nPresence demo pose networking\nHuman-readable presence markers with an orb debug mode"
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nRecursive art-game loop and its minimal steel thread\nMinimal multiplayer presence demo with head and hand orbs\nPresence demo pose networking\nHuman-readable presence markers with an orb debug mode"
   },
   {
     "objectID": "decisions/20260606-spatial-audio-patched-resonance-audio.html",
@@ -851,7 +851,7 @@
     "href": "decisions/20260606-spatial-audio-patched-resonance-audio.html#related",
     "title": "Spatial audio via a patched Resonance Audio (HRTF and audio probes)",
     "section": "Related",
-    "text": "Related\n\nPin the engine to a frozen Godot 4.7 commit"
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nPin the engine to a frozen Godot 4.7 commit"
   },
   {
     "objectID": "decisions/20260501-webtransport-over-quic-for-game-traffic.html",
@@ -970,7 +970,7 @@
     "href": "decisions/20260606-presence-demo-networking-internals.html#related",
     "title": "Presence demo pose networking",
     "section": "Related",
-    "text": "Related\n\nFeature classification — proof of concept, baseline, stretch\nMinimal multiplayer presence demo with head and hand orbs\nHuman-readable presence markers with an orb debug mode\nWebTransport over HTTP/3 transport"
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nFeature classification — proof of concept, baseline, stretch\nMinimal multiplayer presence demo with head and hand orbs\nHuman-readable presence markers with an orb debug mode\nWebTransport over HTTP/3 transport"
   },
   {
     "objectID": "decisions/20260501-fly-io-for-deployment.html",
@@ -1131,7 +1131,7 @@
     "href": "decisions/20260606-multiplayer-presence-demo-orbs.html#related",
     "title": "Minimal multiplayer presence demo with head and hand orbs",
     "section": "Related",
-    "text": "Related\n\nArchival file naming convention for committed assets\nRecursive art-game loop and its minimal steel thread\nFeature classification — proof of concept, baseline, stretch\nPresence demo pose networking\nHuman-readable presence markers with an orb debug mode"
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nArchival file naming convention for committed assets\nRecursive art-game loop and its minimal steel thread\nFeature classification — proof of concept, baseline, stretch\nPresence demo pose networking\nHuman-readable presence markers with an orb debug mode"
   },
   {
     "objectID": "changelog/2026/20260507-deck-log.html",
@@ -1292,21 +1292,35 @@
     "href": "changelog/2026/20260606-deck-log.html",
     "title": "V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)",
     "section": "",
-    "text": "Date: 2026-06-06\n\n\n\nDecision: Compiling the Godot engine — local build SOP using sccache as the compiler launcher with a shared cache on E:, and a gscons function for both PowerShell and WSL.\nDecision (MADR): Two-org split between V-Sekai-fire and v-sekai-multiplayer-fabric — records the partial migration and the old→new repo mapping.\nDecision (MADR): Require pull requests and a merge queue on main.\nindex.md capabilities table mapping native video playback, OpenUSD scene baking, spatial audio, speech, and pen-stroke creation (codename cassie, feat/module-cassie) to their engine branches and supporting repos. Pen stroke creation works; patch surface creation loses about 90%.\nRepository ruleset on main (id 17352485): require a pull request plus a squash merge queue; block deletion and non-fast-forward. Repo allow_auto_merge enabled so PRs can enter the queue.\n\n\n\n\n\nRewrote the index.md repository map for the live v-sekai-multiplayer-fabric org, grouped by role (engine, runtime, Harvester VM images, rendering/USD, spatial, tooling, infra, archived), with a cross-org “Still on V-Sekai-fire” section for repos that have not migrated.\nAGENTS.md adopts the MADR template for new decisions.\n_quarto.yml site and repo URLs point at v-sekai-multiplayer-fabric."
+    "text": "Date: 2026-06-06\nA documentation sprint on the manuals: brought the repo map onto the live org, recorded the day’s decisions as MADRs, and built the site’s metadata, navigation, and quality gates.\n\n\n\nDecisions (MADR): compiling the engine, two-org split, require PR + merge queue, feature classification, pin engine to Godot 4.7, archival file naming, self-host on Harvester, and bound the LLM steering queue.\nCapability decisions: spatial audio (HRTF + probes), WebTransport over HTTP/3, presence pose networking, presence demo → human-readable markers → ghostly ANNY/SOMA-X body, and art-game loop steel thread.\nA capabilities table in index.md mapping native video, OpenUSD baking, spatial audio, speech, pen-stroke (cassie), WebTransport, and presence to engine branches, repos, and a tier.\nCI: a Checks workflow running prek (prettier) and a static, no-LLM tropes gate; a merge-queue ruleset on main (require PR + squash queue).\nA Python (panflute) filter showing tier/status per page, linking superseded-by targets, with a breadcrumb trail on top and a symmetric Related section at the bottom across the site.\nReferences for MaterialX, OpenUSD, Slug, Resonance Audio, sccache, MADR, tropes.fyi, Vulkan Video, Harvester, ANNY, SOMA-X, and the uncanny-valley papers.\n\n\n\n\n\nRewrote the index.md repository map for the live v-sekai-multiplayer-fabric org, grouped by role, with a cross-org “Still on V-Sekai-fire” section.\nAGENTS.md: adopted the MADR template and documented the tier, asset-naming, prek/tropes, merge-queue, and no-absolute-paths conventions.\n_quarto.yml: URLs point at the live org; the decisions index is sortable with Tier, Status, and Date columns.\nGave every decision a tier (proof of concept / baseline / stretch) and a frontmatter status; converted the maglev-cycle docs to MADR frontmatter.\nGeneralized the build SOP onto GODOT_SRC / GODOT_BUILD_CACHE env vars, removing hardcoded absolute paths.\nSet decision-makers to K. S. Ernest Lee (lyuma consulted on the classification).\nNoted Harvester deployment on the active observability decisions.\n\n\n\n\n\nCorrected the presence demo (a skinned-mesh hero-asset landmark, not a VRM or a player; orbs encode head/hand pose) and spatial audio (Resonance Audio is abandoned upstream; the engine is pinned to 4.7).\nDead supersede links: status frontmatter held a .md link the listing did not rewrite, so statuses now hold a plain filename with the link in the body.\nBreadcrumb and Related links: the filter ran with the document’s directory as its cwd, so it is now anchored to QUARTO_PROJECT_DIR.\nFormatted the legacy markdown so the whole-repo prettier gate passes.\n\n\n\n\n\nClosed the stale maglev-cycle proposals (cycles 2–12 and the intercept) as rejected, leaving the live direction as the only open proposals.\nDropped Fly.io as the deployment target, superseded by self-hosting on Harvester."
   },
   {
     "objectID": "changelog/2026/20260606-deck-log.html#added",
     "href": "changelog/2026/20260606-deck-log.html#added",
     "title": "V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)",
     "section": "",
-    "text": "Decision: Compiling the Godot engine — local build SOP using sccache as the compiler launcher with a shared cache on E:, and a gscons function for both PowerShell and WSL.\nDecision (MADR): Two-org split between V-Sekai-fire and v-sekai-multiplayer-fabric — records the partial migration and the old→new repo mapping.\nDecision (MADR): Require pull requests and a merge queue on main.\nindex.md capabilities table mapping native video playback, OpenUSD scene baking, spatial audio, speech, and pen-stroke creation (codename cassie, feat/module-cassie) to their engine branches and supporting repos. Pen stroke creation works; patch surface creation loses about 90%.\nRepository ruleset on main (id 17352485): require a pull request plus a squash merge queue; block deletion and non-fast-forward. Repo allow_auto_merge enabled so PRs can enter the queue."
+    "text": "Decisions (MADR): compiling the engine, two-org split, require PR + merge queue, feature classification, pin engine to Godot 4.7, archival file naming, self-host on Harvester, and bound the LLM steering queue.\nCapability decisions: spatial audio (HRTF + probes), WebTransport over HTTP/3, presence pose networking, presence demo → human-readable markers → ghostly ANNY/SOMA-X body, and art-game loop steel thread.\nA capabilities table in index.md mapping native video, OpenUSD baking, spatial audio, speech, pen-stroke (cassie), WebTransport, and presence to engine branches, repos, and a tier.\nCI: a Checks workflow running prek (prettier) and a static, no-LLM tropes gate; a merge-queue ruleset on main (require PR + squash queue).\nA Python (panflute) filter showing tier/status per page, linking superseded-by targets, with a breadcrumb trail on top and a symmetric Related section at the bottom across the site.\nReferences for MaterialX, OpenUSD, Slug, Resonance Audio, sccache, MADR, tropes.fyi, Vulkan Video, Harvester, ANNY, SOMA-X, and the uncanny-valley papers."
   },
   {
     "objectID": "changelog/2026/20260606-deck-log.html#changed",
     "href": "changelog/2026/20260606-deck-log.html#changed",
     "title": "V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)",
     "section": "",
-    "text": "Rewrote the index.md repository map for the live v-sekai-multiplayer-fabric org, grouped by role (engine, runtime, Harvester VM images, rendering/USD, spatial, tooling, infra, archived), with a cross-org “Still on V-Sekai-fire” section for repos that have not migrated.\nAGENTS.md adopts the MADR template for new decisions.\n_quarto.yml site and repo URLs point at v-sekai-multiplayer-fabric."
+    "text": "Rewrote the index.md repository map for the live v-sekai-multiplayer-fabric org, grouped by role, with a cross-org “Still on V-Sekai-fire” section.\nAGENTS.md: adopted the MADR template and documented the tier, asset-naming, prek/tropes, merge-queue, and no-absolute-paths conventions.\n_quarto.yml: URLs point at the live org; the decisions index is sortable with Tier, Status, and Date columns.\nGave every decision a tier (proof of concept / baseline / stretch) and a frontmatter status; converted the maglev-cycle docs to MADR frontmatter.\nGeneralized the build SOP onto GODOT_SRC / GODOT_BUILD_CACHE env vars, removing hardcoded absolute paths.\nSet decision-makers to K. S. Ernest Lee (lyuma consulted on the classification).\nNoted Harvester deployment on the active observability decisions."
+  },
+  {
+    "objectID": "changelog/2026/20260606-deck-log.html#fixed",
+    "href": "changelog/2026/20260606-deck-log.html#fixed",
+    "title": "V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)",
+    "section": "",
+    "text": "Corrected the presence demo (a skinned-mesh hero-asset landmark, not a VRM or a player; orbs encode head/hand pose) and spatial audio (Resonance Audio is abandoned upstream; the engine is pinned to 4.7).\nDead supersede links: status frontmatter held a .md link the listing did not rewrite, so statuses now hold a plain filename with the link in the body.\nBreadcrumb and Related links: the filter ran with the document’s directory as its cwd, so it is now anchored to QUARTO_PROJECT_DIR.\nFormatted the legacy markdown so the whole-repo prettier gate passes."
+  },
+  {
+    "objectID": "changelog/2026/20260606-deck-log.html#removed",
+    "href": "changelog/2026/20260606-deck-log.html#removed",
+    "title": "V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)",
+    "section": "",
+    "text": "Closed the stale maglev-cycle proposals (cycles 2–12 and the intercept) as rejected, leaving the live direction as the only open proposals.\nDropped Fly.io as the deployment target, superseded by self-hosting on Harvester."
   },
   {
     "objectID": "decisions/present-proposal-template.html",
@@ -1502,7 +1516,7 @@
     "href": "decisions/20260606-pin-engine-to-frozen-godot-4-7.html#related",
     "title": "Pin the engine to a frozen Godot 4.7 commit",
     "section": "Related",
-    "text": "Related\n\nSelf-host on Harvester HCI instead of Fly.io\nSpatial audio via a patched Resonance Audio (HRTF and audio probes)\nWebTransport over HTTP/3 transport"
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nSelf-host on Harvester HCI instead of Fly.io\nSpatial audio via a patched Resonance Audio (HRTF and audio probes)\nWebTransport over HTTP/3 transport"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-3-baker.html",
@@ -1768,7 +1782,7 @@
     "href": "decisions/20260606-archival-file-naming-convention.html#related",
     "title": "Archival file naming convention for committed assets",
     "section": "Related",
-    "text": "Related\n\nMinimal multiplayer presence demo with head and hand orbs"
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nMinimal multiplayer presence demo with head and hand orbs"
   },
   {
     "objectID": "decisions/20260606-webtransport-http3-transport.html",
@@ -1817,7 +1831,7 @@
     "href": "decisions/20260606-webtransport-http3-transport.html#related",
     "title": "WebTransport over HTTP/3 transport",
     "section": "Related",
-    "text": "Related\n\nPin the engine to a frozen Godot 4.7 commit\nPresence demo pose networking"
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nPin the engine to a frozen Godot 4.7 commit\nPresence demo pose networking"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-12-game-planning.html",
@@ -2258,7 +2272,7 @@
     "href": "decisions/20260606-self-host-on-harvester-hci.html#related",
     "title": "Self-host on Harvester HCI instead of Fly.io",
     "section": "Related",
-    "text": "Related\n\nFly.io for deployment\nMaglev Cycle 0: Terraform Fly.io Infrastructure\nMaglev Cycle 2: Observability Stack\nReplace Jaeger with VictoriaTraces for trace storage\nPin the engine to a frozen Godot 4.7 commit"
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nFly.io for deployment\nMaglev Cycle 0: Terraform Fly.io Infrastructure\nMaglev Cycle 2: Observability Stack\nReplace Jaeger with VictoriaTraces for trace storage\nPin the engine to a frozen Godot 4.7 commit"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-11-db-write.html",
@@ -2398,7 +2412,7 @@
     "href": "decisions/20260606-ghostly-presence-body-model.html#related",
     "title": "Ghostly partial-body presence avatar from ANNY via SOMA-X",
     "section": "Related",
-    "text": "Related\n\nHuman-readable presence markers with an orb debug mode"
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nHuman-readable presence markers with an orb debug mode"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-2-observability.html",
