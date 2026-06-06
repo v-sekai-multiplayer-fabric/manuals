@@ -279,6 +279,75 @@
   <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>Feature classification — proof of concept, baseline, stretch</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-feature-classification-poc-baseline-stretch.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The capabilities table lists features with a free-text status (“working”, “loses about 90%”). Free text does not say whether a feature is a throwaway experiment, a committed part of the product, or a nice-to-have. The team needs one shared vocabulary for how far along and how committed a feature is, so planning and the docs agree on what “done” means for each one.</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>One vocabulary shared between planning and the manuals.</li>
+<li>A reader should know at a glance whether a feature is committed or exploratory.</li>
+<li>Cheap to apply and to move as a feature matures.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Keep free-text status only.</li>
+<li>A maturity ladder (alpha / beta / stable).</li>
+<li>A three-tier commitment classification: proof of concept, baseline, stretch.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “A three-tier commitment classification”, because it captures commitment, not just maturity, which is what planning needs.</p>
+<p>The tiers:</p>
+<ol type="1">
+<li><strong>Proof of concept</strong> — demonstrates the idea works end to end, in partial or throwaway form. May be unreliable or lossy, and nothing depends on it yet.</li>
+<li><strong>Baseline</strong> — the committed minimum the product ships. Works reliably across the target platforms. This is the bar.</li>
+<li><strong>Stretch goal</strong> — beyond baseline. Pursued if time allows; cutting it does not block the release.</li>
+</ol>
+<p>Each feature in the <a href="../index.html#capabilities-and-where-they-live">capabilities table</a> carries one tier. A feature moves between tiers as it matures or as commitment changes; the tier is the current call, not a permanent label.</p>
+<section id="initial-triage" class="level3">
+<h3 class="anchored" data-anchor-id="initial-triage">Initial triage</h3>
+<ul>
+<li>Native video playback — baseline.</li>
+<li>Scene baking via OpenUSD — baseline.</li>
+<li>Spatial audio (HRTF + audio probes) — baseline.</li>
+<li>Speech — baseline.</li>
+<li>Pen stroke creation (cassie) — proof of concept (patch surface creation loses about 90%).</li>
+</ul>
+</section>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good: planning and docs share one word per feature for its commitment level.</li>
+<li>Good: the tier is a small, reversible edit as features move.</li>
+<li>Bad: a tier is a judgement call and can drift from reality if the table is not kept current.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>The capabilities table has a Tier column, and every row carries one of the three tiers. New capabilities are added with a tier.</p>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-feature-classification-poc-baseline-stretch.html</guid>
+  <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Compiling the Godot engine</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-compiling-godot-engine.html</link>
   <description><![CDATA[ 
@@ -1123,7 +1192,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/present-proposal-template.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:11:14 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:14:16 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1348,7 +1417,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-intercept-smoke-test.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:11:14 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:14:16 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1470,7 +1539,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-9-physics-vrm.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:11:14 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:14:16 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1587,7 +1656,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-8-ik-merge.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:11:14 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:14:16 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1706,7 +1775,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-7-ik-routing.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:11:14 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:14:16 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1826,7 +1895,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-6-mmog-load.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:11:14 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:14:16 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1960,141 +2029,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-5-zone-console.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:11:14 GMT</pubDate>
-</item>
-<item>
-  <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-4-db-connection.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="maglev-cycle-4-cockroachdb-connection" class="level1">
-<h1>Maglev Cycle 4: CockroachDB Connection</h1>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>Cycle 10 confirms cross-zone causal ordering via VClock.le gating. Cycle 4 verifies the database write path independently: <code>multiplayer-fabric-uro</code> writes a single test record to CockroachDB over Fly’s 6PN without any game logic or causal path involved.</p>
-</section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>The Ecto connection from uro to CockroachDB over Fly’s 6PN using the <code>gateway_writer</code> role has not been exercised under the Fly network topology. Verifying it in isolation means any failure in Cycle 11 is attributable to the causal path, not the connection.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>Trigger a test write from <code>multiplayer-fabric-uro</code> directly — a single row to a test table — using the <code>gateway_writer</code> role. The connection uses mTLS (cert generated by <code>gen_crdb_certs.sh</code>), port 26257 over Fly’s 6PN private network (IPv6 only, <code>socket_options: [:inet6]</code>), and <code>prepare: :unnamed</code> in Postgrex to prevent statement-cache OOM on the single-node deployment.</p>
-<p>Pass criteria:</p>
-<ul class="task-list">
-<li><label><input type="checkbox">Row appears in CockroachDB within one second of the trigger</label></li>
-<li><label><input type="checkbox">mTLS handshake succeeds; no cert or auth error</label></li>
-<li><label><input type="checkbox"><code>gateway_writer</code> role has DML access; <code>gateway_admin</code> is not used at runtime</label></li>
-<li><label><input type="checkbox">Connection reuse works across multiple sequential writes (<code>prepare: :unnamed</code> confirmed)</label></li>
-</ul>
-</section>
-<section id="estimate" class="level2">
-<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
-<p><strong>1 day</strong> (2026-05-09, parallel). The uro CockroachDB connection is already working on Fly (commit “Fix CockroachDB connection on Fly: inet6 socket + unnamed prepare”, 2026-05-05). This cycle validates the existing connection against the pass criteria checklist.</p>
-</section>
-<section id="cris-score" class="level2">
-<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 3%">
-<col style="width: 87%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Factor</th>
-<th>Score</th>
-<th>Evidence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>C</strong>omplexity</td>
-<td>8</td>
-<td>A direct Ecto write over Fly’s 6PN is well-understood; the only unknown is the Fly network topology between uro and the CockroachDB node.</td>
-</tr>
-<tr class="even">
-<td><strong>R</strong>each</td>
-<td>10</td>
-<td>Cycle 11 cannot safely write mission scores until the connection itself is verified.</td>
-</tr>
-<tr class="odd">
-<td><strong>I</strong>mpediment</td>
-<td>7</td>
-<td>A connection failure here blocks Cycle 11 but not the mission gameplay in Cycles 6–10.</td>
-</tr>
-<tr class="even">
-<td><strong>S</strong>takeholder</td>
-<td>10</td>
-<td>Gate for Cycle 11.</td>
-</tr>
-<tr class="odd">
-<td><strong>Total</strong></td>
-<td>8.75</td>
-<td>Build after Cycle 2 passes.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>A passing Cycle 4 does not validate the causal write path.</p>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<p>Testing the DB connection as part of Cycle 11 was rejected — a connection failure inside the causal write path is harder to distinguish from a VClock gating failure.</p>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Status: Draft</p>
-</section>
-<section id="decision-makers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
-<ul>
-<li>Lead Architect / Fabric Maintainer</li>
-</ul>
-</section>
-<section id="tags" class="level2">
-<h2 class="anchored" data-anchor-id="tags">Tags</h2>
-<ul>
-<li>maglev-cycle-4, db-connection, cockroachdb, galls-law, 20260506-maglev-cycle-4-db-connection, present-proposal-template</li>
-</ul>
-</section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
-<pre><code>@techreport{20260501_crdb,
-  title       = {CockroachDB with mTLS and role-separated access},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260501-cockroachdb-with-mtls-role-separation.md}
-}
-
-@techreport{20260501_fly,
-  title       = {Fly.io for deployment},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260501-fly-io-for-deployment.md}
-}
-
-@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}</code></pre>
-
-
-</section>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-4-db-connection.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:11:14 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:14:16 GMT</pubDate>
 </item>
 </channel>
 </rss>

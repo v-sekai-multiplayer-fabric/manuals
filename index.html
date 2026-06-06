@@ -389,11 +389,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="capabilities-and-where-they-live" class="level2">
 <h2 class="anchored" data-anchor-id="capabilities-and-where-they-live">Capabilities and where they live</h2>
-<p>Each capability maps to the engine feature branch in <a href="https://github.com/v-sekai-multiplayer-fabric/godot">godot</a> that implements it, plus the supporting repos.</p>
+<p>Each capability maps to the engine feature branch in <a href="https://github.com/v-sekai-multiplayer-fabric/godot">godot</a> that implements it, plus the supporting repos. The Tier column follows the <a href="./decisions/20260606-feature-classification-poc-baseline-stretch.html">feature classification</a>: proof of concept, baseline, or stretch.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th>Capability</th>
+<th>Tier</th>
 <th>Engine branch</th>
 <th>Supporting repos</th>
 <th>Status</th>
@@ -402,30 +403,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td>Native video playback</td>
+<td>Baseline</td>
 <td><code>feat/native-media</code> (MediaFoundation, GStreamer)</td>
 <td><a href="https://github.com/v-sekai-multiplayer-fabric/native-media-test">native-media-test</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/vulkan-video-godot">vulkan-video-godot</a></td>
 <td>Working; builds on Windows and Linux.</td>
 </tr>
 <tr class="even">
 <td>Scene baking via OpenUSD</td>
+<td>Baseline</td>
 <td>—</td>
 <td><a href="https://github.com/v-sekai-multiplayer-fabric/openusd-fabric">openusd-fabric</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/zone-baker">zone-baker</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/idtx-flow">idtx-flow</a></td>
 <td>Working; USD schema, Blender export hooks, scene validation, headless export.</td>
 </tr>
 <tr class="odd">
 <td>Spatial audio (<a href="./decisions/20260606-spatial-audio-patched-resonance-audio.html">HRTF + audio probes</a>)</td>
+<td>Baseline</td>
 <td><code>feat/spatial-audio-server</code>, <code>feat/module-resonance-audio</code> (patched Resonance Audio)</td>
 <td><a href="https://github.com/v-sekai-multiplayer-fabric/sponza-godot-audio">sponza-godot-audio</a></td>
 <td>Working; demo and benchmark scene.</td>
 </tr>
 <tr class="even">
 <td>Speech</td>
+<td>Baseline</td>
 <td><code>feat/module-speech</code></td>
 <td>—</td>
 <td>Working.</td>
 </tr>
 <tr class="odd">
 <td>Pen stroke creation (codename cassie)</td>
+<td>Proof of concept</td>
 <td><code>feat/module-cassie</code></td>
 <td><a href="https://github.com/v-sekai-multiplayer-fabric/vsekai-materialx">vsekai-materialx</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/materialx-shaders-lean">materialx-shaders-lean</a></td>
 <td>Pen stroke creation works; patch surface creation loses about 90%.</td>
