@@ -511,6 +511,80 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
   <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>Human-readable presence markers with an orb debug mode</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-presence-marker-representation.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The <a href="../decisions/20260606-multiplayer-presence-demo-orbs.html">orb presence demo</a> draws each participant as head and hand orb clusters. In review, the orbs read as too similar: a head cluster and a hand cluster look alike, so they are easy to conflate, and a bare cluster conveys position better than heading. The 3-point model and the networking are sound; the visual marker is the weak part. What should the default marker be?</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/attachments/20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png" class="img-fluid figure-img"></p>
+<figcaption>The <code>xr-grid</code> debug scene: each remote participant drawn as head and hand orb clusters. These become the debug mode. <span class="citation" data-cites="vsekai_xrgrid_debug_2026">(V-Sekai Multiplayer Fabric 2026)</span></figcaption>
+</figure>
+</div>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>Tell head from hands at a glance.</li>
+<li>Convey heading (orientation), not only position.</li>
+<li>Keep the cheap 3-point pose and its compact wire format.</li>
+<li>Keep a raw view for debugging.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Raw orb clusters as the default (current).</li>
+<li>A vague ghostly or cartoony head plus distinct hand markers that show heading.</li>
+<li>A floating “TV head” showing the user’s Steam avatar (the “Lord Kanti” look).</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “A vague ghostly or cartoony head plus distinct hand markers”. The default marker is a soft humanoid head that shows position and heading, with hand markers shaped differently from the head so the three points stay legible. The raw orb clusters stay as a debug mode the viewer can flip to.</p>
+<ul>
+<li>Default: a ghostly/cartoony head (position + heading) and distinct hand markers.</li>
+<li>Debug: the orb clusters from the superseded demo, toggleable.</li>
+<li>Stretch: a floating TV head showing the user’s Steam avatar.</li>
+<li>Unchanged: 3-point tracking, poses over <a href="../decisions/20260606-presence-demo-networking-internals.html">WebTransport datagrams</a> in a compact binary form, and <a href="../decisions/20260606-feature-classification-poc-baseline-stretch.html">cassie</a> pen signing for optional identity.</li>
+</ul>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good: head and hands are distinguishable, and heading is visible.</li>
+<li>Good: the orb mode is kept for debugging the underlying poses.</li>
+<li>Bad: the humanoid and hand markers are assets that have to be authored and shipped.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>A session shows each participant as a heading-bearing head marker and distinct hand markers; a debug toggle falls back to the orb clusters.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>Supersedes <a href="../decisions/20260606-multiplayer-presence-demo-orbs.html">Minimal multiplayer presence demo with head and hand orbs</a>. The orb representation is retained as the debug mode. UX input from Joseph.</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-vsekai_xrgrid_debug_2026" class="csl-entry">
+V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug Scene: Hero-Asset Landmark with Head and Hand Orientation-and-Translation Orbs</em>.
+</div>
+</div></section></div> ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-presence-marker-representation.html</guid>
+  <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Minimal multiplayer presence demo with head and hand orbs</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-multiplayer-presence-demo-orbs.html</link>
   <description><![CDATA[ 
@@ -2049,177 +2123,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-2-observability.html</guid>
-  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Maglev Cycle 3: Baker Pipeline</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-3-baker.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>The Maglev train scene and player VRM avatars must be baked before Cycle 9 (physics replication), which is the first cycle to load actual game assets into the zone server. The baker pipeline runs as an on-demand Fly Machine, depends only on the Fly infrastructure proven in Cycle 1, and can run in parallel with Cycles 6–9.</p>
-<p><code>multiplayer-fabric-baker</code> uses Godot in headless editor mode (<code>godot.linuxbsd.editor.double.x86_64</code>, built from <code>multiplayer-fabric-baker</code> via <code>ghcr.io/v-sekai-fire/godot-editor-double:latest</code>) to validate and export scenes. <code>aria-storage</code> chunks the output using casync/desync <code>.caibx</code> format with zstd compression, uploads chunks to the zone-backend chunk store, and posts the <code>.caibx</code> index to uro at <code>/storage/:id/bake</code>.</p>
-</section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>The Cyberprep train environment (MToon shaders, banking train geometry) and the test VRM avatar have not been validated and stored through the baker pipeline under the Fly deployment. Without baked assets in the chunk store, the zone server in Cycle 9 cannot load the scene.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>Trigger two bake jobs via the Fly Machines API:</p>
-<ol type="1">
-<li>Train environment bake: <code>multiplayer-fabric-baker</code> validates the Maglev train scene (greybox CSG geometry is acceptable for cycle validation), exports it, chunks it with aria-storage, and posts the index to uro.</li>
-<li>Avatar bake: same pipeline for <code>multiplayer-fabric-humanoid-project/humanoid/art/mire/mire.vrm</code> (51 MB), used by both PCVR and Steam Deck clients in Cycle 9.</li>
-</ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">flyctl</span> machine run registry.fly.io/multiplayer-fabric-baker:latest <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb1-2">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--app</span> multiplayer-fabric-baker <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb1-3">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--env</span> ASSET_ID=<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>uuid<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb1-4">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--env</span> URO_URL=https://hub.chibifire.com <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb1-5">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--</span> avatar scenes/<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>uuid<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span>.tscn out/<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>uuid<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span>.scn</span></code></pre></div></div>
-<p>Pass criteria:</p>
-<ul class="task-list">
-<li><label><input type="checkbox">Both bake jobs exit 0</label></li>
-<li><label><input type="checkbox"><code>.caibx</code> index appears in uro at <code>/storage/:id/bake</code> for each asset</label></li>
-<li><label><input type="checkbox">Zone server can fetch and assemble the train scene from the chunk store before Cycle 9 begins</label></li>
-</ul>
-</section>
-<section id="estimate" class="level2">
-<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
-<p><strong>3 days</strong> (2026-05-09 → 2026-05-13, parallel). The baker pipeline is in production on Fly (14 days of commits 2026-04-23 to 2026-05-06). The work is Maglev-specific bake config (MToon shader settings, VRM export params) and a Fly Machine invocation test. <code>mire.vrm</code> and a greyboxed train scene are the placeholder inputs, so no art track blocks this cycle.</p>
-</section>
-<section id="cris-score" class="level2">
-<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 3%">
-<col style="width: 87%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Factor</th>
-<th>Score</th>
-<th>Evidence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>C</strong>omplexity</td>
-<td>7</td>
-<td>The baker pipeline is in production use; the only unknowns are the Maglev-specific MToon shader configuration and VRM avatar export settings.</td>
-</tr>
-<tr class="even">
-<td><strong>R</strong>each</td>
-<td>10</td>
-<td>Cycles 10–4 cannot load game assets without baked chunk store entries.</td>
-</tr>
-<tr class="odd">
-<td><strong>I</strong>mpediment</td>
-<td>9</td>
-<td>A bake failure before Cycle 9 blocks the entire physics and scenario track.</td>
-</tr>
-<tr class="even">
-<td><strong>S</strong>takeholder</td>
-<td>10</td>
-<td>Required before the first physics cycle and the full Maglev mission scenario.</td>
-</tr>
-<tr class="odd">
-<td><strong>Total</strong></td>
-<td>8.75</td>
-<td>Build after Cycle 1 passes, in parallel with Cycles 6–9.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>Building the Cyberprep environment with MToon shaders tuned for both Steam Deck and PCVR requires dedicated art work. Bake failures surface late if the pipeline is not tested early; running this cycle in parallel with Cycles 6–9 surfaces them while networking cycles are still running.</p>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<p>Deferring the bake to just before Cycle 9 was rejected — a failed bake stalls the physics track after the networking cycles that preceded Cycle 9 have already completed.</p>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Status: Draft</p>
-</section>
-<section id="decision-makers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
-<ul>
-<li>Lead Architect / Fabric Maintainer</li>
-<li>Game Director</li>
-</ul>
-</section>
-<section id="tags" class="level2">
-<h2 class="anchored" data-anchor-id="tags">Tags</h2>
-<ul>
-<li>maglev-cycle-3, baker, aria-storage, vrm, galls-law, 20260506-maglev-cycle-3-baker, present-proposal-template</li>
-</ul>
-</section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
-<pre><code>@techreport{20260501_fly,
-  title       = {Fly.io for deployment},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260501-fly-io-for-deployment.md}
-}
-
-@techreport{20260506_ghcr,
-  title       = {GHCR packages must be built by the repo that consumes them},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260506-ghcr-package-ownership-same-repo.md}
-}
-
-@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}</code></pre>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-3-baker.html</guid>
   <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
 </item>
 </channel>
