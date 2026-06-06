@@ -12,6 +12,70 @@
 <generator>quarto-1.9.38</generator>
 <lastBuildDate>Sat, 06 Jun 2026 00:00:00 GMT</lastBuildDate>
 <item>
+  <title>Spatial audio via a patched Resonance Audio (HRTF and audio probes)</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-spatial-audio-patched-resonance-audio.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The zone server renders shared social-VR scenes where sound sources need to be localized in 3D for every listener. Two things drive presence: binaural HRTF rendering so a source is heard at the correct azimuth and elevation over headphones, and audio probes that capture how a room colors and occludes sound so a source baked behind a wall does not leak through it. Godot’s built-in <code>AudioServer</code> does stereo panning and attenuation, but it has no HRTF path and no probe-based spatialization. How should the engine produce HRTF spatial audio with environmental probes?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>Binaural HRTF output for headphone VR.</li>
+<li>Audio probes for environmental response and occlusion, bakeable per scene.</li>
+<li>Double-precision engine build; the audio module has to link into the fork.</li>
+<li>Reuse a proven spatialization library rather than writing one.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Godot built-in <code>AudioServer</code> panning only.</li>
+<li>Steam Audio (Valve) integration.</li>
+<li>A patched Resonance Audio integrated as an engine module plus a spatial-audio server.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “A patched Resonance Audio integrated as an engine module”, because it provides HRTF binaural rendering and ambisonic room response with an open-source base the fork can carry, and it slots into the engine as a module rather than a runtime GDExtension.</p>
+<p>The implementation lives on two engine feature branches:</p>
+<ul>
+<li><code>feat/module-resonance-audio</code> — the patched Resonance Audio vendored as an engine module, exposing HRTF binaural rendering and audio probes.</li>
+<li><code>feat/spatial-audio-server</code> — the spatial-audio server that drives the module, placing sources and listeners and resolving probes per frame.</li>
+</ul>
+<p><a href="https://github.com/v-sekai-multiplayer-fabric/sponza-godot-audio">sponza-godot-audio</a> is the demo and benchmark scene.</p>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good: headphone listeners get correct HRTF localization, and probes give rooms a consistent response with occlusion.</li>
+<li>Good: the module links into the double-precision fork and ships with the engine assembly.</li>
+<li>Bad: the fork carries a patch set against Resonance Audio that has to be re-based as upstream or the engine moves.</li>
+<li>Bad: HRTF and probe resolution add per-frame audio cost that the spatial-audio server has to budget.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>The two branches assemble into the engine and the <code>sponza-godot-audio</code> scene renders HRTF output with probes. The capability is tracked in the <a href="../index.html#capabilities-and-where-they-live">index capabilities table</a>.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>Resonance Audio is Google’s open-source spatial audio SDK (<a href="https://resonance-audio.github.io/resonance-audio/" class="uri">https://resonance-audio.github.io/resonance-audio/</a>). “Patched” here means the fork carries local changes to build it as an engine module and to wire its HRTF and probe paths to the spatial-audio server.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-spatial-audio-patched-resonance-audio.html</guid>
+  <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Require pull requests and a merge queue on main</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-require-pr-and-merge-queue-on-main.html</link>
   <description><![CDATA[ 
@@ -1059,7 +1123,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/present-proposal-template.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:00:57 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:03:04 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1284,7 +1348,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-intercept-smoke-test.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:00:57 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:03:04 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1406,7 +1470,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-9-physics-vrm.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:00:57 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:03:04 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1523,7 +1587,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-8-ik-merge.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:00:57 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:03:04 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1642,7 +1706,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-7-ik-routing.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:00:57 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:03:04 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1762,7 +1826,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-6-mmog-load.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:00:57 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:03:04 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1896,7 +1960,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-5-zone-console.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:00:57 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:03:04 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -2030,181 +2094,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-4-db-connection.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:00:57 GMT</pubDate>
-</item>
-<item>
-  <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-3-baker.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="maglev-cycle-3-baker-pipeline" class="level1">
-<h1>Maglev Cycle 3: Baker Pipeline</h1>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>The Maglev train scene and player VRM avatars must be baked before Cycle 9 (physics replication), which is the first cycle to load actual game assets into the zone server. The baker pipeline runs as an on-demand Fly Machine, depends only on the Fly infrastructure proven in Cycle 1, and can run in parallel with Cycles 6–9.</p>
-<p><code>multiplayer-fabric-baker</code> uses Godot in headless editor mode (<code>godot.linuxbsd.editor.double.x86_64</code>, built from <code>multiplayer-fabric-baker</code> via <code>ghcr.io/v-sekai-fire/godot-editor-double:latest</code>) to validate and export scenes. <code>aria-storage</code> chunks the output using casync/desync <code>.caibx</code> format with zstd compression, uploads chunks to the zone-backend chunk store, and posts the <code>.caibx</code> index to uro at <code>/storage/:id/bake</code>.</p>
-</section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>The Cyberprep train environment (MToon shaders, banking train geometry) and the test VRM avatar have not been validated and stored through the baker pipeline under the Fly deployment. Without baked assets in the chunk store, the zone server in Cycle 9 cannot load the scene.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>Trigger two bake jobs via the Fly Machines API:</p>
-<ol type="1">
-<li><strong>Train environment bake</strong>: <code>multiplayer-fabric-baker</code> validates the Maglev train scene (greybox CSG geometry is acceptable for cycle validation), exports it, chunks it with aria-storage, and posts the index to uro.</li>
-<li><strong>Avatar bake</strong>: same pipeline for <code>multiplayer-fabric-humanoid-project/humanoid/art/mire/mire.vrm</code> (51 MB), used by both PCVR and Steam Deck clients in Cycle 9.</li>
-</ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="ex" style="color: null;
-background-color: null;
-font-style: inherit;">flyctl</span> machine run registry.fly.io/multiplayer-fabric-baker:latest <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb1-2">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--app</span> multiplayer-fabric-baker <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb1-3">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--env</span> ASSET_ID=<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>uuid<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb1-4">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--env</span> URO_URL=https://hub.chibifire.com <span class="dt" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">\</span></span>
-<span id="cb1-5">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">--</span> avatar scenes/<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>uuid<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span>.tscn out/<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&lt;</span>uuid<span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span>.scn</span></code></pre></div></div>
-<p>Pass criteria:</p>
-<ul class="task-list">
-<li><label><input type="checkbox">Both bake jobs exit 0</label></li>
-<li><label><input type="checkbox"><code>.caibx</code> index appears in uro at <code>/storage/:id/bake</code> for each asset</label></li>
-<li><label><input type="checkbox">Zone server can fetch and assemble the train scene from the chunk store before Cycle 9 begins</label></li>
-</ul>
-</section>
-<section id="estimate" class="level2">
-<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
-<p><strong>3 days</strong> (2026-05-09 → 2026-05-13, parallel). The baker pipeline is in production on Fly (14 days of commits 2026-04-23 to 2026-05-06). The work is Maglev-specific bake config (MToon shader settings, VRM export params) and a Fly Machine invocation test. <code>mire.vrm</code> and a greyboxed train scene are the placeholder inputs, so no art track blocks this cycle.</p>
-</section>
-<section id="cris-score" class="level2">
-<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 9%">
-<col style="width: 3%">
-<col style="width: 87%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Factor</th>
-<th>Score</th>
-<th>Evidence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>C</strong>omplexity</td>
-<td>7</td>
-<td>The baker pipeline is in production use; the only unknowns are the Maglev-specific MToon shader configuration and VRM avatar export settings.</td>
-</tr>
-<tr class="even">
-<td><strong>R</strong>each</td>
-<td>10</td>
-<td>Cycles 10–4 cannot load game assets without baked chunk store entries.</td>
-</tr>
-<tr class="odd">
-<td><strong>I</strong>mpediment</td>
-<td>9</td>
-<td>A bake failure before Cycle 9 blocks the entire physics and scenario track.</td>
-</tr>
-<tr class="even">
-<td><strong>S</strong>takeholder</td>
-<td>10</td>
-<td>Required before the first physics cycle and the full Maglev mission scenario.</td>
-</tr>
-<tr class="odd">
-<td><strong>Total</strong></td>
-<td>8.75</td>
-<td>Build after Cycle 1 passes, in parallel with Cycles 6–9.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>Building the Cyberprep environment with MToon shaders tuned for both Steam Deck and PCVR requires dedicated art work. Bake failures surface late if the pipeline is not tested early; running this cycle in parallel with Cycles 6–9 surfaces them while networking cycles are still running.</p>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<p>Deferring the bake to just before Cycle 9 was rejected — a failed bake stalls the physics track after the networking cycles that preceded Cycle 9 have already completed.</p>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Status: Draft</p>
-</section>
-<section id="decision-makers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
-<ul>
-<li>Lead Architect / Fabric Maintainer</li>
-<li>Game Director</li>
-</ul>
-</section>
-<section id="tags" class="level2">
-<h2 class="anchored" data-anchor-id="tags">Tags</h2>
-<ul>
-<li>maglev-cycle-3, baker, aria-storage, vrm, galls-law, 20260506-maglev-cycle-3-baker, present-proposal-template</li>
-</ul>
-</section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
-<pre><code>@techreport{20260501_fly,
-  title       = {Fly.io for deployment},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260501-fly-io-for-deployment.md}
-}
-
-@techreport{20260506_ghcr,
-  title       = {GHCR packages must be built by the repo that consumes them},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260506-ghcr-package-ownership-same-repo.md}
-}
-
-@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}</code></pre>
-
-
-</section>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-3-baker.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:00:57 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:03:04 GMT</pubDate>
 </item>
 </channel>
 </rss>
