@@ -279,6 +279,71 @@
   <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>Minimal multiplayer presence demo with head and hand orbs</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-multiplayer-presence-demo-orbs.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The <code>xr-grid</code> debug scene currently shows one VRM avatar standing on the grid with a few clusters of small colored orbs floating nearby as placeholder remote players. The next increment should prove shared presence: several people in the same space at once, at the scale of a full V-Sekai Discord call. What is the smallest piece that demonstrates real multiplayer presence without committing to full networked avatars for everyone?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>Smallest demonstrable multiplayer increment on top of the existing scene.</li>
+<li>Real presence for many participants, roughly a Discord call’s worth.</li>
+<li>Cheap per-player representation that still reads as a person.</li>
+<li>Identity should be optional, not a login wall.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Full networked VRM avatar for every participant.</li>
+<li>Head plus two hand orbs per participant (3-point tracking representation).</li>
+<li>Text nameplates with no embodiment.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “Head plus two hand orbs per participant”, because three tracked points per person convey presence and gesture at a fraction of the cost of a full avatar, which lets the demo scale to a whole call.</p>
+<p>Scope of the demo:</p>
+<ul>
+<li>Each participant is represented by one head orb and two hand orbs, driven by their 3-point tracking. One full VRM (as in the current scene) can stand in for the local player.</li>
+<li>The room scales to a V-Sekai Discord call’s worth of participants.</li>
+<li>A participant who wants to identify themselves signs with the pen (<a href="../decisions/20260606-feature-classification-poc-baseline-stretch.html">cassie</a>); the signature is the identity mark. Unsigned participants stay anonymous orbs.</li>
+<li>Built on <a href="https://github.com/v-sekai-multiplayer-fabric/xr-grid">xr-grid</a>.</li>
+</ul>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good: presence and gesture for many people at low per-player cost.</li>
+<li>Good: identity is opt-in through signing, so there is no login step.</li>
+<li>Bad: orbs are not full avatars, so the demo does not exercise avatar networking or IK.</li>
+<li>Bad: pen signing depends on cassie, which is a proof-of-concept capability (patch surface creation loses about 90%), so the signing path is the weakest link.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>A session shows multiple participants, each rendered as a head orb and two hand orbs tracking their movement, at call scale. Signing with the pen produces a visible identifying mark next to that participant’s orbs.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>This is the “smallest new piece” milestone: expand the existing single-avatar <code>xr-grid</code> debug scene (one VRM plus placeholder orb clusters) into a populated room. It composes the <a href="../decisions/20260606-feature-classification-poc-baseline-stretch.html">pen-stroke / cassie capability</a> for optional identity.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-multiplayer-presence-demo-orbs.html</guid>
+  <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Feature classification — proof of concept, baseline, stretch</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-feature-classification-poc-baseline-stretch.html</link>
   <description><![CDATA[ 
@@ -1192,7 +1257,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/present-proposal-template.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:21:10 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:22:39 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1417,7 +1482,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-intercept-smoke-test.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:21:10 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:22:39 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1539,7 +1604,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-9-physics-vrm.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:21:10 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:22:39 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1656,7 +1721,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-8-ik-merge.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:21:10 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:22:39 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1775,7 +1840,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-7-ik-routing.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:21:10 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:22:39 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1895,141 +1960,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-6-mmog-load.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:21:10 GMT</pubDate>
-</item>
-<item>
-  <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-5-zone-console.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="maglev-cycle-5-zone-console-tui-observer" class="level1">
-<h1>Maglev Cycle 5: Zone-Console TUI Observer</h1>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p><code>multiplayer-fabric-zone-console</code> is a ratatui TUI that observes the zone over WebTransport. It is in the production stack and is the operator’s primary visibility into zone health during and after mission cycles. Cycle 5 depends only on Cycle 1 (zone server live) and runs in parallel with the game-logic track.</p>
-</section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>The zone-console has not connected to the zone server under the Fly deployment and confirmed it can display entity state and tick rate. Without a passing Cycle 5, operators have no real-time view into the zone during Cycles 9–10, where physics desync and causal ordering failures are the primary risks.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>Start zone-console targeting the Fly zone server. Confirm the TUI displays: connected status, current tick rate (targeting 20 Hz), and at least one entity visible in the entity list.</p>
-<p>Pass criteria:</p>
-<ul class="task-list">
-<li><label><input type="checkbox">zone-console connects without error</label></li>
-<li><label><input type="checkbox">Tick rate displayed at 15 Hz or above (full 20 Hz target confirmed in Cycle 10)</label></li>
-<li><label><input type="checkbox">At least one entity visible in the TUI entity list</label></li>
-<li><label><input type="checkbox">Clean disconnect on exit with no orphaned connection</label></li>
-</ul>
-</section>
-<section id="estimate" class="level2">
-<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
-<p><strong>2 days</strong> (2026-05-09 → 2026-05-12, parallel). Zone-console was built from scratch in 6 working days (2026-04-21–28). The work here is connecting the existing TUI to the deployed Fly gateway rather than a local target — config and endpoint change only.</p>
-</section>
-<section id="cris-score" class="level2">
-<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 12%">
-<col style="width: 4%">
-<col style="width: 83%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Factor</th>
-<th>Score</th>
-<th>Evidence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>C</strong>omplexity</td>
-<td>7</td>
-<td>WebTransport observer is simpler than the game clients; the risk is ratatui rendering on headless CI.</td>
-</tr>
-<tr class="even">
-<td><strong>R</strong>each</td>
-<td>9</td>
-<td>Operators need this during Cycles 4–2 to confirm tick rate holds under dynamic physics load.</td>
-</tr>
-<tr class="odd">
-<td><strong>I</strong>mpediment</td>
-<td>7</td>
-<td>A missing observer does not block gameplay but leaves Cycles 4–2 without operator-facing monitoring.</td>
-</tr>
-<tr class="even">
-<td><strong>S</strong>takeholder</td>
-<td>10</td>
-<td>Operator visibility tool for the production stack.</td>
-</tr>
-<tr class="odd">
-<td><strong>Total</strong></td>
-<td>8.25</td>
-<td>Build after Cycle 1 passes, in parallel with Cycles 6–11.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>A passing Cycle 5 does not validate zone-console under load; the full 20 Hz tick rate and entity count targets are confirmed during Cycle 10.</p>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<p>Deferring to after Cycle 10 was rejected — the observer is needed during Cycle 10 to confirm tick rate holds at 20 Hz under dynamic physics load.</p>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Status: Draft</p>
-</section>
-<section id="decision-makers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
-<ul>
-<li>Lead Architect / Fabric Maintainer</li>
-</ul>
-</section>
-<section id="tags" class="level2">
-<h2 class="anchored" data-anchor-id="tags">Tags</h2>
-<ul>
-<li>maglev-cycle-5, zone-console, ratatui, observer, galls-law, 20260506-maglev-cycle-5-zone-console, present-proposal-template</li>
-</ul>
-</section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
-<pre><code>@techreport{20260506_cycle1,
-  title       = {Maglev Cycle 1: Godot Client Gateway Handshake},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260506-maglev-cycle-1-gateway-handshake.md}
-}
-
-@techreport{20260501_webtransport,
-  title       = {Use WebTransport over QUIC for game traffic},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260501-webtransport-over-quic-for-game-traffic.md}
-}
-
-@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}</code></pre>
-
-
-</section>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-5-zone-console.html</guid>
-  <pubDate>Sat, 06 Jun 2026 15:21:10 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 15:22:39 GMT</pubDate>
 </item>
 </channel>
 </rss>
