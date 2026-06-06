@@ -3,6 +3,7 @@
     "listing": "/decisions.html",
     "items": [
       "/decisions/present-proposal-template.html",
+      "/decisions/20260606-require-pr-and-merge-queue-on-main.html",
       "/decisions/20260606-org-split-v-sekai-multiplayer-fabric.html",
       "/decisions/20260606-compiling-godot-engine.html",
       "/decisions/20260506-observability-stack-victoriatraces.html",

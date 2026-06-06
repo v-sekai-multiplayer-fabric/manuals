@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2026-06-06">
 
-<title>Decisions – V-Sekai Fire — Manuals</title>
+<title>Require pull requests and a merge queue on main – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,29 +27,27 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-36efc884c3a04bcf6faa8f32e02d7e53.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-4954c030c383bd8fc8b39159c186ddfc.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-36efc884c3a04bcf6faa8f32e02d7e53.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-36efc884c3a04bcf6faa8f32e02d7e53.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-4954c030c383bd8fc8b39159c186ddfc.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-36efc884c3a04bcf6faa8f32e02d7e53.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -76,67 +75,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-title','listing-reading-time','listing-filename',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="alternate" type="application/rss+xml" title="V-Sekai Fire — Manuals" href="decisions.xml" data-external="1"></head>
+</head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
@@ -307,7 +248,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">V-Sekai Fire — Manuals</span>
     </a>
   </div>
@@ -318,15 +259,15 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./changelog.html"> 
+    <a class="nav-link" href="../changelog.html"> 
 <span class="menu-text">Changes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./decisions.html" aria-current="page"> 
+    <a class="nav-link" href="../decisions.html"> 
 <span class="menu-text">Decisions</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./references.html"> 
+    <a class="nav-link" href="../references.html"> 
 <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -341,8 +282,22 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link active" data-scroll-target="#context-and-problem-statement">Context and Problem Statement</a></li>
+  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision Drivers</a></li>
+  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered Options</a></li>
+  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision Outcome</a>
+  <ul class="collapse">
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
+  </ul></li>
+  <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More Information</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260606-require-pr-and-merge-queue-on-main.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -350,7 +305,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Decisions</h1>
+<h1 class="title">Require pull requests and a merge queue on main</h1>
 </div>
 
 
@@ -358,6 +313,12 @@ window.Quarto = {
 <div class="quarto-title-meta">
 
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 6, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -367,389 +328,58 @@ window.Quarto = {
 </header>
 
 
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The <code>manuals</code> repo had no branch protection on <code>main</code>. Changes landed by pushing directly or by manually merging pull requests one at a time, with no serialization between concurrent PRs. As the number of in-flight documentation PRs grows, two PRs can each pass against an older <code>main</code> and then conflict or break the Quarto build once both land. How should changes reach <code>main</code> so that every merge is reviewable and tested against the tip it will actually join?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>Every change to <code>main</code> should arrive through a pull request, not a direct push.</li>
+<li>Concurrent PRs should serialize so each is validated against the latest <code>main</code>.</li>
+<li>The team is small, so the process should add little ceremony (no mandatory second reviewer).</li>
+<li>The setting should be declarative and recorded, not click-ops folklore.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Leave <code>main</code> unprotected (status quo).</li>
+<li>Branch protection requiring a pull request only.</li>
+<li>A repository ruleset requiring a pull request plus a merge queue.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “A repository ruleset requiring a pull request plus a merge queue”, because it serializes merges and keeps <code>main</code> PR-only without forcing a second reviewer.</p>
+<p>The ruleset targets the default branch with these rules:</p>
+<ul>
+<li>Block branch deletion and non-fast-forward pushes.</li>
+<li>Require a pull request, with <code>0</code> required approvals (review is allowed, not mandated) and all three merge methods permitted on the PR.</li>
+<li>Require a merge queue using the squash merge method, <code>ALLGREEN</code> grouping, up to 5 entries built and merged per batch, and a 1-minute minimum wait.</li>
+</ul>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good: <code>main</code> only changes through PRs, and the queue tests each entry against the branch tip before it lands.</li>
+<li>Good: the configuration is captured here and reproducible from the ruleset JSON.</li>
+<li>Bad: solo edits now need a PR and an enqueue step.</li>
+<li>Bad: with <code>0</code> required approvals, the rule enforces process but not review, so an unreviewed PR can still merge.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>The ruleset is active (id <code>17352485</code>). <code>gh api repos/v-sekai-multiplayer-fabric/manuals/rulesets</code> lists it, and a direct push to <code>main</code> is rejected. Future PRs land via the queue.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>Created with <code>gh api -X POST repos/v-sekai-multiplayer-fabric/manuals/rulesets</code>. To change the policy, edit the ruleset rather than protecting the branch through the classic branch-protection API, so the two mechanisms do not overlap.</p>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-      <option value="" disabled="" selected="" hidden="">Order By</option>
-      <option value="index" data-direction="asc">Default</option>
-      <option value="listing-title-sort" data-direction="asc">
-        Title
-      </option>
-    </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
-</div>
-<table class="quarto-listing-table table">
-<thead>
-<tr>
-
-<th>
-<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
-</th>
-
-<th>
-Reading Time
-</th>
-
-<th>
-File Name
-</th>
-
-</tr>
-</thead>
-<tbody class="list">
-
-<tr data-index="0" data-listing-file-modified-sort="1780757887197" data-listing-reading-time-sort="3" data-listing-word-count-sort="587" data-listing-title-sort="[Proposal Title]" data-listing-filename-sort="present-proposal-template.md">
-<td>
-<a href="./decisions/present-proposal-template.html" class="title listing-title">[Proposal Title]</a>
-</td>
-<td>
-<span class="listing-reading-time">3 min</span>
-</td>
-<td>
-<a href="./decisions/present-proposal-template.html" class="filename listing-filename">present-proposal-template.md</a>
-</td>
-
-</tr>
-
-<tr data-index="1" data-listing-date-sort="1780704000000" data-listing-file-modified-sort="1780757887197" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="358" data-listing-title-sort="Require pull requests and a merge queue on main" data-listing-filename-sort="20260606-require-pr-and-merge-queue-on-main.md">
-<td>
-<a href="./decisions/20260606-require-pr-and-merge-queue-on-main.html" class="title listing-title">Require pull requests and a merge queue on main</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-<td>
-<a href="./decisions/20260606-require-pr-and-merge-queue-on-main.html" class="filename listing-filename">20260606-require-pr-and-merge-queue-on-main.md</a>
-</td>
-
-</tr>
-
-<tr data-index="2" data-listing-date-sort="1780704000000" data-listing-file-modified-sort="1780757887197" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="892" data-listing-title-sort="Two-org split between V-Sekai-fire and v-sekai-multiplayer-fabric" data-listing-filename-sort="20260606-org-split-v-sekai-multiplayer-fabric.md">
-<td>
-<a href="./decisions/20260606-org-split-v-sekai-multiplayer-fabric.html" class="title listing-title">Two-org split between V-Sekai-fire and v-sekai-multiplayer-fabric</a>
-</td>
-<td>
-<span class="listing-reading-time">5 min</span>
-</td>
-<td>
-<a href="./decisions/20260606-org-split-v-sekai-multiplayer-fabric.html" class="filename listing-filename">20260606-org-split-v-sekai-multiplayer-fabric.md</a>
-</td>
-
-</tr>
-
-<tr data-index="3" data-listing-date-sort="1780704000000" data-listing-file-modified-sort="1780757887196" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="887" data-listing-title-sort="Compiling the Godot engine" data-listing-filename-sort="20260606-compiling-godot-engine.md">
-<td>
-<a href="./decisions/20260606-compiling-godot-engine.html" class="title listing-title">Compiling the Godot engine</a>
-</td>
-<td>
-<span class="listing-reading-time">5 min</span>
-</td>
-<td>
-<a href="./decisions/20260606-compiling-godot-engine.html" class="filename listing-filename">20260606-compiling-godot-engine.md</a>
-</td>
-
-</tr>
-
-<tr data-index="4" data-listing-date-sort="1778025600000" data-listing-file-modified-sort="1780757887196" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="364" data-listing-title-sort="Replace Jaeger with VictoriaTraces for trace storage" data-listing-filename-sort="20260506-observability-stack-victoriatraces.md">
-<td>
-<a href="./decisions/20260506-observability-stack-victoriatraces.html" class="title listing-title">Replace Jaeger with VictoriaTraces for trace storage</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-observability-stack-victoriatraces.html" class="filename listing-filename">20260506-observability-stack-victoriatraces.md</a>
-</td>
-
-</tr>
-
-<tr data-index="5" data-listing-date-sort="1778025600000" data-listing-file-modified-sort="1780757887196" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="150" data-listing-title-sort="Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo" data-listing-filename-sort="20260506-observability-stack-victoriametrics-tempo.md">
-<td>
-<a href="./decisions/20260506-observability-stack-victoriametrics-tempo.html" class="title listing-title">Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-observability-stack-victoriametrics-tempo.html" class="filename listing-filename">20260506-observability-stack-victoriametrics-tempo.md</a>
-</td>
-
-</tr>
-
-<tr data-index="6" data-listing-date-sort="1778025600000" data-listing-file-modified-sort="1780757887196" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="379" data-listing-title-sort="Observability stack with VictoriaMetrics, VictoriaLogs, and Jaeger" data-listing-filename-sort="20260506-observability-stack-victoriametrics-jaeger.md">
-<td>
-<a href="./decisions/20260506-observability-stack-victoriametrics-jaeger.html" class="title listing-title">Observability stack with VictoriaMetrics, VictoriaLogs, and Jaeger</a>
-</td>
-<td>
-<span class="listing-reading-time">2 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-observability-stack-victoriametrics-jaeger.html" class="filename listing-filename">20260506-observability-stack-victoriametrics-jaeger.md</a>
-</td>
-
-</tr>
-
-<tr data-index="7" data-listing-file-modified-sort="1780757887196" data-listing-reading-time-sort="12" data-listing-word-count-sort="2234" data-listing-title-sort="Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test" data-listing-filename-sort="20260506-maglev-intercept-smoke-test.md">
-<td>
-<a href="./decisions/20260506-maglev-intercept-smoke-test.html" class="title listing-title">Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test</a>
-</td>
-<td>
-<span class="listing-reading-time">12 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-maglev-intercept-smoke-test.html" class="filename listing-filename">20260506-maglev-intercept-smoke-test.md</a>
-</td>
-
-</tr>
-
-<tr data-index="8" data-listing-file-modified-sort="1780757887196" data-listing-reading-time-sort="6" data-listing-word-count-sort="1029" data-listing-title-sort="Maglev Cycle 9: Physics and VRM Loading" data-listing-filename-sort="20260506-maglev-cycle-9-physics-vrm.md">
-<td>
-<a href="./decisions/20260506-maglev-cycle-9-physics-vrm.html" class="title listing-title">Maglev Cycle 9: Physics and VRM Loading</a>
-</td>
-<td>
-<span class="listing-reading-time">6 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-maglev-cycle-9-physics-vrm.html" class="filename listing-filename">20260506-maglev-cycle-9-physics-vrm.md</a>
-</td>
-
-</tr>
-
-<tr data-index="9" data-listing-file-modified-sort="1780757887196" data-listing-reading-time-sort="5" data-listing-word-count-sort="841" data-listing-title-sort="Maglev Cycle 8: Full-Rate IK Merge" data-listing-filename-sort="20260506-maglev-cycle-8-ik-merge.md">
-<td>
-<a href="./decisions/20260506-maglev-cycle-8-ik-merge.html" class="title listing-title">Maglev Cycle 8: Full-Rate IK Merge</a>
-</td>
-<td>
-<span class="listing-reading-time">5 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-maglev-cycle-8-ik-merge.html" class="filename listing-filename">20260506-maglev-cycle-8-ik-merge.md</a>
-</td>
-
-</tr>
-
-<tr data-index="10" data-listing-file-modified-sort="1780757887196" data-listing-reading-time-sort="5" data-listing-word-count-sort="921" data-listing-title-sort="Maglev Cycle 7: IK Routing and Merge" data-listing-filename-sort="20260506-maglev-cycle-7-ik-routing.md">
-<td>
-<a href="./decisions/20260506-maglev-cycle-7-ik-routing.html" class="title listing-title">Maglev Cycle 7: IK Routing and Merge</a>
-</td>
-<td>
-<span class="listing-reading-time">5 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-maglev-cycle-7-ik-routing.html" class="filename listing-filename">20260506-maglev-cycle-7-ik-routing.md</a>
-</td>
-
-</tr>
-
-<tr data-index="11" data-listing-file-modified-sort="1780757887196" data-listing-reading-time-sort="5" data-listing-word-count-sort="891" data-listing-title-sort="Maglev Cycle 6: Dual Same-Type Clients" data-listing-filename-sort="20260506-maglev-cycle-6-mmog-load.md">
-<td>
-<a href="./decisions/20260506-maglev-cycle-6-mmog-load.html" class="title listing-title">Maglev Cycle 6: Dual Same-Type Clients</a>
-</td>
-<td>
-<span class="listing-reading-time">5 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-maglev-cycle-6-mmog-load.html" class="filename listing-filename">20260506-maglev-cycle-6-mmog-load.md</a>
-</td>
-
-</tr>
-
-<tr data-index="12" data-listing-file-modified-sort="1780757887196" data-listing-reading-time-sort="4" data-listing-word-count-sort="759" data-listing-title-sort="Maglev Cycle 5: Zone-Console TUI Observer" data-listing-filename-sort="20260506-maglev-cycle-5-zone-console.md">
-<td>
-<a href="./decisions/20260506-maglev-cycle-5-zone-console.html" class="title listing-title">Maglev Cycle 5: Zone-Console TUI Observer</a>
-</td>
-<td>
-<span class="listing-reading-time">4 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-maglev-cycle-5-zone-console.html" class="filename listing-filename">20260506-maglev-cycle-5-zone-console.md</a>
-</td>
-
-</tr>
-
-<tr data-index="13" data-listing-file-modified-sort="1780757887196" data-listing-reading-time-sort="6" data-listing-word-count-sort="1001" data-listing-title-sort="Maglev Cycle 4: CockroachDB Connection" data-listing-filename-sort="20260506-maglev-cycle-4-db-connection.md">
-<td>
-<a href="./decisions/20260506-maglev-cycle-4-db-connection.html" class="title listing-title">Maglev Cycle 4: CockroachDB Connection</a>
-</td>
-<td>
-<span class="listing-reading-time">6 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-maglev-cycle-4-db-connection.html" class="filename listing-filename">20260506-maglev-cycle-4-db-connection.md</a>
-</td>
-
-</tr>
-
-<tr data-index="14" data-listing-file-modified-sort="1780757887196" data-listing-reading-time-sort="6" data-listing-word-count-sort="1112" data-listing-title-sort="Maglev Cycle 3: Baker Pipeline" data-listing-filename-sort="20260506-maglev-cycle-3-baker.md">
-<td>
-<a href="./decisions/20260506-maglev-cycle-3-baker.html" class="title listing-title">Maglev Cycle 3: Baker Pipeline</a>
-</td>
-<td>
-<span class="listing-reading-time">6 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-maglev-cycle-3-baker.html" class="filename listing-filename">20260506-maglev-cycle-3-baker.md</a>
-</td>
-
-</tr>
-
-<tr data-index="15" data-listing-file-modified-sort="1780757887196" data-listing-reading-time-sort="6" data-listing-word-count-sort="1144" data-listing-title-sort="Maglev Cycle 2: Observability Stack" data-listing-filename-sort="20260506-maglev-cycle-2-observability.md">
-<td>
-<a href="./decisions/20260506-maglev-cycle-2-observability.html" class="title listing-title">Maglev Cycle 2: Observability Stack</a>
-</td>
-<td>
-<span class="listing-reading-time">6 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-maglev-cycle-2-observability.html" class="filename listing-filename">20260506-maglev-cycle-2-observability.md</a>
-</td>
-
-</tr>
-
-<tr data-index="16" data-listing-file-modified-sort="1780757887196" data-listing-reading-time-sort="8" data-listing-word-count-sort="1445" data-listing-title-sort="Maglev Cycle 12: Game Cycle Planning" data-listing-filename-sort="20260506-maglev-cycle-12-game-planning.md">
-<td>
-<a href="./decisions/20260506-maglev-cycle-12-game-planning.html" class="title listing-title">Maglev Cycle 12: Game Cycle Planning</a>
-</td>
-<td>
-<span class="listing-reading-time">8 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-maglev-cycle-12-game-planning.html" class="filename listing-filename">20260506-maglev-cycle-12-game-planning.md</a>
-</td>
-
-</tr>
-
-<tr data-index="17" data-listing-file-modified-sort="1780757887196" data-listing-reading-time-sort="4" data-listing-word-count-sort="793" data-listing-title-sort="Maglev Cycle 11: CockroachDB Score Write" data-listing-filename-sort="20260506-maglev-cycle-11-db-write.md">
-<td>
-<a href="./decisions/20260506-maglev-cycle-11-db-write.html" class="title listing-title">Maglev Cycle 11: CockroachDB Score Write</a>
-</td>
-<td>
-<span class="listing-reading-time">4 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-maglev-cycle-11-db-write.html" class="filename listing-filename">20260506-maglev-cycle-11-db-write.md</a>
-</td>
-
-</tr>
-
-<tr data-index="18" data-listing-file-modified-sort="1780757887196" data-listing-reading-time-sort="5" data-listing-word-count-sort="981" data-listing-title-sort="Maglev Cycle 10: Dynamic Physics and Causal Ordering" data-listing-filename-sort="20260506-maglev-cycle-10-dynamic-physics-score.md">
-<td>
-<a href="./decisions/20260506-maglev-cycle-10-dynamic-physics-score.html" class="title listing-title">Maglev Cycle 10: Dynamic Physics and Causal Ordering</a>
-</td>
-<td>
-<span class="listing-reading-time">5 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-maglev-cycle-10-dynamic-physics-score.html" class="filename listing-filename">20260506-maglev-cycle-10-dynamic-physics-score.md</a>
-</td>
-
-</tr>
-
-<tr data-index="19" data-listing-file-modified-sort="1780757887196" data-listing-reading-time-sort="12" data-listing-word-count-sort="2242" data-listing-title-sort="Maglev Cycle 1: Godot Client Gateway Handshake" data-listing-filename-sort="20260506-maglev-cycle-1-gateway-handshake.md">
-<td>
-<a href="./decisions/20260506-maglev-cycle-1-gateway-handshake.html" class="title listing-title">Maglev Cycle 1: Godot Client Gateway Handshake</a>
-</td>
-<td>
-<span class="listing-reading-time">12 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-maglev-cycle-1-gateway-handshake.html" class="filename listing-filename">20260506-maglev-cycle-1-gateway-handshake.md</a>
-</td>
-
-</tr>
-
-<tr data-index="20" data-listing-file-modified-sort="1780757887196" data-listing-reading-time-sort="5" data-listing-word-count-sort="994" data-listing-title-sort="Maglev Cycle 0: Terraform Fly.io Infrastructure" data-listing-filename-sort="20260506-maglev-cycle-0-infra.md">
-<td>
-<a href="./decisions/20260506-maglev-cycle-0-infra.html" class="title listing-title">Maglev Cycle 0: Terraform Fly.io Infrastructure</a>
-</td>
-<td>
-<span class="listing-reading-time">5 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-maglev-cycle-0-infra.html" class="filename listing-filename">20260506-maglev-cycle-0-infra.md</a>
-</td>
-
-</tr>
-
-<tr data-index="21" data-listing-date-sort="1778025600000" data-listing-file-modified-sort="1780757887196" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="173" data-listing-title-sort="GHCR packages must be built by the repo that consumes them" data-listing-filename-sort="20260506-ghcr-package-ownership-same-repo.md">
-<td>
-<a href="./decisions/20260506-ghcr-package-ownership-same-repo.html" class="title listing-title">GHCR packages must be built by the repo that consumes them</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-<td>
-<a href="./decisions/20260506-ghcr-package-ownership-same-repo.html" class="filename listing-filename">20260506-ghcr-package-ownership-same-repo.md</a>
-</td>
-
-</tr>
-
-<tr data-index="22" data-listing-date-sort="1777593600000" data-listing-file-modified-sort="1780757887196" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="139" data-listing-title-sort="Use WebTransport over QUIC for game traffic" data-listing-filename-sort="20260501-webtransport-over-quic-for-game-traffic.md">
-<td>
-<a href="./decisions/20260501-webtransport-over-quic-for-game-traffic.html" class="title listing-title">Use WebTransport over QUIC for game traffic</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-<td>
-<a href="./decisions/20260501-webtransport-over-quic-for-game-traffic.html" class="filename listing-filename">20260501-webtransport-over-quic-for-game-traffic.md</a>
-</td>
-
-</tr>
-
-<tr data-index="23" data-listing-date-sort="1777593600000" data-listing-file-modified-sort="1780757887196" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="102" data-listing-title-sort="Godot double precision template_release for zone servers" data-listing-filename-sort="20260501-godot-double-precision-template-release-for-zone.md">
-<td>
-<a href="./decisions/20260501-godot-double-precision-template-release-for-zone.html" class="title listing-title">Godot double precision template_release for zone servers</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-<td>
-<a href="./decisions/20260501-godot-double-precision-template-release-for-zone.html" class="filename listing-filename">20260501-godot-double-precision-template-release-for-zone.md</a>
-</td>
-
-</tr>
-
-<tr data-index="24" data-listing-date-sort="1777593600000" data-listing-file-modified-sort="1780757887196" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="186" data-listing-title-sort="Fly.io for deployment" data-listing-filename-sort="20260501-fly-io-for-deployment.md">
-<td>
-<a href="./decisions/20260501-fly-io-for-deployment.html" class="title listing-title">Fly.io for deployment</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-<td>
-<a href="./decisions/20260501-fly-io-for-deployment.html" class="filename listing-filename">20260501-fly-io-for-deployment.md</a>
-</td>
-
-</tr>
-
-<tr data-index="25" data-listing-date-sort="1777593600000" data-listing-file-modified-sort="1780757887196" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="181" data-listing-title-sort="CockroachDB with mTLS and role-separated access" data-listing-filename-sort="20260501-cockroachdb-with-mtls-role-separation.md">
-<td>
-<a href="./decisions/20260501-cockroachdb-with-mtls-role-separation.html" class="title listing-title">CockroachDB with mTLS and role-separated access</a>
-</td>
-<td>
-<span class="listing-reading-time">1 min</span>
-</td>
-<td>
-<a href="./decisions/20260501-cockroachdb-with-mtls-role-separation.html" class="filename listing-filename">20260501-cockroachdb-with-mtls-role-separation.md</a>
-</td>
-
-</tr>
-
-</tbody>
-</table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -1171,7 +801,7 @@ File Name
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260606-require-pr-and-merge-queue-on-main.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

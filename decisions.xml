@@ -12,6 +12,70 @@
 <generator>quarto-1.9.38</generator>
 <lastBuildDate>Sat, 06 Jun 2026 00:00:00 GMT</lastBuildDate>
 <item>
+  <title>Require pull requests and a merge queue on main</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-require-pr-and-merge-queue-on-main.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The <code>manuals</code> repo had no branch protection on <code>main</code>. Changes landed by pushing directly or by manually merging pull requests one at a time, with no serialization between concurrent PRs. As the number of in-flight documentation PRs grows, two PRs can each pass against an older <code>main</code> and then conflict or break the Quarto build once both land. How should changes reach <code>main</code> so that every merge is reviewable and tested against the tip it will actually join?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>Every change to <code>main</code> should arrive through a pull request, not a direct push.</li>
+<li>Concurrent PRs should serialize so each is validated against the latest <code>main</code>.</li>
+<li>The team is small, so the process should add little ceremony (no mandatory second reviewer).</li>
+<li>The setting should be declarative and recorded, not click-ops folklore.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Leave <code>main</code> unprotected (status quo).</li>
+<li>Branch protection requiring a pull request only.</li>
+<li>A repository ruleset requiring a pull request plus a merge queue.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “A repository ruleset requiring a pull request plus a merge queue”, because it serializes merges and keeps <code>main</code> PR-only without forcing a second reviewer.</p>
+<p>The ruleset targets the default branch with these rules:</p>
+<ul>
+<li>Block branch deletion and non-fast-forward pushes.</li>
+<li>Require a pull request, with <code>0</code> required approvals (review is allowed, not mandated) and all three merge methods permitted on the PR.</li>
+<li>Require a merge queue using the squash merge method, <code>ALLGREEN</code> grouping, up to 5 entries built and merged per batch, and a 1-minute minimum wait.</li>
+</ul>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good: <code>main</code> only changes through PRs, and the queue tests each entry against the branch tip before it lands.</li>
+<li>Good: the configuration is captured here and reproducible from the ruleset JSON.</li>
+<li>Bad: solo edits now need a PR and an enqueue step.</li>
+<li>Bad: with <code>0</code> required approvals, the rule enforces process but not review, so an unreviewed PR can still merge.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>The ruleset is active (id <code>17352485</code>). <code>gh api repos/v-sekai-multiplayer-fabric/manuals/rulesets</code> lists it, and a direct push to <code>main</code> is rejected. Future PRs land via the queue.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>Created with <code>gh api -X POST repos/v-sekai-multiplayer-fabric/manuals/rulesets</code>. To change the policy, edit the ruleset rather than protecting the branch through the classic branch-protection API, so the two mechanisms do not overlap.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-require-pr-and-merge-queue-on-main.html</guid>
+  <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Two-org split between V-Sekai-fire and v-sekai-multiplayer-fabric</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-org-split-v-sekai-multiplayer-fabric.html</link>
   <description><![CDATA[ 
@@ -995,7 +1059,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/present-proposal-template.html</guid>
-  <pubDate>Sat, 06 Jun 2026 14:53:55 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:59:00 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1220,7 +1284,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-intercept-smoke-test.html</guid>
-  <pubDate>Sat, 06 Jun 2026 14:53:55 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:59:00 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1342,7 +1406,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-9-physics-vrm.html</guid>
-  <pubDate>Sat, 06 Jun 2026 14:53:55 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:59:00 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1459,7 +1523,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-8-ik-merge.html</guid>
-  <pubDate>Sat, 06 Jun 2026 14:53:55 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:59:00 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1578,7 +1642,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-7-ik-routing.html</guid>
-  <pubDate>Sat, 06 Jun 2026 14:53:55 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:59:00 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1698,7 +1762,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-6-mmog-load.html</guid>
-  <pubDate>Sat, 06 Jun 2026 14:53:55 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:59:00 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1832,7 +1896,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-5-zone-console.html</guid>
-  <pubDate>Sat, 06 Jun 2026 14:53:55 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:59:00 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -1966,7 +2030,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-4-db-connection.html</guid>
-  <pubDate>Sat, 06 Jun 2026 14:53:55 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:59:00 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -2140,147 +2204,7 @@ font-style: inherit;">&gt;</span>.scn</span></code></pre></div></div>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-3-baker.html</guid>
-  <pubDate>Sat, 06 Jun 2026 14:53:55 GMT</pubDate>
-</item>
-<item>
-  <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-2-observability.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="maglev-cycle-2-observability-stack" class="level1">
-<h1>Maglev Cycle 2: Observability Stack</h1>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>The observability stack — OTEL Collector (4317/4318), VictoriaMetrics (8428), VictoriaLogs (9428), VictoriaTraces (10428) — is infrastructure-level and depends only on the Fly deployment being live after Cycle 1. It can run in parallel with the game-logic track (Cycles 3–10) and the DB connection (Cycle 9).</p>
-</section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>No cycle verifies that traces from <code>multiplayer-fabric-gateway</code>, <code>multiplayer-fabric-zone</code>, and <code>multiplayer-fabric-uro</code> reach VictoriaTraces, or that metrics reach VictoriaMetrics. Without this, any failure in Cycles 3–10 has no trace evidence to debug against.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>Start the observability stack on the Fly deployment:</p>
-<ul>
-<li>VictoriaMetrics on port 8428</li>
-<li>VictoriaLogs on port 9428</li>
-<li>VictoriaTraces on port 10428 (replaces Jaeger; <code>fly proxy 10428:10428</code> for local inspection)</li>
-<li>OTEL Collector on 4317 (gRPC) and 4318 (HTTP), routing to all three backends</li>
-</ul>
-<p>Trigger a single gateway request and a single zone tick. The zone server binary includes the <code>opentelemetry-godot</code> module compiled into the engine (verify with <code>--test --test-case="*OTel*"</code> before the run). Verify each service emits OTLP spans to the Collector.</p>
-<p>Pass criteria:</p>
-<ul class="task-list">
-<li><label><input type="checkbox">VictoriaTraces UI at <code>http://localhost:10428/select/vmui</code> shows spans from at least one gateway request</label></li>
-<li><label><input type="checkbox">VictoriaMetrics at port 8428 returns a non-empty result for a zone-server metric query</label></li>
-<li><label><input type="checkbox">VictoriaLogs at port 9428 shows at least one log line from uro</label></li>
-<li><label><input type="checkbox">All four services are Apache 2.0 (no Tempo, no Jaeger)</label></li>
-</ul>
-</section>
-<section id="estimate" class="level2">
-<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
-<p><strong>3 days</strong> (2026-05-09 → 2026-05-13, parallel). VictoriaMetrics/Logs/Traces share a config pattern; the only unknown is Fly volume persistence. Comparable to the zone-console Fly deploy (2 days of config commits on 2026-04-24–25).</p>
-</section>
-<section id="cris-score" class="level2">
-<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 7%">
-<col style="width: 2%">
-<col style="width: 89%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Factor</th>
-<th>Score</th>
-<th>Evidence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>C</strong>omplexity</td>
-<td>7</td>
-<td>All four Victoria backends share port conventions and the OTEL Collector config is well-documented; the only unknown is Fly volume persistence under the single-machine deployment.</td>
-</tr>
-<tr class="even">
-<td><strong>R</strong>each</td>
-<td>10</td>
-<td>Every failure in Cycles 3–10 requires trace evidence to diagnose; without this cycle no networking or physics failure is attributable.</td>
-</tr>
-<tr class="odd">
-<td><strong>I</strong>mpediment</td>
-<td>7</td>
-<td>A missing observability stack does not block Cycles 3–10 but leaves failures in Cycles 3–10 impossible to root-cause.</td>
-</tr>
-<tr class="even">
-<td><strong>S</strong>takeholder</td>
-<td>10</td>
-<td>Required for any post-mission debugging of physics desync or score write failures.</td>
-</tr>
-<tr class="odd">
-<td><strong>Total</strong></td>
-<td>8.5</td>
-<td>Build after Cycle 1 passes, in parallel with Cycles 9 and 6–11. Must complete before Cycle 3 begins.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>A passing Cycle 2 does not validate trace volume or retention under mission load; that stress only appears during Cycles 9–2.</p>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<p>Deferring observability to after Cycle 11 was rejected — a failure in Cycle 8 (dynamic physics) or Cycle 10 (score write) with no trace evidence requires rerunning the entire cycle with instrumentation added, doubling the debugging time.</p>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Status: In Progress (producer side complete 2026-05-07; verification pending)</p>
-<p>The observability stack itself is deployed and running on Fly (machine <code>781ed59b437968</code> started, volume <code>observability_data</code> 10GB iad attached) per <code>verify_fly_state</code> workflow output. The producer side has now been wired in all three apps:</p>
-<ul>
-<li>✅ <a href="https://github.com/V-Sekai-fire/multiplayer-fabric-gateway/pull/8">gateway PR #8</a> — <code>:opentelemetry</code> deps + <code>gateway.dispatch</code> span around <code>Gateway.Router.handle/1</code></li>
-<li>✅ <a href="https://github.com/V-Sekai-fire/multiplayer-fabric-zone-backend/pull/13">uro PR #13</a> — <code>:opentelemetry_phoenix</code> + <code>:opentelemetry_ecto</code> automatic instrumentation</li>
-<li>✅ <a href="https://github.com/V-Sekai-fire/multiplayer-fabric-zone/pull/3">zone PR #3</a> — bootstrapped <code>project/main.gd</code> initializing the engine’s <code>module_open_telemetry</code>, emits <code>zone.boot</code> span</li>
-</ul>
-<p>All ship to <code>multiplayer-fabric-observability.internal:4318</code> (OTLP/HTTP over Fly’s 6PN). End-to-end verification runs via <a href="https://github.com/V-Sekai-fire/multiplayer-fabric-infra/blob/main/.github/workflows/verify_observability.yml"><code>.github/workflows/verify_observability.yml</code></a> on <code>multiplayer-fabric-infra</code> — uses <code>flyctl ssh console -C</code> to query the Victoria* APIs from inside the observability machine (the OTLP ports are intentionally private). Pending: trigger the verify workflow after redeploys land and confirm the cycle 1 ping span is visible in VictoriaTraces.</p>
-</section>
-<section id="decision-makers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
-<ul>
-<li>Lead Architect / Fabric Maintainer</li>
-</ul>
-</section>
-<section id="tags" class="level2">
-<h2 class="anchored" data-anchor-id="tags">Tags</h2>
-<ul>
-<li>maglev-cycle-2, observability, victoriatraces, victoriametrics, otel, galls-law, 20260506-maglev-cycle-2-observability, present-proposal-template</li>
-</ul>
-</section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
-<pre><code>@techreport{20260506_observability_victoriatraces,
-  title       = {Replace Jaeger with VictoriaTraces for trace storage},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260506-observability-stack-victoriatraces.md}
-}
-
-@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}</code></pre>
-
-
-</section>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-2-observability.html</guid>
-  <pubDate>Sat, 06 Jun 2026 14:53:55 GMT</pubDate>
+  <pubDate>Sat, 06 Jun 2026 14:59:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
