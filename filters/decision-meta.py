@@ -4,8 +4,8 @@
 Frontmatter stays the single source of truth. This filter:
   * shows ``tier`` and ``status`` at the top of a page (so authors never repeat
     them in the body), rendering a ``superseded by <file>.md`` status as a link;
-  * appends a generalized Backlinks section listing every other page in the site
-    that links to the current one.
+  * appends a Related section listing every other content page this one links to
+    plus every page that links to it (symmetric), and a breadcrumb trail on top.
 """
 import glob
 import os
@@ -172,15 +172,21 @@ def finalize(doc):
         if current is None:
             return
 
-        # Backlinks at the bottom.
-        inbound = sorted(k for k, info in graph.items() if current in info["out"])
-        if inbound:
+        # Related (symmetric) at the bottom: pages this one links to, plus pages
+        # that link here. Limited to content pages (keys with a path), so the
+        # hub/listing pages (index, decisions, changelog, references) stay out.
+        outbound = graph[current]["out"]
+        inbound = {k for k, info in graph.items() if current in info["out"]}
+        related = sorted(
+            k for k in (outbound | inbound) if k != current and "/" in k and k in graph
+        )
+        if related:
             here = posixpath.dirname(current)
             items = []
-            for key in inbound:
+            for key in related:
                 href = posixpath.relpath(key, here) if here else key
                 items.append(ListItem(Para(Link(Str(graph[key]["title"]), url=href + ".html"))))
-            doc.content.append(Header(Str("Backlinks"), level=2, identifier="backlinks"))
+            doc.content.append(Header(Str("Related"), level=2, identifier="related"))
             doc.content.append(BulletList(*items))
 
         # Breadcrumb trail at the top (inserted last so it sits above the meta line).
