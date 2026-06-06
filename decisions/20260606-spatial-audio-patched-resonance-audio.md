@@ -52,8 +52,10 @@ is the demo and benchmark scene.
   a consistent response with occlusion.
 - Good: the module links into the double-precision fork and ships with the engine
   assembly.
-- Bad: the fork carries a patch set against Resonance Audio that has to be
-  re-based as upstream or the engine moves.
+- Neutral: the fork carries a patch set against Resonance Audio, but the rebase
+  burden is low. Upstream is abandoned (Google archived the project), so there are
+  no upstream changes to track, and the engine is pinned to a frozen Godot 4.7
+  commit, so the module does not chase engine movement. The fork owns the code.
 - Bad: HRTF and probe resolution add per-frame audio cost that the spatial-audio
   server has to budget.
 
@@ -66,6 +68,8 @@ renders HRTF output with probes. The capability is tracked in the
 ## More Information
 
 Resonance Audio is Google's open-source spatial audio SDK
-(<https://resonance-audio.github.io/resonance-audio/>). "Patched" here means the
+(<https://resonance-audio.github.io/resonance-audio/>), now archived and no longer
+maintained upstream, so the fork is the de facto source. "Patched" here means the
 fork carries local changes to build it as an engine module and to wire its HRTF
-and probe paths to the spatial-audio server.
+and probe paths to the spatial-audio server. The engine itself is pinned to a
+frozen Godot 4.7 commit, so the module targets a fixed engine API.
