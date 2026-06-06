@@ -3,7 +3,7 @@ title: Human-readable presence markers with an orb debug mode
 date: 2026-06-06
 status: proposed
 tier: proof of concept
-decision-makers: K. S. Ernest Lee
+decision-makers: K. S. Ernest (iFire) Lee
 consulted: Joseph
 ---
 

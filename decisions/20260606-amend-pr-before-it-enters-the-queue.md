@@ -2,7 +2,7 @@
 title: Amend a PR before it enters the merge queue, not after
 date: 2026-06-06
 status: accepted
-decision-makers: K. S. Ernest Lee
+decision-makers: K. S. Ernest (iFire) Lee
 ---
 
 ## Context and Problem Statement

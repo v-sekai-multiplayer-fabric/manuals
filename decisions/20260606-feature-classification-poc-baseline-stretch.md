@@ -3,7 +3,7 @@ title: Feature classification — proof of concept, baseline, stretch
 date: 2026-06-06
 status: accepted
 tier: baseline
-decision-makers: K. S. Ernest Lee
+decision-makers: K. S. Ernest (iFire) Lee
 consulted: lyuma
 ---
 
