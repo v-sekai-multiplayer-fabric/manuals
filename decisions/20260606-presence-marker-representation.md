@@ -60,4 +60,5 @@ markers; a debug toggle falls back to the orb clusters.
 ## More Information
 
 Supersedes [Minimal multiplayer presence demo with head and hand orbs](20260606-multiplayer-presence-demo-orbs.md).
-The orb representation is retained as the debug mode. UX input from Joseph.
+The orb representation is retained as the debug mode. UX input from Joseph. Refined by
+[Ghostly partial-body presence avatar from ANNY via SOMA-X](20260606-ghostly-presence-body-model.md).
