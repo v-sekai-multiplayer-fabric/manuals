@@ -14,14 +14,26 @@ from scratch and cache hits are lost whenever a checkout is moved or renamed.
 
 ## Decision
 
-Standardise on [`sccache`](https://github.com/mozilla/sccache) as the compiler
-launcher plus SCons's own `CacheDir`, both pointed at one shared cache directory
-reachable from both hosts. Wrap the build in a `gscons` shell function on each
-host. Two environment variables parameterise the setup, so this guide hardcodes
-no absolute paths:
+Standardise on [`sccache`](https://github.com/mozilla/sccache) as the **only**
+object cache, wired in as the SCons compiler launcher. Wrap the build in a
+`gscons` shell function on each host.
+
+**Do not also enable SCons's own `CacheDir`** (`cache_path=`). sccache already
+caches every compiled object before SCons's cache would see it, so running both
+double-caches the same artefacts — wasted disk and I/O for no extra hits. sccache
+is the single source of truth.
+
+Cross-host sharing is handled by sccache's **S3-compatible storage backend**, not
+by a shared filesystem directory. Credentials come from a local AWS profile
+(`~/.aws/credentials`) and are **never committed** — only the non-secret bucket
+coordinates are configured, via environment variables, so this guide hardcodes no
+absolute paths and no secrets:
 
 - `GODOT_SRC` — the engine checkout root.
-- `GODOT_BUILD_CACHE` — the shared cache directory.
+- `SCCACHE_BUCKET` / `SCCACHE_ENDPOINT` / `SCCACHE_REGION` — your S3 bucket
+  coordinates.
+- `AWS_PROFILE` — the named profile holding the access keys, read from
+  `~/.aws/credentials`. The keys themselves stay on the developer's machine.
 
 ### Prerequisites
 
@@ -36,20 +48,48 @@ no absolute paths:
 Verify `sccache --version` resolves in each shell. The verified setup uses
 **sccache 0.15.0**.
 
-### Shared cache layout
+### Storage backend
 
-Both the sccache object cache and the SCons `CacheDir` live under
-`GODOT_BUILD_CACHE`:
+sccache picks its backend from environment variables. Two options:
 
-| Purpose              | Path                             |
-| -------------------- | -------------------------------- |
-| sccache object cache | `$GODOT_BUILD_CACHE/sccache`     |
-| SCons `CacheDir`     | `$GODOT_BUILD_CACHE/scons_cache` |
+- **Shared across hosts (recommended): S3-compatible bucket.** Set the
+  `SCCACHE_BUCKET` / `SCCACHE_ENDPOINT` / `SCCACHE_REGION` coordinates and point
+  `AWS_PROFILE` at a profile in `~/.aws/credentials`. sccache keys include the
+  compiler, target triple, and flags, so Windows/MinGW and Linux objects coexist
+  in one bucket without colliding. A `SCCACHE_S3_KEY_PREFIX` namespaces these
+  objects so they never collide with other projects sharing the bucket.
+- **Single host: local directory.** Set `SCCACHE_DIR` and `SCCACHE_CACHE_SIZE`
+  instead; sccache uses local disk. No S3 config needed.
 
-To share one store between Windows and WSL, set `GODOT_BUILD_CACHE` to a location
-both can reach — on a combined workstation that is usually a drive WSL mounts
-under `/mnt`. `sccache` keys include the compiler, target triple, and flags, so
-MinGW and Linux objects coexist in the same store without colliding.
+> **Secrets policy:** only the bucket *name, endpoint, region, and key prefix* —
+> none of which are secrets — appear in committed config. The access key and
+> secret are never committed to any repo, dotfile, or build log. They live in one
+> of two places depending on where the build runs:
+>
+> - **Locally:** `~/.aws/credentials` under a named profile (`AWS_PROFILE`).
+> - **CI:** GitHub Actions **secret variables**, injected at runtime via the
+>   `${{ secrets.* }}` context. Storing the keys there is fine — they are
+>   encrypted and never land in the repo. What is *not* fine is pasting a literal
+>   key into a workflow YAML, a script, or this manual.
+
+### CI — GitHub Actions
+
+In a workflow, read the credentials from secret variables into the sccache S3
+environment for the build step. Only the secret *names* appear in the committed
+YAML — the values are stored in the repo/org Actions secrets:
+
+```yaml
+env:
+  SCCACHE_BUCKET: <your-sccache-bucket>          # non-secret coordinates
+  SCCACHE_ENDPOINT: <region>.example-object-store.com
+  SCCACHE_REGION: <region>
+  SCCACHE_S3_KEY_PREFIX: godot
+  AWS_ACCESS_KEY_ID: ${{ secrets.SCCACHE_AWS_ACCESS_KEY_ID }}      # from Actions secrets
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_AWS_SECRET_ACCESS_KEY }}
+```
+
+sccache reads `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` directly, so CI needs
+no `~/.aws/credentials` file or `AWS_PROFILE`.
 
 `SCCACHE_BASEDIRS` (the equivalent of ccache's `CCACHE_BASEDIR`) strips a leading
 absolute prefix before hashing so hits survive a moved/renamed checkout. Point it
@@ -59,33 +99,51 @@ startup — run `sccache --stop-server` after changing it.
 
 ### Windows — PowerShell profile
 
-Set `GODOT_SRC` and `GODOT_BUILD_CACHE` to your locations, then add to
-`Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1`:
+Set `GODOT_SRC` and the S3 coordinates to your values, then add to
+`Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1`. The function sets
+the sccache env only for the duration of the build and restores it afterwards, so
+the interactive session and the real AWS CLI are never shadowed:
 
 ```powershell
 if (-not $env:GODOT_SRC) { $env:GODOT_SRC = "$env:USERPROFILE\godot" }
-if (-not $env:GODOT_BUILD_CACHE) { $env:GODOT_BUILD_CACHE = "$env:LOCALAPPDATA\godot-build" }
-$env:SCCACHE_DIR = "$env:GODOT_BUILD_CACHE\sccache"
-$env:SCCACHE_CACHE_SIZE = "20G"
-$env:SCCACHE_BASEDIRS = $env:GODOT_SRC
-New-Item -ItemType Directory -Force -Path $env:SCCACHE_DIR, "$env:GODOT_BUILD_CACHE\scons_cache" | Out-Null
-function gscons { python -m SCons platform=windows use_mingw=yes compiledb=yes target=editor precision=double c_compiler_launcher=sccache cpp_compiler_launcher=sccache "cache_path=$env:GODOT_BUILD_CACHE/scons_cache" -j16 @args }
+function gscons {
+    $envset = [ordered]@{
+        SCCACHE_BUCKET        = '<your-sccache-bucket>'
+        SCCACHE_ENDPOINT      = '<region>.example-object-store.com'
+        SCCACHE_REGION        = '<region>'
+        SCCACHE_S3_USE_SSL    = 'true'
+        SCCACHE_S3_KEY_PREFIX = 'godot'
+        SCCACHE_BASEDIRS      = $env:GODOT_SRC
+        AWS_PROFILE           = '<your-s3-profile>'   # keys live in ~/.aws/credentials, never committed
+    }
+    $saved = @{}
+    foreach ($k in $envset.Keys) { $saved[$k] = [Environment]::GetEnvironmentVariable($k, 'Process'); Set-Item "env:$k" $envset[$k] }
+    try {
+        python -m SCons platform=windows use_mingw=yes compiledb=yes target=editor precision=double `
+            c_compiler_launcher=sccache cpp_compiler_launcher=sccache -j16 @args
+    } finally {
+        foreach ($k in $envset.Keys) { if ($null -eq $saved[$k]) { Remove-Item "env:$k" -ErrorAction SilentlyContinue } else { Set-Item "env:$k" $saved[$k] } }
+    }
+}
 ```
 
 ### WSL / Linux — `~/.bashrc`
 
 ```bash
-# Godot V-Sekai linuxbsd build. sccache caches object compilation.
-export GODOT_SRC="${GODOT_SRC:-$HOME/godot}"                       # engine checkout
-export GODOT_BUILD_CACHE="${GODOT_BUILD_CACHE:-$HOME/.cache/godot-build}"  # shared cache
-export SCCACHE_DIR="${SCCACHE_DIR:-$GODOT_BUILD_CACHE/sccache}"
-export SCCACHE_CACHE_SIZE="${SCCACHE_CACHE_SIZE:-20G}"
+# Godot V-Sekai linuxbsd build. sccache is the only object cache; S3 backend shares it across hosts.
+export GODOT_SRC="${GODOT_SRC:-$HOME/godot}"                 # engine checkout
+export SCCACHE_BUCKET="${SCCACHE_BUCKET:-<your-sccache-bucket>}"
+export SCCACHE_ENDPOINT="${SCCACHE_ENDPOINT:-<region>.example-object-store.com}"
+export SCCACHE_REGION="${SCCACHE_REGION:-<region>}"
+export SCCACHE_S3_USE_SSL="${SCCACHE_S3_USE_SSL:-true}"
+export SCCACHE_S3_KEY_PREFIX="${SCCACHE_S3_KEY_PREFIX:-godot}"
+export AWS_PROFILE="${AWS_PROFILE:-<your-s3-profile>}"       # keys in ~/.aws/credentials, never committed
 # Strip the checkout root from compile paths so cache hits survive a moved/renamed build dir.
 export SCCACHE_BASEDIRS="${SCCACHE_BASEDIRS:-$GODOT_SRC}"
 gscons() {
     python3 -m SCons compiledb=yes target=editor precision=double \
         c_compiler_launcher=sccache cpp_compiler_launcher=sccache \
-        "cache_path=$GODOT_BUILD_CACHE/scons_cache" debug_symbols=yes tests=yes -j$(nproc) "$@"
+        debug_symbols=yes tests=yes -j$(nproc) "$@"
 }
 ```
 
@@ -108,34 +166,40 @@ Output binary:
 The two functions differ only where the platform requires it: Windows pins
 `platform=windows use_mingw=yes` and `-j16`; WSL infers `platform=linuxbsd`, uses
 `-j$(nproc)`, and adds `debug_symbols=yes tests=yes`. Both share
-`compiledb=yes target=editor precision=double` and the sccache launchers.
+`compiledb=yes target=editor precision=double` and the sccache launchers — and
+**neither** enables a SCons `CacheDir`.
 
 ### Verifying and maintaining the cache
 
 ```sh
 sccache --show-stats        # "Compile requests" / "Cache hits" climb across builds
-sccache --stop-server       # apply changed SCCACHE_* env vars
+sccache --stop-server       # apply changed SCCACHE_* / AWS_PROFILE env vars
 sccache --zero-stats        # reset counters
 ```
 
 A clean first build is mostly misses; a second build of the same tree shows a high
-hit rate and finishes substantially faster. The store is capped at
-`SCCACHE_CACHE_SIZE` (20G) and evicts least-recently-used entries automatically.
+hit rate and finishes substantially faster. With the S3 backend, a build on the
+*other* host hits the same objects once they are uploaded.
 
 ## Consequences
 
-- One cache directory (`GODOT_BUILD_CACHE`) serves both hosts; management is a
-  single location.
+- **One object cache, not two.** sccache is the sole cache; the SCons `CacheDir`
+  is deliberately not enabled, so the same objects are never stored twice.
+- One S3 bucket serves both hosts; management is a single location, and a checkout
+  can move or be renamed without losing hits (`SCCACHE_BASEDIRS`).
+- **No secrets in the repo.** Bucket coordinates are non-secret config. Access
+  keys live in `~/.aws/credentials` locally and in GitHub Actions secret
+  variables in CI — never in committed files or build logs.
 - The engine `SConstruct` recognises only `cache_path` and `cache_limit` for the
-  SCons cache. `scons_cache=` is **not** valid and is silently ignored.
-- If the shared cache lives on a Windows drive mounted into WSL, that mount is
-  slower than native ext4 — the trade-off accepted for sharing one store.
+  SCons cache. We intentionally pass neither. `scons_cache=` is **not** valid and
+  is silently ignored.
 - Common failures: no hits between builds → server started before the env vars,
   run `sccache --stop-server`; no hits after relocating a checkout → set
-  `SCCACHE_BASEDIRS` to the checkout root.
+  `SCCACHE_BASEDIRS` to the checkout root; S3 auth errors → wrong/expired
+  `AWS_PROFILE` or missing `~/.aws/credentials` entry.
 
 ## Further reading
 
-- [sccache local cache (`SCCACHE_DIR`, `SCCACHE_CACHE_SIZE`)](https://github.com/mozilla/sccache/blob/main/docs/Local.md)
+- [sccache S3 storage (`SCCACHE_BUCKET`, `SCCACHE_ENDPOINT`, `SCCACHE_S3_KEY_PREFIX`)](https://github.com/mozilla/sccache/blob/main/docs/S3.md)
 - [sccache configuration (`SCCACHE_BASEDIRS`)](https://github.com/mozilla/sccache/blob/main/docs/Configuration.md)
 - [Godot `SConstruct`](https://github.com/godotengine/godot/blob/master/SConstruct)
