@@ -1,6 +1,6 @@
 # manuals
 
-Architecture decisions, changelogs, and reference documentation for the V-Sekai-fire multiplayer fabric stack. Published as a Quarto website.
+Architecture decisions, changelogs, and reference documentation for the v-sekai-multiplayer-fabric stack. Published as a Quarto website.
 
 ## Build
 
@@ -12,21 +12,34 @@ quarto preview    # local preview
 
 ## Adding a decision
 
-Create a Markdown file in `decisions/` named `YYYYMMDD-short-title.md` with frontmatter:
+Create a Markdown file in `decisions/` named `YYYYMMDD-short-title.md` following the
+[MADR](https://adr.github.io/madr/) template:
 
 ```markdown
 ---
-title: Short title
+title: Short title representative of the problem and solution
 date: YYYY-MM-DD
-status: accepted | proposed | deprecated | superseded
+status: proposed | accepted | rejected | deprecated | superseded by YYYYMMDD-...
 ---
 
-## Context
+## Context and Problem Statement
 
-## Decision
+## Decision Drivers
 
-## Consequences
+## Considered Options
+
+## Decision Outcome
+
+Chosen option: "...", because ...
+
+### Consequences
+
+### Confirmation
 ```
+
+Optional MADR sections (`Pros and Cons of the Options`, `More Information`) may follow.
+To supersede an earlier decision, set the old file's `status` to `superseded by <new filename>`
+and link back from the new one.
 
 ## Adding a changelog entry
 
