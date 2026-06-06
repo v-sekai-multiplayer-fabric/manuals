@@ -90,6 +90,7 @@ sequence), and add a matching `references.bib` entry. See the naming-convention 
 - Changelog filenames: `YYYYMMDD-deck-log.md` inside `changelog/YYYY/`
 - Asset filenames: `YYYYMMDD_project_description_NNNN.ext` in `decisions/attachments/`, with a `references.bib` entry
 - Prose follows tropes.fyi style; `prek run --all-files` must pass before pushing
+- No hardcoded absolute filesystem paths; use env vars or placeholders (e.g. `$GODOT_SRC`)
 - Do not commit `_site/` — it is build output
 - Commit style: sentence case, no `type(scope):` prefix
 - One concern per PR; PRs land via the `main` merge queue
