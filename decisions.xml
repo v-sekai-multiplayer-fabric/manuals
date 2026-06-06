@@ -1282,303 +1282,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
   <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
-  <title>GHCR packages must be built by the repo that consumes them</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-ghcr-package-ownership-same-repo.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="context" class="level2">
-<h2 class="anchored" data-anchor-id="context">Context</h2>
-<p>The zone server binary was built by <code>multiplayer-fabric-baker</code> and pushed to <code>ghcr.io/v-sekai-fire/godot-zone-double</code>. The zone deploy workflow (in <code>multiplayer-fabric-zone</code>) used <code>--local-only</code> with <code>docker/login-action</code> to pull that image, but received 403 Forbidden.</p>
-<p>GitHub Container Registry ties package write access to the repository whose <code>GITHUB_TOKEN</code> created it. The zone repo’s token could not push to a package owned by the baker repo, and could not pull a private package owned by another repo without package-scoped access.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Each repository builds and publishes the GHCR images it directly uses in its own deploy:</p>
-<ul>
-<li><code>multiplayer-fabric-baker</code> builds and owns <code>godot-editor-double</code>.</li>
-<li><code>multiplayer-fabric-zone</code> builds and owns <code>multiplayer-fabric-zone-godot</code> (renamed from <code>godot-zone-double</code> to reflect ownership).</li>
-</ul>
-<p><code>workflow_run</code> triggers only fire within the same repository, so the zone binary build workflow must live in the zone repo for the deploy to auto-trigger after a successful build.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>Package names must reflect the owning repo to avoid confusion.</li>
-<li>Moving a package between repos requires deleting it (needs <code>delete:packages</code> API scope) and rebuilding, or renaming.</li>
-<li>Cross-repo GHCR access requires either a PAT with <code>read:packages</code> scope or making the package public.</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-ghcr-package-ownership-same-repo.html</guid>
-  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Use WebTransport over QUIC for game traffic</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260501-webtransport-over-quic-for-game-traffic.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="context" class="level2">
-<h2 class="anchored" data-anchor-id="context">Context</h2>
-<p>The zone server needs low-latency bidirectional communication between clients and the Godot game server. HTTP/1.1 and WebSocket both run over TCP, which head-of-line blocks on packet loss and degrades real-time game state.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Use WebTransport (HTTP/3 over QUIC) for all game traffic. Clients connect to the Elixir gateway on UDP port 443, which proxies into the Godot zone server on UDP port 7443.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>UDP eliminates TCP head-of-line blocking.</li>
-<li>Fly.io passes UDP without DNAT, so the app must bind to the same port clients connect to.</li>
-<li>Port 443 requires running as root (or CAP_NET_BIND_SERVICE). The gateway container runs as root.</li>
-<li>Datagrams are used for game state messages. Streams are avoided for ping/pong to sidestep stream half-close deadlock (client must close write side before server response fires).</li>
-<li>Cloudflare’s proxy cannot forward QUIC/UDP. All game-traffic DNS records must be DNS-only (no proxy).</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260501-webtransport-over-quic-for-game-traffic.html</guid>
-  <pubDate>Fri, 01 May 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Godot double precision template_release for zone servers</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260501-godot-double-precision-template-release-for-zone.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="context" class="level2">
-<h2 class="anchored" data-anchor-id="context">Context</h2>
-<p>Zone servers run the game simulation headlessly. Two Godot build targets are candidates: <code>editor</code> (includes import tools) and <code>template_release</code> (runtime only). Precision must match the rest of the V-Sekai stack.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Build zone server binaries as <code>target=template_release precision=double</code> with no Mono. Build from the V-Sekai fork at <code>V-Sekai-fire/multiplayer-fabric-build@b27142e94</code>.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li><code>template_release</code> has no import or export tools, making it smaller and faster to start.</li>
-<li><code>libstdc++-static</code> must be included in the AlmaLinux 9 build environment because <code>template_release</code> links libstdc++ statically.</li>
-<li>The binary filename is <code>godot.linuxbsd.template_release.double.x86_64</code>.</li>
-<li><code>--headless</code> flag is required at runtime.</li>
-<li>Double precision matches the physics and networking precision of the rest of the stack.</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260501-godot-double-precision-template-release-for-zone.html</guid>
-  <pubDate>Fri, 01 May 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Fly.io for deployment</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260501-fly-io-for-deployment.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="context" class="level2">
-<h2 class="anchored" data-anchor-id="context">Context</h2>
-<p>The stack requires a platform that supports UDP (for QUIC/WebTransport), private networking between services, persistent volumes, and on-demand machines for job workloads (asset baking).</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Deploy all services on Fly.io in the <code>iad</code> (Ashburn, Virginia) region.</p>
-<ul>
-<li>Machines handle deployment; Terraform (fly-apps/fly provider v0.0.21) manages resources (apps, IPs, volumes, secrets) but not machines, due to Machines API limitations in the provider.</li>
-<li>Private networking uses Fly’s 6PN (WireGuard mesh). All <code>.internal</code> DNS resolves to IPv6 only, requiring <code>socket_options: [:inet6]</code> in any Erlang/Elixir TCP stack.</li>
-<li>Dedicated IPv4 is required for UDP. Fly passes UDP without DNAT; the app must bind to the same port clients connect to.</li>
-<li>On-demand machines (Fly Machines API) are used for the baker — one machine per bake job, exits when done.</li>
-</ul>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>All services must be in the same region to communicate over the private network without egress charges.</li>
-<li><code>.flycast</code> requires <code>[[services]]</code> on the target app; <code>.internal</code> works without it.</li>
-<li>Cloudflare proxy must be disabled for UDP/QUIC endpoints; DNS-only records point directly to the Fly IP.</li>
-<li>Terraform state is stored on a <code>tfstate</code> orphan branch in the infra repo to avoid requiring a remote backend.</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260501-fly-io-for-deployment.html</guid>
-  <pubDate>Fri, 01 May 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>CockroachDB with mTLS and role-separated access</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260501-cockroachdb-with-mtls-role-separation.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="context" class="level2">
-<h2 class="anchored" data-anchor-id="context">Context</h2>
-<p>The stack needs a relational database reachable by the Elixir gateway and the Phoenix zone backend. It must support schema migrations (DDL) separately from application queries (DML) to limit blast radius if application credentials are compromised.</p>
-</section>
-<section id="decision" class="level2">
-<h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Run a single-node CockroachDB on Fly.io with mTLS for all connections and three application roles:</p>
-<ul>
-<li><code>gateway_admin</code> — DDL access for Ecto migrations</li>
-<li><code>gateway_writer</code> — DML access for the running application</li>
-<li><code>gateway_reader</code> — read-only access</li>
-</ul>
-<p>Certs are generated by <code>gen_crdb_certs.sh</code> with 100-year validity and stored as Fly secrets. The node cert must include both <code>serverAuth</code> and <code>clientAuth</code> in <code>extendedKeyUsage</code> because CockroachDB uses the node cert for internal gRPC client authentication.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li><code>--advertise-addr</code> must be <code>localhost</code>. A flycast address routes the internal gRPC loopback through Fly’s NAT, breaking the admin UI.</li>
-<li><code>prepare: :unnamed</code> is required in Postgrex to avoid statement-cache OOM on single-node deployments.</li>
-<li>Port 26257 is never publicly exposed. Access is via Fly’s private network (6PN) using <code>socket_options: [:inet6]</code> in Ecto, because <code>.internal</code> DNS returns only AAAA records.</li>
-<li>The <code>root</code> cert is provisioned on the CRDB machine only. <code>gateway_admin</code> is the highest-privilege cert available to the application.</li>
-</ul>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260501-cockroachdb-with-mtls-role-separation.html</guid>
-  <pubDate>Fri, 01 May 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title></title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/present-proposal-template.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="proposal-title" class="level1">
-<h1>[Proposal Title]</h1>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>Describe the circumstances that led to this proposal. Give enough background that someone unfamiliar with the area can understand why the work matters. State what you were trying to accomplish, not what solution you reached for first.</p>
-</section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>State the specific problem, limitation, or gap being addressed. Be concrete. A reader should be able to confirm whether a proposed solution actually solves it.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>Detail the proposed solution precisely enough that it could be implemented without improvising the design. Include code, diagrams, or examples where they reduce ambiguity. Vague or underspecified proposals cannot be acted on.</p>
-</section>
-<section id="cris-score" class="level2">
-<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 12%">
-<col style="width: 4%">
-<col style="width: 83%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Factor</th>
-<th>Score</th>
-<th>Evidence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>C</strong>omplexity</td>
-<td>0–10</td>
-<td>[10 = simple, well-understood; 0 = novel or high-risk — why]</td>
-</tr>
-<tr class="even">
-<td><strong>R</strong>each</td>
-<td>0–10</td>
-<td>[10 = affects everyone; 0 = affects almost no one — why]</td>
-</tr>
-<tr class="odd">
-<td><strong>I</strong>mpediment</td>
-<td>0–10</td>
-<td>[10 = total blocker with no workaround; 0 = trivial to work around — why]</td>
-</tr>
-<tr class="even">
-<td><strong>S</strong>takeholder</td>
-<td>0–10</td>
-<td>[10 = critical dependency for a major project; 0 = no project depends on it — why]</td>
-</tr>
-<tr class="odd">
-<td><strong>Total</strong></td>
-<td></td>
-<td>[Average of four factors (0–10); 8–10 = build now, 6–8 = schedule soon, 4–6 = evaluate, 0–4 = defer]</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>Describe the costs, risks, or trade-offs. Every proposal has them.</p>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<p>Describe the alternatives considered and why this approach was chosen over them.</p>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Status: Draft <!-- Draft | Proposed | Rejected | Accepted | Deprecated | Superseded by [Link/Reference] --></p>
-</section>
-<section id="decision-makers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
-<ul>
-<li>[Name or role]</li>
-</ul>
-</section>
-<section id="tags" class="level2">
-<h2 class="anchored" data-anchor-id="tags">Tags</h2>
-<ul>
-<li>[relevant-tag-1], [relevant-tag-2], YYYYMMDD-this-filename-without-extension, present-proposal-template</li>
-</ul>
-<!-- Always include the filename (without .md) as the last tag.
-     This makes the document findable by filename from any grep or
-     code-search tool, the same way Godot Engine source files are
-     cross-referenced by their basename. -->
-</section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
-<!-- Written in Bibtex format -->
-<pre><code>@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}</code></pre>
-
-
-</section>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/present-proposal-template.html</guid>
-  <pubDate>Sat, 06 Jun 2026 16:16:33 GMT</pubDate>
-</item>
-<item>
-  <title></title>
+  <title>Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-intercept-smoke-test.html</link>
   <description><![CDATA[ 
 
@@ -1586,8 +1290,6 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
 
 
-<section id="maglev-intercept-cross-platform-tilt-shift-smoke-test" class="level1">
-<h1>Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test</h1>
 <section id="the-context" class="level2">
 <h2 class="anchored" data-anchor-id="the-context">The Context</h2>
 <p>The stack: <code>multiplayer-fabric-gateway</code> (Elixir, UDP 443 → zone UDP 7443, WebTransport/QUIC datagrams), <code>multiplayer-fabric-zone</code> (headless Godot <code>template_release double</code>), <code>multiplayer-fabric-uro</code> (Phoenix shard registry and asset API), single-node CockroachDB on Fly’s 6PN private network.</p>
@@ -1796,11 +1498,738 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
 
 </section>
-</section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-intercept-smoke-test.html</guid>
-  <pubDate>Sat, 06 Jun 2026 16:16:33 GMT</pubDate>
+  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Maglev Cycle 9: Physics and VRM Loading</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-9-physics-vrm.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="the-context" class="level2">
+<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
+<p>The gateway merges two input types at full rate after Cycle 9. This cycle loads the Maglev train scene with stationary cores on a banking train, verifies replication across clients, and confirms VRM avatar loading from the chunk store. Banking is a scene parameter change; VRM loading is verified in the same session as physics baseline.</p>
+<p>Baked assets from Cycle 3 must be available in the chunk store before this cycle begins. Banking and VRM loading are combined here to reduce the number of cycles before the first physics demo.</p>
+</section>
+<section id="the-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
+<p>Physics replication to clients with different frame rates requires validation before dynamic forces are added. Adding banking motion and rolling cores at the same time as replication makes any failure unattributable. This cycle proves the replication layer works before the physics is made dynamic.</p>
+</section>
+<section id="design" class="level2">
+<h2 class="anchored" data-anchor-id="design">Design</h2>
+<p>Load the Maglev train scene (greyboxed for this cycle: a CSG floor + banking pivot is sufficient) on the zone server. The train banks on a fixed schedule. Quantum Data-Cores sit stationary on the floor under authoritative physics (held by a constraint). The zone server sends datagram state each tick; both clients display the core and avatar positions.</p>
+<p>The PCVR client sees the car as a waist-height diorama; the Steam Deck client sees the same instance as an isometric action-RPG. Both load <code>mire.vrm</code> (baked in Cycle 3 from <code>multiplayer-fabric-humanoid-project/humanoid/art/mire/mire.vrm</code>) as the avatar.</p>
+<p>Pass criteria:</p>
+<ul class="task-list">
+<li><label><input type="checkbox">Zone server loads the Maglev train scene from the chunk store</label></li>
+<li><label><input type="checkbox">Core positions agree between both clients each tick for 60 seconds under continuous banking</label></li>
+<li><label><input type="checkbox">Zone server tick rate holds at 20 Hz with physics active</label></li>
+<li><label><input type="checkbox"><code>mire.vrm</code> loads from the chunk store on both clients without error; humanoid skeleton root present</label></li>
+<li><label><input type="checkbox">No entity desync over the run</label></li>
+</ul>
+</section>
+<section id="estimate" class="level2">
+<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
+<p><strong>10 days</strong> (2026-06-02 → 2026-06-16). First cycle to load game assets and run physics. The zone server initial deploy took 2 days; adding a physics scene, banking animation, and VRM loading from the chunk store is the first substantial game dev work with no prior baseline. Projecting 2× the zone-console build time (6 working days) plus physics integration overhead.</p>
+</section>
+<section id="cris-score" class="level2">
+<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 3%">
+<col style="width: 86%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Factor</th>
+<th>Score</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>C</strong>omplexity</td>
+<td>6</td>
+<td>Physics replication to clients with different frame rates is untested, but a static scene removes the dynamic normal force variable.</td>
+</tr>
+<tr class="even">
+<td><strong>R</strong>each</td>
+<td>10</td>
+<td>Cycle 10 cannot begin until replication itself is verified.</td>
+</tr>
+<tr class="odd">
+<td><strong>I</strong>mpediment</td>
+<td>9</td>
+<td>A replication bug here means Cycle 10 results are unreliable.</td>
+</tr>
+<tr class="even">
+<td><strong>S</strong>takeholder</td>
+<td>10</td>
+<td>Gate for Cycle 10 and beyond.</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td>8.75</td>
+<td>Build after Cycles 8 and 6 pass.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-downsides" class="level2">
+<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
+<p>A passing Cycle 9 does not validate rolling physics or causal ordering; those require Cycle 10.</p>
+</section>
+<section id="the-road-not-taken" class="level2">
+<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
+<p>Starting with rolling cores was rejected — replication and rolling-core physics are easier to separate when cores are stationary.</p>
+</section>
+<section id="status" class="level2">
+<h2 class="anchored" data-anchor-id="status">Status</h2>
+<p>Status: Draft</p>
+</section>
+<section id="decision-makers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
+<ul>
+<li>Lead Architect / Fabric Maintainer</li>
+<li>Game Director</li>
+</ul>
+</section>
+<section id="tags" class="level2">
+<h2 class="anchored" data-anchor-id="tags">Tags</h2>
+<ul>
+<li>maglev-cycle-9, physics-vrm, replication, galls-law, 20260506-maglev-cycle-9-physics-vrm, present-proposal-template</li>
+</ul>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
+<pre><code>@misc{v_sekai_2026,
+  title = {V-Sekai},
+  year  = {2026},
+  url   = {https://v-sekai.org/}
+}</code></pre>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-9-physics-vrm.html</guid>
+  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Maglev Cycle 8: Full-Rate IK Merge</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-8-ik-merge.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="the-context" class="level2">
+<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
+<p>Cycle 7 confirms routing and merge at 10 Hz. Cycle 8 raises the PCVR client to operating rate — continuous 6-DOF IK at headset cadence — alongside full-rate gamepad input, and verifies the gateway merges both without head-of-line blocking.</p>
+</section>
+<section id="the-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
+<p>6-DOF IK datagrams arrive an order of magnitude more frequently than gamepad events. The gateway’s merge path must handle that rate differential without blocking lower-frequency gamepad events. A head-of-line stall on the IK queue would delay or drop gamepad events silently.</p>
+</section>
+<section id="design" class="level2">
+<h2 class="anchored" data-anchor-id="design">Design</h2>
+<p>The PCVR client sends 6-DOF IK datagrams at full headset rate. The Steam Deck client sends gamepad datagrams at normal cadence. Both arrive on UDP 443. The gateway merges them per tick and forwards to the zone server on UDP 7443. The world is static.</p>
+<p>Pass criteria:</p>
+<ul class="task-list">
+<li><label><input type="checkbox">Zone server processes ticks containing both input types without stalls or skipped events</label></li>
+<li><label><input type="checkbox">No gamepad datagram is silently dropped over 60 seconds under full IK load</label></li>
+<li><label><input type="checkbox">Gateway CPU stays within budget under both streams at full rate</label></li>
+</ul>
+</section>
+<section id="estimate" class="level2">
+<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
+<p><strong>5 days</strong> (2026-05-26 → 2026-06-02). The merge path is an extension of Cycle 7; the risk is head-of-line behaviour under load, which requires profiling time. A hardware re-run on physical Meta Quest hardware before Cycle 9 adds 1 day outside this window.</p>
+</section>
+<section id="cris-score" class="level2">
+<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 3%">
+<col style="width: 87%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Factor</th>
+<th>Score</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>C</strong>omplexity</td>
+<td>6</td>
+<td>Merging a continuous high-frequency IK stream with low-frequency gamepad input without head-of-line effects is untested in this codebase.</td>
+</tr>
+<tr class="even">
+<td><strong>R</strong>each</td>
+<td>10</td>
+<td>Cross-platform play at operating rate requires this path; Cycles 9 and beyond add physics and persistence on top of it.</td>
+</tr>
+<tr class="odd">
+<td><strong>I</strong>mpediment</td>
+<td>9</td>
+<td>A head-of-line bug here makes physics results in Cycle 9 and beyond unreliable for the gamepad client.</td>
+</tr>
+<tr class="even">
+<td><strong>S</strong>takeholder</td>
+<td>10</td>
+<td>Gate for cross-platform physics and score.</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td>8.25</td>
+<td>Build after Cycle 7 passes.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-downsides" class="level2">
+<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
+<p>The Meta XR Simulator on macOS covers the initial run, but Cycle 8 must be re-run on physical hardware before Cycle 9 begins — the simulator does not reproduce real headset IK datagram rates under motion.</p>
+</section>
+<section id="the-road-not-taken" class="level2">
+<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
+<p>Skipping Cycles 7 and 5 together was rejected — a failure at full rate conflates routing bugs with rate bugs, leaving both unattributable.</p>
+</section>
+<section id="status" class="level2">
+<h2 class="anchored" data-anchor-id="status">Status</h2>
+<p>Status: Draft</p>
+</section>
+<section id="decision-makers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
+<ul>
+<li>Lead Architect / Fabric Maintainer</li>
+</ul>
+</section>
+<section id="tags" class="level2">
+<h2 class="anchored" data-anchor-id="tags">Tags</h2>
+<ul>
+<li>maglev-cycle-8, ik-merge, heterogeneous-input, galls-law, 20260506-maglev-cycle-8-ik-merge, present-proposal-template</li>
+</ul>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
+<pre><code>@misc{v_sekai_2026,
+  title = {V-Sekai},
+  year  = {2026},
+  url   = {https://v-sekai.org/}
+}</code></pre>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-8-ik-merge.html</guid>
+  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Maglev Cycle 7: IK Routing and Merge</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-7-ik-routing.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="the-context" class="level2">
+<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
+<p>Two same-type Godot clients share a zone after Cycle 6. Cycle 7 swaps one Steam Deck client for a PCVR client and confirms that a single 6-DOF IK datagram travels through the gateway and reaches the zone server. The rate and merge logic are not yet in scope.</p>
+</section>
+<section id="the-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
+<p>A PCVR client’s IK datagram format differs structurally from a gamepad datagram. The gateway has never parsed one. Before testing merge behaviour at full IK rate, the routing path itself must be shown to work for at least one IK datagram.</p>
+</section>
+<section id="design" class="level2">
+<h2 class="anchored" data-anchor-id="design">Design</h2>
+<p>The PCVR client — running the solved <code>multiplayer-fabric-interaction-system</code> addon via <code>xr_controller_interaction_helper.gd</code> and <code>xr_action_host.gd</code> — starts at 1 Hz IK and ramps to 10 Hz. The Steam Deck client sends gamepad datagrams at normal cadence. The gateway routes and merges both streams to the zone server on UDP 7443. The world is static.</p>
+<p>The 1 Hz phase confirms the IK datagram format parses correctly. The 10 Hz phase confirms the gateway’s merge logic is correct under concurrent input before full rate is introduced.</p>
+<p>Pass criteria:</p>
+<ul class="task-list">
+<li><label><input type="checkbox">Zone server receives and logs at least one IK datagram without parse error at 1 Hz</label></li>
+<li><label><input type="checkbox">Zone server receives a merged tick containing both input types at 10 Hz</label></li>
+<li><label><input type="checkbox">No gamepad datagram dropped over 60 seconds at 10 Hz</label></li>
+<li><label><input type="checkbox">No gateway crash or restart</label></li>
+</ul>
+</section>
+<section id="estimate" class="level2">
+<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
+<p><strong>5 days</strong> (2026-05-19 → 2026-05-26). The IK datagram format is new but the gateway routing path is identical to gamepad. The interaction system (<code>xr_controller_interaction_helper.gd</code>) is solved; the work is serialization format definition and gateway route registration.</p>
+</section>
+<section id="cris-score" class="level2">
+<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 3%">
+<col style="width: 86%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Factor</th>
+<th>Score</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>C</strong>omplexity</td>
+<td>7</td>
+<td>IK datagram format is new to the gateway but the routing path is identical to gamepad; one datagram per second removes rate risk.</td>
+</tr>
+<tr class="even">
+<td><strong>R</strong>each</td>
+<td>10</td>
+<td>Cycle 8 (full-rate IK) cannot begin without a proven merge baseline.</td>
+</tr>
+<tr class="odd">
+<td><strong>I</strong>mpediment</td>
+<td>9</td>
+<td>A parse failure here blocks all cross-platform work.</td>
+</tr>
+<tr class="even">
+<td><strong>S</strong>takeholder</td>
+<td>10</td>
+<td>Gate for Cycle 8 and all subsequent cross-platform cycles.</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td>9.0</td>
+<td>Build after Cycle 6 passes.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-downsides" class="level2">
+<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
+<p>10 Hz IK does not trigger head-of-line pressure; that stress test is Cycle 8 at full headset rate.</p>
+</section>
+<section id="the-road-not-taken" class="level2">
+<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
+<p>Going straight to full headset rate was rejected — a routing bug and a head-of-line bug at the same time are harder to separate than routing at 1 Hz and merge at 10 Hz in one cycle.</p>
+</section>
+<section id="status" class="level2">
+<h2 class="anchored" data-anchor-id="status">Status</h2>
+<p>Status: Draft</p>
+</section>
+<section id="decision-makers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
+<ul>
+<li>Lead Architect / Fabric Maintainer</li>
+</ul>
+</section>
+<section id="tags" class="level2">
+<h2 class="anchored" data-anchor-id="tags">Tags</h2>
+<ul>
+<li>maglev-cycle-7, ik-routing-merge, heterogeneous-input, galls-law, 20260506-maglev-cycle-7-ik-routing-merge, present-proposal-template</li>
+</ul>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
+<pre><code>@misc{v_sekai_2026,
+  title = {V-Sekai},
+  year  = {2026},
+  url   = {https://v-sekai.org/}
+}</code></pre>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-7-ik-routing.html</guid>
+  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Maglev Cycle 6: Dual Same-Type Clients</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-6-mmog-load.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="the-context" class="level2">
+<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
+<p>With one Godot client verified end-to-end and the observability stack live (Cycle 2), the next question is whether the gateway can multiplex two same-type connections into one zone server tick while keeping both clients synchronized. Observability must be running before this cycle begins — a broadcast failure here is unattributable without gateway traces.</p>
+</section>
+<section id="the-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
+<p>16 clients in one zone is the minimum to qualify as MMOG load. 14 are taskweft bots (~15 MB each, not full Godot processes); 1 is the PCVR human; 1 is the Steam Deck human. Connection-slot handling, datagram ordering, and state broadcast to 16 sockets have not been tested under concurrent load.</p>
+</section>
+<section id="design" class="level2">
+<h2 class="anchored" data-anchor-id="design">Design</h2>
+<p>16 clients connect to the gateway simultaneously. All receive datagram state from the same zone server instance each tick. One static entity in an empty world.</p>
+<p>Pass criteria:</p>
+<ul class="task-list">
+<li><label><input type="checkbox">All 16 clients receive consistent entity state each tick for 60 seconds</label></li>
+<li><label><input type="checkbox">No client observes a tick gap or duplicate</label></li>
+<li><label><input type="checkbox">Zone-console shows 16 entities at 20 Hz</label></li>
+<li><label><input type="checkbox">Gateway process memory stays flat under 16 connections</label></li>
+<li><label><input type="checkbox">All 14 bots disconnect and reconnect simultaneously; gateway recovers within 5 seconds and all clients resync without a restart</label></li>
+<li><label><input type="checkbox">Under 100 ms injected latency and 2% packet loss, no client desyncs over 30 seconds</label></li>
+</ul>
+</section>
+<section id="estimate" class="level2">
+<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
+<p><strong>5 days</strong> (2026-05-13 → 2026-05-19). Taskweft bots are proven (93 PropCheck properties passing). The work is wiring 14 bots to the gateway and adding the reconnect storm and network condition harnesses. No prior multi-bot gateway test exists in the history; projecting from the gateway build pace.</p>
+</section>
+<section id="cris-score" class="level2">
+<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 3%">
+<col style="width: 86%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Factor</th>
+<th>Score</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>C</strong>omplexity</td>
+<td>6</td>
+<td>16 same-type connections; taskweft bots are proven infrastructure but have not been combined with the gateway at this count.</td>
+</tr>
+<tr class="even">
+<td><strong>R</strong>each</td>
+<td>10</td>
+<td>All subsequent cycles run at 16-client load.</td>
+</tr>
+<tr class="odd">
+<td><strong>I</strong>mpediment</td>
+<td>9</td>
+<td>A desync at 16 clients means the gateway’s broadcast path is broken before heterogeneous input is added.</td>
+</tr>
+<tr class="even">
+<td><strong>S</strong>takeholder</td>
+<td>10</td>
+<td>Gate for Cycles 7–10.</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td>8.75</td>
+<td>Build after Cycles 1 and 2 pass.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-downsides" class="level2">
+<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
+<p>16 same-type bots leave the heterogeneous input path unvalidated.</p>
+</section>
+<section id="the-road-not-taken" class="level2">
+<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
+<p>Starting immediately with heterogeneous IK and gamepad inputs at 16-client scale was rejected — a broadcast failure at full complexity would be ambiguous between gateway capacity and input-mux issues. Cycle 6 uses uniform bots to isolate the broadcast path.</p>
+</section>
+<section id="status" class="level2">
+<h2 class="anchored" data-anchor-id="status">Status</h2>
+<p>Status: Draft</p>
+</section>
+<section id="decision-makers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
+<ul>
+<li>Lead Architect / Fabric Maintainer</li>
+</ul>
+</section>
+<section id="tags" class="level2">
+<h2 class="anchored" data-anchor-id="tags">Tags</h2>
+<ul>
+<li>maglev-cycle-6, mmog-load, gateway, smoke-test, galls-law, 20260506-maglev-cycle-6-mmog-load, present-proposal-template</li>
+</ul>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
+<pre><code>@misc{v_sekai_2026,
+  title = {V-Sekai},
+  year  = {2026},
+  url   = {https://v-sekai.org/}
+}</code></pre>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-6-mmog-load.html</guid>
+  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Maglev Cycle 5: Zone-Console TUI Observer</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-5-zone-console.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="the-context" class="level2">
+<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
+<p><code>multiplayer-fabric-zone-console</code> is a ratatui TUI that observes the zone over WebTransport. It is in the production stack and is the operator’s primary visibility into zone health during and after mission cycles. Cycle 5 depends only on Cycle 1 (zone server live) and runs in parallel with the game-logic track.</p>
+</section>
+<section id="the-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
+<p>The zone-console has not connected to the zone server under the Fly deployment and confirmed it can display entity state and tick rate. Without a passing Cycle 5, operators have no real-time view into the zone during Cycles 9–10, where physics desync and causal ordering failures are the primary risks.</p>
+</section>
+<section id="design" class="level2">
+<h2 class="anchored" data-anchor-id="design">Design</h2>
+<p>Start zone-console targeting the Fly zone server. Confirm the TUI displays: connected status, current tick rate (targeting 20 Hz), and at least one entity visible in the entity list.</p>
+<p>Pass criteria:</p>
+<ul class="task-list">
+<li><label><input type="checkbox">zone-console connects without error</label></li>
+<li><label><input type="checkbox">Tick rate displayed at 15 Hz or above (full 20 Hz target confirmed in Cycle 10)</label></li>
+<li><label><input type="checkbox">At least one entity visible in the TUI entity list</label></li>
+<li><label><input type="checkbox">Clean disconnect on exit with no orphaned connection</label></li>
+</ul>
+</section>
+<section id="estimate" class="level2">
+<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
+<p><strong>2 days</strong> (2026-05-09 → 2026-05-12, parallel). Zone-console was built from scratch in 6 working days (2026-04-21–28). The work here is connecting the existing TUI to the deployed Fly gateway rather than a local target — config and endpoint change only.</p>
+</section>
+<section id="cris-score" class="level2">
+<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 4%">
+<col style="width: 83%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Factor</th>
+<th>Score</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>C</strong>omplexity</td>
+<td>7</td>
+<td>WebTransport observer is simpler than the game clients; the risk is ratatui rendering on headless CI.</td>
+</tr>
+<tr class="even">
+<td><strong>R</strong>each</td>
+<td>9</td>
+<td>Operators need this during Cycles 4–2 to confirm tick rate holds under dynamic physics load.</td>
+</tr>
+<tr class="odd">
+<td><strong>I</strong>mpediment</td>
+<td>7</td>
+<td>A missing observer does not block gameplay but leaves Cycles 4–2 without operator-facing monitoring.</td>
+</tr>
+<tr class="even">
+<td><strong>S</strong>takeholder</td>
+<td>10</td>
+<td>Operator visibility tool for the production stack.</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td>8.25</td>
+<td>Build after Cycle 1 passes, in parallel with Cycles 6–11.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-downsides" class="level2">
+<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
+<p>A passing Cycle 5 does not validate zone-console under load; the full 20 Hz tick rate and entity count targets are confirmed during Cycle 10.</p>
+</section>
+<section id="the-road-not-taken" class="level2">
+<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
+<p>Deferring to after Cycle 10 was rejected — the observer is needed during Cycle 10 to confirm tick rate holds at 20 Hz under dynamic physics load.</p>
+</section>
+<section id="status" class="level2">
+<h2 class="anchored" data-anchor-id="status">Status</h2>
+<p>Status: Draft</p>
+</section>
+<section id="decision-makers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
+<ul>
+<li>Lead Architect / Fabric Maintainer</li>
+</ul>
+</section>
+<section id="tags" class="level2">
+<h2 class="anchored" data-anchor-id="tags">Tags</h2>
+<ul>
+<li>maglev-cycle-5, zone-console, ratatui, observer, galls-law, 20260506-maglev-cycle-5-zone-console, present-proposal-template</li>
+</ul>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
+<pre><code>@techreport{20260506_cycle1,
+  title       = {Maglev Cycle 1: Godot Client Gateway Handshake},
+  institution = {V-Sekai Fire},
+  year        = {2026},
+  type        = {Architecture Decision Record},
+  note        = {decisions/20260506-maglev-cycle-1-gateway-handshake.md}
+}
+
+@techreport{20260501_webtransport,
+  title       = {Use WebTransport over QUIC for game traffic},
+  institution = {V-Sekai Fire},
+  year        = {2026},
+  type        = {Architecture Decision Record},
+  note        = {decisions/20260501-webtransport-over-quic-for-game-traffic.md}
+}
+
+@misc{v_sekai_2026,
+  title = {V-Sekai},
+  year  = {2026},
+  url   = {https://v-sekai.org/}
+}</code></pre>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-5-zone-console.html</guid>
+  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Maglev Cycle 4: CockroachDB Connection</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-4-db-connection.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="the-context" class="level2">
+<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
+<p>Cycle 10 confirms cross-zone causal ordering via VClock.le gating. Cycle 4 verifies the database write path independently: <code>multiplayer-fabric-uro</code> writes a single test record to CockroachDB over Fly’s 6PN without any game logic or causal path involved.</p>
+</section>
+<section id="the-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
+<p>The Ecto connection from uro to CockroachDB over Fly’s 6PN using the <code>gateway_writer</code> role has not been exercised under the Fly network topology. Verifying it in isolation means any failure in Cycle 11 is attributable to the causal path, not the connection.</p>
+</section>
+<section id="design" class="level2">
+<h2 class="anchored" data-anchor-id="design">Design</h2>
+<p>Trigger a test write from <code>multiplayer-fabric-uro</code> directly — a single row to a test table — using the <code>gateway_writer</code> role. The connection uses mTLS (cert generated by <code>gen_crdb_certs.sh</code>), port 26257 over Fly’s 6PN private network (IPv6 only, <code>socket_options: [:inet6]</code>), and <code>prepare: :unnamed</code> in Postgrex to prevent statement-cache OOM on the single-node deployment.</p>
+<p>Pass criteria:</p>
+<ul class="task-list">
+<li><label><input type="checkbox">Row appears in CockroachDB within one second of the trigger</label></li>
+<li><label><input type="checkbox">mTLS handshake succeeds; no cert or auth error</label></li>
+<li><label><input type="checkbox"><code>gateway_writer</code> role has DML access; <code>gateway_admin</code> is not used at runtime</label></li>
+<li><label><input type="checkbox">Connection reuse works across multiple sequential writes (<code>prepare: :unnamed</code> confirmed)</label></li>
+</ul>
+</section>
+<section id="estimate" class="level2">
+<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
+<p><strong>1 day</strong> (2026-05-09, parallel). The uro CockroachDB connection is already working on Fly (commit “Fix CockroachDB connection on Fly: inet6 socket + unnamed prepare”, 2026-05-05). This cycle validates the existing connection against the pass criteria checklist.</p>
+</section>
+<section id="cris-score" class="level2">
+<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 3%">
+<col style="width: 87%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Factor</th>
+<th>Score</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>C</strong>omplexity</td>
+<td>8</td>
+<td>A direct Ecto write over Fly’s 6PN is well-understood; the only unknown is the Fly network topology between uro and the CockroachDB node.</td>
+</tr>
+<tr class="even">
+<td><strong>R</strong>each</td>
+<td>10</td>
+<td>Cycle 11 cannot safely write mission scores until the connection itself is verified.</td>
+</tr>
+<tr class="odd">
+<td><strong>I</strong>mpediment</td>
+<td>7</td>
+<td>A connection failure here blocks Cycle 11 but not the mission gameplay in Cycles 6–10.</td>
+</tr>
+<tr class="even">
+<td><strong>S</strong>takeholder</td>
+<td>10</td>
+<td>Gate for Cycle 11.</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td>8.75</td>
+<td>Build after Cycle 2 passes.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-downsides" class="level2">
+<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
+<p>A passing Cycle 4 does not validate the causal write path.</p>
+</section>
+<section id="the-road-not-taken" class="level2">
+<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
+<p>Testing the DB connection as part of Cycle 11 was rejected — a connection failure inside the causal write path is harder to distinguish from a VClock gating failure.</p>
+</section>
+<section id="status" class="level2">
+<h2 class="anchored" data-anchor-id="status">Status</h2>
+<p>Status: Draft</p>
+</section>
+<section id="decision-makers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
+<ul>
+<li>Lead Architect / Fabric Maintainer</li>
+</ul>
+</section>
+<section id="tags" class="level2">
+<h2 class="anchored" data-anchor-id="tags">Tags</h2>
+<ul>
+<li>maglev-cycle-4, db-connection, cockroachdb, galls-law, 20260506-maglev-cycle-4-db-connection, present-proposal-template</li>
+</ul>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
+<pre><code>@techreport{20260501_crdb,
+  title       = {CockroachDB with mTLS and role-separated access},
+  institution = {V-Sekai Fire},
+  year        = {2026},
+  type        = {Architecture Decision Record},
+  note        = {decisions/20260501-cockroachdb-with-mtls-role-separation.md}
+}
+
+@techreport{20260501_fly,
+  title       = {Fly.io for deployment},
+  institution = {V-Sekai Fire},
+  year        = {2026},
+  type        = {Architecture Decision Record},
+  note        = {decisions/20260501-fly-io-for-deployment.md}
+}
+
+@misc{v_sekai_2026,
+  title = {V-Sekai},
+  year  = {2026},
+  url   = {https://v-sekai.org/}
+}</code></pre>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-4-db-connection.html</guid>
+  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
