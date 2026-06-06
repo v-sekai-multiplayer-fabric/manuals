@@ -14,8 +14,8 @@ The Cyberprep train environment (MToon shaders, banking train geometry) and the 
 
 Trigger two bake jobs via the Fly Machines API:
 
-1. **Train environment bake**: `multiplayer-fabric-baker` validates the Maglev train scene (greybox CSG geometry is acceptable for cycle validation), exports it, chunks it with aria-storage, and posts the index to uro.
-2. **Avatar bake**: same pipeline for `multiplayer-fabric-humanoid-project/humanoid/art/mire/mire.vrm` (51 MB), used by both PCVR and Steam Deck clients in Cycle 9.
+1. Train environment bake: `multiplayer-fabric-baker` validates the Maglev train scene (greybox CSG geometry is acceptable for cycle validation), exports it, chunks it with aria-storage, and posts the index to uro.
+2. Avatar bake: same pipeline for `multiplayer-fabric-humanoid-project/humanoid/art/mire/mire.vrm` (51 MB), used by both PCVR and Steam Deck clients in Cycle 9.
 
 ```bash
 flyctl machine run registry.fly.io/multiplayer-fabric-baker:latest \

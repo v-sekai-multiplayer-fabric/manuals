@@ -4,3 +4,11 @@ repos:
     hooks:
       - id: prettier
         types: [markdown]
+  - repo: local
+    hooks:
+      - id: tropes
+        name: tropes (no AI tells)
+        entry: bash scripts/check_tropes.sh
+        language: system
+        types: [markdown]
+        pass_filenames: false
