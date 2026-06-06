@@ -1,7 +1,7 @@
 ---
 title: "Maglev Cycle 10: Dynamic Physics and Causal Ordering"
 date: 2026-05-06
-status: proposed
+status: rejected
 tier: baseline
 ---
 

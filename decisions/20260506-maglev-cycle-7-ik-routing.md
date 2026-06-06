@@ -1,7 +1,7 @@
 ---
 title: "Maglev Cycle 7: IK Routing and Merge"
 date: 2026-05-06
-status: proposed
+status: rejected
 tier: baseline
 ---
 

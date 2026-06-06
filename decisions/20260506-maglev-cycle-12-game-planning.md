@@ -1,7 +1,7 @@
 ---
 title: "Maglev Cycle 12: Game Cycle Planning"
 date: 2026-05-06
-status: proposed
+status: rejected
 tier: baseline
 ---
 
