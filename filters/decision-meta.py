@@ -14,6 +14,7 @@ import re
 
 from panflute import (
     BulletList,
+    Emph,
     Header,
     Link,
     ListItem,
@@ -116,6 +117,28 @@ def _status_inlines(status):
     return [Str(status)]
 
 
+_SECTIONS = {"decisions": "Decisions", "changelog": "Changelog"}
+
+
+def _breadcrumb(current, title):
+    """Hierarchy trail for the top of a page: Manuals › Section › Title."""
+    if current == "index":
+        return None
+    here = posixpath.dirname(current)
+    prefix = "../" * len([p for p in here.split("/") if p])
+    crumbs = [Link(Str("Manuals"), url=prefix + "index.html")]
+    seg0 = current.split("/")[0] if "/" in current else None
+    if seg0 in _SECTIONS:
+        crumbs.append(Link(Str(_SECTIONS[seg0]), url=prefix + seg0 + ".html"))
+    crumbs.append(Str(title))
+    inlines = []
+    for i, crumb in enumerate(crumbs):
+        if i:
+            inlines.extend([Space(), Str("›"), Space()])
+        inlines.append(crumb)
+    return Para(Emph(*inlines))
+
+
 def action(elem, doc):
     return None
 
@@ -139,7 +162,7 @@ def finalize(doc):
     if head:
         doc.content.insert(0, Para(*head))
 
-    # Backlinks must never break a render; degrade to "no backlinks" on any error.
+    # Navigation must never break a render; degrade to nothing on any error.
     try:
         title = stringify(doc.metadata["title"]) if "title" in doc.metadata else None
         if not title:
@@ -148,16 +171,22 @@ def finalize(doc):
         current = next((k for k, info in graph.items() if info["title"] == title), None)
         if current is None:
             return
+
+        # Backlinks at the bottom.
         inbound = sorted(k for k, info in graph.items() if current in info["out"])
-        if not inbound:
-            return
-        here = posixpath.dirname(current)
-        items = []
-        for key in inbound:
-            href = posixpath.relpath(key, here) if here else key
-            items.append(ListItem(Para(Link(Str(graph[key]["title"]), url=href + ".html"))))
-        doc.content.append(Header(Str("Backlinks"), level=2, identifier="backlinks"))
-        doc.content.append(BulletList(*items))
+        if inbound:
+            here = posixpath.dirname(current)
+            items = []
+            for key in inbound:
+                href = posixpath.relpath(key, here) if here else key
+                items.append(ListItem(Para(Link(Str(graph[key]["title"]), url=href + ".html"))))
+            doc.content.append(Header(Str("Backlinks"), level=2, identifier="backlinks"))
+            doc.content.append(BulletList(*items))
+
+        # Breadcrumb trail at the top (inserted last so it sits above the meta line).
+        crumb = _breadcrumb(current, title)
+        if crumb is not None:
+            doc.content.insert(0, crumb)
     except Exception:
         return
 
