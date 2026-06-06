@@ -9,5 +9,5 @@ listing:
     - "!decisions/attachments/"
   sort: "filename desc"
   feed: true
-  fields: [title, reading-time, filename]
+  fields: [title, tier, status, filename]
 ---

@@ -2,6 +2,7 @@
 title: Recursive art-game loop and its minimal steel thread
 date: 2026-06-06
 status: proposed
+tier: proof of concept
 ---
 
 ## Context and Problem Statement

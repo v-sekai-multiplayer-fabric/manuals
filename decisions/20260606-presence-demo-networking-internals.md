@@ -2,6 +2,7 @@
 title: Presence demo networking internals
 date: 2026-06-06
 status: accepted
+tier: baseline
 ---
 
 ## Context and Problem Statement
