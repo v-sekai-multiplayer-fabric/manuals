@@ -326,7 +326,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#decision" id="toc-decision" class="nav-link" data-scroll-target="#decision">Decision</a>
   <ul class="collapse">
   <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a></li>
-  <li><a href="#shared-cache-layout" id="toc-shared-cache-layout" class="nav-link" data-scroll-target="#shared-cache-layout">Shared cache layout</a></li>
+  <li><a href="#storage-backend" id="toc-storage-backend" class="nav-link" data-scroll-target="#storage-backend">Storage backend</a></li>
+  <li><a href="#ci-github-actions" id="toc-ci-github-actions" class="nav-link" data-scroll-target="#ci-github-actions">CI — GitHub Actions</a></li>
   <li><a href="#windows-powershell-profile" id="toc-windows-powershell-profile" class="nav-link" data-scroll-target="#windows-powershell-profile">Windows — PowerShell profile</a></li>
   <li><a href="#wsl-linux-.bashrc" id="toc-wsl-linux-.bashrc" class="nav-link" data-scroll-target="#wsl-linux-.bashrc">WSL / Linux — <code>~/.bashrc</code></a></li>
   <li><a href="#building" id="toc-building" class="nav-link" data-scroll-target="#building">Building</a></li>
@@ -375,10 +376,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Standardise on <a href="https://github.com/mozilla/sccache"><code>sccache</code></a> as the compiler launcher plus SCons’s own <code>CacheDir</code>, both pointed at one shared cache directory reachable from both hosts. Wrap the build in a <code>gscons</code> shell function on each host. Two environment variables parameterise the setup, so this guide hardcodes no absolute paths:</p>
+<p>Standardise on <a href="https://github.com/mozilla/sccache"><code>sccache</code></a> as the <strong>only</strong> object cache, wired in as the SCons compiler launcher. Wrap the build in a <code>gscons</code> shell function on each host.</p>
+<p><strong>Do not also enable SCons’s own <code>CacheDir</code></strong> (<code>cache_path=</code>). sccache already caches every compiled object before SCons’s cache would see it, so running both double-caches the same artefacts — wasted disk and I/O for no extra hits. sccache is the single source of truth.</p>
+<p>Cross-host sharing is handled by sccache’s <strong>S3-compatible storage backend</strong>, not by a shared filesystem directory. Credentials come from a local AWS profile (<code>~/.aws/credentials</code>) and are <strong>never committed</strong> — only the non-secret bucket coordinates are configured, via environment variables, so this guide hardcodes no absolute paths and no secrets:</p>
 <ul>
 <li><code>GODOT_SRC</code> — the engine checkout root.</li>
-<li><code>GODOT_BUILD_CACHE</code> — the shared cache directory.</li>
+<li><code>SCCACHE_BUCKET</code> / <code>SCCACHE_ENDPOINT</code> / <code>SCCACHE_REGION</code> — your S3 bucket coordinates.</li>
+<li><code>AWS_PROFILE</code> — the named profile holding the access keys, read from <code>~/.aws/credentials</code>. The keys themselves stay on the developer’s machine.</li>
 </ul>
 <section id="prerequisites" class="level3">
 <h3 class="anchored" data-anchor-id="prerequisites">Prerequisites</h3>
@@ -425,90 +429,111 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>Verify <code>sccache --version</code> resolves in each shell. The verified setup uses <strong>sccache 0.15.0</strong>.</p>
 </section>
-<section id="shared-cache-layout" class="level3">
-<h3 class="anchored" data-anchor-id="shared-cache-layout">Shared cache layout</h3>
-<p>Both the sccache object cache and the SCons <code>CacheDir</code> live under <code>GODOT_BUILD_CACHE</code>:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Purpose</th>
-<th>Path</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>sccache object cache</td>
-<td><code>$GODOT_BUILD_CACHE/sccache</code></td>
-</tr>
-<tr class="even">
-<td>SCons <code>CacheDir</code></td>
-<td><code>$GODOT_BUILD_CACHE/scons_cache</code></td>
-</tr>
-</tbody>
-</table>
-<p>To share one store between Windows and WSL, set <code>GODOT_BUILD_CACHE</code> to a location both can reach — on a combined workstation that is usually a drive WSL mounts under <code>/mnt</code>. <code>sccache</code> keys include the compiler, target triple, and flags, so MinGW and Linux objects coexist in the same store without colliding.</p>
+<section id="storage-backend" class="level3">
+<h3 class="anchored" data-anchor-id="storage-backend">Storage backend</h3>
+<p>sccache picks its backend from environment variables. Two options:</p>
+<ul>
+<li><strong>Shared across hosts (recommended): S3-compatible bucket</strong> — set the <code>SCCACHE_BUCKET</code> / <code>SCCACHE_ENDPOINT</code> / <code>SCCACHE_REGION</code> coordinates and point <code>AWS_PROFILE</code> at a profile in <code>~/.aws/credentials</code>. sccache keys include the compiler, target triple, and flags, so Windows/MinGW and Linux objects coexist in one bucket without colliding. A <code>SCCACHE_S3_KEY_PREFIX</code> namespaces these objects so they never collide with other projects sharing the bucket.</li>
+<li><strong>Single host: local directory</strong> — set <code>SCCACHE_DIR</code> and <code>SCCACHE_CACHE_SIZE</code> instead; sccache uses local disk. No S3 config needed.</li>
+</ul>
+<blockquote class="blockquote">
+<p><strong>Secrets policy:</strong> only the bucket <em>name, endpoint, region, and key prefix</em> — none of which are secrets — appear in committed config. The access key and secret are never committed to any repo, dotfile, or build log. They live in one of two places depending on where the build runs:</p>
+<ul>
+<li><strong>Locally:</strong> <code>~/.aws/credentials</code> under a named profile (<code>AWS_PROFILE</code>).</li>
+<li><strong>CI:</strong> GitHub Actions <strong>secret variables</strong>, injected at runtime via the <code>${{ secrets.* }}</code> context. Storing the keys there is fine — they are encrypted and never land in the repo. What is <em>not</em> fine is pasting a literal key into a workflow YAML, a script, or this manual.</li>
+</ul>
+</blockquote>
+</section>
+<section id="ci-github-actions" class="level3">
+<h3 class="anchored" data-anchor-id="ci-github-actions">CI — GitHub Actions</h3>
+<p>In a workflow, read the credentials from secret variables into the sccache S3 environment for the build step. Only the secret <em>names</em> appear in the committed YAML — the values are stored in the repo/org Actions secrets:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">env</span><span class="kw">:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">SCCACHE_BUCKET</span><span class="kw">:</span><span class="at"> &lt;your-sccache-bucket&gt;</span><span class="co"> # non-secret coordinates</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">SCCACHE_ENDPOINT</span><span class="kw">:</span><span class="at"> &lt;region&gt;.example-object-store.com</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">SCCACHE_REGION</span><span class="kw">:</span><span class="at"> &lt;region&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">SCCACHE_S3_KEY_PREFIX</span><span class="kw">:</span><span class="at"> godot</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">AWS_ACCESS_KEY_ID</span><span class="kw">:</span><span class="at"> ${{ secrets.SCCACHE_AWS_ACCESS_KEY_ID }}</span><span class="co"> # from Actions secrets</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">AWS_SECRET_ACCESS_KEY</span><span class="kw">:</span><span class="at"> ${{ secrets.SCCACHE_AWS_SECRET_ACCESS_KEY }}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>sccache reads <code>AWS_ACCESS_KEY_ID</code> / <code>AWS_SECRET_ACCESS_KEY</code> directly, so CI needs no <code>~/.aws/credentials</code> file or <code>AWS_PROFILE</code>.</p>
 <p><code>SCCACHE_BASEDIRS</code> (the equivalent of ccache’s <code>CCACHE_BASEDIR</code>) strips a leading absolute prefix before hashing so hits survive a moved/renamed checkout. Point it at <code>GODOT_SRC</code>. Paths must be <strong>absolute</strong>; separate multiple dirs with <code>;</code> on Windows and <code>:</code> elsewhere (longest matching prefix wins). The server reads it at startup — run <code>sccache --stop-server</code> after changing it.</p>
 </section>
 <section id="windows-powershell-profile" class="level3">
 <h3 class="anchored" data-anchor-id="windows-powershell-profile">Windows — PowerShell profile</h3>
-<p>Set <code>GODOT_SRC</code> and <code>GODOT_BUILD_CACHE</code> to your locations, then add to <code>Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(-not</span> <span class="va">$env</span><span class="op">:</span><span class="va">GODOT_SRC</span><span class="op">)</span> <span class="op">{</span> <span class="va">$env</span><span class="op">:</span><span class="va">GODOT_SRC</span> <span class="op">=</span> <span class="st">"</span><span class="va">$env</span><span class="op">:</span><span class="va">USERPROFILE</span><span class="st">\godot"</span> <span class="op">}</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(-not</span> <span class="va">$env</span><span class="op">:</span><span class="va">GODOT_BUILD_CACHE</span><span class="op">)</span> <span class="op">{</span> <span class="va">$env</span><span class="op">:</span><span class="va">GODOT_BUILD_CACHE</span> <span class="op">=</span> <span class="st">"</span><span class="va">$env</span><span class="op">:</span><span class="va">LOCALAPPDATA</span><span class="st">\godot-build"</span> <span class="op">}</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="va">$env</span><span class="op">:</span><span class="va">SCCACHE_DIR</span> <span class="op">=</span> <span class="st">"</span><span class="va">$env</span><span class="op">:</span><span class="va">GODOT_BUILD_CACHE</span><span class="st">\sccache"</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="va">$env</span><span class="op">:</span><span class="va">SCCACHE_CACHE_SIZE</span> <span class="op">=</span> <span class="st">"20G"</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="va">$env</span><span class="op">:</span><span class="va">SCCACHE_BASEDIRS</span> <span class="op">=</span> <span class="va">$env</span><span class="op">:</span><span class="va">GODOT_SRC</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">New-Item</span> <span class="op">-</span>ItemType Directory <span class="op">-</span>Force <span class="op">-</span>Path <span class="va">$env</span><span class="op">:</span><span class="va">SCCACHE_DIR</span><span class="op">,</span> <span class="st">"</span><span class="va">$env</span><span class="op">:</span><span class="va">GODOT_BUILD_CACHE</span><span class="st">\scons_cache"</span> <span class="op">|</span> <span class="fu">Out-Null</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> gscons <span class="op">{</span> python <span class="op">-</span>m SCons platform<span class="op">=</span>windows use_mingw<span class="op">=</span>yes compiledb<span class="op">=</span>yes target<span class="op">=</span>editor precision<span class="op">=</span>double c_compiler_launcher<span class="op">=</span>sccache cpp_compiler_launcher<span class="op">=</span>sccache <span class="st">"cache_path=</span><span class="va">$env</span><span class="op">:</span><span class="va">GODOT_BUILD_CACHE</span><span class="st">/scons_cache"</span> <span class="op">-</span>j16 @args <span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Set <code>GODOT_SRC</code> and the S3 coordinates to your values, then add to <code>Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1</code>. The function sets the sccache env only for the duration of the build and restores it afterwards, so the interactive session and the real AWS CLI are never shadowed:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(-not</span> <span class="va">$env</span><span class="op">:</span><span class="va">GODOT_SRC</span><span class="op">)</span> <span class="op">{</span> <span class="va">$env</span><span class="op">:</span><span class="va">GODOT_SRC</span> <span class="op">=</span> <span class="st">"</span><span class="va">$env</span><span class="op">:</span><span class="va">USERPROFILE</span><span class="st">\godot"</span> <span class="op">}</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> gscons <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">$envset</span> <span class="op">=</span> <span class="op">[</span>ordered<span class="op">]</span>@<span class="op">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        SCCACHE_BUCKET        <span class="op">=</span> <span class="st">'&lt;your-sccache-bucket&gt;'</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        SCCACHE_ENDPOINT      <span class="op">=</span> <span class="st">'&lt;region&gt;.example-object-store.com'</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        SCCACHE_REGION        <span class="op">=</span> <span class="st">'&lt;region&gt;'</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        SCCACHE_S3_USE_SSL    <span class="op">=</span> <span class="st">'true'</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        SCCACHE_S3_KEY_PREFIX <span class="op">=</span> <span class="st">'godot'</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        SCCACHE_BASEDIRS      <span class="op">=</span> <span class="va">$env</span><span class="op">:</span><span class="va">GODOT_SRC</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        AWS_PROFILE           <span class="op">=</span> <span class="st">'&lt;your-s3-profile&gt;'</span>   <span class="co"># keys live in ~/.aws/credentials, never committed</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="va">$saved</span> <span class="op">=</span> @<span class="op">{}</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">foreach</span> <span class="op">(</span><span class="va">$k</span> <span class="kw">in</span> <span class="va">$envset</span><span class="op">.</span><span class="fu">Keys</span><span class="op">)</span> <span class="op">{</span> <span class="va">$saved</span><span class="op">[</span><span class="va">$k</span><span class="op">]</span> <span class="op">=</span> <span class="op">[</span>Environment<span class="op">]::</span>GetEnvironmentVariable<span class="op">(</span><span class="va">$k</span><span class="op">,</span> <span class="st">'Process'</span><span class="op">);</span> <span class="fu">Set-Item</span> <span class="st">"env:</span><span class="va">$k</span><span class="st">"</span> <span class="va">$envset</span><span class="op">[</span><span class="va">$k</span><span class="op">]</span> <span class="op">}</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span> <span class="op">{</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        python <span class="op">-</span>m SCons platform<span class="op">=</span>windows use_mingw<span class="op">=</span>yes compiledb<span class="op">=</span>yes target<span class="op">=</span>editor precision<span class="op">=</span>double `</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>            c_compiler_launcher<span class="op">=</span>sccache cpp_compiler_launcher<span class="op">=</span>sccache <span class="op">-</span>j16 @args</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">finally</span> <span class="op">{</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">foreach</span> <span class="op">(</span><span class="va">$k</span> <span class="kw">in</span> <span class="va">$envset</span><span class="op">.</span><span class="fu">Keys</span><span class="op">)</span> <span class="op">{</span> <span class="cf">if</span> <span class="op">(</span><span class="va">$null</span> <span class="op">-eq</span> <span class="va">$saved</span><span class="op">[</span><span class="va">$k</span><span class="op">])</span> <span class="op">{</span> <span class="fu">Remove-Item</span> <span class="st">"env:</span><span class="va">$k</span><span class="st">"</span> <span class="op">-</span>ErrorAction SilentlyContinue <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span> <span class="fu">Set-Item</span> <span class="st">"env:</span><span class="va">$k</span><span class="st">"</span> <span class="va">$saved</span><span class="op">[</span><span class="va">$k</span><span class="op">]</span> <span class="op">}</span> <span class="op">}</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="wsl-linux-.bashrc" class="level3">
 <h3 class="anchored" data-anchor-id="wsl-linux-.bashrc">WSL / Linux — <code>~/.bashrc</code></h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Godot V-Sekai linuxbsd build. sccache caches object compilation.</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GODOT_SRC</span><span class="op">=</span><span class="st">"</span><span class="va">${GODOT_SRC</span><span class="op">:-</span><span class="va">$HOME</span>/godot<span class="va">}</span><span class="st">"</span>                       <span class="co"># engine checkout</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GODOT_BUILD_CACHE</span><span class="op">=</span><span class="st">"</span><span class="va">${GODOT_BUILD_CACHE</span><span class="op">:-</span><span class="va">$HOME</span>/.cache/godot-build<span class="va">}</span><span class="st">"</span>  <span class="co"># shared cache</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SCCACHE_DIR</span><span class="op">=</span><span class="st">"</span><span class="va">${SCCACHE_DIR</span><span class="op">:-</span><span class="va">$GODOT_BUILD_CACHE</span>/sccache<span class="va">}</span><span class="st">"</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SCCACHE_CACHE_SIZE</span><span class="op">=</span><span class="st">"</span><span class="va">${SCCACHE_CACHE_SIZE</span><span class="op">:-</span>20G<span class="va">}</span><span class="st">"</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Strip the checkout root from compile paths so cache hits survive a moved/renamed build dir.</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SCCACHE_BASEDIRS</span><span class="op">=</span><span class="st">"</span><span class="va">${SCCACHE_BASEDIRS</span><span class="op">:-</span><span class="va">$GODOT_SRC}</span><span class="st">"</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">gscons()</span> <span class="kw">{</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python3</span> <span class="at">-m</span> SCons compiledb=yes target=editor precision=double <span class="dt">\</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        c_compiler_launcher=sccache cpp_compiler_launcher=sccache <span class="dt">\</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"cache_path=</span><span class="va">$GODOT_BUILD_CACHE</span><span class="st">/scons_cache"</span> debug_symbols=yes tests=yes <span class="at">-j</span><span class="va">$(</span><span class="fu">nproc</span><span class="va">)</span> <span class="st">"</span><span class="va">$@</span><span class="st">"</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Godot V-Sekai linuxbsd build. sccache is the only object cache; S3 backend shares it across hosts.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GODOT_SRC</span><span class="op">=</span><span class="st">"</span><span class="va">${GODOT_SRC</span><span class="op">:-</span><span class="va">$HOME</span>/godot<span class="va">}</span><span class="st">"</span>                 <span class="co"># engine checkout</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SCCACHE_BUCKET</span><span class="op">=</span><span class="st">"</span><span class="va">${SCCACHE_BUCKET</span><span class="op">:-</span>&lt;your-sccache-bucket&gt;<span class="va">}</span><span class="st">"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SCCACHE_ENDPOINT</span><span class="op">=</span><span class="st">"</span><span class="va">${SCCACHE_ENDPOINT</span><span class="op">:-</span>&lt;region&gt;.example-object-store.com<span class="va">}</span><span class="st">"</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SCCACHE_REGION</span><span class="op">=</span><span class="st">"</span><span class="va">${SCCACHE_REGION</span><span class="op">:-</span>&lt;region&gt;<span class="va">}</span><span class="st">"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SCCACHE_S3_USE_SSL</span><span class="op">=</span><span class="st">"</span><span class="va">${SCCACHE_S3_USE_SSL</span><span class="op">:-</span>true<span class="va">}</span><span class="st">"</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SCCACHE_S3_KEY_PREFIX</span><span class="op">=</span><span class="st">"</span><span class="va">${SCCACHE_S3_KEY_PREFIX</span><span class="op">:-</span>godot<span class="va">}</span><span class="st">"</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">AWS_PROFILE</span><span class="op">=</span><span class="st">"</span><span class="va">${AWS_PROFILE</span><span class="op">:-</span>&lt;your-s3-profile&gt;<span class="va">}</span><span class="st">"</span>       <span class="co"># keys in ~/.aws/credentials, never committed</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Strip the checkout root from compile paths so cache hits survive a moved/renamed build dir.</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">SCCACHE_BASEDIRS</span><span class="op">=</span><span class="st">"</span><span class="va">${SCCACHE_BASEDIRS</span><span class="op">:-</span><span class="va">$GODOT_SRC}</span><span class="st">"</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">gscons()</span> <span class="kw">{</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python3</span> <span class="at">-m</span> SCons compiledb=yes target=editor precision=double <span class="dt">\</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        c_compiler_launcher=sccache cpp_compiler_launcher=sccache <span class="dt">\</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        debug_symbols=yes tests=yes <span class="at">-j</span><span class="va">$(</span><span class="fu">nproc</span><span class="va">)</span> <span class="st">"</span><span class="va">$@</span><span class="st">"</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Open a fresh shell (or <code>source ~/.bashrc</code> / <code>. $PROFILE</code>) so <code>gscons</code> is defined.</p>
 </section>
 <section id="building" class="level3">
 <h3 class="anchored" data-anchor-id="building">Building</h3>
 <p>From your engine checkout (<code>$GODOT_SRC</code>):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gscons</span>                      <span class="co"># full editor build</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">gscons</span> verbose=yes          <span class="co"># extra args pass straight through to SCons</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gscons</span>                      <span class="co"># full editor build</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">gscons</span> verbose=yes          <span class="co"># extra args pass straight through to SCons</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Output binary:</p>
 <ul>
 <li>Windows: <code>bin\godot.windows.editor.double.x86_64.exe</code></li>
 <li>WSL: <code>bin/godot.linuxbsd.editor.double.x86_64</code></li>
 </ul>
-<p>The two functions differ only where the platform requires it: Windows pins <code>platform=windows use_mingw=yes</code> and <code>-j16</code>; WSL infers <code>platform=linuxbsd</code>, uses <code>-j$(nproc)</code>, and adds <code>debug_symbols=yes tests=yes</code>. Both share <code>compiledb=yes target=editor precision=double</code> and the sccache launchers.</p>
+<p>The two functions differ only where the platform requires it: Windows pins <code>platform=windows use_mingw=yes</code> and <code>-j16</code>; WSL infers <code>platform=linuxbsd</code>, uses <code>-j$(nproc)</code>, and adds <code>debug_symbols=yes tests=yes</code>. Both share <code>compiledb=yes target=editor precision=double</code> and the sccache launchers — and <strong>neither</strong> enables a SCons <code>CacheDir</code>.</p>
 </section>
 <section id="verifying-and-maintaining-the-cache" class="level3">
 <h3 class="anchored" data-anchor-id="verifying-and-maintaining-the-cache">Verifying and maintaining the cache</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sccache</span> <span class="at">--show-stats</span>        <span class="co"># "Compile requests" / "Cache hits" climb across builds</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">sccache</span> <span class="at">--stop-server</span>       <span class="co"># apply changed SCCACHE_* env vars</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">sccache</span> <span class="at">--zero-stats</span>        <span class="co"># reset counters</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>A clean first build is mostly misses; a second build of the same tree shows a high hit rate and finishes substantially faster. The store is capped at <code>SCCACHE_CACHE_SIZE</code> (20G) and evicts least-recently-used entries automatically.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sccache</span> <span class="at">--show-stats</span>        <span class="co"># "Compile requests" / "Cache hits" climb across builds</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">sccache</span> <span class="at">--stop-server</span>       <span class="co"># apply changed SCCACHE_* / AWS_PROFILE env vars</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">sccache</span> <span class="at">--zero-stats</span>        <span class="co"># reset counters</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A clean first build is mostly misses; a second build of the same tree shows a high hit rate and finishes substantially faster. With the S3 backend, a build on the <em>other</em> host hits the same objects once they are uploaded.</p>
 </section>
 </section>
 <section id="consequences" class="level2">
 <h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
 <ul>
-<li>One cache directory (<code>GODOT_BUILD_CACHE</code>) serves both hosts; management is a single location.</li>
-<li>The engine <code>SConstruct</code> recognises only <code>cache_path</code> and <code>cache_limit</code> for the SCons cache. <code>scons_cache=</code> is <strong>not</strong> valid and is silently ignored.</li>
-<li>If the shared cache lives on a Windows drive mounted into WSL, that mount is slower than native ext4 — the trade-off accepted for sharing one store.</li>
-<li>Common failures: no hits between builds → server started before the env vars, run <code>sccache --stop-server</code>; no hits after relocating a checkout → set <code>SCCACHE_BASEDIRS</code> to the checkout root.</li>
+<li><strong>One object cache, not two</strong> — sccache is the sole cache; the SCons <code>CacheDir</code> is deliberately not enabled, so the same objects are never stored twice.</li>
+<li>One S3 bucket serves both hosts; management is a single location, and a checkout can move or be renamed without losing hits (<code>SCCACHE_BASEDIRS</code>).</li>
+<li><strong>No secrets in the repo</strong> — bucket coordinates are non-secret config. Access keys live in <code>~/.aws/credentials</code> locally and in GitHub Actions secret variables in CI — never in committed files or build logs.</li>
+<li>The engine <code>SConstruct</code> recognises only <code>cache_path</code> and <code>cache_limit</code> for the SCons cache. We intentionally pass neither. <code>scons_cache=</code> is <strong>not</strong> valid and is silently ignored.</li>
+<li>Common failures: no hits between builds → server started before the env vars, run <code>sccache --stop-server</code>; no hits after relocating a checkout → set <code>SCCACHE_BASEDIRS</code> to the checkout root; S3 auth errors → wrong/expired <code>AWS_PROFILE</code> or missing <code>~/.aws/credentials</code> entry.</li>
 </ul>
 </section>
 <section id="further-reading" class="level2">
 <h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
 <ul>
-<li><a href="https://github.com/mozilla/sccache/blob/main/docs/Local.md">sccache local cache (<code>SCCACHE_DIR</code>, <code>SCCACHE_CACHE_SIZE</code>)</a></li>
+<li><a href="https://github.com/mozilla/sccache/blob/main/docs/S3.md">sccache S3 storage (<code>SCCACHE_BUCKET</code>, <code>SCCACHE_ENDPOINT</code>, <code>SCCACHE_S3_KEY_PREFIX</code>)</a></li>
 <li><a href="https://github.com/mozilla/sccache/blob/main/docs/Configuration.md">sccache configuration (<code>SCCACHE_BASEDIRS</code>)</a></li>
 <li><a href="https://github.com/godotengine/godot/blob/master/SConstruct">Godot <code>SConstruct</code></a></li>
 </ul>

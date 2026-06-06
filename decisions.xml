@@ -443,10 +443,13 @@ font-style: inherit;">Set-Alias</span> scc sccheck</span></code></pre></div></di
 </section>
 <section id="decision" class="level2">
 <h2 class="anchored" data-anchor-id="decision">Decision</h2>
-<p>Standardise on <a href="https://github.com/mozilla/sccache"><code>sccache</code></a> as the compiler launcher plus SCons’s own <code>CacheDir</code>, both pointed at one shared cache directory reachable from both hosts. Wrap the build in a <code>gscons</code> shell function on each host. Two environment variables parameterise the setup, so this guide hardcodes no absolute paths:</p>
+<p>Standardise on <a href="https://github.com/mozilla/sccache"><code>sccache</code></a> as the <strong>only</strong> object cache, wired in as the SCons compiler launcher. Wrap the build in a <code>gscons</code> shell function on each host.</p>
+<p><strong>Do not also enable SCons’s own <code>CacheDir</code></strong> (<code>cache_path=</code>). sccache already caches every compiled object before SCons’s cache would see it, so running both double-caches the same artefacts — wasted disk and I/O for no extra hits. sccache is the single source of truth.</p>
+<p>Cross-host sharing is handled by sccache’s <strong>S3-compatible storage backend</strong>, not by a shared filesystem directory. Credentials come from a local AWS profile (<code>~/.aws/credentials</code>) and are <strong>never committed</strong> — only the non-secret bucket coordinates are configured, via environment variables, so this guide hardcodes no absolute paths and no secrets:</p>
 <ul>
 <li><code>GODOT_SRC</code> — the engine checkout root.</li>
-<li><code>GODOT_BUILD_CACHE</code> — the shared cache directory.</li>
+<li><code>SCCACHE_BUCKET</code> / <code>SCCACHE_ENDPOINT</code> / <code>SCCACHE_REGION</code> — your S3 bucket coordinates.</li>
+<li><code>AWS_PROFILE</code> — the named profile holding the access keys, read from <code>~/.aws/credentials</code>. The keys themselves stay on the developer’s machine.</li>
 </ul>
 <section id="prerequisites" class="level3">
 <h3 class="anchored" data-anchor-id="prerequisites">Prerequisites</h3>
@@ -493,34 +496,101 @@ font-style: inherit;">Set-Alias</span> scc sccheck</span></code></pre></div></di
 </table>
 <p>Verify <code>sccache --version</code> resolves in each shell. The verified setup uses <strong>sccache 0.15.0</strong>.</p>
 </section>
-<section id="shared-cache-layout" class="level3">
-<h3 class="anchored" data-anchor-id="shared-cache-layout">Shared cache layout</h3>
-<p>Both the sccache object cache and the SCons <code>CacheDir</code> live under <code>GODOT_BUILD_CACHE</code>:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Purpose</th>
-<th>Path</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>sccache object cache</td>
-<td><code>$GODOT_BUILD_CACHE/sccache</code></td>
-</tr>
-<tr class="even">
-<td>SCons <code>CacheDir</code></td>
-<td><code>$GODOT_BUILD_CACHE/scons_cache</code></td>
-</tr>
-</tbody>
-</table>
-<p>To share one store between Windows and WSL, set <code>GODOT_BUILD_CACHE</code> to a location both can reach — on a combined workstation that is usually a drive WSL mounts under <code>/mnt</code>. <code>sccache</code> keys include the compiler, target triple, and flags, so MinGW and Linux objects coexist in the same store without colliding.</p>
+<section id="storage-backend" class="level3">
+<h3 class="anchored" data-anchor-id="storage-backend">Storage backend</h3>
+<p>sccache picks its backend from environment variables. Two options:</p>
+<ul>
+<li><strong>Shared across hosts (recommended): S3-compatible bucket</strong> — set the <code>SCCACHE_BUCKET</code> / <code>SCCACHE_ENDPOINT</code> / <code>SCCACHE_REGION</code> coordinates and point <code>AWS_PROFILE</code> at a profile in <code>~/.aws/credentials</code>. sccache keys include the compiler, target triple, and flags, so Windows/MinGW and Linux objects coexist in one bucket without colliding. A <code>SCCACHE_S3_KEY_PREFIX</code> namespaces these objects so they never collide with other projects sharing the bucket.</li>
+<li><strong>Single host: local directory</strong> — set <code>SCCACHE_DIR</code> and <code>SCCACHE_CACHE_SIZE</code> instead; sccache uses local disk. No S3 config needed.</li>
+</ul>
+<blockquote class="blockquote">
+<p><strong>Secrets policy:</strong> only the bucket <em>name, endpoint, region, and key prefix</em> — none of which are secrets — appear in committed config. The access key and secret are never committed to any repo, dotfile, or build log. They live in one of two places depending on where the build runs:</p>
+<ul>
+<li><strong>Locally:</strong> <code>~/.aws/credentials</code> under a named profile (<code>AWS_PROFILE</code>).</li>
+<li><strong>CI:</strong> GitHub Actions <strong>secret variables</strong>, injected at runtime via the <code>${{ secrets.* }}</code> context. Storing the keys there is fine — they are encrypted and never land in the repo. What is <em>not</em> fine is pasting a literal key into a workflow YAML, a script, or this manual.</li>
+</ul>
+</blockquote>
+</section>
+<section id="ci-github-actions" class="level3">
+<h3 class="anchored" data-anchor-id="ci-github-actions">CI — GitHub Actions</h3>
+<p>In a workflow, read the credentials from secret variables into the sccache S3 environment for the build step. Only the secret <em>names</em> appear in the committed YAML — the values are stored in the repo/org Actions secrets:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">env</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span></span>
+<span id="cb1-2"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">SCCACHE_BUCKET</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> &lt;your-sccache-bucket&gt;</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"> # non-secret coordinates</span></span>
+<span id="cb1-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">SCCACHE_ENDPOINT</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> &lt;region&gt;.example-object-store.com</span></span>
+<span id="cb1-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">SCCACHE_REGION</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> &lt;region&gt;</span></span>
+<span id="cb1-5"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">SCCACHE_S3_KEY_PREFIX</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> godot</span></span>
+<span id="cb1-6"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">AWS_ACCESS_KEY_ID</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> ${{ secrets.SCCACHE_AWS_ACCESS_KEY_ID }}</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"> # from Actions secrets</span></span>
+<span id="cb1-7"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">AWS_SECRET_ACCESS_KEY</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> ${{ secrets.SCCACHE_AWS_SECRET_ACCESS_KEY }}</span></span></code></pre></div></div>
+<p>sccache reads <code>AWS_ACCESS_KEY_ID</code> / <code>AWS_SECRET_ACCESS_KEY</code> directly, so CI needs no <code>~/.aws/credentials</code> file or <code>AWS_PROFILE</code>.</p>
 <p><code>SCCACHE_BASEDIRS</code> (the equivalent of ccache’s <code>CCACHE_BASEDIR</code>) strips a leading absolute prefix before hashing so hits survive a moved/renamed checkout. Point it at <code>GODOT_SRC</code>. Paths must be <strong>absolute</strong>; separate multiple dirs with <code>;</code> on Windows and <code>:</code> elsewhere (longest matching prefix wins). The server reads it at startup — run <code>sccache --stop-server</code> after changing it.</p>
 </section>
 <section id="windows-powershell-profile" class="level3">
 <h3 class="anchored" data-anchor-id="windows-powershell-profile">Windows — PowerShell profile</h3>
-<p>Set <code>GODOT_SRC</code> and <code>GODOT_BUILD_CACHE</code> to your locations, then add to <code>Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><span class="cf" style="color: #003B4F;
+<p>Set <code>GODOT_SRC</code> and the S3 coordinates to your values, then add to <code>Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1</code>. The function sets the sccache env only for the duration of the build and restores it afterwards, so the interactive session and the real AWS CLI are never shadowed:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb2-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
 font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
@@ -556,79 +626,49 @@ background-color: null;
 font-style: inherit;">\godot"</span> <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">}</span></span>
-<span id="cb1-2"><span class="cf" style="color: #003B4F;
+<span id="cb2-2"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
-font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+font-style: inherit;">function</span> gscons <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">(-not</span> <span class="va" style="color: #111111;
+font-style: inherit;">{</span></span>
+<span id="cb2-3">    <span class="va" style="color: #111111;
 background-color: null;
-font-style: inherit;">$env</span><span class="op" style="color: #5E5E5E;
+font-style: inherit;">$envset</span> <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">:</span><span class="va" style="color: #111111;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">GODOT_BUILD_CACHE</span><span class="op" style="color: #5E5E5E;
+font-style: inherit;">[</span>ordered<span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+font-style: inherit;">]</span>@<span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">{</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$env</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">GODOT_BUILD_CACHE</span> <span class="op" style="color: #5E5E5E;
+font-style: inherit;">{</span></span>
+<span id="cb2-4">        SCCACHE_BUCKET        <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$env</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">LOCALAPPDATA</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">\godot-build"</span> <span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">}</span></span>
-<span id="cb1-3"><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$env</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">SCCACHE_DIR</span> <span class="op" style="color: #5E5E5E;
+font-style: inherit;">'&lt;your-sccache-bucket&gt;'</span></span>
+<span id="cb2-5">        SCCACHE_ENDPOINT      <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$env</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">GODOT_BUILD_CACHE</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">\sccache"</span></span>
-<span id="cb1-4"><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$env</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">SCCACHE_CACHE_SIZE</span> <span class="op" style="color: #5E5E5E;
+font-style: inherit;">'&lt;region&gt;.example-object-store.com'</span></span>
+<span id="cb2-6">        SCCACHE_REGION        <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"20G"</span></span>
-<span id="cb1-5"><span class="va" style="color: #111111;
+font-style: inherit;">'&lt;region&gt;'</span></span>
+<span id="cb2-7">        SCCACHE_S3_USE_SSL    <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$env</span><span class="op" style="color: #5E5E5E;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">:</span><span class="va" style="color: #111111;
+font-style: inherit;">'true'</span></span>
+<span id="cb2-8">        SCCACHE_S3_KEY_PREFIX <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">SCCACHE_BASEDIRS</span> <span class="op" style="color: #5E5E5E;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'godot'</span></span>
+<span id="cb2-9">        SCCACHE_BASEDIRS      <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="va" style="color: #111111;
 background-color: null;
@@ -637,43 +677,93 @@ background-color: null;
 font-style: inherit;">:</span><span class="va" style="color: #111111;
 background-color: null;
 font-style: inherit;">GODOT_SRC</span></span>
-<span id="cb1-6"><span class="fu" style="color: #4758AB;
+<span id="cb2-10">        AWS_PROFILE           <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">New-Item</span> <span class="op" style="color: #5E5E5E;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">-</span>ItemType Directory <span class="op" style="color: #5E5E5E;
+font-style: inherit;">'&lt;your-s3-profile&gt;'</span>   <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">-</span>Force <span class="op" style="color: #5E5E5E;
+font-style: inherit;"># keys live in ~/.aws/credentials, never committed</span></span>
+<span id="cb2-11">    <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">-</span>Path <span class="va" style="color: #111111;
+font-style: inherit;">}</span></span>
+<span id="cb2-12">    <span class="va" style="color: #111111;
 background-color: null;
-font-style: inherit;">$env</span><span class="op" style="color: #5E5E5E;
+font-style: inherit;">$saved</span> <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">:</span><span class="va" style="color: #111111;
+font-style: inherit;">=</span> @<span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">SCCACHE_DIR</span><span class="op" style="color: #5E5E5E;
+font-style: inherit;">{}</span></span>
+<span id="cb2-13">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">foreach</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$k</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$envset</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">Keys</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$saved</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$k</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span>Environment<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]::</span>GetEnvironmentVariable<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$k</span><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">,</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"</span><span class="va" style="color: #111111;
+font-style: inherit;">'Process'</span><span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$env</span><span class="op" style="color: #5E5E5E;
+font-style: inherit;">);</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">:</span><span class="va" style="color: #111111;
+font-style: inherit;">Set-Item</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">GODOT_BUILD_CACHE</span><span class="st" style="color: #20794D;
+font-style: inherit;">"env:</span><span class="va" style="color: #111111;
 background-color: null;
-font-style: inherit;">\scons_cache"</span> <span class="op" style="color: #5E5E5E;
+font-style: inherit;">$k</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">|</span> <span class="fu" style="color: #4758AB;
+font-style: inherit;">"</span> <span class="va" style="color: #111111;
 background-color: null;
-font-style: inherit;">Out-Null</span></span>
-<span id="cb1-7"><span class="kw" style="color: #003B4F;
+font-style: inherit;">$envset</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$k</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb2-14">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
-font-style: inherit;">function</span> gscons <span class="op" style="color: #5E5E5E;
+font-style: inherit;">try</span> <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">{</span> python <span class="op" style="color: #5E5E5E;
+font-style: inherit;">{</span></span>
+<span id="cb2-15">        python <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>m SCons platform<span class="op" style="color: #5E5E5E;
 background-color: null;
@@ -685,32 +775,112 @@ font-style: inherit;">=</span>yes target<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>editor precision<span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">=</span>double c_compiler_launcher<span class="op" style="color: #5E5E5E;
+font-style: inherit;">=</span>double `</span>
+<span id="cb2-16">            c_compiler_launcher<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>sccache cpp_compiler_launcher<span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">=</span>sccache <span class="st" style="color: #20794D;
+font-style: inherit;">=</span>sccache <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">"cache_path=</span><span class="va" style="color: #111111;
+font-style: inherit;">-</span>j16 @args</span>
+<span id="cb2-17">    <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">$env</span><span class="op" style="color: #5E5E5E;
+font-style: inherit;">}</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">:</span><span class="va" style="color: #111111;
+font-weight: bold;
+font-style: inherit;">finally</span> <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">GODOT_BUILD_CACHE</span><span class="st" style="color: #20794D;
+font-style: inherit;">{</span></span>
+<span id="cb2-18">        <span class="cf" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">/scons_cache"</span> <span class="op" style="color: #5E5E5E;
+font-weight: bold;
+font-style: inherit;">foreach</span> <span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">-</span>j16 @args <span class="op" style="color: #5E5E5E;
+font-style: inherit;">(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$k</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$envset</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">Keys</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">)</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">(</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$null</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-eq</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$saved</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$k</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">])</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">Remove-Item</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"env:</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$k</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>ErrorAction SilentlyContinue <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">else</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">Set-Item</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"env:</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$k</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$saved</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">[</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">$k</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">]</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb2-19">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb2-20"><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">}</span></span></code></pre></div></div>
 </section>
 <section id="wsl-linux-.bashrc" class="level3">
 <h3 class="anchored" data-anchor-id="wsl-linux-.bashrc">WSL / Linux — <code>~/.bashrc</code></h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># Godot V-Sekai linuxbsd build. sccache caches object compilation.</span></span>
-<span id="cb2-2"><span class="bu" style="color: null;
+font-style: inherit;"># Godot V-Sekai linuxbsd build. sccache is the only object cache; S3 backend shares it across hosts.</span></span>
+<span id="cb3-2"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">export</span> <span class="va" style="color: #111111;
 background-color: null;
@@ -728,70 +898,117 @@ font-style: inherit;">$HOME</span>/godot<span class="va" style="color: #111111;
 background-color: null;
 font-style: inherit;">}</span><span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"</span>                       <span class="co" style="color: #5E5E5E;
+font-style: inherit;">"</span>                 <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># engine checkout</span></span>
-<span id="cb2-3"><span class="bu" style="color: null;
+<span id="cb3-3"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">export</span> <span class="va" style="color: #111111;
 background-color: null;
-font-style: inherit;">GODOT_BUILD_CACHE</span><span class="op" style="color: #5E5E5E;
+font-style: inherit;">SCCACHE_BUCKET</span><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span><span class="va" style="color: #111111;
 background-color: null;
-font-style: inherit;">${GODOT_BUILD_CACHE</span><span class="op" style="color: #5E5E5E;
+font-style: inherit;">${SCCACHE_BUCKET</span><span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">:-</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$HOME</span>/.cache/godot-build<span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">}</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span>  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># shared cache</span></span>
-<span id="cb2-4"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">export</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">SCCACHE_DIR</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">${SCCACHE_DIR</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:-</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$GODOT_BUILD_CACHE</span>/sccache<span class="va" style="color: #111111;
+font-style: inherit;">:-</span>&lt;your-sccache-bucket&gt;<span class="va" style="color: #111111;
 background-color: null;
 font-style: inherit;">}</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span></span>
-<span id="cb2-5"><span class="bu" style="color: null;
+<span id="cb3-4"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">export</span> <span class="va" style="color: #111111;
 background-color: null;
-font-style: inherit;">SCCACHE_CACHE_SIZE</span><span class="op" style="color: #5E5E5E;
+font-style: inherit;">SCCACHE_ENDPOINT</span><span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span><span class="va" style="color: #111111;
 background-color: null;
-font-style: inherit;">${SCCACHE_CACHE_SIZE</span><span class="op" style="color: #5E5E5E;
+font-style: inherit;">${SCCACHE_ENDPOINT</span><span class="op" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">:-</span>20G<span class="va" style="color: #111111;
+font-style: inherit;">:-</span>&lt;region&gt;.example-object-store.com<span class="va" style="color: #111111;
 background-color: null;
 font-style: inherit;">}</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span></span>
-<span id="cb2-6"><span class="co" style="color: #5E5E5E;
+<span id="cb3-5"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">export</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">SCCACHE_REGION</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${SCCACHE_REGION</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:-</span>&lt;region&gt;<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb3-6"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">export</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">SCCACHE_S3_USE_SSL</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${SCCACHE_S3_USE_SSL</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:-</span>true<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb3-7"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">export</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">SCCACHE_S3_KEY_PREFIX</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${SCCACHE_S3_KEY_PREFIX</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:-</span>godot<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb3-8"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">export</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">AWS_PROFILE</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">${AWS_PROFILE</span><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:-</span>&lt;your-s3-profile&gt;<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>       <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># keys in ~/.aws/credentials, never committed</span></span>
+<span id="cb3-9"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Strip the checkout root from compile paths so cache hits survive a moved/renamed build dir.</span></span>
-<span id="cb2-7"><span class="bu" style="color: null;
+<span id="cb3-10"><span class="bu" style="color: null;
 background-color: null;
 font-style: inherit;">export</span> <span class="va" style="color: #111111;
 background-color: null;
@@ -808,29 +1025,23 @@ background-color: null;
 font-style: inherit;">$GODOT_SRC}</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span></span>
-<span id="cb2-8"><span class="fu" style="color: #4758AB;
+<span id="cb3-11"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">gscons()</span> <span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
 font-style: inherit;">{</span></span>
-<span id="cb2-9">    <span class="ex" style="color: null;
+<span id="cb3-12">    <span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">python3</span> <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">-m</span> SCons compiledb=yes target=editor precision=double <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">\</span></span>
-<span id="cb2-10">        c_compiler_launcher=sccache cpp_compiler_launcher=sccache <span class="dt" style="color: #AD0000;
+<span id="cb3-13">        c_compiler_launcher=sccache cpp_compiler_launcher=sccache <span class="dt" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">\</span></span>
-<span id="cb2-11">        <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"cache_path=</span><span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">$GODOT_BUILD_CACHE</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">/scons_cache"</span> debug_symbols=yes tests=yes <span class="at" style="color: #657422;
+<span id="cb3-14">        debug_symbols=yes tests=yes <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">-j</span><span class="va" style="color: #111111;
 background-color: null;
@@ -845,7 +1056,7 @@ background-color: null;
 font-style: inherit;">$@</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"</span></span>
-<span id="cb2-12"><span class="kw" style="color: #003B4F;
+<span id="cb3-15"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
 font-style: inherit;">}</span></span></code></pre></div></div>
@@ -854,12 +1065,12 @@ font-style: inherit;">}</span></span></code></pre></div></div>
 <section id="building" class="level3">
 <h3 class="anchored" data-anchor-id="building">Building</h3>
 <p>From your engine checkout (<code>$GODOT_SRC</code>):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">gscons</span>                      <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># full editor build</span></span>
-<span id="cb3-2"><span class="ex" style="color: null;
+<span id="cb4-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">gscons</span> verbose=yes          <span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -869,47 +1080,48 @@ font-style: inherit;"># extra args pass straight through to SCons</span></span><
 <li>Windows: <code>bin\godot.windows.editor.double.x86_64.exe</code></li>
 <li>WSL: <code>bin/godot.linuxbsd.editor.double.x86_64</code></li>
 </ul>
-<p>The two functions differ only where the platform requires it: Windows pins <code>platform=windows use_mingw=yes</code> and <code>-j16</code>; WSL infers <code>platform=linuxbsd</code>, uses <code>-j$(nproc)</code>, and adds <code>debug_symbols=yes tests=yes</code>. Both share <code>compiledb=yes target=editor precision=double</code> and the sccache launchers.</p>
+<p>The two functions differ only where the platform requires it: Windows pins <code>platform=windows use_mingw=yes</code> and <code>-j16</code>; WSL infers <code>platform=linuxbsd</code>, uses <code>-j$(nproc)</code>, and adds <code>debug_symbols=yes tests=yes</code>. Both share <code>compiledb=yes target=editor precision=double</code> and the sccache launchers — and <strong>neither</strong> enables a SCons <code>CacheDir</code>.</p>
 </section>
 <section id="verifying-and-maintaining-the-cache" class="level3">
 <h3 class="anchored" data-anchor-id="verifying-and-maintaining-the-cache">Verifying and maintaining the cache</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><span class="ex" style="color: null;
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">sccache</span> <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">--show-stats</span>        <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># "Compile requests" / "Cache hits" climb across builds</span></span>
-<span id="cb4-2"><span class="ex" style="color: null;
+<span id="cb5-2"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">sccache</span> <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">--stop-server</span>       <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># apply changed SCCACHE_* env vars</span></span>
-<span id="cb4-3"><span class="ex" style="color: null;
+font-style: inherit;"># apply changed SCCACHE_* / AWS_PROFILE env vars</span></span>
+<span id="cb5-3"><span class="ex" style="color: null;
 background-color: null;
 font-style: inherit;">sccache</span> <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">--zero-stats</span>        <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># reset counters</span></span></code></pre></div></div>
-<p>A clean first build is mostly misses; a second build of the same tree shows a high hit rate and finishes substantially faster. The store is capped at <code>SCCACHE_CACHE_SIZE</code> (20G) and evicts least-recently-used entries automatically.</p>
+<p>A clean first build is mostly misses; a second build of the same tree shows a high hit rate and finishes substantially faster. With the S3 backend, a build on the <em>other</em> host hits the same objects once they are uploaded.</p>
 </section>
 </section>
 <section id="consequences" class="level2">
 <h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
 <ul>
-<li>One cache directory (<code>GODOT_BUILD_CACHE</code>) serves both hosts; management is a single location.</li>
-<li>The engine <code>SConstruct</code> recognises only <code>cache_path</code> and <code>cache_limit</code> for the SCons cache. <code>scons_cache=</code> is <strong>not</strong> valid and is silently ignored.</li>
-<li>If the shared cache lives on a Windows drive mounted into WSL, that mount is slower than native ext4 — the trade-off accepted for sharing one store.</li>
-<li>Common failures: no hits between builds → server started before the env vars, run <code>sccache --stop-server</code>; no hits after relocating a checkout → set <code>SCCACHE_BASEDIRS</code> to the checkout root.</li>
+<li><strong>One object cache, not two</strong> — sccache is the sole cache; the SCons <code>CacheDir</code> is deliberately not enabled, so the same objects are never stored twice.</li>
+<li>One S3 bucket serves both hosts; management is a single location, and a checkout can move or be renamed without losing hits (<code>SCCACHE_BASEDIRS</code>).</li>
+<li><strong>No secrets in the repo</strong> — bucket coordinates are non-secret config. Access keys live in <code>~/.aws/credentials</code> locally and in GitHub Actions secret variables in CI — never in committed files or build logs.</li>
+<li>The engine <code>SConstruct</code> recognises only <code>cache_path</code> and <code>cache_limit</code> for the SCons cache. We intentionally pass neither. <code>scons_cache=</code> is <strong>not</strong> valid and is silently ignored.</li>
+<li>Common failures: no hits between builds → server started before the env vars, run <code>sccache --stop-server</code>; no hits after relocating a checkout → set <code>SCCACHE_BASEDIRS</code> to the checkout root; S3 auth errors → wrong/expired <code>AWS_PROFILE</code> or missing <code>~/.aws/credentials</code> entry.</li>
 </ul>
 </section>
 <section id="further-reading" class="level2">
 <h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
 <ul>
-<li><a href="https://github.com/mozilla/sccache/blob/main/docs/Local.md">sccache local cache (<code>SCCACHE_DIR</code>, <code>SCCACHE_CACHE_SIZE</code>)</a></li>
+<li><a href="https://github.com/mozilla/sccache/blob/main/docs/S3.md">sccache S3 storage (<code>SCCACHE_BUCKET</code>, <code>SCCACHE_ENDPOINT</code>, <code>SCCACHE_S3_KEY_PREFIX</code>)</a></li>
 <li><a href="https://github.com/mozilla/sccache/blob/main/docs/Configuration.md">sccache configuration (<code>SCCACHE_BASEDIRS</code>)</a></li>
 <li><a href="https://github.com/godotengine/godot/blob/master/SConstruct">Godot <code>SConstruct</code></a></li>
 </ul>
