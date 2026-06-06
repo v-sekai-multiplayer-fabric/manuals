@@ -1177,6 +1177,9 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 
 
 
+<blockquote class="blockquote">
+<p>Deployment note: the stack now runs on the Harvester cluster; it has moved off Fly.io (see <a href="../decisions/20260606-self-host-on-harvester-hci.html">self-host on Harvester HCI</a>). The Fly volume and <code>fly proxy</code> references below are from the original deployment.</p>
+</blockquote>
 <section id="context" class="level2">
 <h2 class="anchored" data-anchor-id="context">Context</h2>
 <p>Jaeger all-in-one with Badger storage was chosen as the Apache 2.0 replacement for Tempo. VictoriaMetrics ships VictoriaTraces — an Apache 2.0 trace backend that accepts OTLP directly. VictoriaMetrics benchmarks report 3.7× less RAM and 2.6× less CPU vs Tempo.</p>

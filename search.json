@@ -949,14 +949,14 @@
     "href": "decisions/20260506-observability-stack-victoriatraces.html",
     "title": "Replace Jaeger with VictoriaTraces for trace storage",
     "section": "",
-    "text": "Jaeger all-in-one with Badger storage was chosen as the Apache 2.0 replacement for Tempo. VictoriaMetrics ships VictoriaTraces — an Apache 2.0 trace backend that accepts OTLP directly. VictoriaMetrics benchmarks report 3.7× less RAM and 2.6× less CPU vs Tempo.\nUsing VictoriaTraces puts all three storage backends (metrics, logs, traces) under the same vendor, drops Badger’s single-node limit, and matches the port and CLI-flag conventions already in use."
+    "text": "Deployment note: the stack now runs on the Harvester cluster; it has moved off Fly.io (see self-host on Harvester HCI). The Fly volume and fly proxy references below are from the original deployment."
   },
   {
     "objectID": "decisions/20260506-observability-stack-victoriatraces.html#context",
     "href": "decisions/20260506-observability-stack-victoriatraces.html#context",
     "title": "Replace Jaeger with VictoriaTraces for trace storage",
-    "section": "",
-    "text": "Jaeger all-in-one with Badger storage was chosen as the Apache 2.0 replacement for Tempo. VictoriaMetrics ships VictoriaTraces — an Apache 2.0 trace backend that accepts OTLP directly. VictoriaMetrics benchmarks report 3.7× less RAM and 2.6× less CPU vs Tempo.\nUsing VictoriaTraces puts all three storage backends (metrics, logs, traces) under the same vendor, drops Badger’s single-node limit, and matches the port and CLI-flag conventions already in use."
+    "section": "Context",
+    "text": "Context\nJaeger all-in-one with Badger storage was chosen as the Apache 2.0 replacement for Tempo. VictoriaMetrics ships VictoriaTraces — an Apache 2.0 trace backend that accepts OTLP directly. VictoriaMetrics benchmarks report 3.7× less RAM and 2.6× less CPU vs Tempo.\nUsing VictoriaTraces puts all three storage backends (metrics, logs, traces) under the same vendor, drops Badger’s single-node limit, and matches the port and CLI-flag conventions already in use."
   },
   {
     "objectID": "decisions/20260506-observability-stack-victoriatraces.html#decision",
@@ -2048,14 +2048,14 @@
     "href": "decisions/20260506-maglev-cycle-2-observability.html",
     "title": "Maglev Cycle 2: Observability Stack",
     "section": "",
-    "text": "The observability stack — OTEL Collector (4317/4318), VictoriaMetrics (8428), VictoriaLogs (9428), VictoriaTraces (10428) — is infrastructure-level and depends only on the Fly deployment being live after Cycle 1. It can run in parallel with the game-logic track (Cycles 3–10) and the DB connection (Cycle 9)."
+    "text": "Deployment note: the stack now runs on the Harvester cluster; it has moved off Fly.io (see self-host on Harvester HCI). The Fly-specific details below are from the original deployment."
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-2-observability.html#the-context",
     "href": "decisions/20260506-maglev-cycle-2-observability.html#the-context",
     "title": "Maglev Cycle 2: Observability Stack",
-    "section": "",
-    "text": "The observability stack — OTEL Collector (4317/4318), VictoriaMetrics (8428), VictoriaLogs (9428), VictoriaTraces (10428) — is infrastructure-level and depends only on the Fly deployment being live after Cycle 1. It can run in parallel with the game-logic track (Cycles 3–10) and the DB connection (Cycle 9)."
+    "section": "The Context",
+    "text": "The Context\nThe observability stack — OTEL Collector (4317/4318), VictoriaMetrics (8428), VictoriaLogs (9428), VictoriaTraces (10428) — is infrastructure-level and depends only on the Fly deployment being live after Cycle 1. It can run in parallel with the game-logic track (Cycles 3–10) and the DB connection (Cycle 9)."
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-2-observability.html#the-problem-statement",

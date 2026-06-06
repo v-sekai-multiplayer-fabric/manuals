@@ -330,6 +330,9 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<blockquote class="blockquote">
+<p>Deployment note: the stack now runs on the Harvester cluster; it has moved off Fly.io (see <a href="../decisions/20260606-self-host-on-harvester-hci.html">self-host on Harvester HCI</a>). The Fly-specific details below are from the original deployment.</p>
+</blockquote>
 <section id="the-context" class="level2">
 <h2 class="anchored" data-anchor-id="the-context">The Context</h2>
 <p>The observability stack — OTEL Collector (4317/4318), VictoriaMetrics (8428), VictoriaLogs (9428), VictoriaTraces (10428) — is infrastructure-level and depends only on the Fly deployment being live after Cycle 1. It can run in parallel with the game-logic track (Cycles 3–10) and the DB connection (Cycle 9).</p>
