@@ -233,6 +233,108 @@
   <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>Checking the sccache build cache</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-checking-sccache.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Checking the sccache build cache</em></p>
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>Native builds route compilation through <a href="https://github.com/mozilla/sccache">sccache</a> backed by a shared DigitalOcean Spaces bucket (<code>chibifire-sccache</code>, region <code>tor1</code>), so object files are cached across machines and CI (see <a href="../decisions/20260606-compiling-godot-engine.html">Compiling the Godot engine</a>). The failure mode is silent: if the <code>SCCACHE_*</code> environment is missing, the credentials are wrong, or the region/endpoint is off, sccache quietly falls back to a local disk cache — or records read/write errors — while the build still succeeds. The shared-cache benefit is lost with no obvious signal. How does someone confirm sccache is actually using the remote bucket and is healthy?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>A misconfigured cache degrades silently (local disk, or errored requests) without failing the build, so “the build worked” is not evidence the cache worked.</li>
+<li>The check should be one command, not a ritual or a log dive.</li>
+<li>Credentials are scoped to the <code>do-tor1</code> AWS profile, not global environment variables, so the check must not require exporting secrets.</li>
+<li>It should read the same on Windows (PowerShell) and WSL/Linux.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Infer from build times (implicit, unreliable, no backend visibility).</li>
+<li>Enable <code>SCCACHE_LOG=debug</code> and read the per-request log every build.</li>
+<li>Read <code>sccache --show-stats</code> and check the backend and error counters.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “Read <code>sccache --show-stats</code>”, because it surfaces the cache backend and health in one command without secrets or log parsing.</p>
+<p>Check three lines of the output:</p>
+<ul>
+<li><strong><code>Cache location</code></strong> — must be <code>s3, name: chibifire-sccache</code> (with the project’s key prefix, e.g.&nbsp;<code>/godot/</code>). If it says <code>Local disk</code>, the <code>SCCACHE_*</code> env vars are not set in that shell and the shared cache is not in use.</li>
+<li><strong><code>Cache errors</code></strong> (and read/write errors) — must be <code>0</code>. Non-zero means a credentials, endpoint, or connectivity problem.</li>
+<li><strong><code>Cache hits</code> vs <code>Cache misses</code></strong> — the payoff; the hit rate rises across builds.</li>
+</ul>
+<p>On Windows this is wrapped as a <code>sccheck</code> PowerShell function (alias <code>scc</code>) in the user profile; aliases cannot carry logic, hence a function plus a <code>Set-Alias</code> shim:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span> sccheck <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span></span>
+<span id="cb1-2">    sccache <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">--</span>show-stats <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span></span>
+<span id="cb1-3">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">Select-String</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>Pattern <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Compile requests|Cache hits|Cache misses|Cache .*errors|Cache location'</span></span>
+<span id="cb1-4"><span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">Set-Alias</span> scc sccheck</span></code></pre></div></div>
+<p>The bash equivalent is <code>sccache --show-stats</code> filtered with <code>grep</code>. To measure a single build, reset first: <code>sccache --zero-stats; &lt;build&gt;; sccache --show-stats</code>.</p>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good: one command shows the backend and health; no secrets needed, since stats read the running server’s own counters.</li>
+<li>Good: works identically across shells; the PowerShell <code>sccheck</code>/<code>scc</code> shortcut makes it a reflex.</li>
+<li>Bad: the counters are per-server-session — they reset when the sccache server restarts or on <code>--zero-stats</code>, so they are not lifetime bucket totals.</li>
+<li>Bad: <code>--show-stats</code> alone does not prove S3 connectivity; only a compile (or a full build) exercises read/write. <code>Cache errors = 0</code> <em>after</em> a build is the real confirmation that auth and the endpoint are correct.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>Running <code>sccheck</code> reported <code>Cache location  s3, name: chibifire-sccache, prefix: /godot/</code>, <code>Cache errors 0</code>, and hits accumulating during a Godot rebuild — so the remote backend, region, and <code>do-tor1</code> credentials are all working.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<ul>
+<li>The non-secret <code>SCCACHE_*</code> variables (<code>SCCACHE_BUCKET</code>, <code>SCCACHE_ENDPOINT</code>, <code>SCCACHE_REGION</code>, <code>SCCACHE_S3_USE_SSL</code>, <code>SCCACHE_S3_KEY_PREFIX</code>) are set globally; credentials live in the <code>do-tor1</code> profile (<code>~/.aws/credentials</code>) and are applied only for the duration of a build, so the real AWS CLI is never shadowed.</li>
+<li>Per-project key prefixes keep objects from colliding in the one bucket (e.g. <code>godot</code> vs <code>idtx-flow</code>).</li>
+<li>To debug a non-zero error count, set <code>SCCACHE_LOG=debug</code> and <code>SCCACHE_ERROR_LOG</code> before restarting the server (<code>sccache --stop-server; sccache --start-server</code>).</li>
+</ul>
+
+
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="20260606-compiling-godot-engine.html">Compiling the Godot engine</a></p></li>
+</ul>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-checking-sccache.html</guid>
+  <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Cold-boot dependencies for the presence-marker demo</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-presence-demo-cold-boot-dependencies.html</link>
   <description><![CDATA[ 
@@ -817,6 +919,7 @@ font-style: inherit;"># reset counters</span></span></code></pre></div></div>
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="../changelog/2026/20260606-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a></p></li>
+<li><p><a href="20260606-checking-sccache.html">Checking the sccache build cache</a></p></li>
 <li><p><a href="20260606-presence-demo-cold-boot-dependencies.html">Cold-boot dependencies for the presence-marker demo</a></p></li>
 </ul>
 </section>
@@ -1967,160 +2070,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-ghcr-package-ownership-same-repo.html</guid>
-  <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Maglev Cycle 0: Terraform Fly.io Infrastructure</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-0-infra.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Maglev Cycle 0: Terraform Fly.io Infrastructure</em></p>
-<p><strong>Tier:</strong> baseline · <strong>Status:</strong> superseded by <a href="20260606-self-host-on-harvester-hci.html">20260606-self-host-on-harvester-hci</a></p>
-<section id="the-context" class="level2">
-<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>All Fly services — gateway, zone, uro, CockroachDB, observability stack — depend on Terraform having created their Fly apps, dedicated IPs, volumes, and secrets. Without applied Terraform state, no Fly app exists to deploy to and no subsequent cycle can run.</p>
-</section>
-<section id="the-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>Terraform has not been applied and verified under the current infra config in <code>multiplayer-fabric-infra</code>. Until the Fly provider confirms that all resources exist and match the declared state, the deployment is unverifiable.</p>
-</section>
-<section id="design" class="level2">
-<h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>Run <code>terraform apply</code> in <code>multiplayer-fabric-infra</code>. Verify via Fly CLI:</p>
-<ul>
-<li><code>fly status --app multiplayer-fabric-gateway</code> exits 0</li>
-<li>CockroachDB volume exists and is attached to the uro app</li>
-<li>uro app exists and is reachable on the 6PN private network</li>
-<li>Observability app exists with persistent volume</li>
-</ul>
-<p>Pass criteria:</p>
-<ul class="task-list">
-<li><label><input type="checkbox"><code>fly status --app multiplayer-fabric-gateway</code> shows running; dedicated IPv4 assigned</label></li>
-<li><label><input type="checkbox">CockroachDB volume attached; <code>fly volumes list</code> confirms the volume is in the correct region</label></li>
-<li><label><input type="checkbox">uro app reachable on Fly’s 6PN private network</label></li>
-<li><label><input type="checkbox">Secrets for mTLS certs present (<code>fly secrets list</code> shows expected keys for gateway and uro)</label></li>
-</ul>
-</section>
-<section id="estimate" class="level2">
-<h2 class="anchored" data-anchor-id="estimate">Estimate</h2>
-<p><strong>1 day</strong> (2026-05-06 → 2026-05-06). The infra repo has a complete Terraform config with DNS, cert renewal, and CockroachDB volume (20+ commits on 2026-05-05). This cycle is a validation run, not a build.</p>
-</section>
-<section id="cris-score" class="level2">
-<h2 class="anchored" data-anchor-id="cris-score">CRIS Score</h2>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 11%">
-<col style="width: 3%">
-<col style="width: 84%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Factor</th>
-<th>Score</th>
-<th>Evidence</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>C</strong>omplexity</td>
-<td>8</td>
-<td>Terraform is well-understood; the only unknowns are Fly provider version quirks against the current config.</td>
-</tr>
-<tr class="even">
-<td><strong>R</strong>each</td>
-<td>10</td>
-<td>Every subsequent cycle runs on infrastructure created here.</td>
-</tr>
-<tr class="odd">
-<td><strong>I</strong>mpediment</td>
-<td>10</td>
-<td>No Fly app can be deployed until Terraform apply succeeds.</td>
-</tr>
-<tr class="even">
-<td><strong>S</strong>takeholder</td>
-<td>10</td>
-<td>Gate for all Maglev cycles.</td>
-</tr>
-<tr class="odd">
-<td><strong>Total</strong></td>
-<td>9.5</td>
-<td>Build before all other cycles.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="the-downsides" class="level2">
-<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>Terraform state must be kept in sync with any manual Fly CLI changes. A drift between Terraform state and actual Fly resources will cause <code>terraform apply</code> to fail or, worse, silently produce the wrong configuration.</p>
-</section>
-<section id="the-road-not-taken" class="level2">
-<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
-<p>Running <code>flyctl deploy</code> manually without Terraform was rejected — untracked infrastructure state makes the deployment unreproducible and leaves secrets and volumes outside version control.</p>
-</section>
-<section id="status" class="level2">
-<h2 class="anchored" data-anchor-id="status">Status</h2>
-<p>Status: Done (verified 2026-05-07)</p>
-<p>All four pass criteria verified directly against the live Fly API via the <code>verify_fly_state</code> workflow on <code>multiplayer-fabric-infra</code>:</p>
-<ul>
-<li>✅ Gateway running with dedicated IPv4: machine <code>e7845e1ef35768</code> state=<code>started</code> in <code>iad</code>, IPv4 <code>213.188.205.180/v4</code></li>
-<li>✅ CockroachDB volume in correct region: <code>vol_v8e78nmp2qqglzkv</code> (<code>crdb_data</code> 10GB iad) attached to machine <code>48e3794c949548</code></li>
-<li>✅ uro reachable on Fly’s 6PN: <code>Deploy Uro to Fly.io</code> deploy succeeded (token can’t directly query the zone-backend app but the deploy workflow uses the same private network)</li>
-<li>✅ mTLS secrets: gateway has 12 secrets including <code>CRDB_CA_CRT</code>, <code>CRDB_CLIENT_ADMIN_CRT/KEY</code>, <code>TLS_CERT/KEY</code>; crdb has 7 including <code>CRDB_NODE_CRT/KEY</code>, <code>CRDB_CLIENT_ROOT_CRT/KEY</code></li>
-</ul>
-<p>Most recent <code>terraform apply</code> reported <code>0 added, 0 changed, 0 destroyed</code> — state matches the .tf files exactly.</p>
-</section>
-<section id="decision-makers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-makers">Decision Makers</h2>
-<ul>
-<li>Lead Architect / Fabric Maintainer</li>
-</ul>
-</section>
-<section id="tags" class="level2">
-<h2 class="anchored" data-anchor-id="tags">Tags</h2>
-<ul>
-<li>maglev-cycle-0, infra, terraform, fly-io, galls-law, 20260506-maglev-cycle-0-infra, present-proposal-template</li>
-</ul>
-</section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
-<pre><code>@techreport{20260501_fly,
-  title       = {Fly.io for deployment},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260501-fly-io-for-deployment.md}
-}
-
-@techreport{20260501_crdb,
-  title       = {CockroachDB with mTLS and role-separated access},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260501-cockroachdb-with-mtls-role-separation.md}
-}
-
-@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}</code></pre>
-
-
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="20260506-maglev-intercept-smoke-test.html">Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test</a></p></li>
-<li><p><a href="20260606-self-host-on-harvester-hci.html">Self-host on Harvester HCI instead of Fly.io</a></p></li>
-</ul>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260506-maglev-cycle-0-infra.html</guid>
   <pubDate>Wed, 06 May 2026 00:00:00 GMT</pubDate>
 </item>
 </channel>
