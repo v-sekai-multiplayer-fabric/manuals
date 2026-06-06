@@ -7,12 +7,17 @@ decision-makers: K. S. Ernest Lee, lyuma
 
 ## Context and Problem Statement
 
-The `xr-grid` debug scene currently shows one VRM avatar standing on the grid with
-a few clusters of small colored orbs floating nearby as placeholder remote
-players. The next increment should prove shared presence: several people in the
-same space at once, at the scale of a full V-Sekai Discord call. What is the
-smallest piece that demonstrates real multiplayer presence without committing to
+The `xr-grid` debug scene currently shows one skinned-mesh hero asset (a rigged
+mesh with a skeleton, not a VRM) standing on the grid as a visual landmark; it
+does not represent a player. Around it float a few clusters of small colored orbs.
+Each cluster encodes the translation and orientation (a full pose) of one tracked
+point — head, hand, hand — for a remote participant, drawn as orientation and translation orbs. The next
+increment should prove shared presence: several people in the same space at once,
+at the scale of a full V-Sekai Discord call. What is the smallest piece that
+demonstrates real multiplayer presence without committing to
 full networked avatars for everyone?
+
+![The `xr-grid` debug scene, 2026-06-06: a skinned-mesh hero asset as a visual landmark, with each remote participant drawn as head and hand orientation-and-translation orb clusters. [@vsekai_xrgrid_debug_2026]](attachments/20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png)
 
 ## Decision Drivers
 
@@ -23,7 +28,7 @@ full networked avatars for everyone?
 
 ## Considered Options
 
-- Full networked VRM avatar for every participant.
+- Full networked character (skinned mesh) for every participant.
 - Head plus two hand orbs per participant (3-point tracking representation).
 - Text nameplates with no embodiment.
 
@@ -35,9 +40,10 @@ avatar, which lets the demo scale to a whole call.
 
 Scope of the demo:
 
-- Each participant is represented by one head orb and two hand orbs, driven by
-  their 3-point tracking. One full VRM (as in the current scene) can stand in for
-  the local player.
+- Every participant, including the local player, is represented by three tracked
+  points — head, hand, hand — each shown as a cluster of orbs that encodes its
+  translation and orientation (pose). The existing skinned-mesh hero asset stays
+  in the scene as a visual landmark and does not represent any player.
 - The room scales to a V-Sekai Discord call's worth of participants.
 - A participant who wants to identify themselves signs with the pen
   ([cassie](20260606-feature-classification-poc-baseline-stretch.md)); the
@@ -56,13 +62,13 @@ Scope of the demo:
 
 ### Confirmation
 
-A session shows multiple participants, each rendered as a head orb and two hand
-orbs tracking their movement, at call scale. Signing with the pen produces a
-visible identifying mark next to that participant's orbs.
+A session shows multiple participants, each rendered as three orb clusters (head,
+hand, hand) tracking the pose of those points, at call scale. Signing with the pen
+produces a visible identifying mark next to that participant's orbs.
 
 ## More Information
 
-This is the "smallest new piece" milestone: expand the existing single-avatar
-`xr-grid` debug scene (one VRM plus placeholder orb clusters) into a populated
-room. It composes the [pen-stroke / cassie capability](20260606-feature-classification-poc-baseline-stretch.md)
+This is the "smallest new piece" milestone: expand the existing `xr-grid` debug
+scene (a skinned-mesh hero asset as a landmark, plus orientation and translation orb clusters)
+into a populated room. It composes the [pen-stroke / cassie capability](20260606-feature-classification-poc-baseline-stretch.md)
 for optional identity.
