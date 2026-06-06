@@ -95,7 +95,7 @@
     "href": "decisions/20260506-maglev-cycle-0-infra.html",
     "title": "Maglev Cycle 0: Terraform Fly.io Infrastructure",
     "section": "",
-    "text": "Tier: baseline · Status: superseded by 20260606-self-host-on-harvester-hci.md"
+    "text": "Tier: baseline · Status: superseded by 20260606-self-host-on-harvester-hci"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-0-infra.html#the-context",
@@ -1012,7 +1012,7 @@
     "href": "decisions/20260506-observability-stack-victoriametrics-tempo.html",
     "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Tempo",
     "section": "",
-    "text": "Tier: baseline · Status: superseded by 20260506-observability-stack-victoriametrics-jaeger.md"
+    "text": "Tier: baseline · Status: superseded by 20260506-observability-stack-victoriametrics-jaeger"
   },
   {
     "objectID": "decisions/20260506-observability-stack-victoriametrics-tempo.html#context",
@@ -1292,7 +1292,7 @@
     "href": "decisions/20260606-multiplayer-presence-demo-orbs.html",
     "title": "Minimal multiplayer presence demo with head and hand orbs",
     "section": "",
-    "text": "Tier: proof of concept · Status: superseded by 20260606-presence-marker-representation.md"
+    "text": "Tier: proof of concept · Status: superseded by 20260606-presence-marker-representation"
   },
   {
     "objectID": "decisions/20260606-multiplayer-presence-demo-orbs.html#context-and-problem-statement",
@@ -1404,7 +1404,7 @@
     "href": "decisions/20260501-fly-io-for-deployment.html",
     "title": "Fly.io for deployment",
     "section": "",
-    "text": "Tier: baseline · Status: superseded by 20260606-self-host-on-harvester-hci.md"
+    "text": "Tier: baseline · Status: superseded by 20260606-self-host-on-harvester-hci"
   },
   {
     "objectID": "decisions/20260501-fly-io-for-deployment.html#context",
@@ -1642,7 +1642,7 @@
     "href": "decisions/20260506-observability-stack-victoriametrics-jaeger.html",
     "title": "Observability stack with VictoriaMetrics, VictoriaLogs, and Jaeger",
     "section": "",
-    "text": "Tier: baseline · Status: superseded by 20260506-observability-stack-victoriatraces.md"
+    "text": "Tier: baseline · Status: superseded by 20260506-observability-stack-victoriatraces"
   },
   {
     "objectID": "decisions/20260506-observability-stack-victoriametrics-jaeger.html#context",
