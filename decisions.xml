@@ -10,7 +10,73 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/decisions.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Sat, 06 Jun 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 07 Jun 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Comments and docs use a tenseless continuous-present voice</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260607-tenseless-continuous-present-voice.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Comments and docs use a tenseless continuous-present voice</em></p>
+<p><strong>Status:</strong> accepted</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>Comments and documentation drift out of sync with code as the system changes. A comment written as history (“added a cache”, “we removed the old path”) or as a plan (“will solve this”, “TODO: wire X”) describes a moment that has passed or has not yet arrived, so a reader cannot check it against the code in front of them. How should prose in this repo phrase what it says about the system?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>A reader trusts a comment when it matches the code as it stands.</li>
+<li>History lives in git; plans live in issues and decision records.</li>
+<li>The rule stays mechanical enough to apply in review without debate.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Free choice of tense per author.</li>
+<li>Past-tense changelog voice inside code comments.</li>
+<li>A tenseless continuous-present voice where every sentence states what is currently true of the system.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “a tenseless continuous-present voice”, because a sentence that states a present truth stays correct as long as the code it describes stays the same, and goes stale visibly the moment the code changes.</p>
+<p>Every comment and documentation sentence states what is currently true of the system. Prose describes behaviour (“the parser streams tokens”), and an unfinished area reads as a present gap (“the parser handles no Unicode escapes yet”) rather than as a task or a past edit. The voice covers code comments, doc pages, and decision records alike.</p>
+<p>The voice rules out three habits:</p>
+<ul>
+<li>Past-tense narration of edits, such as “removed the legacy path” or “we switched to a queue”.</li>
+<li>Future or imperative planning, such as “will add validation” or “TODO: handle retries”.</li>
+<li>Temporal qualifiers that age, such as “now”, “currently changed”, or “previously”.</li>
+</ul>
+<p>A TODO document states each open item as a present gap, so the file reads as a description of where the system stands rather than a logbook of intentions.</p>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good, because a stale sentence signals a real divergence from the code, which makes review catch it.</li>
+<li>Good, because one voice covers code comments, doc pages, and decision records.</li>
+<li>Bad, because a present-gap phrasing reads less naturally than an imperative TODO, and authors need practice to phrase work that way.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>Review checks that new comments and prose state present truths, with no past-tense edit narration, no future or imperative planning, and no aging temporal qualifiers. The existing decision records in this repo already read this way.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>This generalizes the house rule applied across the sinew Lean spec and its native viewer prose, where comments describe current behaviour and <code>todo.md</code> lists each open item as a present gap.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260607-tenseless-continuous-present-voice.html</guid>
+  <pubDate>Sun, 07 Jun 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Amend a PR before it enters the merge queue, not after</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-amend-pr-before-it-enters-the-queue.html</link>
@@ -2302,79 +2368,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-org-split-v-sekai-multiplayer-fabric.html</guid>
-  <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>WebTransport over HTTP/3 transport</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-webtransport-http3-transport.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › WebTransport over HTTP/3 transport</em></p>
-<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The stack needs a client/server transport that carries reliable control messages and high-rate unreliable state over one connection, on both native and web clients. Which transport does the engine provide?</p>
-</section>
-<section id="decision-drivers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
-<ul>
-<li>Unreliable datagrams for high-rate state, plus reliable streams for control.</li>
-<li>One connection for both, with native and browser support.</li>
-</ul>
-</section>
-<section id="considered-options" class="level2">
-<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
-<ul>
-<li>Standard <code>MultiplayerPeer</code> transports (ENet, WebSocket, WebRTC).</li>
-<li>WebTransport over HTTP/3 / QUIC.</li>
-</ul>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: “WebTransport over HTTP/3”, provided by the engine’s <code>modules/http3</code> (on <code>feat/module-http3</code>):</p>
-<ul>
-<li><code>quic_picoquic_backend.{cpp,h}</code> — native QUIC via picoquic.</li>
-<li><code>quic_web_backend.cpp</code> + <code>quic_web_glue.js</code> — the web/wasm backend.</li>
-<li><code>http3_client.{cpp,h}</code>, <code>quic_client.{cpp,h}</code>, <code>quic_server.h</code>.</li>
-<li>Classes <code>HTTP3Client</code>, <code>QUICClient</code>, <code>QUICServer</code>, <code>WebTransportPeer</code>.</li>
-<li>Demos: <code>modules/http3/demo/wt_client_test.gd</code>, <code>wt_server_demo.gd</code>, <code>wt_browser_test.html</code>.</li>
-<li><code>lean/http3/PollingTermination.lean</code> proves the poll loop terminates.</li>
-</ul>
-<p>One QUIC connection carries reliable streams and unreliable datagrams, so control messages and high-rate state share a connection.</p>
-<section id="consequences" class="level3">
-<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
-<ul>
-<li>Good: datagrams suit high-rate state; one connection serves native and browser.</li>
-<li>Bad: the fork carries a picoquic backend and a QUIC stack to maintain.</li>
-</ul>
-</section>
-<section id="confirmation" class="level3">
-<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
-<p>The <code>modules/http3</code> demos open a WebTransport client and server over QUIC.</p>
-</section>
-</section>
-<section id="more-information" class="level2">
-<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
-<p>Pose streaming for the presence demo rides this transport; see <a href="../decisions/20260606-presence-demo-networking-internals.html">presence demo pose networking</a>. The engine is <a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">pinned to a frozen Godot 4.7 commit</a>.</p>
-
-
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="../changelog/2026/20260606-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a></p></li>
-<li><p><a href="20260606-pin-engine-to-frozen-godot-4-7.html">Pin the engine to a frozen Godot 4.7 commit</a></p></li>
-<li><p><a href="20260606-presence-demo-cold-boot-dependencies.html">Cold-boot dependencies for the presence-marker demo</a></p></li>
-<li><p><a href="20260606-presence-demo-networking-internals.html">Presence demo pose networking</a></p></li>
-</ul>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-webtransport-http3-transport.html</guid>
   <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 </channel>
