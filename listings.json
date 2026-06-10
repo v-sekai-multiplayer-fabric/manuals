@@ -3,6 +3,7 @@
     "listing": "/decisions.html",
     "items": [
       "/decisions/present-proposal-template.html",
+      "/decisions/20260609-umbrella-package-installs-all-components.html",
       "/decisions/20260609-commit-messages-sentence-case.html",
       "/decisions/20260607-tenseless-continuous-present-voice.html",
       "/decisions/20260606-amend-pr-before-it-enters-the-queue.html",
