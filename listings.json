@@ -13,6 +13,7 @@
     "listing": "/decisions.html",
     "items": [
       "/decisions/present-proposal-template.html",
+      "/decisions/20260611-cicd-runners-as-queueing-system.html",
       "/decisions/20260610-hexagonal-core-ports-adapters.html",
       "/decisions/20260609-umbrella-package-installs-all-components.html",
       "/decisions/20260609-commit-messages-sentence-case.html",

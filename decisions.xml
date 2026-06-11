@@ -10,7 +10,76 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/decisions.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Wed, 10 Jun 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 11 Jun 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>CI/CD runners operate as a finite queueing system</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-cicd-runners-as-queueing-system.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › CI/CD runners operate as a finite queueing system</em></p>
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The organization shares one GitHub Actions runner pool across every repository, observed at roughly 14–20 concurrent jobs. A single push to the Godot fork triggers a matrix of about 20 jobs, and the slowest of them (sanitizer and Windows builds) hold a runner for one to two hours. Pushes arrive from fix branches, pull requests, merge commits, reruns, and even archive repositories that carry the same workflow files. When arrivals outpace the pool, every queued job waits behind work that may carry no information at all. How does CI work get admitted to the runner pool so that signal arrives quickly?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>The pool is a queueing system with a small fixed number of servers: as utilization approaches saturation, waiting time grows without bound (M/M/c behaviour), and the delay hits short high-signal jobs as hard as long ones.</li>
+<li>One logical change can spawn several full matrices: a branch push and its pull request double-trigger, the merge push triggers again, and a rerun repeats whatever already ran.</li>
+<li>Some queued work is known in advance to produce nothing: a job whose fix is not on the branch yet fails with certainty, and a run on a merged or deleted ref validates nothing.</li>
+<li>Diagnostics need CI hardware (a crash that only reproduces on GCC Linux runners) but not the whole matrix.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Unbounded admission: push and rerun freely, let GitHub queue everything.</li>
+<li>Hard concurrency caps in workflow configuration (per-repo <code>concurrency</code> groups beyond the existing per-branch cancellation).</li>
+<li>An operating discipline that bounds arrivals at the source: batch, sequence, and cancel zero-information work.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “an operating discipline that bounds arrivals at the source”, because the waste comes from how work is submitted, not from how GitHub schedules it — and a discipline adapts per situation where a hard cap blocks urgent work behind stale work.</p>
+<p>The discipline:</p>
+<ul>
+<li>Two or three full matrices run at a time; further work waits for a slot. A merge push waits until the in-flight run it would concurrency-cancel finishes, so partially-completed long jobs are not thrown away mid-service.</li>
+<li>Arrivals are batched: fixes land as one commit per push where possible, and a late-discovered fix joins an already-open PR branch rather than opening a new one. One merge then validates the whole batch with a single matrix.</li>
+<li>Zero-information runs are cancelled immediately: the push-event run that duplicates a PR’s pull-request run, runs still queued on merged or deleted refs, runs whose remaining jobs have a known outcome, and workflow runs triggered by pushes to archive repositories (Actions stays disabled on <code>godot-archived</code>).</li>
+<li>Diagnostics are trimmed to one job: a throwaway branch edits the workflow down to the single job that reproduces the problem, and reuses the warm build cache by keeping the matrix entry’s <code>cache-name</code>. The branch is deleted once the answer is in hand.</li>
+<li>A failed job whose fix is not yet on the branch never reruns; until the fix lands it would occupy a server for its full service time and return a result that is already known.</li>
+<li>Backlog is admitted selectively: stale branches needing fresh signal enter the queue worst-first, one or two at a time, when utilization is low rather than as a bulk rerun.</li>
+</ul>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good: high-signal jobs spend their time in service, not in queue; verdicts on key jobs arrive in roughly the service time of the job itself.</li>
+<li>Good: the merge policy (merge on a passing key job) composes cleanly — batched PRs mean each merge buys validation for several fixes with one matrix.</li>
+<li>Bad: sequencing adds wall-clock latency to individual merges; a merge-ready PR waits for an unrelated in-flight run to finish.</li>
+<li>Bad: the discipline lives in operator habit and this record, not in enforced configuration; a contributor who pushes freely still floods the pool.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>The discipline is in practice on the CHI-364 CI campaign: six redundant queued runs cancelled in one sweep (two merged PRs’ leftovers, a deleted tag’s run, a push/PR duplicate), Actions disabled on <code>godot-archived</code> after an archive push was found competing with the main repo’s queue, a GCC-only segfault diagnosed through a single-job trimmed workflow over four iterations on a warm cache, and fixes batched so that two branches reached green with one validation matrix each.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>The queue is observable with <code>gh run list --repo &lt;repo&gt; --json databaseId,status,headBranch</code> filtered to <code>queued</code>/<code>in_progress</code>, and per-run job counts with <code>gh run view &lt;id&gt; --json jobs</code>. Little’s law gives the sanity check: jobs in system ≈ arrival rate × time in system, so when queued jobs exceed the server count several times over, every new matrix admits about an hour of added latency to its own verdict.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-cicd-runners-as-queueing-system.html</guid>
+  <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Hexagonal core/ports/adapters as the component convention</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260610-hexagonal-core-ports-adapters.html</link>
@@ -2150,143 +2219,6 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-require-pr-and-merge-queue-on-main.html</guid>
-  <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Running background services on Windows with nssm</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-windows-background-services-nssm.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Running background services on Windows with nssm</em></p>
-<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>Several pieces of the workstation stack need to run as long-lived background processes that survive shells, log-offs, and reboots, and restart themselves when they crash:</p>
-<ul>
-<li>the <a href="https://github.com/mozilla/sccache">sccache</a> compile-cache server(s) backing native builds,</li>
-<li>Godot dedicated/headless game servers,</li>
-<li>a CockroachDB (<code>crdb</code>) node for the local RDBMS,</li>
-<li>zone servers and similar per-world daemons.</li>
-</ul>
-<p>The naive approaches all failed in practice. Starting these by hand in a terminal ties them to that shell. The compile cache made the problem concrete: sccache auto-starts a single machine-wide server on first use, and whichever project touches it first fixes its configuration (S3 key prefix, base dirs) for everyone — so a second project silently inherits the wrong cache namespace. Worse, a configuration that lives only in a per-build environment forces a stop/start of the server on every build to apply it, which is slow and races (“Address in use”). None of this is “a service” in the Windows sense: nothing owns the process lifecycle.</p>
-<p>We are not local administrators by default, and Windows <code>sudo</code> here runs in <em>Force New Window</em> mode, so any elevation is an interactive UAC prompt.</p>
-</section>
-<section id="decision-drivers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
-<ul>
-<li>Processes must auto-start at boot and auto-restart on crash, independent of any interactive session.</li>
-<li>Multiple instances of the same program must coexist without clobbering each other’s state (e.g.&nbsp;one cache server per project, several game/zone servers).</li>
-<li>Secrets (object-store keys, DB credentials) must never be written into a repo, a service definition, or the registry — only read at runtime from their existing secured location.</li>
-<li>The target programs are plain executables, not native Windows services, so they do not implement the Service Control Manager (SCM) protocol on their own.</li>
-<li>Setup must be reproducible from a script and reviewable after an elevated run.</li>
-</ul>
-</section>
-<section id="considered-options" class="level2">
-<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
-<ul>
-<li>Running by hand in a terminal ties the process to that shell: no restart and no boot start.</li>
-<li>A Scheduled Task on a logon trigger runs in the user session and needs no service wrapper, but it is not a true service (no SCM state, weaker restart semantics), and registering one was denied by policy on this machine.</li>
-<li>Calling <code>sc.exe create</code> directly does not work because the SCM expects a process that implements the service protocol; a bare exe started this way is killed as non-responsive.</li>
-<li>Wrapping the program with <a href="https://nssm.cc/">nssm</a> (the Non-Sucking Service Manager) puts a thin supervisor in front of it that <em>is</em> a proper service and keeps an ordinary foreground process alive, restarting it on exit.</li>
-</ul>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: <strong>nssm-supervised foreground processes, one Windows service per instance.</strong> nssm satisfies the SCM, so each target runs as a real auto-start/auto-restart service while staying an ordinary executable.</p>
-<p>The pattern has four parts:</p>
-<ol type="1">
-<li><p>Run the target in the foreground, since a supervisor can only watch a process that does not fork-and-exit. For sccache that means <code>SCCACHE_START_SERVER=1</code> + <code>SCCACHE_NO_DAEMON=1</code> and invoking the bare binary (not <code>--start-server</code>, which always daemonizes). Most servers (Godot <code>--headless</code>, <code>cockroach start</code>, zone daemons) are already foreground.</p></li>
-<li><p>A per-instance launcher script sets that instance’s environment and execs the program by <strong>absolute path</strong> — services run as <em>LocalSystem</em>, whose <code>PATH</code> does not include user shims (e.g.&nbsp;scoop). Secrets are read at runtime from their existing secured file (for sccache, the object-store keys come from the <code>do-tor1</code> AWS profile in <code>~/.aws/credentials</code>, exported as <code>AWS_ACCESS_KEY_ID</code>/<code>AWS_SECRET_ACCESS_KEY</code> because sccache’s S3 backend ignores AWS <em>profiles</em>). Nothing secret is written to disk by the script.</p></li>
-<li><p>An elevated installer script registers each service with nssm, sets it to <code>SERVICE_AUTO_START</code>, enables restart-on-exit with a throttle/delay, points stdout/stderr at rotating log files, and starts it. It is idempotent (stop + remove + reinstall) and writes a transcript so the result can be reviewed after the separate elevated window closes.</p></li>
-<li><p>Instance isolation comes from the port (and namespace): each instance listens on its own loopback port; clients select an instance by port. Loopback is not session-isolated, so a LocalSystem service in session 0 is reachable from the user session. sccache additionally uses a distinct S3 key prefix per instance.</p></li>
-</ol>
-<section id="worked-example-the-sccache-services" class="level3">
-<h3 class="anchored" data-anchor-id="worked-example-the-sccache-services">Worked example — the sccache services</h3>
-<p>Two services back two projects from the one shared object-store bucket, kept apart by port and key prefix:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 29%">
-<col style="width: 6%">
-<col style="width: 17%">
-<col style="width: 46%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Service</th>
-<th>Port</th>
-<th>Key prefix</th>
-<th>Base dirs (checkout roots)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>sccache-godot</code></td>
-<td>4227</td>
-<td><code>godot</code></td>
-<td>the Godot checkout + merge dir</td>
-</tr>
-<tr class="even">
-<td><code>sccache-idtx-flow</code></td>
-<td>4226</td>
-<td><code>idtx-flow</code></td>
-<td>the idtx-flow checkouts</td>
-</tr>
-</tbody>
-</table>
-<p>4226 is sccache’s default port, so the idtx-flow builds use that service with no changes; the Godot build sets <code>SCCACHE_SERVER_PORT=4227</code>. The build wrapper (<code>gscons</code>) therefore no longer manages the server at all — it sets one port variable and runs. This supersedes the earlier per-build environment juggling and server restarts described in <a href="../decisions/20260606-compiling-godot-engine.html">Compiling the Godot engine</a> and <a href="../decisions/20260606-checking-sccache.html">Checking the sccache build cache</a>.</p>
-</section>
-<section id="applying-the-pattern-elsewhere" class="level3">
-<h3 class="anchored" data-anchor-id="applying-the-pattern-elsewhere">Applying the pattern elsewhere</h3>
-<p>The same launcher + installer shape runs other dev infrastructure as services:</p>
-<ul>
-<li>Godot dedicated servers get one service per instance, each on its own port; the launcher passes <code>--headless</code> and the scene/port arguments.</li>
-<li>Zone servers get one service per zone/world, isolated by port, supervised and restarted independently so one zone crashing does not take down the others.</li>
-<li>Zone backends are the per-zone backend daemons (state/persistence/matchmaking workers) behind those zone servers, each its own service with its own port and runtime-read credentials.</li>
-<li>CockroachDB runs as a <code>cockroach start</code> (or <code>start-single-node</code>) service, with secrets (certs/join tokens) read at runtime and the data dir as an absolute path.</li>
-</ul>
-</section>
-<section id="consequences" class="level3">
-<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
-<ul>
-<li>Good: real services — boot start, crash restart, and lifecycle owned by the SCM, not a terminal.</li>
-<li>Good: many instances of one binary coexist cleanly (port/namespace per service).</li>
-<li>Good: no secrets in the repo, the service config, or the registry; they stay in their existing secured files and are read at runtime.</li>
-<li>Good: build/runtime wrappers shrink to “pick a port and run” — no server management, no restart races.</li>
-<li>Bad: requires one-time elevation per install/change; with <em>Force New Window</em> sudo this is an interactive UAC prompt and the output must be logged to a file to be reviewed afterward.</li>
-<li>Bad: services run as LocalSystem in session 0, so launchers must use absolute paths and cannot rely on the user environment; anything needing the desktop is unsuitable.</li>
-<li>Bad: nssm is an extra dependency to install (via scoop) and keep updated.</li>
-</ul>
-</section>
-<section id="confirmation" class="level3">
-<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
-<p>After install, both sccache services report <code>Running</code> with <code>Automatic</code> start, and <code>sccache --show-stats</code> on each port shows the expected S3 backend (<code>s3, name: &lt;bucket&gt;</code>) with the correct per-project key prefix and base dirs — so isolation, credentials, and auto-start all hold. A subsequent build connects on port 4227 and accumulates cache hits with zero cache errors.</p>
-</section>
-</section>
-<section id="more-information" class="level2">
-<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
-<ul>
-<li>Foreground is the crux: a fork-and-exit daemon makes nssm see an immediate exit and enter its rapid-exit guard (<code>SERVICE_PAUSED</code>). Verify a target stays in the foreground before wrapping it.</li>
-<li>LocalSystem can read another user’s secured files (e.g.&nbsp;the AWS credentials file), but <code>$HOME</code>/<code>%USERPROFILE%</code> resolve to the system profile — always pass absolute paths to both the launcher and the secrets it reads.</li>
-<li>Restart-on-crash plus a throttle/delay avoids a hot loop when a target is misconfigured; check the per-service stderr log to diagnose.</li>
-<li>Related: <a href="../decisions/20260606-compiling-godot-engine.html">Compiling the Godot engine</a>, <a href="../decisions/20260606-checking-sccache.html">Checking the sccache build cache</a>.</li>
-</ul>
-
-
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="20260606-checking-sccache.html">Checking the sccache build cache</a></p></li>
-<li><p><a href="20260606-compiling-godot-engine.html">Compiling the Godot engine</a></p></li>
-</ul>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260606-windows-background-services-nssm.html</guid>
   <pubDate>Sat, 06 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 </channel>
