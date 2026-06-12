@@ -22,3 +22,7 @@ Chosen option: until the module carries per-session peer routing and clean teard
 ## Confirmation
 
 The four-player smoke passes at the harness, and a multi-session reply test starts passing per session when the module fix lands.
+
+## More Information
+
+The fix is open as [godot#56](https://github.com/v-sekai-multiplayer-fabric/godot/pull/56): a mutex-guarded session list with MultiplayerPeer ids replaces the single slot, ingress attributes its session, egress routes by target (broadcast at zero), the drain validates session membership, and teardown erases before delete. The pattern matches the single pending-slot bug fixed in `fire/webtransportd@f0fc9a4`. Post-fix, all four clients receive their own announcements and the server survives every teardown; the one-listener-per-process limit stands. A `FabricMultiplayerPeer` probe (ENet factories injected) also routes four clients correctly and stays an alternative transport for the loop.
