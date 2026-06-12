@@ -15,8 +15,12 @@
     "items": [
       "/decisions/present-proposal-template.html",
       "/decisions/20260612-android-template-temurin-jdk21.html",
+      "/decisions/20260612-fabric-channels-as-reliability-classes.html",
       "/decisions/20260612-headless-openxr-testing-with-monado.html",
+      "/decisions/20260612-integral-entity-transform-wire.html",
+      "/decisions/20260612-mcp-runtime-bridge-deployed-builds.html",
       "/decisions/20260612-http3-listener-session-findings.html",
+      "/decisions/20260612-quest3-immersive-deployment.html",
       "/decisions/20260612-systemd-quadlet-verification-queue.html",
       "/decisions/20260612-r128-fixed-point-as-lean-library.html",
       "/decisions/20260611-hexagon-budgeter-core.html",

@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/changelog.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Fri, 12 Jun 2026 18:26:12 GMT</lastBuildDate>
+<lastBuildDate>Fri, 12 Jun 2026 21:19:33 GMT</lastBuildDate>
 <item>
   <title></title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260612-deck-log.html</link>
@@ -54,6 +54,15 @@
 <ul>
 <li>The http3 multi-session reply routing and teardown double free, as <a href="https://github.com/v-sekai-multiplayer-fabric/godot/pull/56">godot#56</a> — the fix pattern comes from the webtransportd single-pending-slot bug (<code>fire/webtransportd@f0fc9a4</code>). Post-fix, four concurrent clients each receive their own winner announcements and the server survives teardown; the quadlet four-player smoke verifies per client.</li>
 </ul>
+</section>
+<section id="added-replication-and-deployment" class="level2">
+<h2 class="anchored" data-anchor-id="added-replication-and-deployment">Added (replication and deployment)</h2>
+<ul>
+<li>The entity-transform wire is integral: int64 absolute micrometers (no origin shift), velocity tied to the predictive BVH’s V_MAX, a 42-byte payload, and a Lean+Plausible source-of-truth in <a href="https://github.com/v-sekai-multiplayer-fabric/entity_packet">entity_packet</a> (<a href="../../decisions/20260612-integral-entity-transform-wire.html">decision</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/godot/pull/58">godot#58</a>).</li>
+<li>Fabric channels are reliability classes with control in the packet payload (<a href="../../decisions/20260612-fabric-channels-as-reliability-classes.html">decision</a>).</li>
+<li>The slice runs on a Quest 3 at a locked 72 Hz: the immersive deployment requirements (OpenXR loader, VR-category manifest, INTERNET, mobile+double shader) are recorded (<a href="../../decisions/20260612-quest3-immersive-deployment.html">decision</a>), and the MCP runtime bridge drives the deployed build over adb (<a href="../../decisions/20260612-mcp-runtime-bridge-deployed-builds.html">decision</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/vsekai-godot-mcp/pull/1">vsekai-godot-mcp#1</a>).</li>
+<li>New repos: the standalone Lean workspaces <a href="https://github.com/v-sekai-multiplayer-fabric/loot-core">loot-core</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/combat-core">combat-core</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/progression-core">progression-core</a>, and the playable <a href="https://github.com/v-sekai-multiplayer-fabric/loop-slice">loop-slice</a>.</li>
+</ul>
 
 
 </section>
@@ -61,7 +70,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260612-deck-log.html</guid>
-  <pubDate>Fri, 12 Jun 2026 18:26:12 GMT</pubDate>
+  <pubDate>Fri, 12 Jun 2026 21:19:33 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -121,7 +130,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260606-deck-log.html</guid>
-  <pubDate>Fri, 12 Jun 2026 18:26:12 GMT</pubDate>
+  <pubDate>Fri, 12 Jun 2026 21:19:33 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -185,7 +194,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260507-deck-log.html</guid>
-  <pubDate>Fri, 12 Jun 2026 18:26:12 GMT</pubDate>
+  <pubDate>Fri, 12 Jun 2026 21:19:33 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -236,7 +245,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260506-deck-log.html</guid>
-  <pubDate>Fri, 12 Jun 2026 18:26:12 GMT</pubDate>
+  <pubDate>Fri, 12 Jun 2026 21:19:33 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -324,7 +333,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260425-deck-log.html</guid>
-  <pubDate>Fri, 12 Jun 2026 18:26:12 GMT</pubDate>
+  <pubDate>Fri, 12 Jun 2026 21:19:33 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -355,7 +364,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260421-deck-log.html</guid>
-  <pubDate>Fri, 12 Jun 2026 18:26:12 GMT</pubDate>
+  <pubDate>Fri, 12 Jun 2026 21:19:33 GMT</pubDate>
 </item>
 </channel>
 </rss>

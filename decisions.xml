@@ -57,6 +57,51 @@
   <pubDate>Fri, 12 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>Fabric channels as reliability classes, control in payload</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-fabric-channels-as-reliability-classes.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Fabric channels as reliability classes, control in payload</em></p>
+<p><strong>Status:</strong> accepted</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>Transforms want unreliable, latest-wins delivery at tick rate; sparse control events (a teleport vote, a loot grab) want reliable, exactly-once delivery. Mixing both on one ordered stream lets a reliable event head-of-line-block the transform flow, and a separate text channel for control means two codecs and two reliability models to reason about.</p>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: the fabric’s logical channels are the reliability classes, and the 100-byte entity packet carries everything. <code>FabricMultiplayerPeer</code> runs one ENet host per channel, so channels are head-of-line-free: CH_INTEREST (1) carries unreliable transforms, CH_MIGRATION (0) carries reliable-ordered control and state. The lane is chosen with <code>set_transfer_channel</code> plus <code>set_transfer_mode</code>; a <code>cmd</code>/<code>action</code> byte in the payload picks the meaning within a lane.</p>
+<p>Control rides the same packet as the transform that produced it, so an action arrives bound to its position and HLC — the server validates a hit against the exact transform and tick, atomically. The transport gives exactly-once per channel, so there is no sequence counter, repeat, or dedupe. Server-to-client state (phase, grant, reject) uses the same format under reserved global ids (a zone entity for phase, the player entity for grants).</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>A reliable control event never stalls the unreliable transform stream, because each is a separate ENet host.</li>
+<li>One codec and one wire format both directions; text disappears entirely.</li>
+<li>A display name is a byte field in the payload, and bytes are integers, so even names stay integral and deterministic.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>The multi-session http3 fix (<a href="https://github.com/v-sekai-multiplayer-fabric/godot/pull/56">godot#56</a>) routes per-session replies, and a <code>FabricMultiplayerPeer</code> probe routes four concurrent clients with the ENet factories injected.</p>
+
+
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
+</ul>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-fabric-channels-as-reliability-classes.html</guid>
+  <pubDate>Fri, 12 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Headless OpenXR testing with Monado (null compositor + simulated HMD)</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-headless-openxr-testing-with-monado.html</link>
   <description><![CDATA[ 
@@ -111,6 +156,98 @@
   <pubDate>Fri, 12 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>Integral entity-transform wire (int64 micrometers, no origin shift)</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-integral-entity-transform-wire.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Integral entity-transform wire (int64 micrometers, no origin shift)</em></p>
+<p><strong>Status:</strong> accepted</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The fabric replicates entity transforms in a fixed 100-byte packet (<code>XRGridEntityPacket</code>). The determinism doctrine keeps the authoritative state in integers and r128 fixed point, yet the packet carried position as <code>f64</code> — three doubles whose 52-bit mantissa cannot even represent a Q64.64 value. Floating point on the wire reintroduces the cross-platform divergence the determinism decision rules out.</p>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: every field on the wire is integral. Position becomes <strong>int64 absolute micrometers</strong> — the integer twin of the <code>precision=double</code> large-world coordinate, so there is no camera-relative origin shifting (the double-precision build and r128 exist precisely to hold absolute coordinates). Velocity stays i16, scaled to <code>PBVH_V_MAX_PHYSICAL_DEFAULT</code> so it shares the predictive BVH’s units. Rotation stays i16 swing-twist. A 42-byte userdata payload carries control and state. The packet keeps its 100 bytes.</p>
+<p>Position int64 micrometers spans plus or minus 9.2e12 m at 1 um, and matches the <a href="https://github.com/v-sekai-multiplayer-fabric/lean-predictive-bvh">lean-predictive-bvh</a> int64-um AABB space. The authoritative position stays r128; the wire is its micrometer-scale integer projection. Clients render rather than re-simulate (<a href="../decisions/20260611-server-authoritative-simulation-deferred-rollback.html">server authority</a>), so micrometer quantization is below perception while the exact state remains server-side.</p>
+<p>A Lean 4 plus Plausible model in <a href="https://github.com/v-sekai-multiplayer-fabric/entity_packet">entity_packet</a> is the source of truth: a roundtrip property and a size invariant the C++ must match, plus a golden-vector differential.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>The wire has no floating point; replication is deterministic across platforms.</li>
+<li>The packet speaks the predictive BVH’s native int64-micrometer language, so position flows into the BVH with no conversion.</li>
+<li>Tying velocity to <code>PBVH_V_MAX_PHYSICAL_DEFAULT</code> closes a latent drift (the codec had an ad-hoc times-1000 scale that the BVH-sync review surfaced).</li>
+<li>Density, when it matters, comes from value delta-from-baseline rather than origin rebasing; entropy coding stays off the per-tick path because variable length breaks the fixed datagram layout.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>The entity_packet Plausible suite passes a 50000-vector roundtrip and size sweep, and the engine’s C++ decode matches the Lean golden bytes on 64 vectors. The change lands on <code>feat/module-xr-grid</code> and <code>feat/module-multiplayer-fabric</code>.</p>
+
+
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
+<li><p><a href="20260611-server-authoritative-simulation-deferred-rollback.html">Server-authoritative simulation with deferred rollback</a></p></li>
+</ul>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-integral-entity-transform-wire.html</guid>
+  <pubDate>Fri, 12 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>MCP runtime bridge for deployed builds</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-mcp-runtime-bridge-deployed-builds.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › MCP runtime bridge for deployed builds</em></p>
+<p><strong>Status:</strong> accepted</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The Godot MCP addon is an editor plugin, so it drives the editor over its <code>EditorInterface</code>. Debugging a deployed build — a headless zone server, a mobile client, a Quest 3 app — needs the same inspection against the running game, where there is no editor.</p>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: a runtime autoload (<code>mcp_runtime.gd</code>) serves the same MCP from inside the running game, injecting the live <code>SceneTree</code> where the editor plugin injects the editor. An MCP client reaches it over <code>adb forward</code> (or any port forward). Scene, node, property, <code>call_method</code>, <code>run_script</code>, <code>get_render_info</code>, and a runtime-capable <code>screenshot</code> operate on the running game; editor-only commands return an error.</p>
+<p>The contribution lands upstream as <a href="https://github.com/v-sekai-multiplayer-fabric/vsekai-godot-mcp/pull/1">vsekai-godot-mcp#1</a>.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>A deployed Quest build is inspectable and drivable from the workstation: frame stats, the live scene tree, and arbitrary GDScript against the running game.</li>
+<li>Under XR, <code>screenshot</code> reads the flat Window viewport, which is black because the rendered frames go to the XR compositor’s per-eye swapchain and that is not host-readable; <code>get_render_info</code> and <code>run_script</code> cover XR diagnostics instead.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>On a Quest 3 over <code>adb forward</code>, <code>get_render_info</code> returns 13 draw calls and 46476 primitives from the running app, and <code>run_script</code> reads the live client state (peer id, connection, phase).</p>
+
+
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
+</ul>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-mcp-runtime-bridge-deployed-builds.html</guid>
+  <pubDate>Fri, 12 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>One transport listener per authority pending http3 multi-session fixes</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-http3-listener-session-findings.html</link>
   <description><![CDATA[ 
@@ -156,6 +293,57 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-http3-listener-session-findings.html</guid>
+  <pubDate>Fri, 12 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Quest 3 immersive deployment requirements</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-quest3-immersive-deployment.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Quest 3 immersive deployment requirements</em></p>
+<p><strong>Status:</strong> accepted</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>Exporting the slice to a Quest 3 surfaced several requirements that stock Godot does not satisfy by default, each of which fails in a different, non-obvious way on the device.</p>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: the Android export carries four fixes, each confirmed on the device.</p>
+<ul>
+<li>Bundle the Khronos OpenXR loader into the template. Stock Godot dlopens <code>libopenxr_loader.so</code> at runtime and ships none, so OpenXR fails to start; a fetch script in <a href="https://github.com/v-sekai-multiplayer-fabric/merge">merge</a> places the arm64 loader where gradle packages it.</li>
+<li>Declare <code>com.oculus.intent.category.VR</code> and <code>android.hardware.vr.headtracking</code> on the launcher activity, on <code>feat/horizonos-immersive</code>. Without the VR category Horizon hosts the app as a flat 2D panel and the OpenXR session never reaches visible.</li>
+<li>Enable the <code>INTERNET</code> permission in the export. Without it the runtime MCP and any listen socket fail to open (<code>socket() == -1</code>).</li>
+<li>Fix the forward-mobile vertex shader under <code>precision=double</code>, on <code>feat/double-precision-mobile</code>. The call sites pass the <code>vec4</code> <code>inv_view_precision</code> UBO field where <code>vertex_shader()</code> takes <code>vec3</code>, so every scene shader variant fails to compile and the app dies on launch; the <code>.xyz</code> fix matches the clustered renderer.</li>
+</ul>
+<p>A screen-state detector reads the VrApi frame heartbeat plus the display power state, so automation tells a black mirror (the Quest sleeps when the proximity sensor is uncovered) from a genuine render fault.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>The Quest export is reproducible from the merged assembly, with the engine fixes on feat branches and the loader step scripted.</li>
+<li>The double-precision client runs on the Quest without origin shifting, consistent with the large-world coordinate approach.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>The APK installs, takes immersive focus (<code>VrFocusManager</code> reports it), and the on-device MCP reports a locked 72 Hz with the hub scene rendering (<a href="../decisions/20260611-quest-3-frame-floor-as-mvp-gate.html">the Quest 3 gate</a>).</p>
+
+
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
+<li><p><a href="20260611-quest-3-frame-floor-as-mvp-gate.html">Quest 3 frame floor as the MVP performance gate</a></p></li>
+</ul>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-quest3-immersive-deployment.html</guid>
   <pubDate>Fri, 12 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
@@ -819,200 +1007,6 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-generated-behavior-sandboxed-riscv.html</guid>
-  <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Genre-generic naming, no trademarked proper nouns</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-genre-generic-naming-no-trademarks.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Genre-generic naming, no trademarked proper nouns</em></p>
-<p><strong>Status:</strong> accepted</p>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The core loop draws on a trademarked action RPG. The project reuses none of that game’s trademarks, so the docs and the game need a neutral vocabulary that carries the mechanics without the marks.</p>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: use genre-generic vocabulary throughout the docs, the filenames, and the game, because generic terms describe the mechanics while carrying no trademark.</p>
-<p>The vocabulary: Hub for the social staging area, Field for a combat instance, melee, ranged, and caster for the archetypes, art for a learnable ability, affinity for the gating stat, and energy for the ability resource.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>No trademarked proper nouns appear in filenames, docs, or content.</li>
-<li>The docs read as their own product.</li>
-<li>New writing reuses the same neutral terms, so the vocabulary stays consistent.</li>
-</ul>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>A trademark scan over the project docs returns clean.</p>
-
-
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
-</ul>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-genre-generic-naming-no-trademarks.html</guid>
-  <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Lean 4 build-time kernel cores with flat-C host adapters</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-lean4-kernel-cores-flat-c-host-adapters.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Lean 4 build-time kernel cores with flat-C host adapters</em></p>
-<p><strong>Status:</strong> accepted</p>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The hexagonal cores (<a href="../decisions/20260610-hexagonal-core-ports-adapters.html">the hexagonal decision</a>) hold dependency-free domain logic that Godot, the Elixir backend, and a CLI all bind. The team wants strong spec and proof guarantees on that logic without linking a heavy language runtime into every host. The <code>idtx-flow</code> repository already explores this shape in its <code>LEAN_KERNELS_HOST_ADAPTERS</code> investigation.</p>
-</section>
-<section id="considered-options" class="level2">
-<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
-<ul>
-<li>Link the Lean runtime into each host and call exported Lean functions over a C ABI.</li>
-<li>Hand-write the cores in flat C with no Lean involvement.</li>
-<li>Use Lean 4 at build time for the spec and code generation, and ship a flat-C runtime core.</li>
-</ul>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: use Lean 4 at build time as the kernel, the spec, and the code generator, and ship each runtime core as a flat C ABI behind the port ring with no Lean runtime linked into any host, because this keeps the proof leverage while the hosts bind only a flat C surface. The first option links a heavy runtime and marshals Lean objects across every boundary; the second option loses the spec and proof leverage.</p>
-<p>Each core models a pure reducer over byte-serialized state, so it is bytes to bytes. The compute kernels are authored in Lean and lowered to Slang through <a href="https://github.com/V-Sekai-fire/lean-slang">lean-slang</a>, then <code>slangc -target spirv</code> lowers the Slang to SPIR-V, and the runtime core dispatches the <code>.spv</code> compute kernel behind the flat C ABI, byte-pinned beside the core (<a href="../decisions/20260611-core-codegen-lean-slang.html">the codegen decision</a>). The spec suite drives the C ABI through Python ctypes, the property tests run on Plausible, and a handful of theorems pin the invariants that never break. This mirrors <code>idtx-flow</code>, where <code>flow/core</code> compiles to a flat-C library, <code>flow/ports</code> is the flat C ABI, and <code>flow/core/spec</code> drives that ABI through ctypes with no engine and no hardware.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>A host binds only the flat C ABI and never sees core internals or a Lean runtime.</li>
-<li>CI runs the cores headless on the workstation, with no engine and no device.</li>
-<li>Lean stays a build-time tool, so the runtime carries no Lean dependency.</li>
-</ul>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>Each core passes its ctypes fixture suite and its Plausible properties in CI, and no host binary links a Lean runtime.</p>
-
-
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
-<li><p><a href="20260610-hexagonal-core-ports-adapters.html">Hexagonal core/ports/adapters as the component convention</a></p></li>
-<li><p><a href="20260611-core-codegen-lean-slang.html">Core kernel codegen via lean-slang (Lean to Slang to SPIR-V)</a></p></li>
-</ul>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-lean4-kernel-cores-flat-c-host-adapters.html</guid>
-  <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Loot hexagon — core, ports, and adapters</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-hexagon-loot-core.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Loot hexagon — core, ports, and adapters</em></p>
-<p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>Loot generation and first-touch contention need to be deterministic and replayable, so a drop and its winner reproduce from the seed and the receipt order.</p>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: structure loot as a hexagon. The core rolls drops from loot tables keyed by enemy type and difficulty using a seeded generator, and resolves first-touch contention by receipt timestamp, granting the first requester and rejecting the rest, as a pure reducer over deterministic state.</p>
-<p>Driving port: <code>loot_request_source</code> (an interact event with a receipt timestamp and a requester id). Driven ports: <code>grant_sink</code> (the award or rejection per requester), <code>inventory_delta_sink</code> (the change to persist). Adapters: the <code>zone-server</code> orders requests by receipt; the progression persistence adapter applies <code>inventory_delta_sink</code>; a fixture adapter replays contention races for CI.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>The Hub shop degrades to a free starting kit behind this core, so a slipping economy is not blocking the loop.</li>
-<li>The roll reproduces from the seed in the state.</li>
-<li>Contention resolves on the server, so two clients see one winner.</li>
-</ul>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>The core replays a recorded contention race to one grant against the rest rejected, with no network.</p>
-
-
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
-</ul>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-hexagon-loot-core.html</guid>
-  <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Loot-action core-loop MVP vertical slice</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Loot-action core-loop MVP vertical slice</em></p>
-<p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> accepted</p>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The fabric needs a first playable that exercises the whole stack end to end: a social hub, an instanced combat zone, and the round trip between them, on the Quest 3. The team needs one bounded target small enough for a one-week build yet complete enough to prove the loop.</p>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: ship one vertical slice of an instanced, four-player loot-action core loop, because a single bounded loop proves the transport, the authority, the persistence, and the budget together without an open content surface.</p>
-<p>In scope:</p>
-<p><strong>One Hub deck with a shop, a four-player party teleporting into one Field room, the melee archetype with a timed combo against one enemy, one loot drop, and persistence of the result.</strong></p>
-<p>Out of scope:</p>
-<p>More Fields, boss fights, the full economy, trading, and avatar customization. The deadline is 2026-06-18, and AI generates the cores, the fixtures, the adapters, and the content in parallel while the squad reviews and integrates.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>The slice proves the loop on the Quest 3 frame floor with placeholder content.</li>
-<li>The ranged archetype, the caster archetype, the second platforms, and the in-headset authoring land after the gate.</li>
-<li>The build follows the hexagonal core/ports/adapters structure, per <a href="../decisions/20260610-hexagonal-core-ports-adapters.html">the hexagonal decision</a>, with one core per loop concern behind narrow ports.</li>
-</ul>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>The slice is complete when a four-player party forms on the Hub, clears the enemy, grabs one drop under first-touch contention, and returns with the result committing to the store, at 72 Hz on a Quest 3.</p>
-
-
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
-<li><p><a href="20260610-hexagonal-core-ports-adapters.html">Hexagonal core/ports/adapters as the component convention</a></p></li>
-</ul>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html</guid>
   <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 </channel>

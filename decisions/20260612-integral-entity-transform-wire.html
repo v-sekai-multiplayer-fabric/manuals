@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-06-11">
+<meta name="dcterms.date" content="2026-06-12">
 
-<title>Server-authoritative simulation with deferred rollback – V-Sekai Fire — Manuals</title>
+<title>Integral entity-transform wire (int64 micrometers, no origin shift) – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -293,7 +293,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260611-server-authoritative-simulation-deferred-rollback.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260612-integral-entity-transform-wire.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -301,7 +301,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Server-authoritative simulation with deferred rollback</h1>
+<h1 class="title">Integral entity-transform wire (int64 micrometers, no origin shift)</h1>
 </div>
 
 
@@ -312,7 +312,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 11, 2026</p>
+      <p class="date">June 12, 2026</p>
     </div>
   </div>
   
@@ -324,28 +324,30 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Server-authoritative simulation with deferred rollback</em></p>
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Integral entity-transform wire (int64 micrometers, no origin shift)</em></p>
 <p><strong>Status:</strong> accepted</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The loop needs one authority over combat state and loot contention. An earlier geometric Hilbert-zone authority attempt (<a href="../decisions/20260506-maglev-intercept-smoke-test.html">the Maglev intercept smoke test</a>) was rejected, and the one-week slice needs a simpler model that still resists client tampering.</p>
+<p>The fabric replicates entity transforms in a fixed 100-byte packet (<code>XRGridEntityPacket</code>). The determinism doctrine keeps the authoritative state in integers and r128 fixed point, yet the packet carried position as <code>f64</code> — three doubles whose 52-bit mantissa cannot even represent a Q64.64 value. Floating point on the wire reintroduces the cross-platform divergence the determinism decision rules out.</p>
 </section>
 <section id="decision-outcome" class="level2">
 <h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: the headless <code>zone-server</code> owns entity transforms, health, combat state, and loot contention, and clients reconcile to the server snapshot, because a single authority per instance keeps the slice simple and tamper-resistant.</p>
-<p>For the deadline the model is server-authoritative with client interpolation and no client prediction. The rollback adapter lands after the gate behind the same <code>input_source</code> and <code>state_sink</code>, so the swap never touches a core (<a href="../decisions/20260611-hexagon-combat-core.html">the combat hexagon</a>, <a href="../decisions/20260611-core-contract-pure-reducer-byte-state.html">the core contract</a>).</p>
+<p>Chosen option: every field on the wire is integral. Position becomes <strong>int64 absolute micrometers</strong> — the integer twin of the <code>precision=double</code> large-world coordinate, so there is no camera-relative origin shifting (the double-precision build and r128 exist precisely to hold absolute coordinates). Velocity stays i16, scaled to <code>PBVH_V_MAX_PHYSICAL_DEFAULT</code> so it shares the predictive BVH’s units. Rotation stays i16 swing-twist. A 42-byte userdata payload carries control and state. The packet keeps its 100 bytes.</p>
+<p>Position int64 micrometers spans plus or minus 9.2e12 m at 1 um, and matches the <a href="https://github.com/v-sekai-multiplayer-fabric/lean-predictive-bvh">lean-predictive-bvh</a> int64-um AABB space. The authoritative position stays r128; the wire is its micrometer-scale integer projection. Clients render rather than re-simulate (<a href="../decisions/20260611-server-authoritative-simulation-deferred-rollback.html">server authority</a>), so micrometer quantization is below perception while the exact state remains server-side.</p>
+<p>A Lean 4 plus Plausible model in <a href="https://github.com/v-sekai-multiplayer-fabric/entity_packet">entity_packet</a> is the source of truth: a roundtrip property and a size invariant the C++ must match, plus a golden-vector differential.</p>
 </section>
 <section id="consequences" class="level2">
 <h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
 <ul>
-<li>One authority per instance, so a per-connection transport child relays to that single core rather than holding state.</li>
-<li>Rollback is an adapter swap after the gate, not a rewrite.</li>
-<li>The deadline trades input snappiness for a far smaller build.</li>
+<li>The wire has no floating point; replication is deterministic across platforms.</li>
+<li>The packet speaks the predictive BVH’s native int64-micrometer language, so position flows into the BVH with no conversion.</li>
+<li>Tying velocity to <code>PBVH_V_MAX_PHYSICAL_DEFAULT</code> closes a latent drift (the codec had an ad-hoc times-1000 scale that the BVH-sync review surfaced).</li>
+<li>Density, when it matters, comes from value delta-from-baseline rather than origin rebasing; entropy coding stays off the per-tick path because variable length breaks the fixed datagram layout.</li>
 </ul>
 </section>
 <section id="confirmation" class="level2">
 <h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>A divergent client reconciles to the server snapshot, and combat and loot resolve identically across the four clients.</p>
+<p>The entity_packet Plausible suite passes a 50000-vector roundtrip and size sweep, and the engine’s C++ decode matches the Lean golden bytes on 64 vectors. The change lands on <code>feat/module-xr-grid</code> and <code>feat/module-multiplayer-fabric</code>.</p>
 
 
 </section>
@@ -353,10 +355,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
-<li><p><a href="20260506-maglev-intercept-smoke-test.html">Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test</a></p></li>
-<li><p><a href="20260611-core-contract-pure-reducer-byte-state.html">Cores as pure reducers over byte-serialized state</a></p></li>
-<li><p><a href="20260611-hexagon-combat-core.html">Combat hexagon — core, ports, and adapters</a></p></li>
-<li><p><a href="20260612-integral-entity-transform-wire.html">Integral entity-transform wire (int64 micrometers, no origin shift)</a></p></li>
+<li><p><a href="20260611-server-authoritative-simulation-deferred-rollback.html">Server-authoritative simulation with deferred rollback</a></p></li>
 </ul>
 </section>
 
@@ -782,7 +781,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260611-server-authoritative-simulation-deferred-rollback.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260612-integral-entity-transform-wire.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
