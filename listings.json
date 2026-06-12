@@ -16,6 +16,7 @@
       "/decisions/present-proposal-template.html",
       "/decisions/20260612-android-template-temurin-jdk21.html",
       "/decisions/20260612-fabric-channels-as-reliability-classes.html",
+      "/decisions/20260612-five-second-transaction-limit.html",
       "/decisions/20260612-headless-openxr-testing-with-monado.html",
       "/decisions/20260612-integral-entity-transform-wire.html",
       "/decisions/20260612-mcp-runtime-bridge-deployed-builds.html",
