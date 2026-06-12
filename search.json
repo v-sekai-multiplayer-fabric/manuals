@@ -1495,7 +1495,7 @@
     "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#decision-outcome",
     "title": "Loot-action core-loop MVP vertical slice",
     "section": "Decision Outcome",
-    "text": "Decision Outcome\nChosen option: ship one vertical slice of an instanced, four-player loot-action core loop, because a single bounded loop proves the transport, the authority, the persistence, and the budget together without an open content surface.\nIn scope:\none Hub deck with a shop, a four-player party teleporting into one Field room, the melee archetype with a timed combo against one enemy, one loot drop, and persistence of the result.\nOut of scope:\nmore Fields, boss fights, the full economy, trading, and avatar customization. The deadline is 2026-06-18, and AI generates the cores, the fixtures, the adapters, and the content in parallel while the squad reviews and integrates."
+    "text": "Decision Outcome\nChosen option: ship one vertical slice of an instanced, four-player loot-action core loop, because a single bounded loop proves the transport, the authority, the persistence, and the budget together without an open content surface.\nIn scope:\nOne Hub deck with a shop, a four-player party teleporting into one Field room, the melee archetype with a timed combo against one enemy, one loot drop, and persistence of the result.\nOut of scope:\nMore Fields, boss fights, the full economy, trading, and avatar customization. The deadline is 2026-06-18, and AI generates the cores, the fixtures, the adapters, and the content in parallel while the squad reviews and integrates."
   },
   {
     "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#consequences",
