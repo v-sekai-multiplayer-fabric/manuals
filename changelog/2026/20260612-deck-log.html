@@ -291,6 +291,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#added" id="toc-added" class="nav-link" data-scroll-target="#added">Added</a></li>
   <li><a href="#added-the-steel-thread-later-the-same-day" id="toc-added-the-steel-thread-later-the-same-day" class="nav-link" data-scroll-target="#added-the-steel-thread-later-the-same-day">Added (the steel thread, later the same day)</a></li>
   <li><a href="#fixed" id="toc-fixed" class="nav-link" data-scroll-target="#fixed">Fixed</a></li>
+  <li><a href="#fixed-later-still" id="toc-fixed-later-still" class="nav-link" data-scroll-target="#fixed-later-still">Fixed (later still)</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/changelog/2026/20260612-deck-log.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
@@ -329,6 +330,12 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><code>merge</code> <code>gitassembly</code> drops the dead <code>feat/spatial-audio-server</code> ref (<a href="https://github.com/v-sekai-multiplayer-fabric/merge/pull/36">merge#36</a>), so the canonical assembly runs again.</li>
 <li>The http3 listener findings are recorded as <a href="../../decisions/20260612-http3-listener-session-findings.html">a decision</a>: one listener per process, reply routing to a single session, and a teardown double free, with the loop’s interim shape until the module fixes land.</li>
+</ul>
+</section>
+<section id="fixed-later-still" class="level2">
+<h2 class="anchored" data-anchor-id="fixed-later-still">Fixed (later still)</h2>
+<ul>
+<li>The http3 multi-session reply routing and teardown double free, as <a href="https://github.com/v-sekai-multiplayer-fabric/godot/pull/56">godot#56</a> — the fix pattern comes from the webtransportd single-pending-slot bug (<code>fire/webtransportd@f0fc9a4</code>). Post-fix, four concurrent clients each receive their own winner announcements and the server survives teardown; the quadlet four-player smoke verifies per client.</li>
 </ul>
 
 

@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/changelog.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Fri, 12 Jun 2026 15:37:44 GMT</lastBuildDate>
+<lastBuildDate>Fri, 12 Jun 2026 16:01:14 GMT</lastBuildDate>
 <item>
   <title></title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260612-deck-log.html</link>
@@ -48,6 +48,12 @@
 <li><code>merge</code> <code>gitassembly</code> drops the dead <code>feat/spatial-audio-server</code> ref (<a href="https://github.com/v-sekai-multiplayer-fabric/merge/pull/36">merge#36</a>), so the canonical assembly runs again.</li>
 <li>The http3 listener findings are recorded as <a href="../../decisions/20260612-http3-listener-session-findings.html">a decision</a>: one listener per process, reply routing to a single session, and a teardown double free, with the loop’s interim shape until the module fixes land.</li>
 </ul>
+</section>
+<section id="fixed-later-still" class="level2">
+<h2 class="anchored" data-anchor-id="fixed-later-still">Fixed (later still)</h2>
+<ul>
+<li>The http3 multi-session reply routing and teardown double free, as <a href="https://github.com/v-sekai-multiplayer-fabric/godot/pull/56">godot#56</a> — the fix pattern comes from the webtransportd single-pending-slot bug (<code>fire/webtransportd@f0fc9a4</code>). Post-fix, four concurrent clients each receive their own winner announcements and the server survives teardown; the quadlet four-player smoke verifies per client.</li>
+</ul>
 
 
 </section>
@@ -55,7 +61,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260612-deck-log.html</guid>
-  <pubDate>Fri, 12 Jun 2026 15:37:44 GMT</pubDate>
+  <pubDate>Fri, 12 Jun 2026 16:01:14 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -115,7 +121,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260606-deck-log.html</guid>
-  <pubDate>Fri, 12 Jun 2026 15:37:44 GMT</pubDate>
+  <pubDate>Fri, 12 Jun 2026 16:01:14 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -179,7 +185,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260507-deck-log.html</guid>
-  <pubDate>Fri, 12 Jun 2026 15:37:44 GMT</pubDate>
+  <pubDate>Fri, 12 Jun 2026 16:01:14 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -230,7 +236,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260506-deck-log.html</guid>
-  <pubDate>Fri, 12 Jun 2026 15:37:44 GMT</pubDate>
+  <pubDate>Fri, 12 Jun 2026 16:01:14 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -318,7 +324,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260425-deck-log.html</guid>
-  <pubDate>Fri, 12 Jun 2026 15:37:44 GMT</pubDate>
+  <pubDate>Fri, 12 Jun 2026 16:01:14 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -349,7 +355,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260421-deck-log.html</guid>
-  <pubDate>Fri, 12 Jun 2026 15:37:44 GMT</pubDate>
+  <pubDate>Fri, 12 Jun 2026 16:01:14 GMT</pubDate>
 </item>
 </channel>
 </rss>

@@ -291,6 +291,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision Outcome</a></li>
   <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
   <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
+  <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More Information</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260612-http3-listener-session-findings.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
@@ -345,6 +346,10 @@ ul.task-list li input[type="checkbox"] {
 <section id="confirmation" class="level2">
 <h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
 <p>The four-player smoke passes at the harness, and a multi-session reply test starts passing per session when the module fix lands.</p>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>The fix is open as <a href="https://github.com/v-sekai-multiplayer-fabric/godot/pull/56">godot#56</a>: a mutex-guarded session list with MultiplayerPeer ids replaces the single slot, ingress attributes its session, egress routes by target (broadcast at zero), the drain validates session membership, and teardown erases before delete. The pattern matches the single pending-slot bug fixed in <code>fire/webtransportd@f0fc9a4</code>. Post-fix, all four clients receive their own announcements and the server survives every teardown; the one-listener-per-process limit stands. A <code>FabricMultiplayerPeer</code> probe (ENet factories injected) also routes four clients correctly and stays an alternative transport for the loop.</p>
 
 
 </section>
