@@ -12,6 +12,59 @@
 <generator>quarto-1.9.38</generator>
 <lastBuildDate>Fri, 12 Jun 2026 00:00:00 GMT</lastBuildDate>
 <item>
+  <title>Headless OpenXR testing with Monado (null compositor + simulated HMD)</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-headless-openxr-testing-with-monado.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Headless OpenXR testing with Monado (null compositor + simulated HMD)</em></p>
+<p><strong>Status:</strong> accepted</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The OpenXR path needs to run on Linux without a headset: on the workstation for iteration and in a podman quadlet for CI. The standalone Quest 3 build is the performance gate (<a href="../decisions/20260611-quest-3-frame-floor-as-mvp-gate.html">the Quest 3 gate</a>), but functional and integration coverage of the OpenXR path needs a runnable runtime on the box, with no display and no hardware.</p>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: run Monado with the null compositor and a simulated HMD, headless, because it is a conformant OpenXR runtime that an app reaches over the loader with no display and no device, on the workstation and inside a quadlet.</p>
+<p>The recipe on Fedora (Monado 25.1.0):</p>
+<ul>
+<li>Install <code>monado monado-devel monado-vulkan-layers</code>.</li>
+<li>Select the runtime: symlink <code>~/.config/openxr/1/active_runtime.json</code> to <code>/usr/share/openxr/1/openxr_monado.json</code>, or set <code>XR_RUNTIME_JSON</code>.</li>
+<li>Start the service headless: <code>tail -f /dev/null | XRT_COMPOSITOR_NULL=1 SIMULATED_ENABLE=1 monado-service</code>.</li>
+<li>OpenXR clients connect over the IPC socket <code>$XDG_RUNTIME_DIR/monado_comp_ipc</code>.</li>
+</ul>
+<p>The non-obvious part is the stdin pipe. <code>monado-service</code> watches stdin through <code>epoll</code> to notice shutdown, and a non-epoll-able stdin (a closed descriptor or a regular file, which is what a background job, a <code>nohup</code>, or a container hands it) makes <code>epoll_ctl(stdin)</code> fail and the service aborts before it opens the socket. Feeding it an epoll-able pipe (<code>tail -f /dev/null | ...</code>, or a held-open FIFO) is what lets it start.</p>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>The OpenXR path runs on the workstation and in a podman quadlet with no display and no headset.</li>
+<li><code>XRT_COMPOSITOR_NULL</code> discards submitted frames, so this covers the runtime, the tracking, and frame submission, with no rendered output and no performance signal.</li>
+<li><code>SIMULATED_ENABLE</code> supplies a head and controllers driven programmatically; the <code>qwerty</code> driver (<code>QWERTY_ENABLE</code>) adds keyboard and mouse control for an interactive desktop run.</li>
+<li>This is functional and integration coverage; the standalone Quest 3 build stays the performance and comfort gate.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p><code>openxr_runtime_list</code>, and any OpenXR app, reaches <code>xrCreateInstance</code> against the running service, and the service log reports the null compositor and a simulated HMD.</p>
+
+
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="20260611-quest-3-frame-floor-as-mvp-gate.html">Quest 3 frame floor as the MVP performance gate</a></p></li>
+</ul>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-headless-openxr-testing-with-monado.html</guid>
+  <pubDate>Fri, 12 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>r128 Q64.64 fixed-point as a Lean library for the cores</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-r128-fixed-point-as-lean-library.html</link>
   <description><![CDATA[ 
@@ -953,59 +1006,12 @@
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
+<li><p><a href="20260612-headless-openxr-testing-with-monado.html">Headless OpenXR testing with Monado (null compositor + simulated HMD)</a></p></li>
 </ul>
 </section>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-quest-3-frame-floor-as-mvp-gate.html</guid>
-  <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Server-authoritative simulation with deferred rollback</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-server-authoritative-simulation-deferred-rollback.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Server-authoritative simulation with deferred rollback</em></p>
-<p><strong>Status:</strong> accepted</p>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The loop needs one authority over combat state and loot contention. An earlier geometric Hilbert-zone authority attempt (<a href="../decisions/20260506-maglev-intercept-smoke-test.html">the Maglev intercept smoke test</a>) was rejected, and the one-week slice needs a simpler model that still resists client tampering.</p>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: the headless <code>zone-server</code> owns entity transforms, health, combat state, and loot contention, and clients reconcile to the server snapshot, because a single authority per instance keeps the slice simple and tamper-resistant.</p>
-<p>For the deadline the model is server-authoritative with client interpolation and no client prediction. The rollback adapter lands after the gate behind the same <code>input_source</code> and <code>state_sink</code>, so the swap never touches a core (<a href="../decisions/20260611-hexagon-combat-core.html">the combat hexagon</a>, <a href="../decisions/20260611-core-contract-pure-reducer-byte-state.html">the core contract</a>).</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>One authority per instance, so a per-connection transport child relays to that single core rather than holding state.</li>
-<li>Rollback is an adapter swap after the gate, not a rewrite.</li>
-<li>The deadline trades input snappiness for a far smaller build.</li>
-</ul>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>A divergent client reconciles to the server snapshot, and combat and loot resolve identically across the four clients.</p>
-
-
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
-<li><p><a href="20260506-maglev-intercept-smoke-test.html">Maglev Intercept: Cross-Platform Tilt-Shift Smoke Test</a></p></li>
-<li><p><a href="20260611-core-contract-pure-reducer-byte-state.html">Cores as pure reducers over byte-serialized state</a></p></li>
-<li><p><a href="20260611-hexagon-combat-core.html">Combat hexagon — core, ports, and adapters</a></p></li>
-</ul>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-server-authoritative-simulation-deferred-rollback.html</guid>
   <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 </channel>

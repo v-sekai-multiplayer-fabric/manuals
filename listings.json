@@ -14,6 +14,7 @@
     "listing": "/decisions.html",
     "items": [
       "/decisions/present-proposal-template.html",
+      "/decisions/20260612-headless-openxr-testing-with-monado.html",
       "/decisions/20260612-r128-fixed-point-as-lean-library.html",
       "/decisions/20260611-hexagon-budgeter-core.html",
       "/decisions/20260611-cassie-desktop-curvenet-authoring.html",
