@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-06-06">
+<meta name="dcterms.date" content="2026-06-13">
 
-<title>Minimal multiplayer presence demo with head and hand orbs – V-Sekai Fire — Manuals</title>
+<title>Repository and capability inventory for the multiplayer fabric – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -24,26 +24,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -307,16 +288,16 @@ div.csl-indent {
    
   <ul>
   <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link active" data-scroll-target="#context-and-problem-statement">Context and Problem Statement</a></li>
-  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision Drivers</a></li>
-  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered Options</a></li>
   <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision Outcome</a>
   <ul class="collapse">
-  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
-  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
+  <li><a href="#capabilities-and-where-they-live" id="toc-capabilities-and-where-they-live" class="nav-link" data-scroll-target="#capabilities-and-where-they-live">Capabilities and where they live</a></li>
+  <li><a href="#repositories-v-sekai-multiplayer-fabric" id="toc-repositories-v-sekai-multiplayer-fabric" class="nav-link" data-scroll-target="#repositories-v-sekai-multiplayer-fabric">Repositories — <code>v-sekai-multiplayer-fabric</code></a></li>
+  <li><a href="#still-on-v-sekai-fire-not-yet-migrated" id="toc-still-on-v-sekai-fire-not-yet-migrated" class="nav-link" data-scroll-target="#still-on-v-sekai-fire-not-yet-migrated">Still on <code>V-Sekai-fire</code> (not yet migrated)</a></li>
   </ul></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260606-multiplayer-presence-demo-orbs.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260613-repository-and-capability-inventory.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -324,7 +305,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Minimal multiplayer presence demo with head and hand orbs</h1>
+<h1 class="title">Repository and capability inventory for the multiplayer fabric</h1>
 </div>
 
 
@@ -335,7 +316,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 6, 2026</p>
+      <p class="date">June 13, 2026</p>
     </div>
   </div>
   
@@ -347,81 +328,404 @@ div.csl-indent {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Minimal multiplayer presence demo with head and hand orbs</em></p>
-<p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> superseded by <a href="20260606-presence-marker-representation.html">20260606-presence-marker-representation</a></p>
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Repository and capability inventory for the multiplayer fabric</em></p>
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The <code>xr-grid</code> debug scene shows one skinned-mesh hero asset (a rigged mesh with a skeleton, not a VRM) on the grid as a visual landmark; it does not represent a player. Around it float clusters of small colored orbs, each encoding the pose (translation and orientation) of one tracked point — head, hand, hand — for a remote participant. What is the smallest piece that proves shared presence at the scale of a full V-Sekai Discord call?</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="attachments/20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png" class="img-fluid figure-img"></p>
-<figcaption>The <code>xr-grid</code> debug scene, 2026-06-06: a skinned-mesh hero asset as a visual landmark, with each remote participant drawn as head and hand orientation-and-translation orb clusters. <span class="citation" data-cites="vsekai_xrgrid_debug_2026">(<a href="#ref-vsekai_xrgrid_debug_2026" role="doc-biblioref">V-Sekai Multiplayer Fabric 2026</a>)</span></figcaption>
-</figure>
-</div>
-</section>
-<section id="decision-drivers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
-<ul>
-<li>Smallest demonstrable multiplayer increment on top of the existing scene.</li>
-<li>Real presence for a Discord call’s worth of participants.</li>
-<li>Cheap per-player representation that still reads as a person.</li>
-<li>Identity should be optional, not a login wall.</li>
-</ul>
-</section>
-<section id="considered-options" class="level2">
-<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
-<ul>
-<li>Full networked character (skinned mesh) for every participant.</li>
-<li>Head plus two hand orbs per participant (3-point tracking).</li>
-<li>Text nameplates with no embodiment.</li>
-</ul>
+<p>The landing page used to carry the full repository list, a capability-to-branch table, and a prose description of the deployment target. Those facts already have homes — each capability rides a decision and an engine branch, the deployment target is a decision, the two-org split is a decision — so the landing page was a second copy that drifted every time one of those decisions changed. This record is the one place that owns the org-wide inventory; the landing page links here instead of restating it, and decided facts (deployment, org split, per-capability status) stay in their own decisions.</p>
+<p>The narrower <a href="../decisions/20260612-vertical-slice-repository-map.html">vertical-slice repository map</a> indexes only the loot-action slice; this inventory is the full <a href="https://github.com/v-sekai-multiplayer-fabric"><code>v-sekai-multiplayer-fabric</code></a> org plus the repos still on <a href="https://github.com/V-Sekai-fire"><code>V-Sekai-fire</code></a>.</p>
 </section>
 <section id="decision-outcome" class="level2">
 <h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: “Head plus two hand orbs per participant”, because three tracked points convey presence and gesture cheaply enough to scale to a whole call.</p>
-<ul>
-<li>Every participant, including the local player, is three orb clusters (head, hand, hand), each encoding a pose. The hero asset stays as a landmark only.</li>
-<li>The room scales to a Discord call’s worth of participants.</li>
-<li>Identity is opt-in: a participant signs with the <a href="../decisions/20260606-feature-classification-poc-baseline-stretch.html">cassie</a> pen; unsigned ones stay anonymous orbs.</li>
-<li>Poses go over low-level <a href="../decisions/20260606-presence-demo-networking-internals.html">WebTransport datagrams</a>, not high-level replication.</li>
-<li>Built on <a href="https://github.com/v-sekai-multiplayer-fabric/xr-grid">xr-grid</a>.</li>
-</ul>
-<section id="consequences" class="level3">
-<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
-<ul>
-<li>Good: presence and gesture for many people at low per-player cost.</li>
-<li>Good: identity is opt-in, so there is no login step.</li>
-<li>Bad: orbs are not full avatars, so avatar networking and IK go unexercised.</li>
-<li>Neutral: signing rides cassie’s pen stroke creation, which is solid; only its patch surface creation is buggy, and signing does not use that.</li>
-</ul>
+<p>This page is the canonical inventory. Each capability maps to the engine feature branch in <a href="https://github.com/v-sekai-multiplayer-fabric/godot">godot</a> that implements it; the Tier column follows the <a href="../decisions/20260606-feature-classification-poc-baseline-stretch.html">feature classification</a>.</p>
+<section id="capabilities-and-where-they-live" class="level3">
+<h3 class="anchored" data-anchor-id="capabilities-and-where-they-live">Capabilities and where they live</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Capability</th>
+<th>Tier</th>
+<th>Engine branch</th>
+<th>Supporting repos</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Native video playback</td>
+<td>Baseline</td>
+<td><code>feat/native-media</code> (MediaFoundation, GStreamer)</td>
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/native-media-test">native-media-test</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/vulkan-video-godot">vulkan-video-godot</a></td>
+<td>Working; builds on Windows and Linux.</td>
+</tr>
+<tr class="even">
+<td>Networking transport (<a href="../decisions/20260606-webtransport-http3-transport.html">WebTransport / HTTP/3</a>)</td>
+<td>Baseline</td>
+<td><code>feat/module-http3</code> (picoquic + web/wasm backends)</td>
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/zone-server">zone-server</a></td>
+<td>Working; <code>WebTransportPeer</code>/<code>QUICClient</code>/<code>QUICServer</code>, demos, Lean termination proof.</td>
+</tr>
+<tr class="odd">
+<td>Scene baking via OpenUSD</td>
+<td>Baseline</td>
+<td>—</td>
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/openusd-fabric">openusd-fabric</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/zone-baker">zone-baker</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/idtx-flow">idtx-flow</a></td>
+<td>Working; USD schema, Blender export hooks, scene validation, headless export.</td>
+</tr>
+<tr class="even">
+<td>Spatial audio (<a href="../decisions/20260606-spatial-audio-patched-resonance-audio.html">HRTF + audio probes</a>)</td>
+<td>Baseline</td>
+<td><code>feat/spatial-audio-server</code>, <code>feat/module-resonance-audio</code> (patched Resonance Audio)</td>
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/sponza-godot-audio">sponza-godot-audio</a></td>
+<td>Working; demo and benchmark scene.</td>
+</tr>
+<tr class="odd">
+<td>Speech</td>
+<td>Baseline</td>
+<td><code>feat/module-speech</code></td>
+<td>—</td>
+<td>Working.</td>
+</tr>
+<tr class="even">
+<td>Pen stroke creation (codename cassie)</td>
+<td>Proof of concept</td>
+<td><code>feat/module-cassie</code></td>
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/vsekai-materialx">vsekai-materialx</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/materialx-shaders-lean">materialx-shaders-lean</a></td>
+<td>Pen stroke creation is solid; patch surface creation is buggy (loses about 90%).</td>
+</tr>
+<tr class="odd">
+<td>Multiplayer presence (<a href="../decisions/20260606-multiplayer-presence-demo-orbs.html">tracker orbs</a>)</td>
+<td>Proof of concept</td>
+<td><code>feat/module-xr-grid</code></td>
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/xr-grid">xr-grid</a></td>
+<td>Proposed; head and hand pose orbs sent over low-level WebTransport.</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="confirmation" class="level3">
-<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
-<p>A session shows multiple participants as head and hand orb clusters tracking their poses at call scale, and signing produces a visible mark by that participant.</p>
+<section id="repositories-v-sekai-multiplayer-fabric" class="level3">
+<h3 class="anchored" data-anchor-id="repositories-v-sekai-multiplayer-fabric">Repositories — <code>v-sekai-multiplayer-fabric</code></h3>
+<section id="engine" class="level4">
+<h4 class="anchored" data-anchor-id="engine">Engine</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Repo</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/godot">godot</a></td>
+<td>V-Sekai fork of the Godot engine. Feature branches per topic.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/merge">merge</a></td>
+<td><code>gitassembly</code> recipe and <code>update_godot_v_sekai.exs</code> driver that composes the engine from its feature branches.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/godot-images">godot-images</a></td>
+<td>Single-source-of-truth engine builds: editor (baker) and template_release (zone server). Publishes to GHCR.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/godot-sandbox-gdscript-compiler">godot-sandbox-gdscript-compiler</a></td>
+<td>GDScript-to-sandbox compiler for the engine’s <code>module_sandbox</code>.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/godot-sandbox-programs">godot-sandbox-programs</a></td>
+<td>RISC-V programs run inside <code>module_sandbox</code> (fork).</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/native-media-test">native-media-test</a></td>
+<td>Godot project exercising the engine’s native media (audio/video) backend.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/vulkan-video-godot">vulkan-video-godot</a></td>
+<td>Vulkan Video decode integration for Godot (placeholder).</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="runtime-services" class="level4">
+<h4 class="anchored" data-anchor-id="runtime-services">Runtime services</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Repo</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/zone-server">zone-server</a></td>
+<td>Headless Godot zone server (template_release, double precision).</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/zone-backend">zone-backend</a></td>
+<td>URO: Phoenix/Elixir backend for identity, the zone directory, and the planner.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/zone-baker">zone-baker</a></td>
+<td>Minimal headless Godot project that validates and exports VSK assets.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/observability">observability</a></td>
+<td>VictoriaMetrics, VictoriaLogs, Tempo, and the OTEL Collector.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="service-images" class="level4">
+<h4 class="anchored" data-anchor-id="service-images">Service images</h4>
+<p>Each service ships as an OCI container image launched by a podman quadlet under systemd; see <a href="../decisions/20260613-quadlets-on-fedora-44-instead-of-harvester.html">run services as systemd podman quadlets on Fedora 44</a>, which supersedes the earlier qcow2-on-Harvester model. The <code>*-image</code> repos below are being repointed from qcow2 VM images to OCI images per that decision.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Repo</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/linux-base-image">linux-base-image</a></td>
+<td>Shared base image with podman, chrony, and a guest agent. Base for every service image.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-image">zone-server-image</a></td>
+<td>Headless Godot zone server runtime image.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/zone-baker-image">zone-baker-image</a></td>
+<td>Headless Godot asset validator and exporter image.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/zone-backend-image">zone-backend-image</a></td>
+<td>URO Phoenix backend image.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/cockroach-crdb-image">cockroach-crdb-image</a></td>
+<td>CockroachDB server image (v-sekai fork).</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/restic-backup-image">restic-backup-image</a></td>
+<td>versitygw, restic, and a cockroach client for the backup image.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/gha-runner-image">gha-runner-image</a></td>
+<td>Org-wide GitHub Actions self-hosted runner as a podman quadlet.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/sccache-cache-image">sccache-cache-image</a></td>
+<td>versitygw S3 endpoint dedicated to sccache for fast C++ rebuilds.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="rendering-shaders-and-usd" class="level4">
+<h4 class="anchored" data-anchor-id="rendering-shaders-and-usd">Rendering, shaders, and USD</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Repo</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/godot-toon-shaders">godot-toon-shaders</a></td>
+<td>Godot toon shader ports and a shared parameter map (MToon 0.x / MToon10, planned SCSS and lilToon).</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/vsekai-materialx">vsekai-materialx</a></td>
+<td>PBR/NPR/Slug as MaterialX nodes compiled to Slang; ThorVG-to-Slug vectorization, differentiable via SlangPy.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/materialx-shaders-lean">materialx-shaders-lean</a></td>
+<td>Lean 4 formalization of PBR, NPR, and vector shaders under MaterialX.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/MaterialX">MaterialX</a></td>
+<td>The MaterialX material-exchange standard (fork).</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/idtx-flow">idtx-flow</a></td>
+<td>Godot plugin importing USD via openUSD (fork).</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/openusd-fabric">openusd-fabric</a></td>
+<td>OpenUSD pipeline spanning Blender, Godot, Hydra, Unity, and a Lean schema.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/sponza-godot-audio">sponza-godot-audio</a></td>
+<td>Sponza demo and audio benchmark for Godot 4.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="spatial-and-verification" class="level4">
+<h4 class="anchored" data-anchor-id="spatial-and-verification">Spatial and verification</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Repo</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/lean-predictive-bvh">lean-predictive-bvh</a></td>
+<td>Lean 4 formal verification and codegen for the Predictive BVH spatial oracle.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tooling-and-integration" class="level4">
+<h4 class="anchored" data-anchor-id="tooling-and-integration">Tooling and integration</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Repo</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/vsekai-godot-mcp">vsekai-godot-mcp</a></td>
+<td>In-editor MCP server addon for Godot (Streamable-HTTP, constant-work command buffer).</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/viser">viser</a></td>
+<td>Web-based 3D visualization in Python (fork).</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/xr-grid">xr-grid</a></td>
+<td>VR interaction tool (fork).</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="infrastructure-and-docs" class="level4">
+<h4 class="anchored" data-anchor-id="infrastructure-and-docs">Infrastructure and docs</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Repo</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/infra">infra</a></td>
+<td>OpenTofu config that provisions the self-hosted hosts and delivers the podman-quadlet units.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/manuals">manuals</a></td>
+<td>This Quarto site.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="archived" class="level4">
+<h4 class="anchored" data-anchor-id="archived">Archived</h4>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Repo</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/friends-art-game-loop">friends-art-game-loop</a></td>
+<td>Local-first art-game loop experiment.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/sandbox-gdextension-godot">sandbox-gdextension-godot</a></td>
+<td>Earlier GDExtension sandbox approach.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/v-sekai-multiplayer-fabric/usd-converter-for-vrchat">usd-converter-for-vrchat</a></td>
+<td>VRChat-to-VRM 1.0 converter UPM (fork).</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="still-on-v-sekai-fire-not-yet-migrated" class="level3">
+<h3 class="anchored" data-anchor-id="still-on-v-sekai-fire-not-yet-migrated">Still on <code>V-Sekai-fire</code> (not yet migrated)</h3>
+<p>These repos remain the source of truth under the older org; see the <a href="../decisions/20260606-org-split-v-sekai-multiplayer-fabric.html">two-org split</a>. Links in the decisions and changelog that point at them are correct and still resolve.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Repo</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric">multiplayer-fabric</a></td>
+<td>Umbrella monorepo registering the V-Sekai-fire repos as submodules.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-gateway">multiplayer-fabric-gateway</a></td>
+<td>Elixir WebTransport gateway on UDP 443.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-zone-console">multiplayer-fabric-zone-console</a></td>
+<td>Operator console for zone health and shard rotations.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-webtransport">multiplayer-fabric-webtransport</a></td>
+<td>Elixir bindings for the Rust wtransport library.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-taskweft">multiplayer-fabric-taskweft</a></td>
+<td>Re-entrant temporal HTN planner and ReBAC engine.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-humanoid-project">multiplayer-fabric-humanoid-project</a></td>
+<td>Humanoid avatars and animations (<code>mire.vrm</code> test avatar).</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/V-Sekai-fire/aria-storage">aria-storage</a></td>
+<td>casync/desync chunked content-addressable storage.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/V-Sekai-fire/elixir-turboquant-llm">elixir-turboquant-llm</a></td>
+<td>Quantized LLM inference NIF (Elixir / llama.cpp).</td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/V-Sekai-fire/multiplayer-fabric-cycle-tests">multiplayer-fabric-cycle-tests</a></td>
+<td>Maglev cycle smoke tests, one per cycle.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>One page owns the inventory, so a repo or capability change lands in one place.</li>
+<li>The landing page asserts only durable orientation and links here, so it no longer drifts when the deployment target, org split, or a capability status changes.</li>
+<li>This inventory still needs hand maintenance; the gain is a single source of truth, not zero maintenance.</li>
+</ul>
 
 
-</section>
 </section>
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
-<li><p><a href="../changelog/2026/20260606-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)</a></p></li>
-<li><p><a href="20260606-archival-file-naming-convention.html">Archival file naming convention for committed assets</a></p></li>
-<li><p><a href="20260606-art-game-loop-steel-thread.html">Recursive art-game loop and its minimal steel thread</a></p></li>
 <li><p><a href="20260606-feature-classification-poc-baseline-stretch.html">Feature classification — proof of concept, baseline, stretch</a></p></li>
-<li><p><a href="20260606-presence-demo-networking-internals.html">Presence demo pose networking</a></p></li>
-<li><p><a href="20260606-presence-marker-representation.html">Human-readable presence markers with an orb debug mode</a></p></li>
-<li><p><a href="20260611-hexagon-presence-core.html">Presence hexagon — wrapping the existing presence stack</a></p></li>
-<li><p><a href="20260613-repository-and-capability-inventory.html">Repository and capability inventory for the multiplayer fabric</a></p></li>
+<li><p><a href="20260606-multiplayer-presence-demo-orbs.html">Minimal multiplayer presence demo with head and hand orbs</a></p></li>
+<li><p><a href="20260606-org-split-v-sekai-multiplayer-fabric.html">Two-org split between V-Sekai-fire and v-sekai-multiplayer-fabric</a></p></li>
+<li><p><a href="20260606-spatial-audio-patched-resonance-audio.html">Spatial audio via a patched Resonance Audio (HRTF and audio probes)</a></p></li>
+<li><p><a href="20260606-webtransport-http3-transport.html">WebTransport over HTTP/3 transport</a></p></li>
+<li><p><a href="20260612-vertical-slice-repository-map.html">Repository map of the loot-action vertical slice</a></p></li>
+<li><p><a href="20260613-quadlets-on-fedora-44-instead-of-harvester.html">Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI</a></p></li>
 </ul>
-
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-vsekai_xrgrid_debug_2026" class="csl-entry" role="listitem">
-V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug Scene: Hero-Asset Landmark with Head and Hand Orientation-and-Translation Orbs</em>.
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -843,7 +1147,7 @@ V-Sekai Multiplayer Fabric. 2026. <em><span class="nocase">xr-grid</span> Debug 
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260606-multiplayer-presence-demo-orbs.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260613-repository-and-capability-inventory.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
