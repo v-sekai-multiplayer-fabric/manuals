@@ -4,14 +4,7 @@
     "href": "index.html",
     "title": "V-Sekai — Multiplayer Fabric",
     "section": "",
-    "text": "A WebTransport game-server platform built on Godot, Elixir, and CockroachDB. The runtime is self-hosted; see the deployment decisions for the current target.\nThe project spans two GitHub organizations: v-sekai-multiplayer-fabric is the home for new work, and V-Sekai-fire holds the runtime services not yet migrated. See the two-org split decision for how they relate, and the repository and capability inventory for where each repo lives today.\n\n\n\n\n\nResource\nContents\n\n\n\n\nDecisions\nArchitecture decision records (MADR) — the source of truth\n\n\nRepositories\nCanonical repo and capability inventory\n\n\nChangelog\nDaily deck logs\n\n\nReferences\nBibliography of cited sources\n\n\nCompiling the engine\nLocal build SOP for Godot"
-  },
-  {
-    "objectID": "index.html#where-things-live",
-    "href": "index.html#where-things-live",
-    "title": "V-Sekai — Multiplayer Fabric",
-    "section": "",
-    "text": "Resource\nContents\n\n\n\n\nDecisions\nArchitecture decision records (MADR) — the source of truth\n\n\nRepositories\nCanonical repo and capability inventory\n\n\nChangelog\nDaily deck logs\n\n\nReferences\nBibliography of cited sources\n\n\nCompiling the engine\nLocal build SOP for Godot"
+    "text": "V-Sekai — Multiplayer Fabric\nA WebTransport game-server platform built on Godot, Elixir, and CockroachDB. The runtime is self-hosted; see the deployment decisions for the current target."
   },
   {
     "objectID": "references.html",
