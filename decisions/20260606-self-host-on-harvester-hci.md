@@ -1,7 +1,7 @@
 ---
 title: Self-host on Harvester HCI instead of Fly.io
 date: 2026-06-06
-status: accepted
+status: superseded by 20260613-quadlets-on-fedora-44-instead-of-harvester.md
 tier: baseline
 supersedes: 20260501-fly-io-for-deployment.md, 20260506-maglev-cycle-0-infra.md
 ---
