@@ -22,20 +22,3 @@ for where each repo lives today.
 | [Changelog](changelog.qmd)                                                | Daily deck logs                                            |
 | [References](references.qmd)                                              | Bibliography of cited sources                              |
 | [Compiling the engine](decisions/20260606-compiling-godot-engine.md)      | Local build SOP for Godot                                  |
-
-This page stays deliberately thin: it links to the decisions that own each fact rather
-than restating them, so it does not drift as those decisions change.
-
-## Quick start
-
-The local workflow is bash-first (POSIX shebangs, `/tmp` paths, symlinks, `lsof`, the
-UNIX docker socket). On Windows, use WSL2 (Ubuntu).
-
-```sh
-git clone https://github.com/v-sekai-multiplayer-fabric/godot
-```
-
-The engine assembles from feature branches via
-[merge](https://github.com/v-sekai-multiplayer-fabric/merge) and builds through
-[godot-images](https://github.com/v-sekai-multiplayer-fabric/godot-images). To build it
-locally, follow [Compiling the Godot engine](decisions/20260606-compiling-godot-engine.md).
