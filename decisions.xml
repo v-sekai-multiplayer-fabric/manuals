@@ -94,6 +94,7 @@
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
+<li><p><a href="20260612-webtransport-persistent-framed-stream.html">WebTransport reliable delivery on one persistent framed stream per session</a></p></li>
 </ul>
 </section>
 
@@ -426,6 +427,75 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-systemd-quadlet-verification-queue.html</guid>
+  <pubDate>Fri, 12 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>WebTransport reliable delivery on one persistent framed stream per session</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-webtransport-persistent-framed-stream.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › WebTransport reliable delivery on one persistent framed stream per session</em></p>
+<p><strong>Status:</strong> accepted</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The fabric’s reliability classes (<a href="../decisions/20260612-fabric-channels-as-reliability-classes.html">fabric channels</a>) run over ENet for the local slice. WebTransport carries the same classes for the browser and Quest paths over one QUIC connection per client. The picoquic WebTransport server goes silent within seconds once four or more sessions connect: some clients never finish the extended-CONNECT handshake, and once a few sessions are open every client stops sending and receiving while the network thread stays alive in <code>poll()</code>.</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>A client sends a transform every tick and a control event rarely, so the reliable path takes a high message rate.</li>
+<li>picoquic caps concurrent streams per connection, and the extended-CONNECT response rides the session’s control stream.</li>
+<li>The same <code>set_transfer_channel</code> plus <code>set_transfer_mode</code> lane selection has to read the same on both transports.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>A fresh bidirectional stream per reliable message, FIN’d after the payload.</li>
+<li>One persistent bidirectional stream per session, carrying length-prefixed frames.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: reliable traffic rides one persistent bidirectional WebTransport stream per session, opened once after connect-accepted and appended to without a per-message FIN; unreliable traffic rides datagrams. Each reliable message carries the webtransportd frame header (<code>flag | len_varint | payload</code>, where the flag holds a 0–7 channel and a reliable bit), so the receiver delimits messages on the shared stream and recovers the channel. This matches the picoquic <code>wt_baton</code> reference and the webtransportd frame spec.</p>
+<p>A fresh stream per message exhausts the connection’s stream credit, and the exhaustion starves the connect-accepted response on the control stream, so the late session stays in connecting. The persistent stream holds the stream count at one per session regardless of message rate.</p>
+<p>Five supporting invariants keep the server alive under concurrent load:</p>
+<ul>
+<li>The inbound packet queue takes a mutex shared by the picoquic network thread and the main thread. A Lean+Plausible model proves the locked queue stays size-honest for every schedule, and finds the unlocked interleaving that strands the newest session’s packets behind a stale cached length.</li>
+<li>The packet-loop wake branch services receive and send on the same iteration, and the work queue drains on every loop callback, including timeouts and receives. A steady wake stream otherwise holds the loop in the wake branch and starves both directions. The same Lean+Plausible model proves the inclusive iteration stays starvation-free for every schedule.</li>
+<li><code>get_packet_peer</code>, <code>get_packet_mode</code>, and <code>get_packet_channel</code> peek the front of the queue, the MultiplayerPeer contract, rather than the last-popped value. Reading the popped value mis-attributes interleaved sessions, so a late client’s join credits another peer and the client never receives its welcome.</li>
+<li>The server connection table sizes for the entity and interest fanout, above a single slot.</li>
+<li>The picoquic textlog stays behind the engine verbose flag, because its synchronous stdout writes stall the network thread under load.</li>
+</ul>
+</section>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<ul>
+<li>A client opens one reliable stream for its whole session, so concurrent joins keep their stream credit and reach open.</li>
+<li>The channel-plus-reliability flag the ENet peer reads from the transfer channel and mode rides inside the frame, so both transports realize the channels decision with one mental model.</li>
+<li>The slice runs identically on <code>TRANSPORT=enet</code> and <code>TRANSPORT=wt</code>; the text protocol stays transport-agnostic, and the Quest 3 joins the same loop over either.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>The <a href="https://github.com/v-sekai-multiplayer-fabric/http3-queue">http3-queue</a> Lean+Plausible workspace proves the queue and wake-loop properties and exhibits the failing schedules. Five concurrent WebTransport sessions stay healthy for ninety seconds and complete full Hub-to-Field-to-Loot rounds, on the fork’s <code>feat/module-http3</code>.</p>
+
+
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
+<li><p><a href="20260612-fabric-channels-as-reliability-classes.html">Fabric channels as reliability classes, control in payload</a></p></li>
+</ul>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-webtransport-persistent-framed-stream.html</guid>
   <pubDate>Fri, 12 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
@@ -949,57 +1019,6 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-first-party-curated-content-zone-baker-budgets.html</guid>
-  <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Forward renderer with baked light for the mobile floor</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-forward-renderer-baked-light.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Forward renderer with baked light for the mobile floor</em></p>
-<p><strong>Status:</strong> accepted</p>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The Quest 3 rations bandwidth across file, memory, and network IO, and deferred rendering competes for it. The slice needs predictable frame cost regardless of light count on the mobile tile renderer.</p>
-</section>
-<section id="considered-options" class="level2">
-<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
-<ul>
-<li>Deferred rendering.</li>
-<li>A simple forward renderer with baked global illumination.</li>
-</ul>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: a simple forward renderer with baked global illumination and light probes for static geometry, a dedicated shadow pass for avatars, and probe lighting for dynamic entities, because the frame cost stays predictable regardless of light count. Deferred rendering pressures the bandwidth the mobile tile renderer rations.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>Frame cost stays predictable, so artists place many lights without watching the budget.</li>
-<li>Dynamic entities take lower-fidelity probe lighting.</li>
-<li>The renderer removes one axis the small team otherwise tunes by hand.</li>
-</ul>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>The Field room holds 72 Hz on a standalone Quest 3 with many lights placed.</p>
-
-
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
-</ul>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-forward-renderer-baked-light.html</guid>
   <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 </channel>

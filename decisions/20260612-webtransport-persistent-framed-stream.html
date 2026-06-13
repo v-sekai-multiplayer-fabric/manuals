@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2026-06-12">
 
-<title>deck-log – V-Sekai Fire — Manuals</title>
+<title>WebTransport reliable delivery on one persistent framed stream per session – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,27 +27,27 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-c8b36098594828138602e592b3b57366.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-c744e0ff86f5d87993c78b6cdbb23212.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../../site_libs/bootstrap/bootstrap-c8b36098594828138602e592b3b57366.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-c8b36098594828138602e592b3b57366.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-c744e0ff86f5d87993c78b6cdbb23212.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-c8b36098594828138602e592b3b57366.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -247,7 +248,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">V-Sekai Fire — Manuals</span>
     </a>
   </div>
@@ -258,15 +259,15 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../changelog.html"> 
+    <a class="nav-link" href="../changelog.html"> 
 <span class="menu-text">Changes</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../decisions.html"> 
+    <a class="nav-link" href="../decisions.html"> 
 <span class="menu-text">Decisions</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../references.html"> 
+    <a class="nav-link" href="../references.html"> 
 <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -286,87 +287,99 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#v-sekai-multiplayer-fabric-deck-log-2026-06-12-friday" id="toc-v-sekai-multiplayer-fabric-deck-log-2026-06-12-friday" class="nav-link active" data-scroll-target="#v-sekai-multiplayer-fabric-deck-log-2026-06-12-friday">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a>
-  <ul class="collapse">
-  <li><a href="#added" id="toc-added" class="nav-link" data-scroll-target="#added">Added</a></li>
-  <li><a href="#added-the-steel-thread-later-the-same-day" id="toc-added-the-steel-thread-later-the-same-day" class="nav-link" data-scroll-target="#added-the-steel-thread-later-the-same-day">Added (the steel thread, later the same day)</a></li>
-  <li><a href="#fixed" id="toc-fixed" class="nav-link" data-scroll-target="#fixed">Fixed</a></li>
-  <li><a href="#fixed-later-still" id="toc-fixed-later-still" class="nav-link" data-scroll-target="#fixed-later-still">Fixed (later still)</a></li>
-  <li><a href="#added-replication-and-deployment" id="toc-added-replication-and-deployment" class="nav-link" data-scroll-target="#added-replication-and-deployment">Added (replication and deployment)</a></li>
-  <li><a href="#fixed-webtransport-multi-session-stability" id="toc-fixed-webtransport-multi-session-stability" class="nav-link" data-scroll-target="#fixed-webtransport-multi-session-stability">Fixed (WebTransport multi-session stability)</a></li>
-  <li><a href="#added-the-loop-on-both-transports-and-the-quest-3" id="toc-added-the-loop-on-both-transports-and-the-quest-3" class="nav-link" data-scroll-target="#added-the-loop-on-both-transports-and-the-quest-3">Added (the loop on both transports and the Quest 3)</a></li>
-  </ul></li>
+  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link active" data-scroll-target="#context-and-problem-statement">Context and Problem Statement</a></li>
+  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision Drivers</a></li>
+  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered Options</a></li>
+  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision Outcome</a></li>
+  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
+  <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/changelog/2026/20260612-deck-log.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260612-webtransport-persistent-framed-stream.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">WebTransport reliable delivery on one persistent framed stream per session</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 12, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
 
 
-<section id="v-sekai-multiplayer-fabric-deck-log-2026-06-12-friday" class="level1">
-<h1>V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</h1>
-<p>Date: 2026-06-12</p>
-<p>Recorded the instanced loot-action core-loop slice as MADRs: the product scope and the Quest 3 gate, the five hexagons, and the core architecture around Lean kernels lowered to SPIR-V over r128 fixed-point.</p>
-<section id="added" class="level2">
-<h2 class="anchored" data-anchor-id="added">Added</h2>
+</header>
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › WebTransport reliable delivery on one persistent framed stream per session</em></p>
+<p><strong>Status:</strong> accepted</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The fabric’s reliability classes (<a href="../decisions/20260612-fabric-channels-as-reliability-classes.html">fabric channels</a>) run over ENet for the local slice. WebTransport carries the same classes for the browser and Quest paths over one QUIC connection per client. The picoquic WebTransport server goes silent within seconds once four or more sessions connect: some clients never finish the extended-CONNECT handshake, and once a few sessions are open every client stops sending and receiving while the network thread stays alive in <code>poll()</code>.</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
 <ul>
-<li>Product and process decisions: <a href="../../decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html">MVP vertical slice</a>, <a href="../../decisions/20260611-quest-3-frame-floor-as-mvp-gate.html">Quest 3 frame-floor gate</a>, <a href="../../decisions/20260611-first-party-curated-content-zone-baker-budgets.html">first-party content budgets</a>, <a href="../../decisions/20260611-genre-generic-naming-no-trademarks.html">genre-generic naming</a>, <a href="../../decisions/20260611-cassie-desktop-curvenet-authoring.html">CASSIE desktop authoring</a>, and <a href="../../decisions/20260611-content-build-merged-double-precision-mcp.html">a merged build via the editor MCP</a>.</li>
-<li>Hexagon decisions (core, ports, adapters): <a href="../../decisions/20260611-hexagon-combat-core.html">combat</a>, <a href="../../decisions/20260611-hexagon-loot-core.html">loot</a>, <a href="../../decisions/20260611-hexagon-progression-core.html">progression</a>, <a href="../../decisions/20260611-hexagon-budgeter-core.html">budgeter</a>, and <a href="../../decisions/20260611-hexagon-presence-core.html">presence</a>, the last wrapping the existing presence decisions.</li>
-<li>Core architecture decisions: <a href="../../decisions/20260611-lean4-kernel-cores-flat-c-host-adapters.html">Lean kernel cores with flat-C adapters</a>, <a href="../../decisions/20260611-core-codegen-lean-slang.html">Lean to Slang to SPIR-V codegen</a>, <a href="../../decisions/20260612-r128-fixed-point-as-lean-library.html">r128 fixed-point as a Lean library</a>, <a href="../../decisions/20260611-core-contract-pure-reducer-byte-state.html">the pure-reducer byte-state contract</a>, <a href="../../decisions/20260611-deterministic-cores-integer-seeded-rng.html">deterministic state</a>, <a href="../../decisions/20260611-server-authoritative-simulation-deferred-rollback.html">server authority with deferred rollback</a>, <a href="../../decisions/20260611-generated-behavior-sandboxed-riscv.html">sandboxed RISC-V behavior</a>, <a href="../../decisions/20260611-forward-renderer-baked-light.html">the forward renderer</a>, and <a href="../../decisions/20260611-webtransportd-core-transport-adapter.html">the webtransportd transport adapter</a>.</li>
+<li>A client sends a transform every tick and a control event rarely, so the reliable path takes a high message rate.</li>
+<li>picoquic caps concurrent streams per connection, and the extended-CONNECT response rides the session’s control stream.</li>
+<li>The same <code>set_transfer_channel</code> plus <code>set_transfer_mode</code> lane selection has to read the same on both transports.</li>
 </ul>
 </section>
-<section id="added-the-steel-thread-later-the-same-day" class="level2">
-<h2 class="anchored" data-anchor-id="added-the-steel-thread-later-the-same-day">Added (the steel thread, later the same day)</h2>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
 <ul>
-<li>The merged <code>multiplayer-fabric</code> assembly builds: the linux double-precision editor (23 branches, zero conflicts) and the Android arm64 double template (<code>android_release.apk</code>), per <a href="../../decisions/20260612-android-template-temurin-jdk21.html">the toolchain decision</a>.</li>
-<li>Wire parity under server authority in the merged build: loot (256 rolls), combat (88 effects), and four-player contention (64 rounds, 4 concurrent clients) all match their Lean golden vectors; headless OpenXR initializes against Monado per <a href="../../decisions/20260612-headless-openxr-testing-with-monado.html">the Monado decision</a>.</li>
-<li>New repos: <a href="https://github.com/v-sekai-multiplayer-fabric/loot">loot</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/combat">combat</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/progression">progression</a> (each a core/ports/adapters triad with Plausible-pinned golden vectors), and <a href="https://github.com/v-sekai-multiplayer-fabric/fabric-verify">fabric-verify</a> (the smokes as a quadlet queue, per <a href="../../decisions/20260612-systemd-quadlet-verification-queue.html">the queue decision</a>).</li>
-<li>The r128 chain: the Lean <code>R128</code> matches the vendored <code>r128.c</code> (8,200 vectors x 7 ops), the uint32-limb <code>R128L</code> matches <code>R128</code> (50,000 sweep), and the lean-slang-emitted SPIR-V kernel matches <code>r128.c</code> on the GPU (4,096 multiplies), per <a href="../../decisions/20260612-r128-fixed-point-as-lean-library.html">the r128 Lean library decision</a>.</li>
-<li>lean-slang runs on Lean 4.30 (<a href="https://github.com/V-Sekai-fire/lean-slang/pull/1">V-Sekai-fire/lean-slang#1</a>).</li>
+<li>A fresh bidirectional stream per reliable message, FIN’d after the payload.</li>
+<li>One persistent bidirectional stream per session, carrying length-prefixed frames.</li>
 </ul>
 </section>
-<section id="fixed" class="level2">
-<h2 class="anchored" data-anchor-id="fixed">Fixed</h2>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: reliable traffic rides one persistent bidirectional WebTransport stream per session, opened once after connect-accepted and appended to without a per-message FIN; unreliable traffic rides datagrams. Each reliable message carries the webtransportd frame header (<code>flag | len_varint | payload</code>, where the flag holds a 0–7 channel and a reliable bit), so the receiver delimits messages on the shared stream and recovers the channel. This matches the picoquic <code>wt_baton</code> reference and the webtransportd frame spec.</p>
+<p>A fresh stream per message exhausts the connection’s stream credit, and the exhaustion starves the connect-accepted response on the control stream, so the late session stays in connecting. The persistent stream holds the stream count at one per session regardless of message rate.</p>
+<p>Five supporting invariants keep the server alive under concurrent load:</p>
 <ul>
-<li><code>merge</code> <code>gitassembly</code> drops the dead <code>feat/spatial-audio-server</code> ref (<a href="https://github.com/v-sekai-multiplayer-fabric/merge/pull/36">merge#36</a>), so the canonical assembly runs again.</li>
-<li>The http3 listener findings are recorded as <a href="../../decisions/20260612-http3-listener-session-findings.html">a decision</a>: one listener per process, reply routing to a single session, and a teardown double free, with the loop’s interim shape until the module fixes land.</li>
+<li>The inbound packet queue takes a mutex shared by the picoquic network thread and the main thread. A Lean+Plausible model proves the locked queue stays size-honest for every schedule, and finds the unlocked interleaving that strands the newest session’s packets behind a stale cached length.</li>
+<li>The packet-loop wake branch services receive and send on the same iteration, and the work queue drains on every loop callback, including timeouts and receives. A steady wake stream otherwise holds the loop in the wake branch and starves both directions. The same Lean+Plausible model proves the inclusive iteration stays starvation-free for every schedule.</li>
+<li><code>get_packet_peer</code>, <code>get_packet_mode</code>, and <code>get_packet_channel</code> peek the front of the queue, the MultiplayerPeer contract, rather than the last-popped value. Reading the popped value mis-attributes interleaved sessions, so a late client’s join credits another peer and the client never receives its welcome.</li>
+<li>The server connection table sizes for the entity and interest fanout, above a single slot.</li>
+<li>The picoquic textlog stays behind the engine verbose flag, because its synchronous stdout writes stall the network thread under load.</li>
 </ul>
 </section>
-<section id="fixed-later-still" class="level2">
-<h2 class="anchored" data-anchor-id="fixed-later-still">Fixed (later still)</h2>
+<section id="consequences" class="level2">
+<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
 <ul>
-<li>The http3 multi-session reply routing and teardown double free, as <a href="https://github.com/v-sekai-multiplayer-fabric/godot/pull/56">godot#56</a> — the fix pattern comes from the webtransportd single-pending-slot bug (<code>fire/webtransportd@f0fc9a4</code>). Post-fix, four concurrent clients each receive their own winner announcements and the server survives teardown; the quadlet four-player smoke verifies per client.</li>
+<li>A client opens one reliable stream for its whole session, so concurrent joins keep their stream credit and reach open.</li>
+<li>The channel-plus-reliability flag the ENet peer reads from the transfer channel and mode rides inside the frame, so both transports realize the channels decision with one mental model.</li>
+<li>The slice runs identically on <code>TRANSPORT=enet</code> and <code>TRANSPORT=wt</code>; the text protocol stays transport-agnostic, and the Quest 3 joins the same loop over either.</li>
 </ul>
 </section>
-<section id="added-replication-and-deployment" class="level2">
-<h2 class="anchored" data-anchor-id="added-replication-and-deployment">Added (replication and deployment)</h2>
-<ul>
-<li>The entity-transform wire is integral: int64 absolute micrometers (no origin shift), velocity tied to the predictive BVH’s V_MAX, a 42-byte payload, and a Lean+Plausible source-of-truth in <a href="https://github.com/v-sekai-multiplayer-fabric/entity_packet">entity_packet</a> (<a href="../../decisions/20260612-integral-entity-transform-wire.html">decision</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/godot/pull/58">godot#58</a>).</li>
-<li>Fabric channels are reliability classes with control in the packet payload (<a href="../../decisions/20260612-fabric-channels-as-reliability-classes.html">decision</a>).</li>
-<li>The slice runs on a Quest 3 at a locked 72 Hz: the immersive deployment requirements (OpenXR loader, VR-category manifest, INTERNET, mobile+double shader) are recorded (<a href="../../decisions/20260612-quest3-immersive-deployment.html">decision</a>), and the MCP runtime bridge drives the deployed build over adb (<a href="../../decisions/20260612-mcp-runtime-bridge-deployed-builds.html">decision</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/vsekai-godot-mcp/pull/1">vsekai-godot-mcp#1</a>).</li>
-<li>New repos: the standalone Lean workspaces <a href="https://github.com/v-sekai-multiplayer-fabric/loot-core">loot-core</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/combat-core">combat-core</a>, <a href="https://github.com/v-sekai-multiplayer-fabric/progression-core">progression-core</a>, and the playable <a href="https://github.com/v-sekai-multiplayer-fabric/loop-slice">loop-slice</a>.</li>
-</ul>
-</section>
-<section id="fixed-webtransport-multi-session-stability" class="level2">
-<h2 class="anchored" data-anchor-id="fixed-webtransport-multi-session-stability">Fixed (WebTransport multi-session stability)</h2>
-<ul>
-<li>The picoquic WebTransport server survives four or more concurrent sessions and completes full rounds, on <code>feat/module-http3</code>. Reliable traffic rides one persistent framed stream per session instead of a fresh stream per message, which exhausts stream credit and starves the connect handshake (<a href="../../decisions/20260612-webtransport-persistent-framed-stream.html">decision</a>). Five supporting fixes hold the network thread up under load: a mutex on the inbound queue, an inclusive wake-loop that drains and services receive on every callback, <code>get_packet_peer</code> peeking the queue front per the MultiplayerPeer contract, a connection table sized for the fanout, and the picoquic textlog gated behind the verbose flag.</li>
-<li>The queue race and the wake-loop starvation each carry a Lean+Plausible proof in the new <a href="https://github.com/v-sekai-multiplayer-fabric/http3-queue">http3-queue</a> workspace: the locked queue stays size-honest for every schedule, the inclusive loop stays starvation-free, and the models exhibit the schedules the unlocked and exclusive variants fail.</li>
-</ul>
-</section>
-<section id="added-the-loop-on-both-transports-and-the-quest-3" class="level2">
-<h2 class="anchored" data-anchor-id="added-the-loop-on-both-transports-and-the-quest-3">Added (the loop on both transports and the Quest 3)</h2>
-<ul>
-<li>The loop chooses its transport at launch through <code>TRANSPORT</code>: ENet for the local slice, WebTransport for the browser and headset paths, with the text protocol unchanged across both. Control rides reliable on channel 0, the high-rate transform rides unreliable on channel 1.</li>
-<li>A Quest 3 joins the four-player loop over LAN as a real player: it autoconnects to the desktop server, fights in immersive OpenXR above the 72 Hz floor, and the round commits progression. The headset controllers drive the loop through polled, edge-detected actions (left thumbstick locomotion, right trigger attack, right A grab, left Y teleport vote), reading the bool action <code>trigger_click</code> rather than a float trigger, with the XR camera held by reference so the locomotion branch runs.</li>
-<li>The <a href="https://github.com/v-sekai-multiplayer-fabric/merge">merge</a> assembler returns to the base branch and drops the local assembly branch on every run, including dry runs and failures, so a half-built assembly leaves the checkout clean.</li>
-</ul>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>The <a href="https://github.com/v-sekai-multiplayer-fabric/http3-queue">http3-queue</a> Lean+Plausible workspace proves the queue and wake-loop properties and exhibits the failing schedules. Five concurrent WebTransport sessions stay healthy for ninety seconds and complete full Hub-to-Field-to-Loot rounds, on the fork’s <code>feat/module-http3</code>.</p>
 
 
 </section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
+<li><p><a href="20260612-fabric-channels-as-reliability-classes.html">Fabric channels as reliability classes, control in payload</a></p></li>
+</ul>
 </section>
 
 </main> <!-- /main -->
@@ -791,7 +804,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/changelog/2026/20260612-deck-log.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260612-webtransport-persistent-framed-stream.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
