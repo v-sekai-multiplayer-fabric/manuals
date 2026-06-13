@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-06-10">
+<meta name="dcterms.date" content="2026-06-12">
 
-<title>Hexagonal core/ports/adapters as the component convention – V-Sekai Fire — Manuals</title>
+<title>Repository map of the loot-action vertical slice – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -291,16 +291,17 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision Drivers</a></li>
   <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision Outcome</a>
   <ul class="collapse">
-  <li><a href="#core-dependency-free-domain-logic" id="toc-core-dependency-free-domain-logic" class="nav-link" data-scroll-target="#core-dependency-free-domain-logic">core/ — dependency-free domain logic</a></li>
-  <li><a href="#ports-interface-contracts-labelled-by-direction" id="toc-ports-interface-contracts-labelled-by-direction" class="nav-link" data-scroll-target="#ports-interface-contracts-labelled-by-direction">ports/ — interface contracts, labelled by direction</a></li>
-  <li><a href="#adapters-concrete-io-at-the-edges" id="toc-adapters-concrete-io-at-the-edges" class="nav-link" data-scroll-target="#adapters-concrete-io-at-the-edges">adapters/ — concrete I/O at the edges</a></li>
-  <li><a href="#cluster-composition-wiring-ports-across-the-seam" id="toc-cluster-composition-wiring-ports-across-the-seam" class="nav-link" data-scroll-target="#cluster-composition-wiring-ports-across-the-seam">Cluster composition — wiring ports across the seam</a></li>
+  <li><a href="#the-playable-slice" id="toc-the-playable-slice" class="nav-link" data-scroll-target="#the-playable-slice">The playable slice</a></li>
+  <li><a href="#the-domain-hexagons-and-their-lean-cores" id="toc-the-domain-hexagons-and-their-lean-cores" class="nav-link" data-scroll-target="#the-domain-hexagons-and-their-lean-cores">The domain hexagons and their Lean cores</a></li>
+  <li><a href="#the-wire-transport-and-determinism-specs-leanplausible" id="toc-the-wire-transport-and-determinism-specs-leanplausible" class="nav-link" data-scroll-target="#the-wire-transport-and-determinism-specs-leanplausible">The wire, transport, and determinism specs (Lean+Plausible)</a></li>
+  <li><a href="#the-engine-and-its-assembly" id="toc-the-engine-and-its-assembly" class="nav-link" data-scroll-target="#the-engine-and-its-assembly">The engine and its assembly</a></li>
+  <li><a href="#verification-tooling-and-docs" id="toc-verification-tooling-and-docs" class="nav-link" data-scroll-target="#verification-tooling-and-docs">Verification, tooling, and docs</a></li>
   </ul></li>
   <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
-  <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More Information</a></li>
+  <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260610-hexagonal-core-ports-adapters.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260612-vertical-slice-repository-map.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -308,7 +309,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Hexagonal core/ports/adapters as the component convention</h1>
+<h1 class="title">Repository map of the loot-action vertical slice</h1>
 </div>
 
 
@@ -319,7 +320,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 10, 2026</p>
+      <p class="date">June 12, 2026</p>
     </div>
   </div>
   
@@ -331,71 +332,86 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Hexagonal core/ports/adapters as the component convention</em></p>
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Repository map of the loot-action vertical slice</em></p>
 <p><strong>Status:</strong> accepted</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>Components in the stack span several languages (C, C++, Python, Elixir, GDScript), run as separate processes, and each binds to hardware, a GPU, the network, or an engine runtime. A component has to stay testable without its device, replaceable without a rewrite of its callers, and composable with components written in another language. A shared monolith or a single in-memory object model does not hold across those boundaries.</p>
+<p>The <a href="../decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html">loot-action core-loop slice</a> spans more than a dozen repositories: a playable app, one Lean core per loop concern, the wire and transport specs, the engine fork and its assembly recipe, the verification queue, and the docs. A reader who clones one repo sees one slice of the whole and has no single place that says which repository owns which concern and how they compose into a build a Quest 3 runs.</p>
 </section>
 <section id="decision-drivers" class="level2">
 <h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
 <ul>
-<li>Real-time and pipeline paths cross process and language boundaries with no shared object model.</li>
-<li>Hardware, OS, GPU, network, and engine concerns have to stay out of the domain logic, or that logic becomes untestable away from the live system.</li>
-<li>CI runs the domain logic against recorded fixtures, without the device or the runtime.</li>
-<li>One computed result often feeds several outputs from a single pass.</li>
+<li>The slice follows the <a href="../decisions/20260610-hexagonal-core-ports-adapters.html">hexagonal core/ports/adapters structure</a>, so each loop concern lives behind its own narrow port in its own repository.</li>
+<li>The cores are pure reducers proven in Lean+Plausible, separate from the engine that hosts them.</li>
+<li>The engine fork assembles from independent <code>feat/*</code> branches through a recipe, so the runtime binary has no single source repository.</li>
 </ul>
 </section>
 <section id="decision-outcome" class="level2">
 <h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Each component is a hexagon with a uniform <code>core/</code> + <code>ports/</code> + <code>adapters/</code> layout, and components compose into a cluster by wiring ports across the boundary.</p>
-<section id="core-dependency-free-domain-logic" class="level3">
-<h3 class="anchored" data-anchor-id="core-dependency-free-domain-logic">core/ — dependency-free domain logic</h3>
-<p><code>core/</code> holds the component’s domain logic and nothing else: it opens no socket, reads no device, and links no framework. It carries its own <code>core/spec/</code> of tests that run in isolation against fixtures. A transport never reaches into the core.</p>
-</section>
-<section id="ports-interface-contracts-labelled-by-direction" class="level3">
-<h3 class="anchored" data-anchor-id="ports-interface-contracts-labelled-by-direction">ports/ — interface contracts, labelled by direction</h3>
-<p>A port is a narrow interface the core defines and an adapter implements. Each port is labelled by its side of the hexagon and by its data direction:</p>
+<p>Chosen option: one repository owns each concern, and this map is the index. Every repository below lives in the <a href="https://github.com/v-sekai-multiplayer-fabric"><code>v-sekai-multiplayer-fabric</code></a> organization.</p>
+<section id="the-playable-slice" class="level3">
+<h3 class="anchored" data-anchor-id="the-playable-slice">The playable slice</h3>
 <ul>
-<li>driving (primary) ports carry input the outside world pushes into the core;</li>
-<li>driven (secondary) ports carry the core’s output back out to the outside world;</li>
-<li>by data flow, a <code>*_source</code> port reads data in and a <code>*_sink</code> port writes data out.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/loop-slice"><code>loop-slice</code></a> — the GDScript app: hub deck, party teleport, the timed combo against one enemy, first-touch loot contention, and the round trip that commits the result. The text protocol is transport-agnostic, so <code>TRANSPORT=enet</code> drives the local slice and <code>TRANSPORT=wt</code> drives the WebTransport path over the same protocol.</li>
 </ul>
-<p>A port stays at the lowest common denominator every binding language can implement: a C-ABI struct of function pointers where the cluster crosses languages, a language-native interface where it does not. One header then binds C, C++, and Python adapters alike.</p>
 </section>
-<section id="adapters-concrete-io-at-the-edges" class="level3">
-<h3 class="anchored" data-anchor-id="adapters-concrete-io-at-the-edges">adapters/ — concrete I/O at the edges</h3>
-<p>Adapters implement the ports against the real world: a serial device, a UDP socket, a recorded fixture for CI, a GPU compute host, a renderer, an engine runtime. One port admits many adapters, so a single core output fans out to several destinations from one pass, and a recorded-fixture adapter stands in for live hardware under CI.</p>
+<section id="the-domain-hexagons-and-their-lean-cores" class="level3">
+<h3 class="anchored" data-anchor-id="the-domain-hexagons-and-their-lean-cores">The domain hexagons and their Lean cores</h3>
+<p>Each loop concern carries a hexagon (<code>core/</code> + <code>ports/</code> + <code>adapters/</code>) and a standalone Lean workspace holding the canonical core:</p>
+<ul>
+<li>combat: <a href="https://github.com/v-sekai-multiplayer-fabric/combat"><code>combat</code></a> hexagon, <a href="https://github.com/v-sekai-multiplayer-fabric/combat-core"><code>combat-core</code></a> Lean core (combo timing, the enemy spawn-invulnerability window, hit validation, damage).</li>
+<li>loot: <a href="https://github.com/v-sekai-multiplayer-fabric/loot"><code>loot</code></a> hexagon, <a href="https://github.com/v-sekai-multiplayer-fabric/loot-core"><code>loot-core</code></a> Lean core (the seeded weighted roll and first-touch contention, with a lean-slang SPIR-V kernel).</li>
+<li>progression: <a href="https://github.com/v-sekai-multiplayer-fabric/progression"><code>progression</code></a> hexagon, <a href="https://github.com/v-sekai-multiplayer-fabric/progression-core"><code>progression-core</code></a> Lean core (profile and inventory rules, the persistence commit).</li>
+</ul>
 </section>
-<section id="cluster-composition-wiring-ports-across-the-seam" class="level3">
-<h3 class="anchored" data-anchor-id="cluster-composition-wiring-ports-across-the-seam">Cluster composition — wiring ports across the seam</h3>
-<p>Components compose by connecting one component’s sink to another’s source. An in-process dependency links the sibling directly; a cross-process dependency meets on a wire, a network protocol the two ends share. The wire is the integration contract, so a producer in one language and a consumer in another share no code, only the message format. Each component declares its sibling wiring alongside its ports.</p>
+<section id="the-wire-transport-and-determinism-specs-leanplausible" class="level3">
+<h3 class="anchored" data-anchor-id="the-wire-transport-and-determinism-specs-leanplausible">The wire, transport, and determinism specs (Lean+Plausible)</h3>
+<ul>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/entity_packet"><code>entity_packet</code></a> — the integral 100-byte entity transform packet (int64 micrometers, no origin shift), with a roundtrip and size proof and a C++ differential.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/http3-queue"><code>http3-queue</code></a> — the WebTransport transport concurrency model: a mutex-guarded inbound queue proven size-honest, and a starvation-free network-thread loop (<a href="../decisions/20260612-webtransport-persistent-framed-stream.html">the persistent-stream decision</a>).</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/connection-fsm"><code>connection-fsm</code></a> — the client-server connection lifecycle, proven sound and recovering inside the five-second transaction limit.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-predictive-bvh"><code>lean-predictive-bvh</code></a> — the predictive BVH and its R128 fixed-point, the velocity scale the entity packet binds to.</li>
+</ul>
+</section>
+<section id="the-engine-and-its-assembly" class="level3">
+<h3 class="anchored" data-anchor-id="the-engine-and-its-assembly">The engine and its assembly</h3>
+<ul>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/godot"><code>godot</code></a> — the double-precision fork. Each module rides its own <code>feat/*</code> branch (for example <code>feat/module-http3</code> carries WebTransport and the mbedtls ECDSA crypto, <code>feat/module-xr-grid</code> carries the orientation orbs, <code>feat/module-sqlite</code> carries the progression store).</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/merge"><code>merge</code></a> — the <code>gitassembly</code> recipe and the git-assembler driver that stage and merge every <code>feat/*</code> branch into the <code>multiplayer-fabric</code> assembly, then tag the result. The branch stays local; the tag is the durable artifact.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/godot-archived"><code>godot-archived</code></a> — branches the assembly drops, such as <code>crypto-extensions</code>, whose crypto lives in <code>feat/module-http3</code>.</li>
+</ul>
+</section>
+<section id="verification-tooling-and-docs" class="level3">
+<h3 class="anchored" data-anchor-id="verification-tooling-and-docs">Verification, tooling, and docs</h3>
+<ul>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/fabric-verify"><code>fabric-verify</code></a> — the verification smokes as a systemd podman quadlet queue, gating the cores against their golden vectors.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/vsekai-godot-mcp"><code>vsekai-godot-mcp</code></a> — the in-editor and runtime MCP addon that drives a deployed build over adb, including on the Quest 3.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/xr-grid"><code>xr-grid</code></a> — the VR interaction tool whose orientation orbs render the peers in the slice.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/tropes-action"><code>tropes-action</code></a> — the static house-style check the manuals run.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals"><code>manuals</code></a> — these decisions, the changelog, and the reference docs.</li>
+</ul>
 </section>
 </section>
 <section id="consequences" class="level2">
 <h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
 <ul>
-<li>A dependency-free core lets CI replay recorded fixtures through the domain logic with no device and no runtime.</li>
-<li>The wire seam decouples languages and processes, so any component is rewritable or replaceable as long as it keeps the message contract.</li>
-<li>A new output is a new sink adapter, with no change to the core that produced the data.</li>
-<li>The driving and driven labels keep the dependency direction explicit: adapters depend on the core through ports, and the core depends on nothing.</li>
-<li>The convention costs interface boilerplate, and across a process boundary it adds a serialize and parse step the in-process link avoids. That cost buys cross-language, cross-process composition.</li>
+<li>A reader starts here, follows one link to the concern they care about, and finds a self-contained repository.</li>
+<li>A core proves itself in its own Lean workspace, the engine hosts it through a flat-C adapter, and the slice wires the hexagons together, so a change to one concern stays in one repository.</li>
+<li>The runtime binary is reproducible from the pushed <code>feat/*</code> branches through the <code>merge</code> recipe, so no single clone holds the whole engine and none needs to.</li>
 </ul>
 </section>
-<section id="more-information" class="level2">
-<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
-<p>The <code>sinew-mocap</code> cluster applies the pattern end to end. Each repository (<code>driver</code>, <code>mount_drift</code>, <code>solve</code>, <code>viewer</code>, <code>vr_bridge</code>) carries the <code>core/</code> + <code>ports/</code> + <code>adapters/</code> triad; ports are header-only C struct vtables labelled driving or driven and named <code>*_source.h</code> / <code>*_sink.h</code> (FrameSource, TrackerSink, PoseSink, HmdSource); adapters bind the serial dongle, a recorded <code>.rawlog</code>, UDP, polyscope, SteamVR, OpenVR, and Vulkan; and the repositories compose over the <code>/sinew</code> OSC wire (UDP 39539), with each <code>ports/sibling-repos.txt</code> declaring the wiring. The synthetic-data branch in <code>sinew-vrdance/pose_distill</code> applies the same triad in Python: core geometry and label cleaning, ports for the teacher pose model, renderer, and dataset sink, and adapters for the model, the Godot renderer, and the COCO sink.</p>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>A Quest 3 builds from the <code>multiplayer-fabric</code> assembly, joins the <code>loop-slice</code> server over the wire, and completes a Hub-to-Field-to-Loot round that commits progression, exercising the cores, the wire, the transport, and the persistence together.</p>
 
 
 </section>
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
-<li><p><a href="20260611-core-contract-pure-reducer-byte-state.html">Cores as pure reducers over byte-serialized state</a></p></li>
-<li><p><a href="20260611-hexagon-combat-core.html">Combat hexagon — core, ports, and adapters</a></p></li>
-<li><p><a href="20260611-lean4-kernel-cores-flat-c-host-adapters.html">Lean 4 build-time kernel cores with flat-C host adapters</a></p></li>
+<li><p><a href="20260610-hexagonal-core-ports-adapters.html">Hexagonal core/ports/adapters as the component convention</a></p></li>
 <li><p><a href="20260611-loot-action-core-loop-mvp-vertical-slice.html">Loot-action core-loop MVP vertical slice</a></p></li>
-<li><p><a href="20260612-vertical-slice-repository-map.html">Repository map of the loot-action vertical slice</a></p></li>
+<li><p><a href="20260612-webtransport-persistent-framed-stream.html">WebTransport reliable delivery on one persistent framed stream per session</a></p></li>
 </ul>
 </section>
 
@@ -821,7 +837,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260610-hexagonal-core-ports-adapters.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260612-vertical-slice-repository-map.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
