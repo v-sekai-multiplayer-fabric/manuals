@@ -35,13 +35,13 @@ who needs only the outcome stops after one line.
 
 A status report carries three parts in order:
 
-- **Bottom line.** The first sentence states the outcome plainly — the slip, the
-  failure, the result — with no buffer, no apology, and no warm-up. A reader who reads
-  only this line knows where the work stands.
-- **Explanation.** The factual reason for the outcome follows. The reader already holds
-  the outcome, so the explanation carries the why without holding the result back.
-- **Next step.** The report closes on what happens next: the fix underway, the
-  alternative open to the reader, or the time of the next update.
+1. The bottom line comes first. The opening sentence states the outcome plainly — the
+   slip, the failure, the result — with no buffer, no apology, and no warm-up. A reader
+   who reads only this line knows where the work stands.
+2. The explanation follows. It gives the factual reason for the outcome; the reader
+   already holds the result, so the explanation carries the why without holding it back.
+3. The next step closes the report: the fix underway, the alternative open to the
+   reader, or the time of the next update.
 
 The voice rules out two habits:
 
