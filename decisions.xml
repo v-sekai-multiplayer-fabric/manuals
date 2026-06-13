@@ -495,6 +495,83 @@
   <pubDate>Sat, 13 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
+  <title>Status reports lead with the bottom line</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260613-bad-news-reports-lead-with-the-bottom-line.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Status reports lead with the bottom line</em></p>
+<p><strong>Status:</strong> accepted</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>A status report carries an outcome the reader acts on: a slipped date, a broken build, a failed smoke. A report that opens with progress and buffers the outcome to the end makes the reader scan for the catch before the report says anything they can use. How does a report in this project phrase an outcome the reader needs first?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>A reader who learns the outcome in the first sentence starts deciding on it immediately, rather than after a paragraph of buildup.</li>
+<li>An executive or on-call reader scans the opening line and stops; the rest is there for whoever needs the why.</li>
+<li>The rule stays mechanical enough to apply in review without debate.</li>
+<li>Urgency — a down service, a failed gate — leaves no room for a warm-up.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Indirect approach: open with a progress buffer, then state the outcome.</li>
+<li>Direct approach (bottom line up front): state the outcome first, then the explanation, then the next step.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “the direct approach”, because the reader holds the outcome before the explanation, so the explanation reads as context rather than as suspense, and a reader who needs only the outcome stops after one line.</p>
+<p>A status report carries three parts in order:</p>
+<ol type="1">
+<li>The bottom line comes first. The opening sentence states the outcome plainly — the slip, the failure, the result — with no buffer, no apology, and no warm-up. A reader who reads only this line knows where the work stands.</li>
+<li>The explanation follows. It gives the factual reason for the outcome; the reader already holds the result, so the explanation carries the why without holding it back.</li>
+<li>The next step closes the report: the fix underway, the alternative open to the reader, or the time of the next update.</li>
+</ol>
+<p>The voice rules out two habits:</p>
+<ul>
+<li>A progress buffer that opens on what went well and defers the outcome to the end.</li>
+<li>An apology or hedge in place of the outcome in the first sentence.</li>
+</ul>
+<p>A good outcome takes the same shape: the first sentence states the result, and the rest carries the why and the next step.</p>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good, because the reader decides on the outcome from the first line instead of scanning for it.</li>
+<li>Good, because one shape covers a slip, a failed gate, and a shipped result alike.</li>
+<li>Good, because an urgent report — a down service, a recall — leads with the fact that drives the response.</li>
+<li>Bad, because the opening reads blunt, and an author used to a buffer needs practice to drop it.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>Review checks that a status report opens on its outcome, with the explanation and the next step after it, and no progress buffer or apology ahead of the bottom line.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>This applies the BLUF (bottom line up front) convention to status reports, and sits alongside the <a href="../decisions/20260607-tenseless-continuous-present-voice.html">tenseless continuous-present voice</a> for prose across the repo.</p>
+
+
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="20260607-tenseless-continuous-present-voice.html">Comments and docs use a tenseless continuous-present voice</a></p></li>
+</ul>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260613-bad-news-reports-lead-with-the-bottom-line.html</guid>
+  <pubDate>Sat, 13 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
   <title>Android template builds with Temurin JDK 21 and config.gradle-pinned SDK</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-android-template-temurin-jdk21.html</link>
   <description><![CDATA[ 
@@ -1388,70 +1465,6 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-content-build-merged-double-precision-mcp.html</guid>
-  <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Core kernel codegen via lean-slang (Lean to Slang to SPIR-V)</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-core-codegen-lean-slang.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Core kernel codegen via lean-slang (Lean to Slang to SPIR-V)</em></p>
-<p><strong>Status:</strong> accepted</p>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The cores carry compute kernels — hit raycasts, the budgeter solve, geometry costing — that need to be verified once and run as GPU compute, with the dispatch wrapped behind the flat C ABI port (<a href="../decisions/20260611-lean4-kernel-cores-flat-c-host-adapters.html">the Lean cores decision</a>). Hand-porting a kernel from a separate spec to a shader drifts.</p>
-</section>
-<section id="decision-drivers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
-<ul>
-<li>One verified Lean source per kernel, with no separate shader to drift.</li>
-<li>The kernel runs on the GPU and integrates with GPU convergence; the CPU Slang target lacks that integration.</li>
-<li>Integer ops keep the kernel deterministic across conformant devices.</li>
-</ul>
-</section>
-<section id="considered-options" class="level2">
-<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
-<ul>
-<li>Hand-write each kernel as a shader from a separate spec.</li>
-<li>Lower a CPU host target through Slang.</li>
-<li>Author the kernel in Lean and lower it to SPIR-V.</li>
-</ul>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: author the compute kernels in Lean and lower them to Slang through <a href="https://github.com/V-Sekai-fire/lean-slang">lean-slang</a>, then run <code>slangc -target spirv</code> to SPIR-V (<code>.spv</code>), and dispatch the <code>.spv</code> behind the flat C ABI, because SPIR-V runs the kernel on the GPU with the convergence integration the CPU Slang target lacks, and one verified Lean source produces the shipped kernel. The <code>idtx-flow</code> repository already depends on <code>LeanSlang</code> and byte-pins the emitted Slang against committed source with <code>native_decide</code>.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>One Lean kernel source produces the <code>.spv</code>, so the spec and the shipped kernel stay one artifact.</li>
-<li>The lowered Slang and the <code>.spv</code> are committed and byte-pinned, so a regen that drifts fails the pin.</li>
-<li>The kernels use integer ops, so the SPIR-V stays deterministic across conformant devices (<a href="../decisions/20260611-deterministic-cores-integer-seeded-rng.html">the determinism decision</a>).</li>
-</ul>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>The emitted Slang matches its committed byte-pin, and the dispatched <code>.spv</code> kernel passes the core fixtures.</p>
-
-
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
-<li><p><a href="20260611-core-contract-pure-reducer-byte-state.html">Cores as pure reducers over byte-serialized state</a></p></li>
-<li><p><a href="20260611-deterministic-cores-integer-seeded-rng.html">Deterministic cores via r128 fixed-point and seeded RNG</a></p></li>
-<li><p><a href="20260611-lean4-kernel-cores-flat-c-host-adapters.html">Lean 4 build-time kernel cores with flat-C host adapters</a></p></li>
-<li><p><a href="20260612-r128-fixed-point-as-lean-library.html">r128 Q64.64 fixed-point as a Lean library for the cores</a></p></li>
-</ul>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-core-codegen-lean-slang.html</guid>
   <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 </channel>
