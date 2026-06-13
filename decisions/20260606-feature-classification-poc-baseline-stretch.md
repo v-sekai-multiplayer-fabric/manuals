@@ -41,7 +41,7 @@ The tiers:
 3. A stretch goal goes beyond baseline. It is pursued if time allows; cutting it
    does not block the release.
 
-Each feature in the [capabilities table](../index.md#capabilities-and-where-they-live)
+Each feature in the [capabilities table](20260613-repository-and-capability-inventory.md#capabilities-and-where-they-live)
 carries one tier. A feature moves between tiers as it matures or as commitment
 changes; the tier is the current call, not a permanent label.
 

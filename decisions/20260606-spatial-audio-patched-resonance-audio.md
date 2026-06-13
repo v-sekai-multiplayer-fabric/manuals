@@ -64,7 +64,7 @@ is the demo and benchmark scene.
 
 The two branches assemble into the engine and the `sponza-godot-audio` scene
 renders HRTF output with probes. The capability is tracked in the
-[index capabilities table](../index.md#capabilities-and-where-they-live).
+[capabilities table](20260613-repository-and-capability-inventory.md#capabilities-and-where-they-live).
 
 ## More Information
 
