@@ -8,7 +8,7 @@
 
 <meta name="dcterms.date" content="2026-06-13">
 
-<title>Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI – V-Sekai Fire — Manuals</title>
+<title>Org-scoped GitHub App installation token for gh access instead of a personal OAuth token – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -298,7 +298,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More Information</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260613-quadlets-on-fedora-44-instead-of-harvester.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260613-org-scoped-github-app-token-for-gh-access.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -306,7 +306,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI</h1>
+<h1 class="title">Org-scoped GitHub App installation token for gh access instead of a personal OAuth token</h1>
 </div>
 
 
@@ -329,64 +329,61 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI</em></p>
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Org-scoped GitHub App installation token for gh access instead of a personal OAuth token</em></p>
 <p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The superseded Harvester decision ships each service as a qcow2 VM image on a Harvester HCI cluster, with podman quadlets running inside each VM. The quadlets already drive the workloads; the Harvester layer wraps a full virtualization tier — hypervisor, VM lifecycle, qcow2 pipeline — around the container runtime the services depend on. Fedora 44 runs podman quadlets under systemd directly on the host. This records that Harvester HCI is not the deployment target.</p>
+<p>Repository operations against <a href="https://github.com/v-sekai-multiplayer-fabric"><code>v-sekai-multiplayer-fabric</code></a> — archiving, renaming, pushing, editing settings — run through <code>gh</code> from a working environment. <code>gh</code> was authenticated with a personal OAuth token (<code>gho_</code>, scopes <code>gist, read:org, repo, workflow</code>). The <code>repo</code> scope is not org-scoped: it grants read/write/<strong>admin/delete</strong> on every repository the personal account can reach, across every org and every private repo. A mistyped owner in a destructive command, or a leak of that single token, could damage anything the account touches anywhere on GitHub — far beyond the one org being worked on. <code>gh</code> authenticates per host, not per org, so the limit cannot live in <code>gh</code> config; it has to live in the token.</p>
 </section>
 <section id="decision-drivers" class="level2">
 <h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
 <ul>
-<li>Quadlets drive the workloads, so the host runs them directly and the VM tier carries no load the containers need.</li>
-<li>Stock tooling — Fedora 44, systemd, podman — carries the runtime in place of a bespoke HCI stack.</li>
-<li>An OCI container image is the deploy artifact, so the build skips the qcow2 VM step.</li>
-<li>No hypervisor or cluster control plane sits under the services.</li>
-<li>Self-hosting keeps ownership of the hosts, their cost, and their control.</li>
+<li>Confine write/admin reach to the one org, so blast radius stops at its boundary.</li>
+<li>Short-lived credentials, so a leak expires on its own rather than living until revoked.</li>
+<li>Decouple automation from the personal account, so its cross-org access never rides along.</li>
+<li>Least privilege — only the permissions the repo work actually needs.</li>
+<li>Still usable from the CLI and from CI.</li>
 </ul>
 </section>
 <section id="considered-options" class="level2">
 <h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
 <ul>
-<li>Keep Harvester HCI, with qcow2 VMs running quadlets inside.</li>
-<li>Run podman quadlets directly on Fedora 44 hosts under systemd.</li>
-<li>Return to a managed PaaS.</li>
+<li>Keep the broad personal OAuth token (<code>repo</code> scope).</li>
+<li>A fine-grained Personal Access Token with resource owner set to the org.</li>
+<li>A GitHub App installed on the org, minting installation access tokens.</li>
 </ul>
 </section>
 <section id="decision-outcome" class="level2">
 <h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: “run podman quadlets directly on Fedora 44 hosts under systemd”, because systemd supplies service lifecycle, ordering, and boot activation for the quadlets with no virtualization tier underneath. Each service deploys as an OCI container image launched by a quadlet <code>.container</code> unit, with <code>.network</code> and <code>.volume</code> units alongside, copied into <code>~/.config/containers/systemd</code> to match the quadlet deployment convention. Deployment is OpenTofu in <a href="https://github.com/v-sekai-multiplayer-fabric/infra">infra</a>, provisioning Fedora 44 hosts and delivering the quadlet units in place of baking and booting qcow2 images on Harvester.</p>
-<p>This supersedes <a href="../decisions/20260606-self-host-on-harvester-hci.html">Self-host on Harvester HCI instead of Fly.io</a>. Fly.io stays off the table from that decision, and Harvester HCI joins it.</p>
+<p>Chosen option: “a GitHub App installed on the org”. The App is installed on <code>v-sekai-multiplayer-fabric</code>; a helper (<code>~/bin/gh-fabric-token.sh</code>) reads the App id and private key from 1Password, signs an RS256 JWT, exchanges it for an installation access token, and exports it as <code>GH_TOKEN</code>. <code>gh</code> then uses that token with no <code>gh auth login</code>.</p>
+<p>An installation token is org-scoped by construction, expires ~1 hour after minting, and acts as the App rather than the personal account — covering all three of the top drivers in one mechanism, where a fine-grained PAT covers org-scoping but stays long-lived and a human-account secret. The cost is a token-minting step (JWT → installation token) and guarding the App private key, which 1Password holds.</p>
+<p>The everyday installation is granted <code>administration: write</code>, <code>contents: write</code>, <code>workflows: write</code>, <code>actions: read</code>, <code>metadata: read</code> on all repositories in the org — the set the repo work (push, edit workflows, archive/rename) needs.</p>
 <section id="consequences" class="level3">
 <h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
 <ul>
-<li>Good: one fewer tier to build, ship, and operate — no hypervisor, no qcow2 pipeline, no VM lifecycle.</li>
-<li>Good: rootless podman under systemd is a well-documented path on Fedora, and the same OCI image runs in local dev, CI, and production.</li>
-<li>Good: a deploy rebuilds and pulls an OCI image rather than baking a VM image.</li>
-<li>Bad: services on one host share a kernel, so isolation between them is weaker than separate VMs give.</li>
-<li>Bad: host capacity planning and noisy-neighbor limits sit with the operator.</li>
-<li>Bad: the qcow2 <code>*-image</code> repos and any docs that target VMs need retiring or repointing at OCI images.</li>
+<li>Good: cross-org private access is impossible — the token cannot read or write any private repo outside the org, and cannot act as the personal account.</li>
+<li>Good: a leaked token is dead within ~1 hour, with no manual revocation step.</li>
+<li>Good: the App is its own identity, so audit-log entries and access are decoupled from the personal account’s lifecycle.</li>
+<li>Bad: minting needs a JWT-exchange helper rather than a single static secret.</li>
+<li>Bad: the App private key is itself high-value (it can mint tokens for every install of the App) and must be guarded as carefully as the token it replaces.</li>
+<li>Bad: <code>administration: write</code> on all repos means the token can still archive / rename / delete / transfer any repo <em>within</em> the org — the in-org fat-finger case is not mitigated by scoping alone.</li>
 </ul>
 </section>
 <section id="confirmation" class="level3">
 <h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
-<p>The infra repo provisions Fedora 44 hosts via OpenTofu and brings each service up through a podman quadlet unit under systemd, creating no Harvester HCI resources and no qcow2 images. <code>systemctl --user status</code> reports the generated service units active, and they survive a host reboot.</p>
+<p>A minted token was probed against the live API. <code>GET /installation/repositories</code> reports 49 repos, <code>repository_selection: all</code>. Org repos are reachable; <code>GET /user</code> returns <code>403 Resource not accessible by integration</code> (the token is not the personal account); private repos in other orgs are unreachable. Public repos elsewhere stay readable, which is public-is-public and not a private exposure. The minted token’s permissions read back as <code>administration/contents/workflows: write, actions/metadata: read</code>.</p>
 </section>
 </section>
 <section id="more-information" class="level2">
 <h2 class="anchored" data-anchor-id="more-information">More Information</h2>
-<p>Service images move from the qcow2 <code>*-image</code> VM repos to OCI container images; the engine stays <a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">pinned to a frozen Godot 4.7 commit</a>. The verification smokes already run as a <a href="../decisions/20260612-systemd-quadlet-verification-queue.html">systemd podman quadlet queue</a>, so the runtime and its smokes share one quadlet convention.</p>
+<p>In-org blast radius — every repo, with <code>administration: write</code> — is narrowed further by installing on selected repositories instead of all, and by splitting off a separate, rarely-used admin App so the everyday token drops <code>administration: write</code>. The accidental destructive command <em>within</em> the org is caught only by an out-of-band confirmation step, not by token scoping. This pairs with the move to <a href="../decisions/20260613-quadlets-on-fedora-44-instead-of-harvester.html">podman quadlets on Fedora 44</a>, where <code>gh</code> drives the same org’s repos that carry the quadlet sources.</p>
 
 
 </section>
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
-<li><p><a href="20260606-pin-engine-to-frozen-godot-4-7.html">Pin the engine to a frozen Godot 4.7 commit</a></p></li>
-<li><p><a href="20260606-self-host-on-harvester-hci.html">Self-host on Harvester HCI instead of Fly.io</a></p></li>
-<li><p><a href="20260612-systemd-quadlet-verification-queue.html">Verification smokes as a systemd podman quadlet queue</a></p></li>
-<li><p><a href="20260613-org-scoped-github-app-token-for-gh-access.html">Org-scoped GitHub App installation token for gh access instead of a personal OAuth token</a></p></li>
-<li><p><a href="20260613-repository-and-capability-inventory.html">Repository and capability inventory for the multiplayer fabric</a></p></li>
+<li><p><a href="20260613-quadlets-on-fedora-44-instead-of-harvester.html">Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI</a></p></li>
 </ul>
 </section>
 
@@ -812,7 +809,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260613-quadlets-on-fedora-44-instead-of-harvester.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260613-org-scoped-github-app-token-for-gh-access.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
