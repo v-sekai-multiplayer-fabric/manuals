@@ -61,13 +61,13 @@ the package manager never touches and point Blender at it:
 ```sh
 # created once on the machine, owned by the org group; FHS /opt for add-on software,
 # namespaced reverse-DNS as org.v-sekai (from v-sekai.org) to avoid /opt collisions
-#   /opt/org.v-sekai/blender/scripts/
-#   /opt/org.v-sekai/blender/scripts/addons/        <- add-ons land here
-#   /opt/org.v-sekai/blender/scripts/addons/NodeOSC/      (folder)
-#   /opt/org.v-sekai/blender/scripts/addons/blender_mcp/  (addon + server, from the release)
+#   /opt/org.v-sekai/blender/5.1/scripts/
+#   /opt/org.v-sekai/blender/5.1/scripts/addons/        <- add-ons land here
+#   /opt/org.v-sekai/blender/5.1/scripts/addons/NodeOSC/      (folder)
+#   /opt/org.v-sekai/blender/5.1/scripts/addons/blender_mcp/  (addon + server, from the release)
 
 # set machine-wide so every launch sees it (e.g. /etc/profile.d/ or the launcher)
-export BLENDER_SYSTEM_SCRIPTS="/opt/org.v-sekai/blender/scripts"
+export BLENDER_SYSTEM_SCRIPTS="/opt/org.v-sekai/blender/5.1/scripts"
 ```
 
 `BLENDER_SYSTEM_SCRIPTS` adds the directory to Blender's search paths rather than
@@ -79,7 +79,7 @@ add-ons keep loading. The org directory survives Blender reinstalls because the 
 manager owns only `/usr/share/blender/<ver>` and `/opt/org.v-sekai` sits outside it.
 
 This answers where blender-mcp v2.0.0-dev.1 and NodeOSC go: into
-`/opt/org.v-sekai/blender/scripts/addons/`, away from any home directory and away from the
+`/opt/org.v-sekai/blender/5.1/scripts/addons/`, away from any home directory and away from the
 package-owned Blender tree.
 
 ### Consequences
@@ -91,17 +91,19 @@ package-owned Blender tree.
   installed, so the procedure holds across machines and install methods.
 - Bad: someone creates `/opt/org.v-sekai` once with org-group ownership, and a machine that
   skips setting `BLENDER_SYSTEM_SCRIPTS` falls back to the home and bundle paths.
-- Bad: a Blender major upgrade can break a legacy add-on's API, so the contents of the
-  directory are re-pinned per major version even though the path is stable.
+- Bad: the path carries the Blender version (`5.1`), so a version upgrade installs into a
+  new sibling directory (`.../blender/5.2/scripts`) and repoints
+  `BLENDER_SYSTEM_SCRIPTS`, which keeps two Blender versions' add-ons side by side at the
+  cost of that step.
 
 ### Confirmation
 
-With `BLENDER_SYSTEM_SCRIPTS=/opt/org.v-sekai/blender/scripts` exported, `blender --background
+With `BLENDER_SYSTEM_SCRIPTS=/opt/org.v-sekai/blender/5.1/scripts` exported, `blender --background
 --python-expr "import bpy; print(bpy.utils.script_paths())"` lists the org path, and
 `blender --command extension list` (or the add-on preferences) shows blender-mcp and
 NodeOSC loading from it. `bpy.utils.system_resource('SCRIPTS')` still reports the bundled
 tree, confirming the bundle is intact. A `dnf reinstall blender` leaves
-`/opt/org.v-sekai/blender/scripts/addons/` untouched.
+`/opt/org.v-sekai/blender/5.1/scripts/addons/` untouched.
 
 ## More Information
 
