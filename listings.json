@@ -14,6 +14,7 @@
     "listing": "/decisions.html",
     "items": [
       "/decisions/present-proposal-template.html",
+      "/decisions/20260614-blender-addons-under-opt-via-system-scripts.html",
       "/decisions/20260613-org-scoped-github-app-token-for-gh-access.html",
       "/decisions/20260613-repository-and-capability-inventory.html",
       "/decisions/20260613-quadlets-on-fedora-44-instead-of-harvester.html",

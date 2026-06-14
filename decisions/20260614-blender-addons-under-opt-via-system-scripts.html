@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-06-12">
+<meta name="dcterms.date" content="2026-06-14">
 
-<title>MCP runtime bridge for deployed builds – V-Sekai Fire — Manuals</title>
+<title>Install organization Blender add-ons under /opt/org.v-sekai via BLENDER_SYSTEM_SCRIPTS, outside home and the package tree – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -23,6 +23,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -288,12 +323,17 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link active" data-scroll-target="#context-and-problem-statement">Context and Problem Statement</a></li>
-  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision Outcome</a></li>
+  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision Drivers</a></li>
+  <li><a href="#considered-options" id="toc-considered-options" class="nav-link" data-scroll-target="#considered-options">Considered Options</a></li>
+  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision Outcome</a>
+  <ul class="collapse">
   <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
   <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
+  </ul></li>
+  <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More Information</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260612-mcp-runtime-bridge-deployed-builds.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260614-blender-addons-under-opt-via-system-scripts.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -301,7 +341,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">MCP runtime bridge for deployed builds</h1>
+<h1 class="title">Install organization Blender add-ons under /opt/org.v-sekai via BLENDER_SYSTEM_SCRIPTS, outside home and the package tree</h1>
 </div>
 
 
@@ -312,7 +352,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 12, 2026</p>
+      <p class="date">June 14, 2026</p>
     </div>
   </div>
   
@@ -324,35 +364,70 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › MCP runtime bridge for deployed builds</em></p>
-<p><strong>Status:</strong> accepted</p>
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Install organization Blender add-ons under /opt/org.v-sekai via BLENDER_SYSTEM_SCRIPTS, outside home and the package tree</em></p>
+<p><strong>Status:</strong> proposed</p>
 <section id="context-and-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The Godot MCP addon is an editor plugin, so it drives the editor over its <code>EditorInterface</code>. Debugging a deployed build — a headless zone server, a mobile client, a Quest 3 app — needs the same inspection against the running game, where there is no editor.</p>
+<p>Blender add-ons drive parts of the asset pipeline — the blender-mcp runtime bridge plus its NodeOSC dependency (<a href="https://github.com/v-sekai-multiplayer-fabric/blender-mcp/releases/tag/v2.0.0-dev.1">v2.0.0-dev.1</a>), and the V-Sekai game tools among them. These are organization add-ons that belong on the machine for every artist and every headless run, so the install target is an OS-level question rather than a per-user one. Blender offers two default targets and both are a poor home for shared add-ons: the per-user path <code>~/.config/blender/&lt;ver&gt;/scripts/addons</code> (and the Windows and macOS equivalents) lives under a home directory, and the bundled system path <code>/usr/share/blender/&lt;ver&gt;/scripts</code> is owned by the installing package manager. On this host Blender is the Fedora rpm <code>blender-5.1.1-3.fc44</code>, with <code>system_resource('SCRIPTS')</code> at <code>/usr/share/blender/5.1/scripts</code>; a Homebrew or tarball install puts that same path somewhere else again. This records where organization Blender add-ons go.</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>The add-ons load for every user on the machine and in headless runs, so the location sits outside any one home directory.</li>
+<li>A Blender upgrade through <code>dnf</code>, Homebrew, or a tarball must leave the add-ons in place, so the location sits outside the package-owned Blender tree that an upgrade overwrites.</li>
+<li>The same install procedure holds however Blender was installed, so the location is decoupled from where the Blender binary lands.</li>
+<li>The directory name carries the organization identity so it stays clear of other vendors’ <code>/opt</code> entries, which the reverse-DNS form <code>org.v-sekai</code> (from <a href="https://v-sekai.org/">v-sekai.org</a>, the Java package and macOS bundle-id convention) supplies.</li>
+<li>No hardcoded absolute home paths, per the manuals path convention.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Per-user OS default path (<code>~/.config/blender/&lt;ver&gt;/scripts/addons</code> and the Windows and macOS equivalents).</li>
+<li>Blender’s bundled system scripts directory (<code>/usr/share/blender/&lt;ver&gt;/scripts/addons</code>, or the Homebrew Cellar / app-bundle equivalent).</li>
+<li>A stable organization directory under <code>/opt</code>, added to Blender’s search paths through <code>BLENDER_SYSTEM_SCRIPTS</code>.</li>
+</ul>
 </section>
 <section id="decision-outcome" class="level2">
 <h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: a runtime autoload (<code>mcp_runtime.gd</code>) serves the same MCP from inside the running game, injecting the live <code>SceneTree</code> where the editor plugin injects the editor. An MCP client reaches it over <code>adb forward</code> (or any port forward). Scene, node, property, <code>call_method</code>, <code>run_script</code>, <code>get_render_info</code>, and a runtime-capable <code>screenshot</code> operate on the running game; editor-only commands return an error.</p>
-<p>The contribution lands upstream as <a href="https://github.com/v-sekai-multiplayer-fabric/vsekai-godot-mcp/pull/1">vsekai-godot-mcp#1</a>.</p>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<p>Chosen option: “a stable organization directory under <code>/opt</code>, added to Blender’s search paths through <code>BLENDER_SYSTEM_SCRIPTS</code>”, because it gives one OS-level, package-manager independent home for shared add-ons that survives a Blender upgrade and stays out of every user’s home directory.</p>
+<p>We do not install into Blender’s own OS path (<code>/usr/share/blender/&lt;ver&gt;/scripts/addons</code>): it needs root, a <code>dnf</code> or Homebrew Blender upgrade replaces the whole tree and wipes anything dropped there, and the path is pinned to the Blender version and the install method. We instead create an org directory that the package manager never touches and point Blender at it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># created once on the machine, owned by the org group; FHS /opt for add-on software,</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># namespaced reverse-DNS as org.v-sekai (from v-sekai.org) to avoid /opt collisions</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   /opt/org.v-sekai/blender/scripts/</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   /opt/org.v-sekai/blender/scripts/addons/        &lt;- add-ons land here</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   /opt/org.v-sekai/blender/scripts/addons/NodeOSC/      (folder)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   /opt/org.v-sekai/blender/scripts/addons/blender_mcp/  (addon + server, from the release)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># set machine-wide so every launch sees it (e.g. /etc/profile.d/ or the launcher)</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">BLENDER_SYSTEM_SCRIPTS</span><span class="op">=</span><span class="st">"/opt/org.v-sekai/blender/scripts"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>BLENDER_SYSTEM_SCRIPTS</code> adds the directory to Blender’s search paths rather than replacing the bundle. A probe on this host confirmed it: with the variable set, <code>bpy.utils.script_paths()</code> lists the bundled <code>/usr/share/blender/5.1/scripts</code>, the user path, and the org path together; an add-on dropped in the org <code>addons/</code> is discovered; and <code>system_resource('SCRIPTS')</code> still resolves to the bundled tree, so the bundled core add-ons keep loading. The org directory survives Blender reinstalls because the package manager owns only <code>/usr/share/blender/&lt;ver&gt;</code> and <code>/opt/org.v-sekai</code> sits outside it.</p>
+<p>This answers where blender-mcp v2.0.0-dev.1 and NodeOSC go: into <code>/opt/org.v-sekai/blender/scripts/addons/</code>, away from any home directory and away from the package-owned Blender tree.</p>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
 <ul>
-<li>A deployed Quest build is inspectable and drivable from the workstation: frame stats, the live scene tree, and arbitrary GDScript against the running game.</li>
-<li>Under XR, <code>screenshot</code> reads the flat Window viewport, which is black because the rendered frames go to the XR compositor’s per-eye swapchain and that is not host-readable; <code>get_render_info</code> and <code>run_script</code> cover XR diagnostics instead.</li>
+<li>Good: shared add-ons load for every user and every headless run from one OS-level path.</li>
+<li>Good: a Blender upgrade through <code>dnf</code>, Homebrew, or a tarball leaves the add-ons in place, since the package manager never writes to <code>/opt/org.v-sekai</code>.</li>
+<li>Good: one environment variable points Blender at the directory however the binary was installed, so the procedure holds across machines and install methods.</li>
+<li>Bad: someone creates <code>/opt/org.v-sekai</code> once with org-group ownership, and a machine that skips setting <code>BLENDER_SYSTEM_SCRIPTS</code> falls back to the home and bundle paths.</li>
+<li>Bad: a Blender major upgrade can break a legacy add-on’s API, so the contents of the directory are re-pinned per major version even though the path is stable.</li>
 </ul>
 </section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>On a Quest 3 over <code>adb forward</code>, <code>get_render_info</code> returns 13 draw calls and 46476 primitives from the running app, and <code>run_script</code> reads the live client state (peer id, connection, phase).</p>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>With <code>BLENDER_SYSTEM_SCRIPTS=/opt/org.v-sekai/blender/scripts</code> exported, <code>blender --background --python-expr "import bpy; print(bpy.utils.script_paths())"</code> lists the org path, and <code>blender --command extension list</code> (or the add-on preferences) shows blender-mcp and NodeOSC loading from it. <code>bpy.utils.system_resource('SCRIPTS')</code> still reports the bundled tree, confirming the bundle is intact. A <code>dnf reinstall blender</code> leaves <code>/opt/org.v-sekai/blender/scripts/addons/</code> untouched.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>The blender-mcp bridge pairs with the <a href="../decisions/20260612-mcp-runtime-bridge-deployed-builds.html">MCP runtime bridge for deployed builds</a>. NodeOSC installs as a folder under the same <code>addons/</code> directory, and the blender-mcp add-on and its server install together from the fabric release.</p>
 
 
 </section>
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
-<li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
-<li><p><a href="20260614-blender-addons-under-opt-via-system-scripts.html">Install organization Blender add-ons under /opt/org.v-sekai via BLENDER_SYSTEM_SCRIPTS, outside home and the package tree</a></p></li>
+<li><p><a href="20260612-mcp-runtime-bridge-deployed-builds.html">MCP runtime bridge for deployed builds</a></p></li>
 </ul>
 </section>
 
@@ -778,7 +853,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260612-mcp-runtime-bridge-deployed-builds.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260614-blender-addons-under-opt-via-system-scripts.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
