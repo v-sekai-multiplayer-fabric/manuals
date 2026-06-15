@@ -1,7 +1,7 @@
 ---
 title: Install organization Blender add-ons under /opt/org.v-sekai via BLENDER_SYSTEM_SCRIPTS, outside home and the package tree
 date: 2026-06-14
-status: proposed
+status: rejected
 ---
 
 ## Context and Problem Statement
