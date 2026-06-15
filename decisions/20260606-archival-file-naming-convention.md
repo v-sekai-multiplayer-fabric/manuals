@@ -66,7 +66,7 @@ capture date and archived path, so the References page lists it.
 Assets under `decisions/attachments/` match `YYYYMMDD_project_description_NNNN.ext`
 and have a matching `references.bib` entry. The first example is
 `20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png`, cited from the
-[presence-demo decision](20260606-multiplayer-presence-demo-orbs.md).
+presence-demo decision.
 
 ## More Information
 

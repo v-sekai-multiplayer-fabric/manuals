@@ -9,7 +9,7 @@ consulted: Joseph
 
 ## Context and Problem Statement
 
-The [orb presence demo](20260606-multiplayer-presence-demo-orbs.md) draws each
+The orb presence demo draws each
 participant as head and hand orb clusters. In review, the orbs read as too similar:
 a head cluster and a hand cluster look alike, so they are easy to conflate, and a
 bare cluster conveys position better than heading. The 3-point model and the
@@ -59,6 +59,6 @@ markers; a debug toggle falls back to the orb clusters.
 
 ## More Information
 
-Supersedes [Minimal multiplayer presence demo with head and hand orbs](20260606-multiplayer-presence-demo-orbs.md).
+Supersedes Minimal multiplayer presence demo with head and hand orbs.
 The orb representation is retained as the debug mode. UX input from Joseph. Refined by
 [Ghostly partial-body presence avatar from ANNY via SOMA-X](20260606-ghostly-presence-body-model.md).

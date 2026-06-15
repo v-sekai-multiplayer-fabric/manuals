@@ -7,7 +7,7 @@ supersedes: 20260506-observability-stack-victoriametrics-jaeger.md
 ---
 
 > Deployment note: the stack now runs on the Harvester cluster; it has moved off
-> Fly.io (see [self-host on Harvester HCI](20260606-self-host-on-harvester-hci.md)).
+> Fly.io (see self-host on Harvester HCI).
 > The Fly volume and `fly proxy` references below are from the original deployment.
 
 ## Context

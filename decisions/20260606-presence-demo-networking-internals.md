@@ -7,7 +7,7 @@ tier: baseline
 
 ## Context and Problem Statement
 
-The [presence demo](20260606-multiplayer-presence-demo-orbs.md) sends head and hand
+The presence demo sends head and hand
 poses to peers over the [WebTransport transport](20260606-webtransport-http3-transport.md).
 How are those poses sourced, encoded, and sent?
 
