@@ -10,7 +10,7 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/changelog.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Sun, 14 Jun 2026 22:55:43 GMT</lastBuildDate>
+<lastBuildDate>Mon, 15 Jun 2026 01:10:24 GMT</lastBuildDate>
 <item>
   <title></title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260612-deck-log.html</link>
@@ -85,7 +85,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260612-deck-log.html</guid>
-  <pubDate>Sun, 14 Jun 2026 22:55:43 GMT</pubDate>
+  <pubDate>Mon, 15 Jun 2026 01:10:24 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -103,8 +103,8 @@
 <section id="added" class="level2">
 <h2 class="anchored" data-anchor-id="added">Added</h2>
 <ul>
-<li>Decisions (MADR): <a href="../../decisions/20260606-compiling-godot-engine.html">compiling the engine</a>, <a href="../../decisions/20260606-org-split-v-sekai-multiplayer-fabric.html">two-org split</a>, <a href="../../decisions/20260606-require-pr-and-merge-queue-on-main.html">require PR + merge queue</a>, <a href="../../decisions/20260606-feature-classification-poc-baseline-stretch.html">feature classification</a>, <a href="../../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">pin engine to Godot 4.7</a>, <a href="../../decisions/20260606-archival-file-naming-convention.html">archival file naming</a>, <a href="../../decisions/20260606-self-host-on-harvester-hci.html">self-host on Harvester</a>, and <a href="../../decisions/20260606-bounded-llm-steering-queue.html">bound the LLM steering queue</a>.</li>
-<li>Capability decisions: <a href="../../decisions/20260606-spatial-audio-patched-resonance-audio.html">spatial audio (HRTF + probes)</a>, <a href="../../decisions/20260606-webtransport-http3-transport.html">WebTransport over HTTP/3</a>, <a href="../../decisions/20260606-presence-demo-networking-internals.html">presence pose networking</a>, <a href="../../decisions/20260606-multiplayer-presence-demo-orbs.html">presence demo</a> → <a href="../../decisions/20260606-presence-marker-representation.html">human-readable markers</a> → <a href="../../decisions/20260606-ghostly-presence-body-model.html">ghostly ANNY/SOMA-X body</a>, and <a href="../../decisions/20260606-art-game-loop-steel-thread.html">art-game loop steel thread</a>.</li>
+<li>Decisions (MADR): <a href="../../decisions/20260606-compiling-godot-engine.html">compiling the engine</a>, <a href="../../decisions/20260606-org-split-v-sekai-multiplayer-fabric.html">two-org split</a>, <a href="../../decisions/20260606-require-pr-and-merge-queue-on-main.html">require PR + merge queue</a>, <a href="../../decisions/20260606-feature-classification-poc-baseline-stretch.html">feature classification</a>, <a href="../../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">pin engine to Godot 4.7</a>, <a href="../../decisions/20260606-archival-file-naming-convention.html">archival file naming</a>, self-host on Harvester, and <a href="../../decisions/20260606-bounded-llm-steering-queue.html">bound the LLM steering queue</a>.</li>
+<li>Capability decisions: <a href="../../decisions/20260606-spatial-audio-patched-resonance-audio.html">spatial audio (HRTF + probes)</a>, <a href="../../decisions/20260606-webtransport-http3-transport.html">WebTransport over HTTP/3</a>, <a href="../../decisions/20260606-presence-demo-networking-internals.html">presence pose networking</a>, presence demo → <a href="../../decisions/20260606-presence-marker-representation.html">human-readable markers</a> → <a href="../../decisions/20260606-ghostly-presence-body-model.html">ghostly ANNY/SOMA-X body</a>, and <a href="../../decisions/20260606-art-game-loop-steel-thread.html">art-game loop steel thread</a>.</li>
 <li>A capabilities table in <code>index.md</code> mapping native video, OpenUSD baking, spatial audio, speech, pen-stroke (cassie), WebTransport, and presence to engine branches, repos, and a tier.</li>
 <li>CI: a Checks workflow running <code>prek</code> (prettier) and a static, no-LLM tropes gate; a merge-queue ruleset on <code>main</code> (require PR + squash queue).</li>
 <li>A Python (panflute) filter showing tier/status per page, linking superseded-by targets, with a breadcrumb trail on top and a symmetric Related section at the bottom across the site.</li>
@@ -145,7 +145,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260606-deck-log.html</guid>
-  <pubDate>Sun, 14 Jun 2026 22:55:43 GMT</pubDate>
+  <pubDate>Mon, 15 Jun 2026 01:10:24 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -209,7 +209,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260507-deck-log.html</guid>
-  <pubDate>Sun, 14 Jun 2026 22:55:43 GMT</pubDate>
+  <pubDate>Mon, 15 Jun 2026 01:10:24 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -260,7 +260,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260506-deck-log.html</guid>
-  <pubDate>Sun, 14 Jun 2026 22:55:43 GMT</pubDate>
+  <pubDate>Mon, 15 Jun 2026 01:10:24 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -348,7 +348,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260425-deck-log.html</guid>
-  <pubDate>Sun, 14 Jun 2026 22:55:43 GMT</pubDate>
+  <pubDate>Mon, 15 Jun 2026 01:10:24 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -379,7 +379,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260421-deck-log.html</guid>
-  <pubDate>Sun, 14 Jun 2026 22:55:43 GMT</pubDate>
+  <pubDate>Mon, 15 Jun 2026 01:10:24 GMT</pubDate>
 </item>
 </channel>
 </rss>
