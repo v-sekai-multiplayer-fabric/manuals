@@ -9,7 +9,7 @@ tier: proof of concept
 
 We want a small workspace where friends make tiny art-games together, watch them,
 and improve them on a tight loop. Players show up in the space as tracker orbs
-(the [presence demo](20260606-multiplayer-presence-demo-orbs.md)), with drawing
+(the presence demo), with drawing
 pens ([cassie](20260606-feature-classification-poc-baseline-stretch.md)) as a
 stretch goal. Before building the workspace out, we need the smallest end-to-end
 thread that proves the loop runs at all. What is that thread?
@@ -72,6 +72,6 @@ a changed visible result, with one friction note and one patch recorded.
 
 ## More Information
 
-This composes the [presence demo](20260606-multiplayer-presence-demo-orbs.md)
+This composes the presence demo
 (tracker orbs) and the cassie pen (stretch) into a working loop, run through Godot
 MCP and the Godot Sandbox.

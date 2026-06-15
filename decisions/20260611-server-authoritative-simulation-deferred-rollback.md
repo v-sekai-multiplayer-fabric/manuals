@@ -7,7 +7,7 @@ decision-makers: K. S. Ernest (iFire) Lee
 
 ## Context and Problem Statement
 
-The loop needs one authority over combat state and loot contention. An earlier geometric Hilbert-zone authority attempt ([the Maglev intercept smoke test](20260506-maglev-intercept-smoke-test.md)) was rejected, and the one-week slice needs a simpler model that still resists client tampering.
+The loop needs one authority over combat state and loot contention. An earlier geometric Hilbert-zone authority attempt (the Maglev intercept smoke test) was rejected, and the one-week slice needs a simpler model that still resists client tampering.
 
 ## Decision Outcome
 

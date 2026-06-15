@@ -42,8 +42,7 @@ Deployment is OpenTofu in [infra](https://github.com/v-sekai-multiplayer-fabric/
 provisioning Fedora 44 hosts and delivering the quadlet units in place of baking and
 booting qcow2 images on Harvester.
 
-This supersedes [Self-host on Harvester HCI instead of
-Fly.io](20260606-self-host-on-harvester-hci.md). Fly.io stays off the table from that
+This supersedes Self-host on Harvester HCI instead of Fly.io. Fly.io stays off the table from that
 decision, and Harvester HCI joins it.
 
 ### Consequences
