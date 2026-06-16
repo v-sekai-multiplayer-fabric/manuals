@@ -10,7 +10,82 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/decisions.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Sun, 14 Jun 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 16 Jun 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>Project state lives in repo markdown, not in agent auto-memory</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260616-repo-markdown-single-source-of-truth-for-project-state.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Project state lives in repo markdown, not in agent auto-memory</em></p>
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>An agent working a project over many sessions accumulates project knowledge: what is decided, what works, what is still open, which avenues are dead. That knowledge has to live somewhere a future session can read it. A file-based agent auto-memory is the convenient place to put it, but auto-memory is not reviewed in diffs and does not travel with the code. When the code moves and the memory does not, the two desync, and a memory that names a file, function, or flag that no longer exists reads as authoritative while being wrong. Where should project state live so that it stays checkable against the code it describes?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>A record of project state is trustworthy only when a reader can check it against the code as it stands.</li>
+<li>State that changes with the code must change in the same diff as the code, so a reviewer sees both together.</li>
+<li>Knowledge has to survive across agent sessions and across machines, not just inside one assistant’s private store.</li>
+<li>The split between “project state” and “how to work” stays mechanical enough to route a new fact without debate.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Keep all project knowledge in the agent’s file-based auto-memory.</li>
+<li>Keep project state in versioned repo markdown, and keep auto-memory for durable behavioural rules only.</li>
+<li>Scatter state across commit messages and code comments with no dedicated index.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “project state in versioned repo markdown, auto-memory for behavioural rules only”, because a fact committed next to the code it describes travels with the repo, shows up in review, and goes stale visibly the moment the code it names changes — whereas a fact in private auto-memory desyncs silently.</p>
+<p>Project state lives in three repo-root markdown files, each holding state in a distinct status, so every fact has exactly one home:</p>
+<ul>
+<li><code>CHANGELOG.md</code> — decisions and completed, verified work, grouped by area, plus a top <strong>Conventions</strong> section of durable project rules. Entries record change events, so past or imperative tense is fine here, as in commit messages.</li>
+<li><code>OPEN_GAPS.md</code> — unfinished work and open problems, each stated as the gap stands now, with the decisive next lever where it is known.</li>
+<li><code>TOMBSTONES.md</code> — dead-ends, disproven hypotheses, and blocklisted avenues, each saying why it is dead and where any surviving knowledge lives, so a reader checks here before re-attempting something.</li>
+</ul>
+<p>A new fact routes by status: finished or decided or verified goes to <code>CHANGELOG.md</code>; still open goes to <code>OPEN_GAPS.md</code>; tried and failed goes to <code>TOMBSTONES.md</code>; a rule about how to work, rather than about the project, goes to auto-memory. An item moves between files as its status changes — a gap becomes a changelog entry when it is done, a hypothesis becomes a tombstone when it is refuted — and lives in exactly one file at a time.</p>
+<p>Auto-memory stays thin: it holds only durable behavioural rules (for example “no Python, build Lean tools”, “no CSV, emit Parquet”, the voice rule, the blocklists) plus a single pointer telling a future session to read the three repo docs first. Project status — file layouts, what is done, what is open — never goes in auto-memory, because that is exactly the class of fact that desyncs.</p>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good, because a state fact and the code it describes change in one diff, so a reviewer catches a divergence and a stale fact signals a real one.</li>
+<li>Good, because the three files travel with the repo and any session or machine reads the same state, rather than depending on one assistant’s private store.</li>
+<li>Good, because the three-way status split makes “where does this fact go” a mechanical routing decision.</li>
+<li>Bad, because a fact’s home changes as its status changes, so an author has to move entries between files instead of appending everywhere.</li>
+<li>Bad, because the discipline holds only while every contributor routes new facts rather than dropping them into memory or a stray comment.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>Review checks that a change which alters project state also touches the matching repo doc in the same diff, that each fact appears in exactly one of the three files, and that auto-memory carries only behavioural rules plus the pointer, with no file layouts, completion status, or open problems. The <code>repo-state-docs</code> skill encodes this routing and is invoked whenever a finding, a completion, an abandoned avenue, or an open problem surfaces.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>This convention suits any project that an agent carries across many sessions; the work that prompted it is a long reverse-engineering effort, but nothing in the routing rule depends on that domain. This applies the house tenseless continuous-present voice: <code>OPEN_GAPS.md</code> and <code>TOMBSTONES.md</code> state current truth, while <code>CHANGELOG.md</code> entries record change events and so read in past or imperative tense like commit messages. See <a href="../decisions/20260607-tenseless-continuous-present-voice.html">tenseless continuous-present voice</a>.</p>
+
+
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="20260607-tenseless-continuous-present-voice.html">Comments and docs use a tenseless continuous-present voice</a></p></li>
+</ul>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260616-repo-markdown-single-source-of-truth-for-project-state.html</guid>
+  <pubDate>Tue, 16 Jun 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Install organization Blender add-ons under /opt/org.v-sekai via BLENDER_SYSTEM_SCRIPTS, outside home and the package tree</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260614-blender-addons-under-opt-via-system-scripts.html</link>
@@ -1472,75 +1547,6 @@ font-style: inherit;">"/opt/org.v-sekai/blender/5.1/scripts"</span></span></code
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-cassie-desktop-curvenet-authoring.html</guid>
-  <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>CI/CD runners operate as a finite queueing system</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-cicd-runners-as-queueing-system.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › CI/CD runners operate as a finite queueing system</em></p>
-<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The organization shares one GitHub Actions runner pool across every repository, observed at roughly 14–20 concurrent jobs. A single push to the Godot fork triggers a matrix of about 20 jobs, and the slowest of them (sanitizer and Windows builds) hold a runner for one to two hours. Pushes arrive from fix branches, pull requests, merge commits, reruns, and even archive repositories that carry the same workflow files. When arrivals outpace the pool, every queued job waits behind work that may carry no information at all. How does CI work get admitted to the runner pool so that signal arrives quickly?</p>
-</section>
-<section id="decision-drivers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
-<ul>
-<li>The pool is a queueing system with a small fixed number of servers: as utilization approaches saturation, waiting time grows without bound (M/M/c behaviour), and the delay hits short high-signal jobs as hard as long ones.</li>
-<li>One logical change can spawn several full matrices: a branch push and its pull request double-trigger, the merge push triggers again, and a rerun repeats whatever already ran.</li>
-<li>Some queued work is known in advance to produce nothing: a job whose fix is not on the branch yet fails with certainty, and a run on a merged or deleted ref validates nothing.</li>
-<li>Diagnostics need CI hardware (a crash that only reproduces on GCC Linux runners) but not the whole matrix.</li>
-</ul>
-</section>
-<section id="considered-options" class="level2">
-<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
-<ul>
-<li>Unbounded admission: push and rerun freely, let GitHub queue everything.</li>
-<li>Hard concurrency caps in workflow configuration (per-repo <code>concurrency</code> groups beyond the existing per-branch cancellation).</li>
-<li>An operating discipline that bounds arrivals at the source: batch, sequence, and cancel zero-information work.</li>
-</ul>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: “an operating discipline that bounds arrivals at the source”, because the waste comes from how work is submitted, not from how GitHub schedules it — and a discipline adapts per situation where a hard cap blocks urgent work behind stale work.</p>
-<p>The discipline:</p>
-<ul>
-<li>Two or three full matrices run at a time; further work waits for a slot. A merge push waits until the in-flight run it would concurrency-cancel finishes, so partially-completed long jobs are not thrown away mid-service.</li>
-<li>Arrivals are batched: fixes land as one commit per push where possible, and a late-discovered fix joins an already-open PR branch rather than opening a new one. One merge then validates the whole batch with a single matrix.</li>
-<li>Zero-information runs are cancelled immediately: the push-event run that duplicates a PR’s pull-request run, runs still queued on merged or deleted refs, runs whose remaining jobs have a known outcome, and workflow runs triggered by pushes to archive repositories (Actions stays disabled on <code>godot-archived</code>).</li>
-<li>Diagnostics are trimmed to one job: a throwaway branch edits the workflow down to the single job that reproduces the problem, and reuses the warm build cache by keeping the matrix entry’s <code>cache-name</code>. The branch is deleted once the answer is in hand.</li>
-<li>A failed job whose fix is not yet on the branch never reruns; until the fix lands it would occupy a server for its full service time and return a result that is already known.</li>
-<li>Backlog is admitted selectively: stale branches needing fresh signal enter the queue worst-first, one or two at a time, when utilization is low rather than as a bulk rerun.</li>
-</ul>
-<section id="consequences" class="level3">
-<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
-<ul>
-<li>Good: high-signal jobs spend their time in service, not in queue; verdicts on key jobs arrive in roughly the service time of the job itself.</li>
-<li>Good: the merge policy (merge on a passing key job) composes cleanly — batched PRs mean each merge buys validation for several fixes with one matrix.</li>
-<li>Bad: sequencing adds wall-clock latency to individual merges; a merge-ready PR waits for an unrelated in-flight run to finish.</li>
-<li>Bad: the discipline lives in operator habit and this record, not in enforced configuration; a contributor who pushes freely still floods the pool.</li>
-</ul>
-</section>
-<section id="confirmation" class="level3">
-<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
-<p>The discipline is in practice on the CHI-364 CI campaign: six redundant queued runs cancelled in one sweep (two merged PRs’ leftovers, a deleted tag’s run, a push/PR duplicate), Actions disabled on <code>godot-archived</code> after an archive push was found competing with the main repo’s queue, a GCC-only segfault diagnosed through a single-job trimmed workflow over four iterations on a warm cache, and fixes batched so that two branches reached green with one validation matrix each.</p>
-</section>
-</section>
-<section id="more-information" class="level2">
-<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
-<p>The queue is observable with <code>gh run list --repo &lt;repo&gt; --json databaseId,status,headBranch</code> filtered to <code>queued</code>/<code>in_progress</code>, and per-run job counts with <code>gh run view &lt;id&gt; --json jobs</code>. Little’s law gives the sanity check: jobs in system ≈ arrival rate × time in system, so when queued jobs exceed the server count several times over, every new matrix admits about an hour of added latency to its own verdict.</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-cicd-runners-as-queueing-system.html</guid>
   <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 </channel>
