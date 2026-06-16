@@ -87,108 +87,6 @@
   <pubDate>Tue, 16 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 <item>
-  <title>Install organization Blender add-ons under /opt/org.v-sekai via BLENDER_SYSTEM_SCRIPTS, outside home and the package tree</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260614-blender-addons-under-opt-via-system-scripts.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Install organization Blender add-ons under /opt/org.v-sekai via BLENDER_SYSTEM_SCRIPTS, outside home and the package tree</em></p>
-<p><strong>Status:</strong> proposed</p>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>Blender add-ons drive parts of the asset pipeline — the blender-mcp runtime bridge plus its NodeOSC dependency (<a href="https://github.com/v-sekai-multiplayer-fabric/blender-mcp/releases/tag/v2.0.0-dev.1">v2.0.0-dev.1</a>), and the V-Sekai game tools among them. These are organization add-ons that belong on the machine for every artist and every headless run, so the install target is an OS-level question rather than a per-user one. Blender offers two default targets and both are a poor home for shared add-ons: the per-user path <code>~/.config/blender/&lt;ver&gt;/scripts/addons</code> (and the Windows and macOS equivalents) lives under a home directory, and the bundled system path <code>/usr/share/blender/&lt;ver&gt;/scripts</code> is owned by the installing package manager. On this host Blender is the Fedora rpm <code>blender-5.1.1-3.fc44</code>, with <code>system_resource('SCRIPTS')</code> at <code>/usr/share/blender/5.1/scripts</code>; a Homebrew or tarball install puts that same path somewhere else again. This records where organization Blender add-ons go.</p>
-</section>
-<section id="decision-drivers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
-<ul>
-<li>The add-ons load for every user on the machine and in headless runs, so the location sits outside any one home directory.</li>
-<li>A Blender upgrade through <code>dnf</code>, Homebrew, or a tarball must leave the add-ons in place, so the location sits outside the package-owned Blender tree that an upgrade overwrites.</li>
-<li>The same install procedure holds however Blender was installed, so the location is decoupled from where the Blender binary lands.</li>
-<li>The directory name carries the organization identity so it stays clear of other vendors’ <code>/opt</code> entries, which the reverse-DNS form <code>org.v-sekai</code> (from <a href="https://v-sekai.org/">v-sekai.org</a>, the Java package and macOS bundle-id convention) supplies.</li>
-<li>No hardcoded absolute home paths, per the manuals path convention.</li>
-</ul>
-</section>
-<section id="considered-options" class="level2">
-<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
-<ul>
-<li>Per-user OS default path (<code>~/.config/blender/&lt;ver&gt;/scripts/addons</code> and the Windows and macOS equivalents).</li>
-<li>Blender’s bundled system scripts directory (<code>/usr/share/blender/&lt;ver&gt;/scripts/addons</code>, or the Homebrew Cellar / app-bundle equivalent).</li>
-<li>A stable organization directory under <code>/opt</code>, added to Blender’s search paths through <code>BLENDER_SYSTEM_SCRIPTS</code>.</li>
-</ul>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: “a stable organization directory under <code>/opt</code>, added to Blender’s search paths through <code>BLENDER_SYSTEM_SCRIPTS</code>”, because it gives one OS-level, package-manager independent home for shared add-ons that survives a Blender upgrade and stays out of every user’s home directory.</p>
-<p>We do not install into Blender’s own OS path (<code>/usr/share/blender/&lt;ver&gt;/scripts/addons</code>): it needs root, a <code>dnf</code> or Homebrew Blender upgrade replaces the whole tree and wipes anything dropped there, and the path is pinned to the Blender version and the install method. We instead create an org directory that the package manager never touches and point Blender at it:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># created once on the machine, owned by the org group; FHS /opt for add-on software,</span></span>
-<span id="cb1-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># namespaced reverse-DNS as org.v-sekai (from v-sekai.org) to avoid /opt collisions</span></span>
-<span id="cb1-3"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#   /opt/org.v-sekai/blender/5.1/scripts/</span></span>
-<span id="cb1-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#   /opt/org.v-sekai/blender/5.1/scripts/addons/        &lt;- add-ons land here</span></span>
-<span id="cb1-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#   /opt/org.v-sekai/blender/5.1/scripts/addons/NodeOSC/      (folder)</span></span>
-<span id="cb1-6"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#   /opt/org.v-sekai/blender/5.1/scripts/addons/blender_mcp/  (addon + server, from the release)</span></span>
-<span id="cb1-7"></span>
-<span id="cb1-8"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># set machine-wide so every launch sees it (e.g. /etc/profile.d/ or the launcher)</span></span>
-<span id="cb1-9"><span class="bu" style="color: null;
-background-color: null;
-font-style: inherit;">export</span> <span class="va" style="color: #111111;
-background-color: null;
-font-style: inherit;">BLENDER_SYSTEM_SCRIPTS</span><span class="op" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"/opt/org.v-sekai/blender/5.1/scripts"</span></span></code></pre></div></div>
-<p><code>BLENDER_SYSTEM_SCRIPTS</code> adds the directory to Blender’s search paths rather than replacing the bundle. A probe on this host confirmed it: with the variable set, <code>bpy.utils.script_paths()</code> lists the bundled <code>/usr/share/blender/5.1/scripts</code>, the user path, and the org path together; an add-on dropped in the org <code>addons/</code> is discovered; and <code>system_resource('SCRIPTS')</code> still resolves to the bundled tree, so the bundled core add-ons keep loading. The org directory survives Blender reinstalls because the package manager owns only <code>/usr/share/blender/&lt;ver&gt;</code> and <code>/opt/org.v-sekai</code> sits outside it.</p>
-<p>This answers where blender-mcp v2.0.0-dev.1 and NodeOSC go: into <code>/opt/org.v-sekai/blender/5.1/scripts/addons/</code>, away from any home directory and away from the package-owned Blender tree.</p>
-<section id="consequences" class="level3">
-<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
-<ul>
-<li>Good: shared add-ons load for every user and every headless run from one OS-level path.</li>
-<li>Good: a Blender upgrade through <code>dnf</code>, Homebrew, or a tarball leaves the add-ons in place, since the package manager never writes to <code>/opt/org.v-sekai</code>.</li>
-<li>Good: one environment variable points Blender at the directory however the binary was installed, so the procedure holds across machines and install methods.</li>
-<li>Bad: someone creates <code>/opt/org.v-sekai</code> once with org-group ownership, and a machine that skips setting <code>BLENDER_SYSTEM_SCRIPTS</code> falls back to the home and bundle paths.</li>
-<li>Bad: the path carries the Blender version (<code>5.1</code>), so a version upgrade installs into a new sibling directory (<code>.../blender/5.2/scripts</code>) and repoints <code>BLENDER_SYSTEM_SCRIPTS</code>, which keeps two Blender versions’ add-ons side by side at the cost of that step.</li>
-</ul>
-</section>
-<section id="confirmation" class="level3">
-<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
-<p>With <code>BLENDER_SYSTEM_SCRIPTS=/opt/org.v-sekai/blender/5.1/scripts</code> exported, <code>blender --background --python-expr "import bpy; print(bpy.utils.script_paths())"</code> lists the org path, and <code>blender --command extension list</code> (or the add-on preferences) shows blender-mcp and NodeOSC loading from it. <code>bpy.utils.system_resource('SCRIPTS')</code> still reports the bundled tree, confirming the bundle is intact. A <code>dnf reinstall blender</code> leaves <code>/opt/org.v-sekai/blender/5.1/scripts/addons/</code> untouched.</p>
-</section>
-</section>
-<section id="more-information" class="level2">
-<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
-<p>The blender-mcp bridge pairs with the <a href="../decisions/20260612-mcp-runtime-bridge-deployed-builds.html">MCP runtime bridge for deployed builds</a>. NodeOSC installs as a folder under the same <code>addons/</code> directory, and the blender-mcp add-on and its server install together from the fabric release.</p>
-
-
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="20260612-mcp-runtime-bridge-deployed-builds.html">MCP runtime bridge for deployed builds</a></p></li>
-</ul>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260614-blender-addons-under-opt-via-system-scripts.html</guid>
-  <pubDate>Sun, 14 Jun 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
   <title>Org-scoped GitHub App installation token for gh access instead of a personal OAuth token</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260613-org-scoped-github-app-token-for-gh-access.html</link>
   <description><![CDATA[ 
@@ -1086,7 +984,6 @@ font-style: inherit;">"/opt/org.v-sekai/blender/5.1/scripts"</span></span></code
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
-<li><p><a href="20260614-blender-addons-under-opt-via-system-scripts.html">Install organization Blender add-ons under /opt/org.v-sekai via BLENDER_SYSTEM_SCRIPTS, outside home and the package tree</a></p></li>
 </ul>
 </section>
 
@@ -1547,6 +1444,75 @@ font-style: inherit;">"/opt/org.v-sekai/blender/5.1/scripts"</span></span></code
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-cassie-desktop-curvenet-authoring.html</guid>
+  <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>CI/CD runners operate as a finite queueing system</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-cicd-runners-as-queueing-system.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › CI/CD runners operate as a finite queueing system</em></p>
+<p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
+<section id="context-and-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
+<p>The organization shares one GitHub Actions runner pool across every repository, observed at roughly 14–20 concurrent jobs. A single push to the Godot fork triggers a matrix of about 20 jobs, and the slowest of them (sanitizer and Windows builds) hold a runner for one to two hours. Pushes arrive from fix branches, pull requests, merge commits, reruns, and even archive repositories that carry the same workflow files. When arrivals outpace the pool, every queued job waits behind work that may carry no information at all. How does CI work get admitted to the runner pool so that signal arrives quickly?</p>
+</section>
+<section id="decision-drivers" class="level2">
+<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<ul>
+<li>The pool is a queueing system with a small fixed number of servers: as utilization approaches saturation, waiting time grows without bound (M/M/c behaviour), and the delay hits short high-signal jobs as hard as long ones.</li>
+<li>One logical change can spawn several full matrices: a branch push and its pull request double-trigger, the merge push triggers again, and a rerun repeats whatever already ran.</li>
+<li>Some queued work is known in advance to produce nothing: a job whose fix is not on the branch yet fails with certainty, and a run on a merged or deleted ref validates nothing.</li>
+<li>Diagnostics need CI hardware (a crash that only reproduces on GCC Linux runners) but not the whole matrix.</li>
+</ul>
+</section>
+<section id="considered-options" class="level2">
+<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
+<ul>
+<li>Unbounded admission: push and rerun freely, let GitHub queue everything.</li>
+<li>Hard concurrency caps in workflow configuration (per-repo <code>concurrency</code> groups beyond the existing per-branch cancellation).</li>
+<li>An operating discipline that bounds arrivals at the source: batch, sequence, and cancel zero-information work.</li>
+</ul>
+</section>
+<section id="decision-outcome" class="level2">
+<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
+<p>Chosen option: “an operating discipline that bounds arrivals at the source”, because the waste comes from how work is submitted, not from how GitHub schedules it — and a discipline adapts per situation where a hard cap blocks urgent work behind stale work.</p>
+<p>The discipline:</p>
+<ul>
+<li>Two or three full matrices run at a time; further work waits for a slot. A merge push waits until the in-flight run it would concurrency-cancel finishes, so partially-completed long jobs are not thrown away mid-service.</li>
+<li>Arrivals are batched: fixes land as one commit per push where possible, and a late-discovered fix joins an already-open PR branch rather than opening a new one. One merge then validates the whole batch with a single matrix.</li>
+<li>Zero-information runs are cancelled immediately: the push-event run that duplicates a PR’s pull-request run, runs still queued on merged or deleted refs, runs whose remaining jobs have a known outcome, and workflow runs triggered by pushes to archive repositories (Actions stays disabled on <code>godot-archived</code>).</li>
+<li>Diagnostics are trimmed to one job: a throwaway branch edits the workflow down to the single job that reproduces the problem, and reuses the warm build cache by keeping the matrix entry’s <code>cache-name</code>. The branch is deleted once the answer is in hand.</li>
+<li>A failed job whose fix is not yet on the branch never reruns; until the fix lands it would occupy a server for its full service time and return a result that is already known.</li>
+<li>Backlog is admitted selectively: stale branches needing fresh signal enter the queue worst-first, one or two at a time, when utilization is low rather than as a bulk rerun.</li>
+</ul>
+<section id="consequences" class="level3">
+<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
+<ul>
+<li>Good: high-signal jobs spend their time in service, not in queue; verdicts on key jobs arrive in roughly the service time of the job itself.</li>
+<li>Good: the merge policy (merge on a passing key job) composes cleanly — batched PRs mean each merge buys validation for several fixes with one matrix.</li>
+<li>Bad: sequencing adds wall-clock latency to individual merges; a merge-ready PR waits for an unrelated in-flight run to finish.</li>
+<li>Bad: the discipline lives in operator habit and this record, not in enforced configuration; a contributor who pushes freely still floods the pool.</li>
+</ul>
+</section>
+<section id="confirmation" class="level3">
+<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
+<p>The discipline is in practice on the CHI-364 CI campaign: six redundant queued runs cancelled in one sweep (two merged PRs’ leftovers, a deleted tag’s run, a push/PR duplicate), Actions disabled on <code>godot-archived</code> after an archive push was found competing with the main repo’s queue, a GCC-only segfault diagnosed through a single-job trimmed workflow over four iterations on a warm cache, and fixes batched so that two branches reached green with one validation matrix each.</p>
+</section>
+</section>
+<section id="more-information" class="level2">
+<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
+<p>The queue is observable with <code>gh run list --repo &lt;repo&gt; --json databaseId,status,headBranch</code> filtered to <code>queued</code>/<code>in_progress</code>, and per-run job counts with <code>gh run view &lt;id&gt; --json jobs</code>. Little’s law gives the sanity check: jobs in system ≈ arrival rate × time in system, so when queued jobs exceed the server count several times over, every new matrix admits about an hour of added latency to its own verdict.</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260611-cicd-runners-as-queueing-system.html</guid>
   <pubDate>Thu, 11 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 </channel>
