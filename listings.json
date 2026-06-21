@@ -14,6 +14,7 @@
     "listing": "/decisions.html",
     "items": [
       "/decisions/present-proposal-template.html",
+      "/decisions/20260621-kebab-case-repos-snake-case-local-checkouts.html",
       "/decisions/20260616-repo-markdown-single-source-of-truth-for-project-state.html",
       "/decisions/20260613-org-scoped-github-app-token-for-gh-access.html",
       "/decisions/20260613-repository-and-capability-inventory.html",
