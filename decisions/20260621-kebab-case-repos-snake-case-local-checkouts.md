@@ -13,8 +13,8 @@ with snake_case (`entity_packet`), and the `sinew-mocap` org carried
 `mount_drift` and `vr_bridge` alongside kebab-case peers. We want one repo-naming
 convention so clones, links, and code search stay predictable.
 
-The complication is that several C++ repos are consumed as siblings *by directory
-path*. `solve/CMakeLists.txt` does `add_subdirectory(../mount_drift …)`, CI
+The complication is that several C++ repos are consumed as siblings _by directory
+path_. `solve/CMakeLists.txt` does `add_subdirectory(../mount_drift …)`, CI
 workflows in `solve`, `viewer`, and `packaging` check the repo out to
 `path: mount_drift`, and the homebrew formula stages a `mount_drift` resource to
 `../mount_drift`. Renaming the local checkout directory to kebab-case would break
@@ -44,19 +44,20 @@ directory names that CMake, CI, and packaging reference as siblings.
 
 The rules:
 
-- **GitHub repository names are kebab-case.** For example `combat-core`,
-  `loot-core`, `entity-packet`, `mount-drift`, `vr-bridge`.
-- **Local checkout directory names match what the build expects.** Where a repo
-  is consumed as a sibling by path — `add_subdirectory(../mount_drift)`, a CI
-  `path:`, a homebrew `resource` — the local directory keeps the snake_case name
-  the build hardcodes (e.g. local `mount_drift` ↔ remote
-  `sinew-mocap/mount-drift`).
-- **Where no build path depends on the directory name, the local directory may
-  match the kebab-case repo name.** The loot-action slice dirs were renamed to
-  kebab-case on this basis (`combat-core`, `loot-core`, `entity-packet`, …).
-- **Old remote URLs keep working via GitHub redirects.** Update `origin` URLs at
-  convenience; do not rush to rewrite hardcoded `repository:`/`resource` strings
-  that already resolve through the redirect.
+- GitHub repository names are kebab-case, for example `combat-core`,
+  `loot-core`, `entity-packet`, `mount-drift`, and `vr-bridge`.
+- Local checkout directory names match what the build expects. Where a repo is
+  consumed as a sibling by path (`add_subdirectory(../mount_drift)`, a CI
+  `path:`, a homebrew `resource`), the local directory keeps the snake_case name
+  the build hardcodes, so local `mount_drift` maps to remote
+  `sinew-mocap/mount-drift`.
+- Where no build path depends on the directory name, the local directory may
+  match the kebab-case repo name. The loot-action slice directories were renamed
+  to kebab-case on this basis (`combat-core`, `loot-core`, `entity-packet`, and
+  the rest).
+- Old remote URLs keep working through GitHub redirects. Update `origin` URLs at
+  convenience, and leave the hardcoded `repository:` and `resource` strings that
+  already resolve through the redirect.
 
 ### Consequences
 
