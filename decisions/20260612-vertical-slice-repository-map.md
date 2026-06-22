@@ -36,7 +36,13 @@ Each loop concern carries a hexagon (`core/` + `ports/` + `adapters/`) and a sta
 - [`entity_packet`](https://github.com/v-sekai-multiplayer-fabric/entity_packet) — the integral 100-byte entity transform packet (int64 micrometers, no origin shift), with a roundtrip and size proof and a C++ differential.
 - [`http3-queue`](https://github.com/v-sekai-multiplayer-fabric/http3-queue) — the WebTransport transport concurrency model: a mutex-guarded inbound queue proven size-honest, and a starvation-free network-thread loop ([the persistent-stream decision](20260612-webtransport-persistent-framed-stream.md)).
 - [`connection-fsm`](https://github.com/v-sekai-multiplayer-fabric/connection-fsm) — the client-server connection lifecycle, proven sound and recovering inside the five-second transaction limit.
-- [`lean-predictive-bvh`](https://github.com/v-sekai-multiplayer-fabric/lean-predictive-bvh) — the predictive BVH and its R128 fixed-point, the velocity scale the entity packet binds to.
+- the predictive spatial oracle and the proof hexagons that rode alongside it, split out of the now-archived [`lean-predictive-bvh`](https://github.com/v-sekai-multiplayer-fabric/lean-predictive-bvh) monorepo into one repository per hexagon cluster along the dependency seams:
+  - [`lean-spatial-oracle`](https://github.com/v-sekai-multiplayer-fabric/lean-spatial-oracle) — the predictive BVH and its R128 fixed-point, the velocity scale the entity packet binds to (ghost expansion, SAH, and Hilbert broadphase, emitting `predictive_bvh.h` through the AmoLean codegen).
+  - [`lean-shared-core`](https://github.com/v-sekai-multiplayer-fabric/lean-shared-core) — the shared primitive types every cluster core builds on, dependency-free so the others require it without pulling Mathlib.
+  - [`lean-rebac-core`](https://github.com/v-sekai-multiplayer-fabric/lean-rebac-core) — the NoGod / ReBAC authorization core.
+  - [`lean-humanoid-rom`](https://github.com/v-sekai-multiplayer-fabric/lean-humanoid-rom) — humanoid range-of-motion and IK constraints (Kusudama, muscle and prismatic limits), with the body-model and biomechanics citations.
+  - [`lean-fabric-protocol`](https://github.com/v-sekai-multiplayer-fabric/lean-fabric-protocol) — the fabric networking and SLA proofs: saturation, waypoint bounds, and the abyssal SLA.
+  - [`lean-interest-mgmt`](https://github.com/v-sekai-multiplayer-fabric/lean-interest-mgmt) — authority-interest and solve-order: who-sees-whom and solve sequencing.
 
 ### The engine and its assembly
 
