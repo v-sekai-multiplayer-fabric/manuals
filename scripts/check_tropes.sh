@@ -9,7 +9,9 @@
 #   tone         false-suspense and pedagogical openers ("here's the kicker", "let's dive in")
 #   attribution  vague authorities ("experts argue", "studies show that …")
 #   signpost     signposted conclusions ("in summary") and "despite its challenges" dismissal
+#   false-range  the fake-spectrum flourish ("From innovation to transformation")
 #   cliche       overused AI vocabulary ("delve", "tapestry", "testament to", …)
+#   em-dash      per-file overuse of em-dashes in prose (tropes.fyi "20+ per piece")
 set -uo pipefail
 
 mapfile -t files < <(git ls-files '*.md' '*.qmd')
@@ -72,6 +74,16 @@ signpost=(
   "\bdespite its (challenges|limitations|drawbacks|flaws|complexity)\b"
 )
 
+# False ranges — the "from X to Y" fake spectrum ("From innovation to cultural
+# transformation"). Both halves must be words, so genuine numeric ranges ("from 5
+# to 10 ms") and concrete path descriptions ("the connection from uro to crdb",
+# which is lowercase mid-sentence) do not trip it: only the sentence-initial
+# flourish and the sweeping "everything/anything from X to Y" are flagged.
+false_range=(
+  '(^|[.!?][[:space:]])From [A-Za-z]+ to [A-Za-z]+'
+  '\b(everything|anything) from [a-z]+ to [a-z]+'
+)
+
 # Overused AI vocabulary / cliché phrases (tropes.fyi Word Choice + Tone).
 cliches=(
   '\bdelv(e|es|ing|ed)\b'
@@ -117,7 +129,30 @@ scan fragment    s "${fragments[@]}"
 scan tone        i "${tone[@]}"
 scan attribution i "${attribution[@]}"
 scan signpost    i "${signpost[@]}"
+scan false-range i "${false_range[@]}"
 scan cliche      i "${cliches[@]}"
+
+# Em-Dash Addiction (tropes.fyi Formatting): 20+ em-dashes in a single piece.
+# Count only PROSE em-dashes — skip fenced code, headings, and the leading "label —
+# description" separator on a list item, which is house style here, not a tell.
+em_dash_max=20
+for f in "${files[@]}"; do
+  n=$(awk '
+    /^```/ {fence=!fence; next}
+    fence  {next}
+    /^[[:space:]]*#/ {next}
+    {
+      line=$0
+      if (line ~ /^[[:space:]]*([-*+]|[0-9]+\.)[[:space:]]/) sub(/—/, "", line)
+      total += gsub(/—/, "", line)
+    }
+    END {print total+0}
+  ' "$f")
+  if [ "$n" -ge "$em_dash_max" ]; then
+    echo "tropes(em-dash): $f: $n prose em-dashes (limit ${em_dash_max})"
+    found=1
+  fi
+done
 
 if [ "$found" -ne 0 ]; then
   echo
@@ -129,7 +164,9 @@ if [ "$found" -ne 0 ]; then
   echo "  tone:        cut the false-suspense lead-in; state the point plainly."
   echo "  attribution: name the source or drop the claim, not \"experts argue …\"."
   echo "  signpost:    end on the content; delete \"in summary\" / \"despite its challenges\"."
+  echo "  false-range: drop the \"from X to Y\" flourish; name the specific items."
   echo "  cliche:      replace the flagged AI cliché with plain, specific wording."
+  echo "  em-dash:     thin out the em-dashes; recast some asides as plain clauses."
   exit 1
 fi
 echo "tropes check: clean (${#files[@]} files)"
