@@ -14,13 +14,7 @@ The fabric needs a first playable that exercises the whole stack end to end: a s
 
 Chosen option: ship one vertical slice of an instanced, four-player loot-action core loop. A single bounded loop proves transport, authority, persistence, and budget together, with no open content surface to manage.
 
-In scope:
-
-**One Hub deck with a shop, a four-player party teleporting into one Field room, the melee archetype with a timed combo against one enemy, one loot drop, and persistence of the result.**
-
-Out of scope:
-
-More Fields, boss fights, the full economy, trading, and avatar customization. AI generates cores, fixtures, adapters, and content in parallel while the squad reviews and integrates.
+One Hub deck with a shop, a four-player party teleporting into one Field room, the melee archetype with a timed combo against one enemy, one loot drop, and persistence of the result.
 
 ## Consequences
 
@@ -30,4 +24,4 @@ More Fields, boss fights, the full economy, trading, and avatar customization. A
 
 ## Confirmation
 
-The slice is complete when the party clears the enemy, grabs the drop under first-touch contention, and returns with the result committed to the store, holding 72 Hz on a Quest 3.
+The slice is complete when the party clears the enemy, grabs the drop under first-touch contention, and returns with the result committed to the stor.
