@@ -1232,13 +1232,6 @@
     "text": "Consequences\n\nThe slice runs on placeholder content and is gated on the frame floor, not art.\nRanged and caster archetypes, more platforms, and in-headset authoring land after the gate.\nThe build follows the hexagonal core/ports/adapters structure, per the hexagonal decision, with one core per loop concern behind narrow ports."
   },
   {
-    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#confirmation",
-    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#confirmation",
-    "title": "Loot-action core-loop MVP vertical slice",
-    "section": "Confirmation",
-    "text": "Confirmation\nThe slice is complete when the party clears the enemy, grabs the drop under first-touch contention, and returns with the result committed to the stor."
-  },
-  {
     "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#related",
     "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#related",
     "title": "Loot-action core-loop MVP vertical slice",
