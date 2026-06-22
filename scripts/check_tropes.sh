@@ -4,8 +4,11 @@
 # enough context that ordinary prose does not trip it. Rule groups:
 #   parallelism  negative parallelism: "not X, but/it's Y" and the em-dash reframe
 #   bold-list    a bullet/number opening with a **bold label** then a :, ., or —
-#   serves-as    the "serves as a …" dodge
+#   serves-as    the "serves as a …" / "stands as a …" dodge
 #   fragment     rhetorical fragments: "Not X. Not Y. …" and "The X? A Y."
+#   tone         false-suspense and pedagogical openers ("here's the kicker", "let's dive in")
+#   attribution  vague authorities ("experts argue", "studies show that …")
+#   signpost     signposted conclusions ("in summary") and "despite its challenges" dismissal
 #   cliche       overused AI vocabulary ("delve", "tapestry", "testament to", …)
 set -uo pipefail
 
@@ -31,9 +34,11 @@ bold_list=(
   '^[[:space:]]*([-*+]|[0-9]+\.)[[:space:]]+\*\*[^*]+\*\*[[:space:]]*(—|–|--)'
 )
 
-# The "serves as a …" dodge — "the building serves as a reminder of …".
+# The "serves as a …" dodge — "the building serves as a reminder of …" — and its
+# "stands as a …" cousin. Say what the subject does instead.
 serves_as=(
   '\bserves as (a|an|the)\b'
+  '\bstands as (a|an|the)\b'
 )
 
 # Rhetorical fragments: the "Not X. Not Y. Just Z." cascade and the "The X? A Y."
@@ -41,6 +46,30 @@ serves_as=(
 fragments=(
   '\bNot [^.!?]{1,50}\.[[:space:]]+Not [^.!?]{1,50}\.'
   '(^|[.!?][[:space:]])The [^.!?]{1,40}\?[[:space:]]+[A-Z]'
+)
+
+# False-suspense and pedagogical openers (tropes.fyi Tone). Each phrase is
+# distinctive enough that ordinary prose does not use it.
+tone=(
+  "here'?s (the thing|the kicker|where it gets|what (most people|nobody|few people))"
+  "\blet'?s (unpack|dive in|dive into|explore|break (this|it) down)\b"
+  "\bthink of it (as|like) (a|an)\b"
+  "\bimagine a world where\b"
+  "\bthe (simple truth|truth is simple)\b"
+)
+
+# Vague attributions — unnamed authorities standing in for a citation.
+attribution=(
+  "\b(experts|researchers|analysts|observers|critics) (say|argue|agree|believe|suggest|note|contend)\b"
+  "\b(studies|reports|research) (show|shows|suggest|suggests|indicate|indicates) that\b"
+)
+
+# Signposted conclusions and the "despite its challenges" optimism formula
+# (tropes.fyi Composition). Anchored to a sentence start so mid-sentence "in
+# summary judgment" style usage does not trip it.
+signpost=(
+  "(^|[.!?][[:space:]])(in conclusion|to sum up|in summary|to summarize)\b"
+  "\bdespite its (challenges|limitations|drawbacks|flaws|complexity)\b"
 )
 
 # Overused AI vocabulary / cliché phrases (tropes.fyi Word Choice + Tone).
@@ -57,6 +86,9 @@ cliches=(
   '\bever-(evolving|changing|growing|expanding)\b'
   '\ba wealth of\b'
   "it'?s worth noting"
+  "\bit bears mentioning\b"
+  "\bneedless to say\b"
+  "\butiliz(e|es|ing|ed)\b"
   "in today'?s [a-z -]{0,25}(paced|world|landscape|age)"
 )
 
@@ -82,6 +114,9 @@ scan parallelism i "${parallelism[@]}"
 scan bold-list   s "${bold_list[@]}"
 scan serves-as   i "${serves_as[@]}"
 scan fragment    s "${fragments[@]}"
+scan tone        i "${tone[@]}"
+scan attribution i "${attribution[@]}"
+scan signpost    i "${signpost[@]}"
 scan cliche      i "${cliches[@]}"
 
 if [ "$found" -ne 0 ]; then
@@ -91,6 +126,9 @@ if [ "$found" -ne 0 ]; then
   echo "  bold-list:   drop the bold lead-in; write the list item as a sentence."
   echo "  serves-as:   say what it does directly instead of \"serves as a …\"."
   echo "  fragment:    write full sentences, not \"Not X. Not Y.\" / \"The X? A Y.\"."
+  echo "  tone:        cut the false-suspense lead-in; state the point plainly."
+  echo "  attribution: name the source or drop the claim, not \"experts argue …\"."
+  echo "  signpost:    end on the content; delete \"in summary\" / \"despite its challenges\"."
   echo "  cliche:      replace the flagged AI cliché with plain, specific wording."
   exit 1
 fi
