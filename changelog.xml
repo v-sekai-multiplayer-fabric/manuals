@@ -10,7 +10,46 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/changelog.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Mon, 22 Jun 2026 15:33:18 GMT</lastBuildDate>
+<lastBuildDate>Mon, 22 Jun 2026 15:40:28 GMT</lastBuildDate>
+<item>
+  <title></title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260622-deck-log.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="v-sekai-multiplayer-fabric-deck-log-2026-06-22-monday" class="level1">
+<h1>V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)</h1>
+<p>Date: 2026-06-22</p>
+<p>Split the <code>lean-predictive-bvh</code> proof monorepo into one repository per hexagon cluster, along the dependency seams the lakefile already drew, and archived the monorepo. Updated the vertical-slice repository map to match.</p>
+<section id="added" class="level2">
+<h2 class="anchored" data-anchor-id="added">Added</h2>
+<ul>
+<li>Six standalone Lean workspaces, one per hexagon cluster, each carrying its own <code>core/ports/adapters</code> tree, a lakefile that wires its siblings over <code>require ... from git</code>, and a CI gate that builds the production closure: <a href="https://github.com/v-sekai-multiplayer-fabric/lean-shared-core">lean-shared-core</a>, the dependency-free primitive types every other core requires; <a href="https://github.com/v-sekai-multiplayer-fabric/lean-rebac-core">lean-rebac-core</a>, the NoGod / ReBAC authorization core; <a href="https://github.com/v-sekai-multiplayer-fabric/lean-spatial-oracle">lean-spatial-oracle</a>, the predictive BVH and its R128 fixed-point with ghost expansion, SAH, and Hilbert broadphase, emitting <code>predictive_bvh.h</code> through the AmoLean codegen; <a href="https://github.com/v-sekai-multiplayer-fabric/lean-humanoid-rom">lean-humanoid-rom</a>, range-of-motion and IK constraints with the body-model and biomechanics citations; <a href="https://github.com/v-sekai-multiplayer-fabric/lean-fabric-protocol">lean-fabric-protocol</a>, the networking and SLA proofs (saturation, waypoint bounds, abyssal SLA); and <a href="https://github.com/v-sekai-multiplayer-fabric/lean-interest-mgmt">lean-interest-mgmt</a>, authority-interest and solve-order. The push order follows the dependency graph: shared-core and rebac-core first, then spatial-oracle, then fabric-protocol, then interest-mgmt, and each repository’s lake build is green.</li>
+</ul>
+</section>
+<section id="changed" class="level2">
+<h2 class="anchored" data-anchor-id="changed">Changed</h2>
+<ul>
+<li>The <a href="../../decisions/20260612-vertical-slice-repository-map.html">repository map</a> lists the predictive-oracle proofs as the six per-cluster repositories above, replacing the single <code>lean-predictive-bvh</code> entry under the wire, transport, and determinism specs.</li>
+</ul>
+</section>
+<section id="removed" class="level2">
+<h2 class="anchored" data-anchor-id="removed">Removed</h2>
+<ul>
+<li>The <a href="https://github.com/v-sekai-multiplayer-fabric/lean-predictive-bvh">lean-predictive-bvh</a> monorepo is archived and read-only; its proofs now live in the six repositories above. The CITATIONS.bib moved whole to lean-humanoid-rom, the only cluster its body-model and biomechanics references cover.</li>
+</ul>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260622-deck-log.html</guid>
+  <pubDate>Mon, 22 Jun 2026 15:40:28 GMT</pubDate>
+</item>
 <item>
   <title></title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260612-deck-log.html</link>
@@ -85,7 +124,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260612-deck-log.html</guid>
-  <pubDate>Mon, 22 Jun 2026 15:33:18 GMT</pubDate>
+  <pubDate>Mon, 22 Jun 2026 15:40:28 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -145,7 +184,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260606-deck-log.html</guid>
-  <pubDate>Mon, 22 Jun 2026 15:33:18 GMT</pubDate>
+  <pubDate>Mon, 22 Jun 2026 15:40:28 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -209,7 +248,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260507-deck-log.html</guid>
-  <pubDate>Mon, 22 Jun 2026 15:33:18 GMT</pubDate>
+  <pubDate>Mon, 22 Jun 2026 15:40:28 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -260,7 +299,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260506-deck-log.html</guid>
-  <pubDate>Mon, 22 Jun 2026 15:33:18 GMT</pubDate>
+  <pubDate>Mon, 22 Jun 2026 15:40:28 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -348,7 +387,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260425-deck-log.html</guid>
-  <pubDate>Mon, 22 Jun 2026 15:33:18 GMT</pubDate>
+  <pubDate>Mon, 22 Jun 2026 15:40:28 GMT</pubDate>
 </item>
 <item>
   <title></title>
@@ -379,7 +418,7 @@
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/changelog/2026/20260421-deck-log.html</guid>
-  <pubDate>Mon, 22 Jun 2026 15:33:18 GMT</pubDate>
+  <pubDate>Mon, 22 Jun 2026 15:40:28 GMT</pubDate>
 </item>
 </channel>
 </rss>
