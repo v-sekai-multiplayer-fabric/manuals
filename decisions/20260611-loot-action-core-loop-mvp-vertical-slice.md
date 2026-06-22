@@ -21,7 +21,3 @@ One Hub deck with a shop, a four-player party teleporting into one Field room, t
 - The slice runs on placeholder content and is gated on the frame floor, not art.
 - Ranged and caster archetypes, more platforms, and in-headset authoring land after the gate.
 - The build follows the hexagonal core/ports/adapters structure, per [the hexagonal decision](20260610-hexagonal-core-ports-adapters.md), with one core per loop concern behind narrow ports.
-
-## Confirmation
-
-The slice is complete when the party clears the enemy, grabs the drop under first-touch contention, and returns with the result committed to the stor.
