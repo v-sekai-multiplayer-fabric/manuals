@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "V-Sekai — Multiplayer Fabric",
     "section": "",
-    "text": "V-Sekai — Multiplayer Fabric\nA game-server platform built on Godot, Elixir, and a RDMBS. The runtime is self-hosted; see the deployment decisions for the current target."
+    "text": "V-Sekai — Multiplayer Fabric\nA game-server platform built on Godot, Elixir, and a RDMBS. The runtime is self-hosted."
   },
   {
     "objectID": "references.html",
