@@ -17,6 +17,7 @@
       "/decisions/madr-proposal-template.html",
       "/decisions/20260624-game-loop-cluster-sequence.html",
       "/decisions/20260624-release-tag-progression-dev-beta-rc.html",
+      "/decisions/20260624-fabric-platform-central-elixir-burrito-casync.html",
       "/decisions/20260624-sccache-github-actions-cache-for-godot-builds.html",
       "/decisions/20260621-kebab-case-repos-snake-case-local-checkouts.html",
       "/decisions/20260616-repo-markdown-single-source-of-truth-for-project-state.html",

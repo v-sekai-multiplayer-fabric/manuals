@@ -1435,221 +1435,508 @@
     "text": "Tags\n\nloot-action, game-loop, uiux-polish, cassie-pen-mesh, shop-economy, openUSD-i/o, feedback-release, 20260624-game-loop-cluster-sequence"
   },
   {
-    "objectID": "decisions/20260611-genre-generic-naming-no-trademarks.html",
-    "href": "decisions/20260611-genre-generic-naming-no-trademarks.html",
-    "title": "Genre-generic naming, no trademarked proper nouns",
+    "objectID": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html",
+    "href": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html",
+    "title": "fabric-platform-central as Elixir OTP app with Burrito and casync",
     "section": "",
-    "text": "Manuals › Decisions › Genre-generic naming, no trademarked proper nouns\nStatus: accepted"
+    "text": "Manuals › Decisions › fabric-platform-central as Elixir OTP app with Burrito and casync\nStatus: accepted"
   },
   {
-    "objectID": "decisions/20260611-genre-generic-naming-no-trademarks.html#context-and-problem-statement",
-    "href": "decisions/20260611-genre-generic-naming-no-trademarks.html#context-and-problem-statement",
-    "title": "Genre-generic naming, no trademarked proper nouns",
+    "objectID": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#the-context",
+    "href": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#the-context",
+    "title": "fabric-platform-central as Elixir OTP app with Burrito and casync",
+    "section": "The Context",
+    "text": "The Context\nThe multiplayer-fabric stack ships three Windows packages via MSIX: a game client, a dedicated server, and a platform manager that installs and updates the other two (and itself). The platform manager began as a Godot placeholder with a single stub button and no real logic.\nMSIX requires a native .exe as its Executable= entry point. The earlier approach used a .NET 8 self-contained launcher stub (~60 MB) to wrap the Godot dedicated-server export. The zone-backend Elixir application already depends on aria_storage, a library that implements the full casync content-addressable-sync protocol with parallel chunk fetching, local caching, and integrity verification. A second casync implementation for Godot (multiplayer_fabric_asset) was registered as a Godot module but contained only a Python build-config stub — no C++ source at all."
+  },
+  {
+    "objectID": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#the-problem-statement",
+    "href": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#the-problem-statement",
+    "title": "fabric-platform-central as Elixir OTP app with Burrito and casync",
+    "section": "The Problem Statement",
+    "text": "The Problem Statement\n\nThe platform manager needs a single native .exe with no external runtime on the user’s machine to satisfy the MSIX Executable= constraint.\nA Godot export carries a full rendering and physics engine (~60–80 MB) for a process whose only job is download management — unnecessary weight and a larger attack surface.\nThe casync implementation in aria_storage (Elixir) is complete, tested, and already depended on. Writing a second one in GDScript or C++ duplicates the protocol work and creates two things to maintain.\nThe .NET 8 self-contained launcher pattern introduced a .NET dependency and was approximately the same size as Godot with no benefit for the platform manager role."
+  },
+  {
+    "objectID": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#design",
+    "href": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#design",
+    "title": "fabric-platform-central as Elixir OTP app with Burrito and casync",
+    "section": "Design",
+    "text": "Design\nLanguage and runtime: Replace the Godot project with an Elixir OTP application (fabric_platform_central). Declare aria_storage as a dependency so the updater delegates all casync work to the existing implementation.\nSingle executable: Use Burrito. Burrito wraps a mix release into a self-extracting Zig-wrapper binary that bundles ERTS + all BEAM code. The output is burrito_out/fabric_platform_central.exe — one file, no separate .bat, no shim, no sidecar.\nMSIX layout (simplified by Burrito):\nbin\\\n  fabric-platform-central.exe   ← Burrito single binary (MSIX Executable=)\nassets\\\n  Square150x150Logo.png\n  Square44x44Logo.png\n  StoreLogo.png\nAppxManifest.xml\nUpdate logic in lib/fabric_platform_central/updater.ex:\ndef update(target, install_dir, opts \\\\ []) when target in [:client, :server, :self] do\n  {repo_base, index_file} = @targets[target]\n  with {:ok, tag} &lt;- latest_tag(repo_base, opts),\n       index_url = \"#{repo_base}/releases/download/#{tag}/#{index_file}\",\n       store_url = \"#{repo_base}/releases/download/#{tag}/store\" do\n    AriaStorage.CasyncDecoder.decode_uri(index_url,\n      store_uri: store_url,\n      output_dir: Path.join(install_dir, to_string(target)),\n      verify_integrity: true\n    )\n  end\nend\nCI checks (.github/workflows/ci.yml) — runs on every push and PR:\n- run: mix compile --warnings-as-errors\n- run: mix format --check-formatted\n- run: mix test\nRelease workflow (.github/workflows/release-msix.yml) — fires on v* tag push:\n\nerlef/setup-beam — OTP 27 + Elixir 1.18\ngoto-bus-stop/setup-zig@v2.2.1 — Zig 0.14.0 (required by Burrito)\nmix release → burrito_out/fabric_platform_central.exe\npackaging/msix/pack.ps1 -BurritoExe ... -Version ... → signed MSIX\nAttach to GitHub Release\n\nmix.exs release config:\ndefp releases do\n  [\n    fabric_platform_central: [\n      steps: [:assemble, &Burrito.wrap/1],\n      burrito: [targets: [windows: [os: :windows, cpu: :x86_64]]]\n    ]\n  ]\nend"
+  },
+  {
+    "objectID": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#cris-score",
+    "href": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#cris-score",
+    "title": "fabric-platform-central as Elixir OTP app with Burrito and casync",
+    "section": "CRIS Score",
+    "text": "CRIS Score\n\n\n\n\n\n\n\n\nFactor\nScore\nEvidence\n\n\n\n\nComplexity\n7\nElixir OTP + Burrito are established; Burrito needs Zig in CI, which is a new toolchain dependency\n\n\nReach\n6\nAffects every Windows user who installs via the platform manager MSIX\n\n\nImpediment\n8\nWithout a working platform manager MSIX, Windows distribution has no self-update path\n\n\nStakeholder\n7\nDirectly blocks the three-MSIX release milestone (client, server, platform-central)\n\n\nTotal\n7.0\nSchedule soon"
+  },
+  {
+    "objectID": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#the-downsides",
+    "href": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#the-downsides",
+    "title": "fabric-platform-central as Elixir OTP app with Burrito and casync",
+    "section": "The Downsides",
+    "text": "The Downsides\n\nBurrito requires Zig installed in the release CI runner. Zig version compatibility with Burrito’s Zig wrapper must be tracked as both projects release.\nERTS bundled by Burrito adds ~30–50 MB to the MSIX; comparable to a Godot export but without the ability to strip it further without recompiling OTP.\nThe OTP application starts in embedded mode via Burrito; some OTP introspection tools behave differently in embedded vs. interactive mode."
+  },
+  {
+    "objectID": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#the-road-not-taken",
+    "href": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#the-road-not-taken",
+    "title": "fabric-platform-central as Elixir OTP app with Burrito and casync",
+    "section": "The Road Not Taken",
+    "text": "The Road Not Taken\nGodot + GDExtension casync: Would require writing the casync protocol from scratch in C++, duplicating aria_storage with no gain. The multiplayer_fabric_asset module stub confirmed this was not started.\nGodot + GDScript HTTPRequest: Could call Add-AppxPackage via OS.execute() for whole-file downloads but cannot do casync delta transfers without a full casync client in GDScript. Carries the rendering engine for no reason.\nScoop shim + OTP release tree: Downloading a pre-built Zig shim from ScoopInstaller/Shim and writing a .shim sidecar avoids writing any stub code, but still ships the full OTP release directory tree (hundreds of files) in the MSIX alongside it. Burrito produces a single file and is an Elixir-native solution.\nGo stub: A tiny main.go that execs the OTP .bat launcher works but adds a Go compile step and a non-Elixir source file to maintain, offering no advantage over Burrito.\n.NET 8 self-contained launcher: Was the original approach; removed because .NET 8 is a large dependency (~60 MB self-contained), the team does not otherwise use .NET, and it only wrapped a shell invocation — nothing the OTP release cannot do directly."
+  },
+  {
+    "objectID": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#tags",
+    "href": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#tags",
+    "title": "fabric-platform-central as Elixir OTP app with Burrito and casync",
+    "section": "Tags",
+    "text": "Tags\n\nelixir, burrito, casync, msix, windows, aria-storage, 20260624-fabric-platform-central-elixir-burrito-casync"
+  },
+  {
+    "objectID": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#further-reading",
+    "href": "decisions/20260624-fabric-platform-central-elixir-burrito-casync.html#further-reading",
+    "title": "fabric-platform-central as Elixir OTP app with Burrito and casync",
+    "section": "Further Reading",
+    "text": "Further Reading\n@misc{burrito_2024,\n  title  = {Burrito — Wrap your application in a BEAM Burrito!},\n  year   = {2024},\n  url    = {https://github.com/burrito-elixir/burrito}\n}\n\n@misc{aria_storage_2025,\n  title  = {aria-storage — Content-addressable storage with casync protocol},\n  author = {Lee, K. S. Ernest (iFire)},\n  year   = {2025},\n  url    = {https://github.com/V-Sekai-fire/aria-storage}\n}"
+  },
+  {
+    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html",
+    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html",
+    "title": "Loot-action core-loop MVP vertical slice",
+    "section": "",
+    "text": "Manuals › Decisions › Loot-action core-loop MVP vertical slice\nStatus: accepted"
+  },
+  {
+    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-context",
+    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-context",
+    "title": "Loot-action core-loop MVP vertical slice",
+    "section": "The Context",
+    "text": "The Context\nThe fabric has transport, authority, persistence, and budget decisions in place, but no running loop that exercises all of them together. The team needs a first playable to find the gaps that only appear when the whole stack runs end to end: a social hub where players gather, an instanced combat zone where they fight and collect, and the round trip that carries the result back. Without a bounded target the risk is that each layer is individually correct but the integration is never tested until it is too late to fix."
+  },
+  {
+    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-problem-statement",
+    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-problem-statement",
+    "title": "Loot-action core-loop MVP vertical slice",
+    "section": "The Problem Statement",
+    "text": "The Problem Statement\nThere is no single bounded deliverable that tells the team whether the stack works together. The team needs one vertical slice, small enough to build in a week, complete enough to exercise every integration seam: transport, server authority, loot contention, inventory persistence, performance budgeting, and the Hub-to-Field-to-Hub round trip."
+  },
+  {
+    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#design",
+    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#design",
+    "title": "Loot-action core-loop MVP vertical slice",
+    "section": "Design",
+    "text": "Design\nShip one vertical slice of an instanced, four-player loot-action core loop.\nScene layout\n\nOne Hub deck with a shop backed by the loot and progression cores. The shop degrades to a free starting kit if the economy slips.\nOne Field room: four players, one melee combo against one enemy, one loot drop, one persistence round trip.\n\nLoop\n\nPlayers gather in the Hub and form a party.\nThe party teleports into the Field instance hosted by zone-server.\nOne player lands a timed melee combo. The server validates the hit, deducts enemy health, and spawns a loot drop.\nOne player touches the drop first. The loot core resolves contention by receipt timestamp, grants the winner, and rejects the rest.\nThe progression core commits the inventory delta through the CockroachDB adapter (or the SQLite fallback if the commit path slips).\nThe party teleports back to the Hub. The shop reflects the new inventory.\n\nCores\nEach concern is a hexagonal pure reducer (the hexagonal decision, the core contract):\n\n\n\nCore\nResponsibility\nKey ports\n\n\n\n\nCombat (decision)\nCombo timing, hit validation, health, enemy spawn window\ninput_source, tick_source, behavior_source → state_sink, event_sink\n\n\nLoot (decision)\nDrop generation, first-touch contention\nloot_request_source → grant_sink, inventory_delta_sink\n\n\nPresence (decision)\nRemote-pose interpolation\npose_source → avatar_sink\n\n\nProgression (decision)\nProfile, inventory, affinity gate\nprofile_source → commit_sink\n\n\nBudgeter (decision)\nPer-frame quality knobs under load\nmeasurement_source → knob_sink\n\n\n\nAuthority and networking\nThe zone-server is the single authority per instance (server-authoritative decision). For the deadline the model is server-authoritative with client interpolation and no prediction. The rollback adapter lands after the gate behind the same ports.\nContent and performance gate\nContent is first-party curated only; the zone-baker enforces hard budgets at bake time (content decision). The sign-off gate is a SteamVR build at 90 Hz: four avatars and one Field room under 500,000 visible triangles and 200 draw calls per eye.\nWhat ships after the gate\nRanged and caster archetypes, Steam Frame and Steam Deck builds, in-headset authoring, rollback, and user-generated content."
+  },
+  {
+    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#cris-score",
+    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#cris-score",
+    "title": "Loot-action core-loop MVP vertical slice",
+    "section": "CRIS Score",
+    "text": "CRIS Score\n\n\n\n\n\n\n\n\nFactor\nScore\nEvidence\n\n\n\n\nComplexity\n5\nFive hexagonal cores, server authority, three platforms in scope, and a content pipeline; not novel but genuinely wide\n\n\nReach\n10\nThis is the whole stack; every subsystem touches the slice\n\n\nImpediment\n9\nWithout it there is no first playable, no integration proof, and no gate to build subsequent features against\n\n\nStakeholder\n9\nThe vertical slice is the primary deliverable for the proof-of-concept milestone; all downstream work depends on it shipping\n\n\nTotal\n8.25\nBuild now"
+  },
+  {
+    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-downsides",
+    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-downsides",
+    "title": "Loot-action core-loop MVP vertical slice",
+    "section": "The Downsides",
+    "text": "The Downsides\n\nThe slice runs on placeholder content; art is not gated, only the frame floor.\nOnly the melee archetype ships; ranged and caster are explicitly deferred.\nNo client prediction at the deadline; the rollback adapter lands after the gate.\nThe SQLite fallback in progression degrades the inventory persistence, which is not visible to the player but makes the economy untrustworthy until the CockroachDB path is confirmed."
+  },
+  {
+    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-road-not-taken",
+    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-road-not-taken",
+    "title": "Loot-action core-loop MVP vertical slice",
+    "section": "The Road Not Taken",
+    "text": "The Road Not Taken\nFull toolchain and content pipeline first — building the full pipeline before the loop means the integration gaps appear late, when they are most expensive. Rejected in favour of the thin steel thread.\nMulti-archetype slice — including ranged and caster in the first slice widens the scope beyond one week. The melee archetype is sufficient to prove combat authority and loot contention; the others follow the gate.\nBroader platform launch — targeting Steam Frame and Steam Deck alongside SteamVR at the gate is sufficient scope for the vertical slice; additional standalone VR platforms are deferred.\nPer-zone distributed authority (Maglev intercept model) — a geometric Hilbert-zone authority was attempted and rejected in the Maglev intercept smoke test. A single zone-server authority per instance is simpler and sufficient for a four-player room."
+  },
+  {
+    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#status",
+    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#status",
+    "title": "Loot-action core-loop MVP vertical slice",
+    "section": "Status",
+    "text": "Status\nStatus: Accepted"
+  },
+  {
+    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#decision-makers",
+    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#decision-makers",
+    "title": "Loot-action core-loop MVP vertical slice",
+    "section": "Decision Makers",
+    "text": "Decision Makers\n\nK. S. Ernest (iFire) Lee"
+  },
+  {
+    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#tags",
+    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#tags",
+    "title": "Loot-action core-loop MVP vertical slice",
+    "section": "Tags",
+    "text": "Tags\n\nloot-action, mvp, vertical-slice, proof-of-concept, hexagonal, 20260611-loot-action-core-loop-mvp-vertical-slice, madr-proposal-template"
+  },
+  {
+    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#further-reading",
+    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#further-reading",
+    "title": "Loot-action core-loop MVP vertical slice",
+    "section": "Further Reading",
+    "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
+  },
+  {
+    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#related",
+    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#related",
+    "title": "Loot-action core-loop MVP vertical slice",
+    "section": "Related",
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)\nHexagonal core/ports/adapters as the component convention\nCores as pure reducers over byte-serialized state\nFirst-party curated content with zone-baker budgets\nBudgeter hexagon — core, ports, and adapters\nCombat hexagon — core, ports, and adapters\nLoot hexagon — core, ports, and adapters\nPresence hexagon — wrapping the existing presence stack\nProgression hexagon — core, ports, and adapters\nServer-authoritative simulation with deferred rollback\nRepository map of the loot-action vertical slice"
+  },
+  {
+    "objectID": "decisions/20260606-gitassembly-tag-release.html",
+    "href": "decisions/20260606-gitassembly-tag-release.html",
+    "title": "Cut gitassembly tag releases for the assembled engine",
+    "section": "",
+    "text": "Manuals › Decisions › Cut gitassembly tag releases for the assembled engine\nStatus: accepted"
+  },
+  {
+    "objectID": "decisions/20260606-gitassembly-tag-release.html#context-and-problem-statement",
+    "href": "decisions/20260606-gitassembly-tag-release.html#context-and-problem-statement",
+    "title": "Cut gitassembly tag releases for the assembled engine",
     "section": "Context and Problem Statement",
-    "text": "Context and Problem Statement\nThe core loop draws on a trademarked action RPG. The project reuses none of that game’s trademarks, so the docs and the game need a neutral vocabulary that carries the mechanics without the marks."
+    "text": "Context and Problem Statement\nThe merge repo’s gitassembly recipe builds the engine by merging feature branches (feat/module-xr-grid, feat/module-cassie, feat/module-http3, and the rest) onto the frozen Godot 4.7 base. The base is pinned, but the feature branch tips are not: an assembly run today and one next week can merge different branch SHAs and produce a different engine. The cold-boot dependencies refer to the branches by name, so “assemble these branches” alone is not a reproducible artifact. What is the shareable, fixed reference for the assembled engine?"
   },
   {
-    "objectID": "decisions/20260611-genre-generic-naming-no-trademarks.html#decision-outcome",
-    "href": "decisions/20260611-genre-generic-naming-no-trademarks.html#decision-outcome",
-    "title": "Genre-generic naming, no trademarked proper nouns",
+    "objectID": "decisions/20260606-gitassembly-tag-release.html#decision-drivers",
+    "href": "decisions/20260606-gitassembly-tag-release.html#decision-drivers",
+    "title": "Cut gitassembly tag releases for the assembled engine",
+    "section": "Decision Drivers",
+    "text": "Decision Drivers\n\nReproducibility: a name that resolves to one exact assembled tree, not moving tips.\nA single reference the demo, godot-images, and CI can all build from.\nCheap to cut so releases keep pace with the feature branches.\nDo not steamroll prior assemblies that other work already builds against."
+  },
+  {
+    "objectID": "decisions/20260606-gitassembly-tag-release.html#considered-options",
+    "href": "decisions/20260606-gitassembly-tag-release.html#considered-options",
+    "title": "Cut gitassembly tag releases for the assembled engine",
+    "section": "Considered Options",
+    "text": "Considered Options\n\nKeep referring to branch names; each consumer assembles the tips itself.\nForce-push the assembled multiplayer-fabric branch as the shared reference.\nPush an immutable, timestamped tag of the assembled tree (the existing merge tooling already does this)."
+  },
+  {
+    "objectID": "decisions/20260606-gitassembly-tag-release.html#decision-outcome",
+    "href": "decisions/20260606-gitassembly-tag-release.html#decision-outcome",
+    "title": "Cut gitassembly tag releases for the assembled engine",
     "section": "Decision Outcome",
-    "text": "Decision Outcome\nChosen option: use genre-generic vocabulary throughout the docs, the filenames, and the game, because generic terms describe the mechanics while carrying no trademark.\nThe vocabulary: Hub for the social staging area, Field for a combat instance, melee, ranged, and caster for the archetypes, art for a learnable ability, affinity for the gating stat, and energy for the ability resource."
+    "text": "Decision Outcome\nChosen option: “Push an immutable, timestamped tag”, because it gives one reference that resolves to an exact tree without overwriting prior assemblies. This adopts the behavior the merge tooling already implements rather than inventing a new scheme.\n\nelixir update_godot_v_sekai.exs (run from main) fetches the remotes, runs the vendored git-assembler over the gitassembly recipe, then tags the assembled multiplayer-fabric branch and pushes only the tag to v-sekai-multiplayer-fabric/godot. The moving branch stays local, so a release never steamrolls anyone working off a previous tip.\nTag format (CalVer, UTC): v&lt;YYYY.MM.DD.HHMM&gt;-multiplayer-fabric. The timestamp is the only thing that changes between runs; the assembler is deterministic, so the same inputs produce the same tree.\nThe current cold-boot reference is v2026.06.06.1853-multiplayer-fabric (commit 9ea526ab), assembled onto the pinned 4.7 base with the full recipe, including feat/module-xr-grid, feat/module-cassie, and feat/module-http3.\nConsumers pin to a tag, not to branch names. godot-images builds its GHCR editor image from a tag, and the cold-boot steps reference that tag.\nIterate with --dry-run (assembles locally, no push) before cutting a release.\n\n\nConsequences\n\nGood: a tag resolves to one exact assembled engine, so demo, image, and CI build the same tree.\nGood: tag-only push keeps every prior assembly intact and addressable.\nBad: the CalVer tag carries no semantic version, so the assembled Godot version is implicit in the pinned base.\nBad: tags must be cut deliberately, so a stale tag can lag the live branches.\n\n\n\nConfirmation\ngit ls-remote --tags v-sekai-multiplayer-fabric/godot lists v&lt;YYYY.MM.DD.HHMM&gt;-multiplayer-fabric tags, a godot-images build from a tag reproduces the same editor, and the cold-boot steps reference a tag rather than branch names."
   },
   {
-    "objectID": "decisions/20260611-genre-generic-naming-no-trademarks.html#consequences",
-    "href": "decisions/20260611-genre-generic-naming-no-trademarks.html#consequences",
-    "title": "Genre-generic naming, no trademarked proper nouns",
+    "objectID": "decisions/20260606-gitassembly-tag-release.html#more-information",
+    "href": "decisions/20260606-gitassembly-tag-release.html#more-information",
+    "title": "Cut gitassembly tag releases for the assembled engine",
+    "section": "More Information",
+    "text": "More Information\nThe tag sits on top of the engine pin: the pin fixes the base, and the tag fixes the assembly merged onto it. It is the reproducible artifact the cold-boot dependencies build from. The tag format and workflow are documented in the merge repo’s CONTRIBUTING.md."
+  },
+  {
+    "objectID": "decisions/20260606-gitassembly-tag-release.html#related",
+    "href": "decisions/20260606-gitassembly-tag-release.html#related",
+    "title": "Cut gitassembly tag releases for the assembled engine",
+    "section": "Related",
+    "text": "Related\n\nAmend a PR before it enters the merge queue, not after\nPin the engine to a frozen Godot 4.7 commit\nCold-boot dependencies for the presence-marker demo"
+  },
+  {
+    "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html",
+    "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html",
+    "title": "Feature classification — proof of concept, baseline, stretch",
+    "section": "",
+    "text": "Manuals › Decisions › Feature classification — proof of concept, baseline, stretch\nTier: baseline · Status: accepted"
+  },
+  {
+    "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html#context-and-problem-statement",
+    "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html#context-and-problem-statement",
+    "title": "Feature classification — proof of concept, baseline, stretch",
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe capabilities table lists features with a free-text status (“working”, “loses about 90%”). Free text does not say whether a feature is a throwaway experiment, a committed part of the product, or a nice-to-have. The team needs one shared vocabulary for how far along and how committed a feature is, so planning and the docs agree on what “done” means for each one."
+  },
+  {
+    "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html#decision-drivers",
+    "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html#decision-drivers",
+    "title": "Feature classification — proof of concept, baseline, stretch",
+    "section": "Decision Drivers",
+    "text": "Decision Drivers\n\nOne vocabulary shared between planning and the manuals.\nA reader should know at a glance whether a feature is committed or exploratory.\nCheap to apply and to move as a feature matures."
+  },
+  {
+    "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html#considered-options",
+    "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html#considered-options",
+    "title": "Feature classification — proof of concept, baseline, stretch",
+    "section": "Considered Options",
+    "text": "Considered Options\n\nKeep free-text status only.\nA maturity ladder (alpha / beta / stable).\nA three-tier commitment classification: proof of concept, baseline, stretch."
+  },
+  {
+    "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html#decision-outcome",
+    "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html#decision-outcome",
+    "title": "Feature classification — proof of concept, baseline, stretch",
+    "section": "Decision Outcome",
+    "text": "Decision Outcome\nChosen option: “A three-tier commitment classification”, because it captures commitment, not just maturity, which is what planning needs.\nThe tiers:\n\nA proof of concept demonstrates the idea works end to end, in partial or throwaway form. It may be unreliable or lossy, and nothing depends on it yet.\nThe baseline is the committed minimum the product ships. It works reliably across the target platforms, and is the bar.\nA stretch goal goes beyond baseline. It is pursued if time allows; cutting it does not block the release.\n\nEach feature in the capabilities table carries one tier. A feature moves between tiers as it matures or as commitment changes; the tier is the current call, not a permanent label.\n\nInitial triage\n\nNative video playback — baseline.\nScene baking via OpenUSD — baseline.\nSpatial audio (HRTF + audio probes) — baseline.\nSpeech — baseline.\nPen stroke creation (cassie) — proof of concept (patch surface creation loses about 90%).\n\n\n\nConsequences\n\nGood: planning and docs share one word per feature for its commitment level.\nGood: the tier is a small, reversible edit as features move.\nBad: a tier is a judgement call and can drift from reality if the table is not kept current.\n\n\n\nConfirmation\nThe capabilities table has a Tier column, and every row carries one of the three tiers. New capabilities are added with a tier."
+  },
+  {
+    "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html#related",
+    "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html#related",
+    "title": "Feature classification — proof of concept, baseline, stretch",
+    "section": "Related",
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nRecursive art-game loop and its minimal steel thread\nPresence demo pose networking\nHuman-readable presence markers with an orb debug mode\nRepository and capability inventory for the multiplayer fabric"
+  },
+  {
+    "objectID": "decisions/20260611-hexagon-budgeter-core.html",
+    "href": "decisions/20260611-hexagon-budgeter-core.html",
+    "title": "Budgeter hexagon — core, ports, and adapters",
+    "section": "",
+    "text": "Manuals › Decisions › Budgeter hexagon — core, ports, and adapters\nTier: proof of concept · Status: accepted"
+  },
+  {
+    "objectID": "decisions/20260611-hexagon-budgeter-core.html#context-and-problem-statement",
+    "href": "decisions/20260611-hexagon-budgeter-core.html#context-and-problem-statement",
+    "title": "Budgeter hexagon — core, ports, and adapters",
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe slice needs graceful degradation under load on the mobile floor, dialing quality knobs per frame so the player stays inside the experience during a burst."
+  },
+  {
+    "objectID": "decisions/20260611-hexagon-budgeter-core.html#decision-outcome",
+    "href": "decisions/20260611-hexagon-budgeter-core.html#decision-outcome",
+    "title": "Budgeter hexagon — core, ports, and adapters",
+    "section": "Decision Outcome",
+    "text": "Decision Outcome\nChosen option: structure the budgeter as a hexagon. The core is a constraint solver mapping on-device measurements to knob settings — avatar level-of-detail, interpolation against extrapolation, voice radius, and audio sample quality — as a pure reducer; it dials the knobs every frame, never overrules itself, and never dictates how the artists work.\nDriving port: measurement_source (frame time, thermals, and entity counts). Driven port: knob_sink (the settings the runtime applies). Adapters: feat/module-open-telemetry feeds measurement_source; the engine runtime applies knob_sink; a fixture adapter replays a load spike for CI."
+  },
+  {
+    "objectID": "decisions/20260611-hexagon-budgeter-core.html#consequences",
+    "href": "decisions/20260611-hexagon-budgeter-core.html#consequences",
+    "title": "Budgeter hexagon — core, ports, and adapters",
     "section": "Consequences",
-    "text": "Consequences\n\nNo trademarked proper nouns appear in filenames, docs, or content.\nThe docs read as their own product.\nNew writing reuses the same neutral terms, so the vocabulary stays consistent."
+    "text": "Consequences\n\nAs a hundred extra players land in the hub, the budgeter degrades gracefully, so the player stays inside the experience.\nThe solve runs against a recorded spike in CI, so the knob response is testable with no device.\nThe budgeter stays advisory, so it never overrules the artists."
   },
   {
-    "objectID": "decisions/20260611-genre-generic-naming-no-trademarks.html#confirmation",
-    "href": "decisions/20260611-genre-generic-naming-no-trademarks.html#confirmation",
-    "title": "Genre-generic naming, no trademarked proper nouns",
+    "objectID": "decisions/20260611-hexagon-budgeter-core.html#confirmation",
+    "href": "decisions/20260611-hexagon-budgeter-core.html#confirmation",
+    "title": "Budgeter hexagon — core, ports, and adapters",
     "section": "Confirmation",
-    "text": "Confirmation\nA trademark scan over the project docs returns clean."
+    "text": "Confirmation\nThe core replays a recorded load spike and asserts the knob response, with no device under it."
   },
   {
-    "objectID": "decisions/20260611-genre-generic-naming-no-trademarks.html#related",
-    "href": "decisions/20260611-genre-generic-naming-no-trademarks.html#related",
-    "title": "Genre-generic naming, no trademarked proper nouns",
+    "objectID": "decisions/20260611-hexagon-budgeter-core.html#related",
+    "href": "decisions/20260611-hexagon-budgeter-core.html#related",
+    "title": "Budgeter hexagon — core, ports, and adapters",
+    "section": "Related",
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)\nLoot-action core-loop MVP vertical slice"
+  },
+  {
+    "objectID": "decisions/20260606-presence-demo-cold-boot-dependencies.html",
+    "href": "decisions/20260606-presence-demo-cold-boot-dependencies.html",
+    "title": "Cold-boot dependencies for the presence-marker demo",
+    "section": "",
+    "text": "Manuals › Decisions › Cold-boot dependencies for the presence-marker demo\nTier: proof of concept · Status: proposed"
+  },
+  {
+    "objectID": "decisions/20260606-presence-demo-cold-boot-dependencies.html#context-and-problem-statement",
+    "href": "decisions/20260606-presence-demo-cold-boot-dependencies.html#context-and-problem-statement",
+    "title": "Cold-boot dependencies for the presence-marker demo",
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe presence-marker demo (and its ghostly ANNY/SOMA-X body refinement) needs a reproducible setup from nothing. What is the minimal dependency set to cold boot the development environment for it?"
+  },
+  {
+    "objectID": "decisions/20260606-presence-demo-cold-boot-dependencies.html#decision-drivers",
+    "href": "decisions/20260606-presence-demo-cold-boot-dependencies.html#decision-drivers",
+    "title": "Cold-boot dependencies for the presence-marker demo",
+    "section": "Decision Drivers",
+    "text": "Decision Drivers\n\nA new machine should reach a running demo from a checkout and a short script.\nReuse the engine and transport the stack already standardises on.\nKeep the heavy ML pipeline optional until the ghostly body is worked on."
+  },
+  {
+    "objectID": "decisions/20260606-presence-demo-cold-boot-dependencies.html#decision-outcome",
+    "href": "decisions/20260606-presence-demo-cold-boot-dependencies.html#decision-outcome",
+    "title": "Cold-boot dependencies for the presence-marker demo",
+    "section": "Decision Outcome",
+    "text": "Decision Outcome\nCold-boot dependencies, by layer:\n\n1. Engine (pick one)\n\nPrebuilt: pull the editor image from godot-images (GHCR), built at the pinned Godot 4.7 commit.\nFrom source: the compiling SOP toolchain (git, Python 3, SCons, sccache, MinGW-w64 on Windows / build-essential on Linux), plus merge (Elixir gitassembly) to assemble feat/module-xr-grid, feat/module-cassie, and feat/module-http3 onto the pinned base. Check out a gitassembly tag release (v2026.06.06.1853-multiplayer-fabric) rather than the moving branch tips for a reproducible assembly.\n\n\n\n2. Demo project\n\nThe xr-grid checkout: the scene with the skinned-mesh hero-asset landmark and the head/hand pose orbs.\n\n\n\n3. Networking\n\nWebTransport over HTTP/3 is compiled into the engine (modules/http3, picoquic), so local loopback needs nothing extra. The Elixir gateway (on V-Sekai-fire) is only needed for call-scale runs.\n\n\n\n4. Ghostly body pipeline (optional, for the marker upgrade)\n\nA Python 3 environment with ANNY and SOMA-X (py-soma-x), PyTorch, and NVIDIA Warp on a CUDA GPU. Persona and body assets auto-download from Hugging Face.\n\n\n\n5. VR runtime (optional)\n\nAn OpenXR runtime and headset for in-headset use; the desktop debug window runs without one.\n\n\n\nConsequences\n\nGood: layers 1–2 alone boot a local, single-peer demo; networking and the ML body pipeline are additive.\nBad: the from-source path pulls in an Elixir assembly step and a GPU/PyTorch stack, so the full cold boot is heavy.\n\n\n\nConfirmation\nA fresh machine reaches the desktop debug window of the xr-grid demo using the prebuilt engine plus the xr-grid checkout; adding the Python ANNY/SOMA-X stack enables the ghostly body."
+  },
+  {
+    "objectID": "decisions/20260606-presence-demo-cold-boot-dependencies.html#more-information",
+    "href": "decisions/20260606-presence-demo-cold-boot-dependencies.html#more-information",
+    "title": "Cold-boot dependencies for the presence-marker demo",
+    "section": "More Information",
+    "text": "More Information\nLayers reuse the compiling SOP, the engine pin, and the WebTransport transport."
+  },
+  {
+    "objectID": "decisions/20260606-presence-demo-cold-boot-dependencies.html#related",
+    "href": "decisions/20260606-presence-demo-cold-boot-dependencies.html#related",
+    "title": "Cold-boot dependencies for the presence-marker demo",
+    "section": "Related",
+    "text": "Related\n\nCompiling the Godot engine\nGhostly partial-body presence avatar from ANNY via SOMA-X\nCut gitassembly tag releases for the assembled engine\nPin the engine to a frozen Godot 4.7 commit\nHuman-readable presence markers with an orb debug mode\nWebTransport over HTTP/3 transport"
+  },
+  {
+    "objectID": "decisions/20260612-headless-openxr-testing-with-monado.html",
+    "href": "decisions/20260612-headless-openxr-testing-with-monado.html",
+    "title": "Headless OpenXR testing with Monado (null compositor + simulated HMD)",
+    "section": "",
+    "text": "Manuals › Decisions › Headless OpenXR testing with Monado (null compositor + simulated HMD)\nStatus: accepted"
+  },
+  {
+    "objectID": "decisions/20260612-headless-openxr-testing-with-monado.html#context-and-problem-statement",
+    "href": "decisions/20260612-headless-openxr-testing-with-monado.html#context-and-problem-statement",
+    "title": "Headless OpenXR testing with Monado (null compositor + simulated HMD)",
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe OpenXR path needs to run on Linux without a headset: on the workstation for iteration and in a podman quadlet for CI. Functional and integration coverage of the OpenXR path needs a runnable runtime on the box, with no display and no hardware."
+  },
+  {
+    "objectID": "decisions/20260612-headless-openxr-testing-with-monado.html#decision-outcome",
+    "href": "decisions/20260612-headless-openxr-testing-with-monado.html#decision-outcome",
+    "title": "Headless OpenXR testing with Monado (null compositor + simulated HMD)",
+    "section": "Decision Outcome",
+    "text": "Decision Outcome\nChosen option: run Monado with the null compositor and a simulated HMD, headless, because it is a conformant OpenXR runtime that an app reaches over the loader with no display and no device, on the workstation and inside a quadlet.\nThe recipe on Fedora (Monado 25.1.0):\n\nInstall monado monado-devel monado-vulkan-layers.\nSelect the runtime: symlink ~/.config/openxr/1/active_runtime.json to /usr/share/openxr/1/openxr_monado.json, or set XR_RUNTIME_JSON.\nStart the service headless: tail -f /dev/null | XRT_COMPOSITOR_NULL=1 SIMULATED_ENABLE=1 monado-service.\nOpenXR clients connect over the IPC socket $XDG_RUNTIME_DIR/monado_comp_ipc.\n\nThe non-obvious part is the stdin pipe. monado-service watches stdin through epoll to notice shutdown, and a non-epoll-able stdin (a closed descriptor or a regular file, which is what a background job, a nohup, or a container hands it) makes epoll_ctl(stdin) fail and the service aborts before it opens the socket. Feeding it an epoll-able pipe (tail -f /dev/null | ..., or a held-open FIFO) is what lets it start."
+  },
+  {
+    "objectID": "decisions/20260612-headless-openxr-testing-with-monado.html#consequences",
+    "href": "decisions/20260612-headless-openxr-testing-with-monado.html#consequences",
+    "title": "Headless OpenXR testing with Monado (null compositor + simulated HMD)",
+    "section": "Consequences",
+    "text": "Consequences\n\nThe OpenXR path runs on the workstation and in a podman quadlet with no display and no headset.\nXRT_COMPOSITOR_NULL discards submitted frames, so this covers the runtime, the tracking, and frame submission, with no rendered output and no performance signal.\nSIMULATED_ENABLE supplies a head and controllers driven programmatically; the qwerty driver (QWERTY_ENABLE) adds keyboard and mouse control for an interactive desktop run.\nThis is functional and integration coverage; the standalone OpenXR build is the performance and comfort gate."
+  },
+  {
+    "objectID": "decisions/20260612-headless-openxr-testing-with-monado.html#confirmation",
+    "href": "decisions/20260612-headless-openxr-testing-with-monado.html#confirmation",
+    "title": "Headless OpenXR testing with Monado (null compositor + simulated HMD)",
+    "section": "Confirmation",
+    "text": "Confirmation\nopenxr_runtime_list, and any OpenXR app, reaches xrCreateInstance against the running service, and the service log reports the null compositor and a simulated HMD."
+  },
+  {
+    "objectID": "decisions/20260612-headless-openxr-testing-with-monado.html#related",
+    "href": "decisions/20260612-headless-openxr-testing-with-monado.html#related",
+    "title": "Headless OpenXR testing with Monado (null compositor + simulated HMD)",
     "section": "Related",
     "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)"
   },
   {
-    "objectID": "decisions/20260606-webtransport-http3-transport.html",
-    "href": "decisions/20260606-webtransport-http3-transport.html",
-    "title": "WebTransport over HTTP/3 transport",
+    "objectID": "decisions/20260606-compiling-godot-engine.html",
+    "href": "decisions/20260606-compiling-godot-engine.html",
+    "title": "Compiling the Godot engine",
     "section": "",
-    "text": "Manuals › Decisions › WebTransport over HTTP/3 transport\nTier: baseline · Status: accepted"
+    "text": "Manuals › Decisions › Compiling the Godot engine\nTier: baseline · Status: accepted"
   },
   {
-    "objectID": "decisions/20260606-webtransport-http3-transport.html#context-and-problem-statement",
-    "href": "decisions/20260606-webtransport-http3-transport.html#context-and-problem-statement",
-    "title": "WebTransport over HTTP/3 transport",
-    "section": "Context and Problem Statement",
-    "text": "Context and Problem Statement\nThe stack needs a client/server transport that carries reliable control messages and high-rate unreliable state over one connection, on both native and web clients. Which transport does the engine provide?"
-  },
-  {
-    "objectID": "decisions/20260606-webtransport-http3-transport.html#decision-drivers",
-    "href": "decisions/20260606-webtransport-http3-transport.html#decision-drivers",
-    "title": "WebTransport over HTTP/3 transport",
-    "section": "Decision Drivers",
-    "text": "Decision Drivers\n\nUnreliable datagrams for high-rate state, plus reliable streams for control.\nOne connection for both, with native and browser support."
-  },
-  {
-    "objectID": "decisions/20260606-webtransport-http3-transport.html#considered-options",
-    "href": "decisions/20260606-webtransport-http3-transport.html#considered-options",
-    "title": "WebTransport over HTTP/3 transport",
-    "section": "Considered Options",
-    "text": "Considered Options\n\nStandard MultiplayerPeer transports (ENet, WebSocket, WebRTC).\nWebTransport over HTTP/3 / QUIC."
-  },
-  {
-    "objectID": "decisions/20260606-webtransport-http3-transport.html#decision-outcome",
-    "href": "decisions/20260606-webtransport-http3-transport.html#decision-outcome",
-    "title": "WebTransport over HTTP/3 transport",
-    "section": "Decision Outcome",
-    "text": "Decision Outcome\nChosen option: “WebTransport over HTTP/3”, provided by the engine’s modules/http3 (on feat/module-http3):\n\nquic_picoquic_backend.{cpp,h} — native QUIC via picoquic.\nquic_web_backend.cpp + quic_web_glue.js — the web/wasm backend.\nhttp3_client.{cpp,h}, quic_client.{cpp,h}, quic_server.h.\nClasses HTTP3Client, QUICClient, QUICServer, WebTransportPeer.\nDemos: modules/http3/demo/wt_client_test.gd, wt_server_demo.gd, wt_browser_test.html.\nlean/http3/PollingTermination.lean proves the poll loop terminates.\n\nOne QUIC connection carries reliable streams and unreliable datagrams, so control messages and high-rate state share a connection.\n\nConsequences\n\nGood: datagrams suit high-rate state; one connection serves native and browser.\nBad: the fork carries a picoquic backend and a QUIC stack to maintain.\n\n\n\nConfirmation\nThe modules/http3 demos open a WebTransport client and server over QUIC."
-  },
-  {
-    "objectID": "decisions/20260606-webtransport-http3-transport.html#more-information",
-    "href": "decisions/20260606-webtransport-http3-transport.html#more-information",
-    "title": "WebTransport over HTTP/3 transport",
-    "section": "More Information",
-    "text": "More Information\nPose streaming for the presence demo rides this transport; see presence demo pose networking. The engine is pinned to a frozen Godot 4.7 commit."
-  },
-  {
-    "objectID": "decisions/20260606-webtransport-http3-transport.html#related",
-    "href": "decisions/20260606-webtransport-http3-transport.html#related",
-    "title": "WebTransport over HTTP/3 transport",
-    "section": "Related",
-    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nPin the engine to a frozen Godot 4.7 commit\nCold-boot dependencies for the presence-marker demo\nPresence demo pose networking\nRepository and capability inventory for the multiplayer fabric"
-  },
-  {
-    "objectID": "decisions/20260606-archival-file-naming-convention.html",
-    "href": "decisions/20260606-archival-file-naming-convention.html",
-    "title": "Archival file naming convention for committed assets",
-    "section": "",
-    "text": "Manuals › Decisions › Archival file naming convention for committed assets\nTier: baseline · Status: accepted"
-  },
-  {
-    "objectID": "decisions/20260606-archival-file-naming-convention.html#context-and-problem-statement",
-    "href": "decisions/20260606-archival-file-naming-convention.html#context-and-problem-statement",
-    "title": "Archival file naming convention for committed assets",
-    "section": "Context and Problem Statement",
-    "text": "Context and Problem Statement\nThe manuals repo now commits binary assets alongside prose, starting with screenshots under decisions/attachments/. Ad-hoc names like image.png collide, sort poorly, and lose their provenance once they leave the page that referenced them. What naming convention should committed assets follow so they stay unique, sortable, and self-describing?"
-  },
-  {
-    "objectID": "decisions/20260606-archival-file-naming-convention.html#decision-drivers",
-    "href": "decisions/20260606-archival-file-naming-convention.html#decision-drivers",
-    "title": "Archival file naming convention for committed assets",
-    "section": "Decision Drivers",
-    "text": "Decision Drivers\n\nNames should be unique and not collide across decisions.\nNames should sort chronologically and read as self-describing.\nNames should survive being copied out of the repo (provenance in the name).\nThe convention should match established digital-preservation guidance."
-  },
-  {
-    "objectID": "decisions/20260606-archival-file-naming-convention.html#considered-options",
-    "href": "decisions/20260606-archival-file-naming-convention.html#considered-options",
-    "title": "Archival file naming convention for committed assets",
-    "section": "Considered Options",
-    "text": "Considered Options\n\nKeep source names (image.png, screenshot (1).png).\nContent hash names (a1b2c3.png).\nA Library of Congress style descriptive convention."
-  },
-  {
-    "objectID": "decisions/20260606-archival-file-naming-convention.html#decision-outcome",
-    "href": "decisions/20260606-archival-file-naming-convention.html#decision-outcome",
-    "title": "Archival file naming convention for committed assets",
-    "section": "Decision Outcome",
-    "text": "Decision Outcome\nChosen option: “A Library of Congress style descriptive convention”, because it follows recognized preservation guidance and yields names that sort and explain themselves.\nThe pattern:\nYYYYMMDD_project_description_NNNN.ext\nFollowing the Library of Congress file-naming guidance:\n\nLowercase ASCII only; no spaces or special characters.\nISO 8601 date first (YYYYMMDD) so names sort chronologically.\nFacets separated by underscores (_); words within a facet by hyphens (-).\nA zero-padded sequence (NNNN) to keep same-day captures unique and ordered.\nDescriptive but reasonably short.\n\nExample, used for the first committed screenshot:\n20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png\nEach committed asset also gets a BibTeX entry in references.bib recording its capture date and archived path, so the References page lists it.\n\nConsequences\n\nGood: assets are unique, sort by date, and carry their provenance in the name.\nGood: the convention matches preservation practice and is mechanical to apply.\nBad: names are longer than source names, and renaming on import is a manual step.\n\n\n\nConfirmation\nAssets under decisions/attachments/ match YYYYMMDD_project_description_NNNN.ext and have a matching references.bib entry. The first example is 20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png, cited from the presence-demo decision."
-  },
-  {
-    "objectID": "decisions/20260606-archival-file-naming-convention.html#more-information",
-    "href": "decisions/20260606-archival-file-naming-convention.html#more-information",
-    "title": "Archival file naming convention for committed assets",
-    "section": "More Information",
-    "text": "More Information\nBased on the Library of Congress guidance on file naming for digital preservation (descriptive, no spaces, lowercase, ISO dates, zero-padded sequences)."
-  },
-  {
-    "objectID": "decisions/20260606-archival-file-naming-convention.html#related",
-    "href": "decisions/20260606-archival-file-naming-convention.html#related",
-    "title": "Archival file naming convention for committed assets",
-    "section": "Related",
-    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)"
-  },
-  {
-    "objectID": "decisions/20260606-presence-demo-networking-internals.html",
-    "href": "decisions/20260606-presence-demo-networking-internals.html",
-    "title": "Presence demo pose networking",
-    "section": "",
-    "text": "Manuals › Decisions › Presence demo pose networking\nTier: baseline · Status: accepted"
-  },
-  {
-    "objectID": "decisions/20260606-presence-demo-networking-internals.html#context-and-problem-statement",
-    "href": "decisions/20260606-presence-demo-networking-internals.html#context-and-problem-statement",
-    "title": "Presence demo pose networking",
-    "section": "Context and Problem Statement",
-    "text": "Context and Problem Statement\nThe presence demo sends head and hand poses to peers over the WebTransport transport. How are those poses sourced, encoded, and sent?"
-  },
-  {
-    "objectID": "decisions/20260606-presence-demo-networking-internals.html#decision-drivers",
-    "href": "decisions/20260606-presence-demo-networking-internals.html#decision-drivers",
-    "title": "Presence demo pose networking",
-    "section": "Decision Drivers",
-    "text": "Decision Drivers\n\nHigh-rate pose streams must be compact.\nReuse the engine’s XR trackers and WebTransport datagrams.\nAvoid the per-property bookkeeping of automatic scene replication."
-  },
-  {
-    "objectID": "decisions/20260606-presence-demo-networking-internals.html#considered-options",
-    "href": "decisions/20260606-presence-demo-networking-internals.html#considered-options",
-    "title": "Presence demo pose networking",
-    "section": "Considered Options",
-    "text": "Considered Options\n\nHigh-level scene replication (MultiplayerSynchronizer / MultiplayerSpawner).\nExplicit RPC with Variant-encoded arguments.\nHand-rolled compact binary over WebTransport datagrams."
-  },
-  {
-    "objectID": "decisions/20260606-presence-demo-networking-internals.html#decision-outcome",
-    "href": "decisions/20260606-presence-demo-networking-internals.html#decision-outcome",
-    "title": "Presence demo pose networking",
-    "section": "Decision Outcome",
-    "text": "Decision Outcome\nChosen option: “Hand-rolled compact binary over WebTransport datagrams”.\n\nPose source: XRPositionalTracker / XRHandTracker / XRPose (servers/xr/) give a Transform3D, velocity, and tracking confidence; a hand has 26 joints.\nEncoding: a compact binary layout, not MultiplayerAPI’s Variant encoding, which is too fat for high-rate poses.\nVetoed: the high-level nodes in modules/multiplayer (MultiplayerSynchronizer, MultiplayerSpawner, SceneReplicationInterface).\nIdentity: the cassie pen supplies optional signing (stretch).\n\n\nConsequences\n\nGood: poses ride compact datagrams on the same WebTransport the gateway uses.\nBad: the encoding, send rate, and interpolation are hand-written and maintained.\n\n\n\nConfirmation\nThe demo reads local head and hand poses, sends them as datagrams, and a remote peer renders orbs from the decoded transforms."
-  },
-  {
-    "objectID": "decisions/20260606-presence-demo-networking-internals.html#related",
-    "href": "decisions/20260606-presence-demo-networking-internals.html#related",
-    "title": "Presence demo pose networking",
-    "section": "Related",
-    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nFeature classification — proof of concept, baseline, stretch\nHuman-readable presence markers with an orb debug mode\nWebTransport over HTTP/3 transport"
-  },
-  {
-    "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html",
-    "href": "decisions/20260501-cockroachdb-with-mtls-role-separation.html",
-    "title": "CockroachDB with mTLS and role-separated access",
-    "section": "",
-    "text": "Manuals › Decisions › CockroachDB with mTLS and role-separated access\nTier: baseline · Status: accepted"
-  },
-  {
-    "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#context",
-    "href": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#context",
-    "title": "CockroachDB with mTLS and role-separated access",
+    "objectID": "decisions/20260606-compiling-godot-engine.html#context",
+    "href": "decisions/20260606-compiling-godot-engine.html#context",
+    "title": "Compiling the Godot engine",
     "section": "Context",
-    "text": "Context\nThe stack needs a relational database reachable by the Elixir gateway and the Phoenix zone backend. It must support schema migrations (DDL) separately from application queries (DML) to limit blast radius if application credentials are compromised."
+    "text": "Context\nDevelopers build the V-Sekai multiplayer-fabric Godot engine on two hosts from one workstation: Windows (PowerShell + MinGW) and WSL / Linux (linuxbsd). Without a shared, persistent compiler cache, each host rebuilds from scratch and cache hits are lost whenever a checkout is moved or renamed."
   },
   {
-    "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#decision",
-    "href": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#decision",
-    "title": "CockroachDB with mTLS and role-separated access",
+    "objectID": "decisions/20260606-compiling-godot-engine.html#decision",
+    "href": "decisions/20260606-compiling-godot-engine.html#decision",
+    "title": "Compiling the Godot engine",
     "section": "Decision",
-    "text": "Decision\nRun a single-node CockroachDB on Fly.io with mTLS for all connections and three application roles:\n\ngateway_admin — DDL access for Ecto migrations\ngateway_writer — DML access for the running application\ngateway_reader — read-only access\n\nCerts are generated by gen_crdb_certs.sh with 100-year validity and stored as Fly secrets. The node cert must include both serverAuth and clientAuth in extendedKeyUsage because CockroachDB uses the node cert for internal gRPC client authentication."
+    "text": "Decision\nStandardise on sccache as the only object cache, wired in as the SCons compiler launcher. Wrap the build in a gscons shell function on each host.\nDo not also enable SCons’s own CacheDir (cache_path=). sccache already caches every compiled object before SCons’s cache would see it, so running both double-caches the same artefacts — wasted disk and I/O for no extra hits. sccache is the single source of truth.\nCross-host sharing is handled by sccache’s S3-compatible storage backend, not by a shared filesystem directory. Credentials come from a local AWS profile (~/.aws/credentials) and are never committed — only the non-secret bucket coordinates are configured, via environment variables, so this guide hardcodes no absolute paths and no secrets:\n\nGODOT_SRC — the engine checkout root.\nSCCACHE_BUCKET / SCCACHE_ENDPOINT / SCCACHE_REGION — your S3 bucket coordinates.\nAWS_PROFILE — the named profile holding the access keys, read from ~/.aws/credentials. The keys themselves stay on the developer’s machine.\n\n\nPrerequisites\n\n\n\n\n\n\n\n\nTool\nWindows\nWSL (Ubuntu 24.04)\n\n\n\n\nPython 3\nscoop install python\nsystem python3\n\n\nSCons\npython -m pip install scons\npython3 -m pip install scons\n\n\nCompiler\nMinGW-w64 (use_mingw=yes)\nbuild-essential (gcc/g++)\n\n\nsccache\nscoop install sccache\nbrew install sccache\n\n\nGit\nscoop install git\nsystem git\n\n\n\nVerify sccache --version resolves in each shell. The verified setup uses sccache 0.15.0.\n\n\nStorage backend\nsccache picks its backend from environment variables. Two options:\n\nTo share the cache across hosts (recommended), use an S3-compatible bucket: set the SCCACHE_BUCKET / SCCACHE_ENDPOINT / SCCACHE_REGION coordinates and point AWS_PROFILE at a profile in ~/.aws/credentials. sccache keys include the compiler, target triple, and flags, so Windows/MinGW and Linux objects coexist in one bucket without colliding. A SCCACHE_S3_KEY_PREFIX namespaces these objects so they never collide with other projects sharing the bucket.\nFor a single host, use a local directory instead: set SCCACHE_DIR and SCCACHE_CACHE_SIZE, and sccache uses local disk with no S3 config needed.\n\n\nSecrets policy: only the bucket name, endpoint, region, and key prefix — none of which are secrets — appear in committed config. The access key and secret are never committed to any repo, dotfile, or build log. They live in one of two places depending on where the build runs:\n\nLocally: ~/.aws/credentials under a named profile (AWS_PROFILE).\nCI: GitHub Actions secret variables, injected at runtime via the ${{ secrets.* }} context. Storing the keys there is fine — they are encrypted and never land in the repo. What is not fine is pasting a literal key into a workflow YAML, a script, or this manual.\n\n\n\n\nCI — GitHub Actions\nIn a workflow, read the credentials from secret variables into the sccache S3 environment for the build step. Only the secret names appear in the committed YAML — the values are stored in the repo/org Actions secrets:\nenv:\n  SCCACHE_BUCKET: &lt;your-sccache-bucket&gt; # non-secret coordinates\n  SCCACHE_ENDPOINT: &lt;region&gt;.example-object-store.com\n  SCCACHE_REGION: &lt;region&gt;\n  SCCACHE_S3_KEY_PREFIX: godot\n  AWS_ACCESS_KEY_ID: ${{ secrets.SCCACHE_AWS_ACCESS_KEY_ID }} # from Actions secrets\n  AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_AWS_SECRET_ACCESS_KEY }}\nsccache reads AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY directly, so CI needs no ~/.aws/credentials file or AWS_PROFILE.\nSCCACHE_BASEDIRS (the equivalent of ccache’s CCACHE_BASEDIR) strips a leading absolute prefix before hashing so hits survive a moved/renamed checkout. Point it at GODOT_SRC. Paths must be absolute; separate multiple dirs with ; on Windows and : elsewhere (longest matching prefix wins). The server reads it at startup — run sccache --stop-server after changing it.\n\n\nWindows — PowerShell profile\nSet GODOT_SRC and the S3 coordinates to your values, then add to Documents\\WindowsPowerShell\\Microsoft.PowerShell_profile.ps1. The function sets the sccache env only for the duration of the build and restores it afterwards, so the interactive session and the real AWS CLI are never shadowed:\nif (-not $env:GODOT_SRC) { $env:GODOT_SRC = \"$env:USERPROFILE\\godot\" }\nfunction gscons {\n    $envset = [ordered]@{\n        SCCACHE_BUCKET        = '&lt;your-sccache-bucket&gt;'\n        SCCACHE_ENDPOINT      = '&lt;region&gt;.example-object-store.com'\n        SCCACHE_REGION        = '&lt;region&gt;'\n        SCCACHE_S3_USE_SSL    = 'true'\n        SCCACHE_S3_KEY_PREFIX = 'godot'\n        SCCACHE_BASEDIRS      = $env:GODOT_SRC\n        AWS_PROFILE           = '&lt;your-s3-profile&gt;'   # keys live in ~/.aws/credentials, never committed\n    }\n    $saved = @{}\n    foreach ($k in $envset.Keys) { $saved[$k] = [Environment]::GetEnvironmentVariable($k, 'Process'); Set-Item \"env:$k\" $envset[$k] }\n    try {\n        python -m SCons platform=windows use_mingw=yes compiledb=yes target=editor precision=double `\n            c_compiler_launcher=sccache cpp_compiler_launcher=sccache -j16 @args\n    } finally {\n        foreach ($k in $envset.Keys) { if ($null -eq $saved[$k]) { Remove-Item \"env:$k\" -ErrorAction SilentlyContinue } else { Set-Item \"env:$k\" $saved[$k] } }\n    }\n}\n\n\nWSL / Linux — ~/.bashrc\n# Godot V-Sekai linuxbsd build. sccache is the only object cache; S3 backend shares it across hosts.\nexport GODOT_SRC=\"${GODOT_SRC:-$HOME/godot}\"                 # engine checkout\nexport SCCACHE_BUCKET=\"${SCCACHE_BUCKET:-&lt;your-sccache-bucket&gt;}\"\nexport SCCACHE_ENDPOINT=\"${SCCACHE_ENDPOINT:-&lt;region&gt;.example-object-store.com}\"\nexport SCCACHE_REGION=\"${SCCACHE_REGION:-&lt;region&gt;}\"\nexport SCCACHE_S3_USE_SSL=\"${SCCACHE_S3_USE_SSL:-true}\"\nexport SCCACHE_S3_KEY_PREFIX=\"${SCCACHE_S3_KEY_PREFIX:-godot}\"\nexport AWS_PROFILE=\"${AWS_PROFILE:-&lt;your-s3-profile&gt;}\"       # keys in ~/.aws/credentials, never committed\n# Strip the checkout root from compile paths so cache hits survive a moved/renamed build dir.\nexport SCCACHE_BASEDIRS=\"${SCCACHE_BASEDIRS:-$GODOT_SRC}\"\ngscons() {\n    python3 -m SCons compiledb=yes target=editor precision=double \\\n        c_compiler_launcher=sccache cpp_compiler_launcher=sccache \\\n        debug_symbols=yes tests=yes -j$(nproc) \"$@\"\n}\nOpen a fresh shell (or source ~/.bashrc / . $PROFILE) so gscons is defined.\n\n\nBuilding\nFrom your engine checkout ($GODOT_SRC):\ngscons                      # full editor build\ngscons verbose=yes          # extra args pass straight through to SCons\nOutput binary:\n\nWindows: bin\\godot.windows.editor.double.x86_64.exe\nWSL: bin/godot.linuxbsd.editor.double.x86_64\n\nThe two functions differ only where the platform requires it: Windows pins platform=windows use_mingw=yes and -j16; WSL infers platform=linuxbsd, uses -j$(nproc), and adds debug_symbols=yes tests=yes. Both share compiledb=yes target=editor precision=double and the sccache launchers — and neither enables a SCons CacheDir.\n\n\nVerifying and maintaining the cache\nsccache --show-stats        # \"Compile requests\" / \"Cache hits\" climb across builds\nsccache --stop-server       # apply changed SCCACHE_* / AWS_PROFILE env vars\nsccache --zero-stats        # reset counters\nA clean first build is mostly misses; a second build of the same tree shows a high hit rate and finishes substantially faster. With the S3 backend, a build on the other host hits the same objects once they are uploaded."
   },
   {
-    "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#consequences",
-    "href": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#consequences",
-    "title": "CockroachDB with mTLS and role-separated access",
+    "objectID": "decisions/20260606-compiling-godot-engine.html#consequences",
+    "href": "decisions/20260606-compiling-godot-engine.html#consequences",
+    "title": "Compiling the Godot engine",
     "section": "Consequences",
-    "text": "Consequences\n\n--advertise-addr must be localhost. A flycast address routes the internal gRPC loopback through Fly’s NAT, breaking the admin UI.\nprepare: :unnamed is required in Postgrex to avoid statement-cache OOM on single-node deployments.\nPort 26257 is never publicly exposed. Access is via Fly’s private network (6PN) using socket_options: [:inet6] in Ecto, because .internal DNS returns only AAAA records.\nThe root cert is provisioned on the CRDB machine only. gateway_admin is the highest-privilege cert available to the application."
+    "text": "Consequences\n\nThere is one object cache, not two: sccache is the sole cache; the SCons CacheDir is deliberately not enabled, so the same objects are never stored twice.\nOne S3 bucket serves both hosts; management is a single location, and a checkout can move or be renamed without losing hits (SCCACHE_BASEDIRS).\nNo secrets live in the repo; bucket coordinates are non-secret config. Access keys live in ~/.aws/credentials locally and in GitHub Actions secret variables in CI, never in committed files or build logs.\nThe engine SConstruct recognises only cache_path and cache_limit for the SCons cache. We intentionally pass neither. scons_cache= is not valid and is silently ignored.\nCommon failures: no hits between builds → server started before the env vars, run sccache --stop-server; no hits after relocating a checkout → set SCCACHE_BASEDIRS to the checkout root; S3 auth errors → wrong/expired AWS_PROFILE or missing ~/.aws/credentials entry."
   },
   {
-    "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#related",
-    "href": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#related",
-    "title": "CockroachDB with mTLS and role-separated access",
+    "objectID": "decisions/20260606-compiling-godot-engine.html#further-reading",
+    "href": "decisions/20260606-compiling-godot-engine.html#further-reading",
+    "title": "Compiling the Godot engine",
+    "section": "Further reading",
+    "text": "Further reading\n\nsccache S3 storage (SCCACHE_BUCKET, SCCACHE_ENDPOINT, SCCACHE_S3_KEY_PREFIX)\nsccache configuration (SCCACHE_BASEDIRS)\nGodot SConstruct"
+  },
+  {
+    "objectID": "decisions/20260606-compiling-godot-engine.html#related",
+    "href": "decisions/20260606-compiling-godot-engine.html#related",
+    "title": "Compiling the Godot engine",
     "section": "Related",
-    "text": "Related\n\nProgression hexagon — core, ports, and adapters"
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nChecking the sccache build cache\nCold-boot dependencies for the presence-marker demo\nRunning background services on Windows with nssm\nContent creation in a single merged double-precision build via the editor MCP"
+  },
+  {
+    "objectID": "changelog.html",
+    "href": "changelog.html",
+    "title": "Changelog",
+    "section": "",
+    "text": "Manuals › Changelog\nAll notable changes are documented here. Format based on Keep a Changelog.\nAdded — new features. Changed — changes in existing functionality. Fixed — bug fixes. Removed — removed features.\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\n\n\n\n\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)\n\n\n\n\n\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)\n\n\n\n\n\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\n\n\n\n\n\n\nV-Sekai Fire Deck Log — 2026-05-07 (Thursday)\n\n\n\n\n\n\nV-Sekai Fire Deck Log — 2026-05-06 (Wednesday)\n\n\n\n\n\n\nV-Sekai Fire Deck Log — 2026-04-25 (Saturday)\n\n\n\n\n\n\nV-Sekai Fire Deck Log — 2026-04-21 (Tuesday)\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "decisions/20260612-fabric-channels-as-reliability-classes.html",
+    "href": "decisions/20260612-fabric-channels-as-reliability-classes.html",
+    "title": "Fabric channels as reliability classes, control in payload",
+    "section": "",
+    "text": "Manuals › Decisions › Fabric channels as reliability classes, control in payload\nStatus: accepted"
+  },
+  {
+    "objectID": "decisions/20260612-fabric-channels-as-reliability-classes.html#context-and-problem-statement",
+    "href": "decisions/20260612-fabric-channels-as-reliability-classes.html#context-and-problem-statement",
+    "title": "Fabric channels as reliability classes, control in payload",
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nTransforms want unreliable, latest-wins delivery at tick rate; sparse control events (a teleport vote, a loot grab) want reliable, exactly-once delivery. Mixing both on one ordered stream lets a reliable event head-of-line-block the transform flow, and a separate text channel for control means two codecs and two reliability models to reason about."
+  },
+  {
+    "objectID": "decisions/20260612-fabric-channels-as-reliability-classes.html#decision-outcome",
+    "href": "decisions/20260612-fabric-channels-as-reliability-classes.html#decision-outcome",
+    "title": "Fabric channels as reliability classes, control in payload",
+    "section": "Decision Outcome",
+    "text": "Decision Outcome\nChosen option: the fabric’s logical channels are the reliability classes, and the 100-byte entity packet carries everything. FabricMultiplayerPeer runs one ENet host per channel, so channels are head-of-line-free: CH_INTEREST (1) carries unreliable transforms, CH_MIGRATION (0) carries reliable-ordered control and state. The lane is chosen with set_transfer_channel plus set_transfer_mode; a cmd/action byte in the payload picks the meaning within a lane.\nControl rides the same packet as the transform that produced it, so an action arrives bound to its position and HLC — the server validates a hit against the exact transform and tick, atomically. The transport gives exactly-once per channel, so there is no sequence counter, repeat, or dedupe. Server-to-client state (phase, grant, reject) uses the same format under reserved global ids (a zone entity for phase, the player entity for grants)."
+  },
+  {
+    "objectID": "decisions/20260612-fabric-channels-as-reliability-classes.html#consequences",
+    "href": "decisions/20260612-fabric-channels-as-reliability-classes.html#consequences",
+    "title": "Fabric channels as reliability classes, control in payload",
+    "section": "Consequences",
+    "text": "Consequences\n\nA reliable control event never stalls the unreliable transform stream, because each is a separate ENet host.\nOne codec and one wire format both directions; text disappears entirely.\nA display name is a byte field in the payload, and bytes are integers, so even names stay integral and deterministic."
+  },
+  {
+    "objectID": "decisions/20260612-fabric-channels-as-reliability-classes.html#confirmation",
+    "href": "decisions/20260612-fabric-channels-as-reliability-classes.html#confirmation",
+    "title": "Fabric channels as reliability classes, control in payload",
+    "section": "Confirmation",
+    "text": "Confirmation\nThe multi-session http3 fix (godot#56) routes per-session replies, and a FabricMultiplayerPeer probe routes four concurrent clients with the ENet factories injected."
+  },
+  {
+    "objectID": "decisions/20260612-fabric-channels-as-reliability-classes.html#related",
+    "href": "decisions/20260612-fabric-channels-as-reliability-classes.html#related",
+    "title": "Fabric channels as reliability classes, control in payload",
+    "section": "Related",
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)\nWebTransport reliable delivery on one persistent framed stream per session"
+  },
+  {
+    "objectID": "decisions/20260609-commit-messages-sentence-case.html",
+    "href": "decisions/20260609-commit-messages-sentence-case.html",
+    "title": "Commit messages use sentence case without Conventional Commits prefixes",
+    "section": "",
+    "text": "Manuals › Decisions › Commit messages use sentence case without Conventional Commits prefixes\nStatus: accepted"
+  },
+  {
+    "objectID": "decisions/20260609-commit-messages-sentence-case.html#context-and-problem-statement",
+    "href": "decisions/20260609-commit-messages-sentence-case.html#context-and-problem-statement",
+    "title": "Commit messages use sentence case without Conventional Commits prefixes",
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nA commit subject is the first line a reader meets in git log, a blame, or a release note. Two conventions compete for how it reads. Conventional Commits prefixes each subject with a machine-readable type and optional scope, such as feat: or fix(parser):, and lower-cases the summary that follows. Plain prose writes the subject as an ordinary capitalised sentence. How should a commit subject in this repo read?"
+  },
+  {
+    "objectID": "decisions/20260609-commit-messages-sentence-case.html#decision-drivers",
+    "href": "decisions/20260609-commit-messages-sentence-case.html#decision-drivers",
+    "title": "Commit messages use sentence case without Conventional Commits prefixes",
+    "section": "Decision Drivers",
+    "text": "Decision Drivers\n\nA reader scans the subject as a sentence first, and the meaning sits at the front rather than after a colon.\nThe repos here run no tooling that consumes a commit type: no semantic-release, no changelog keyed on feat or fix.\nOne rule covers every commit, so review needs no judgement about which type applies."
+  },
+  {
+    "objectID": "decisions/20260609-commit-messages-sentence-case.html#considered-options",
+    "href": "decisions/20260609-commit-messages-sentence-case.html#considered-options",
+    "title": "Commit messages use sentence case without Conventional Commits prefixes",
+    "section": "Considered Options",
+    "text": "Considered Options\n\nConventional Commits, with a type(scope): prefix on every subject.\nSentence-case prose subjects with no prefix.\nFree choice of style per author."
+  },
+  {
+    "objectID": "decisions/20260609-commit-messages-sentence-case.html#decision-outcome",
+    "href": "decisions/20260609-commit-messages-sentence-case.html#decision-outcome",
+    "title": "Commit messages use sentence case without Conventional Commits prefixes",
+    "section": "Decision Outcome",
+    "text": "Decision Outcome\nChosen option: sentence-case prose with no prefix, because the subject stays a sentence a reader understands on sight, and the repos gain nothing from a commit type that no tool reads.\nA commit subject opens with a capital letter and reads as a plain sentence, such as Add the macOS and Windows release workflows. It carries no feat:, fix:, chore:, or type(scope): prefix, and no trailing period. The body, where present, states what the change makes true of the system and why.\n\nConsequences\n\nGood, because the subject reads as a summary on its own, with nothing to strip before the meaning.\nGood, because the rule holds for every commit, so no author weighs whether a change counts as a feat or a fix.\nBad, because a changelog tool that groups commits by type finds no signal here, so adopting one later needs a different marker or a history rewrite.\n\n\n\nConfirmation\nReview reads each subject as a capitalised sentence with no type prefix and no trailing period. The history after this decision shows subjects in that form."
+  },
+  {
+    "objectID": "decisions/20260609-commit-messages-sentence-case.html#more-information",
+    "href": "decisions/20260609-commit-messages-sentence-case.html#more-information",
+    "title": "Commit messages use sentence case without Conventional Commits prefixes",
+    "section": "More Information",
+    "text": "More Information\nThis pairs with the tenseless continuous-present voice (20260607-tenseless-continuous-present-voice.md): a commit body states what the change makes true of the system, the same way comments and docs do."
+  },
+  {
+    "objectID": "decisions/20260609-commit-messages-sentence-case.html#related",
+    "href": "decisions/20260609-commit-messages-sentence-case.html#related",
+    "title": "Commit messages use sentence case without Conventional Commits prefixes",
+    "section": "Related",
+    "text": "Related\n\nComments and docs use a tenseless continuous-present voice"
   },
   {
     "objectID": "decisions/20260506-maglev-cycle-1-gateway-handshake.html",
@@ -1736,445 +2023,221 @@
     "text": "Further Reading\n@techreport{20260501_webtransport,\n  title       = {Use WebTransport over QUIC for game traffic},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-webtransport-over-quic-for-game-traffic.md}\n}\n\n@techreport{20260501_godot_precision,\n  title       = {Godot double precision template\\_release for zone servers},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-godot-double-precision-template-release-for-zone.md}\n}\n\n@techreport{20260501_fly,\n  title       = {Fly.io for deployment},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260501-fly-io-for-deployment.md}\n}\n\n@techreport{20260506_ghcr,\n  title       = {GHCR packages must be built by the repo that consumes them},\n  institution = {V-Sekai Fire},\n  year        = {2026},\n  type        = {Architecture Decision Record},\n  note        = {decisions/20260506-ghcr-package-ownership-same-repo.md}\n}\n\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
   },
   {
-    "objectID": "decisions/20260609-commit-messages-sentence-case.html",
-    "href": "decisions/20260609-commit-messages-sentence-case.html",
-    "title": "Commit messages use sentence case without Conventional Commits prefixes",
+    "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html",
+    "href": "decisions/20260501-cockroachdb-with-mtls-role-separation.html",
+    "title": "CockroachDB with mTLS and role-separated access",
     "section": "",
-    "text": "Manuals › Decisions › Commit messages use sentence case without Conventional Commits prefixes\nStatus: accepted"
+    "text": "Manuals › Decisions › CockroachDB with mTLS and role-separated access\nTier: baseline · Status: accepted"
   },
   {
-    "objectID": "decisions/20260609-commit-messages-sentence-case.html#context-and-problem-statement",
-    "href": "decisions/20260609-commit-messages-sentence-case.html#context-and-problem-statement",
-    "title": "Commit messages use sentence case without Conventional Commits prefixes",
-    "section": "Context and Problem Statement",
-    "text": "Context and Problem Statement\nA commit subject is the first line a reader meets in git log, a blame, or a release note. Two conventions compete for how it reads. Conventional Commits prefixes each subject with a machine-readable type and optional scope, such as feat: or fix(parser):, and lower-cases the summary that follows. Plain prose writes the subject as an ordinary capitalised sentence. How should a commit subject in this repo read?"
-  },
-  {
-    "objectID": "decisions/20260609-commit-messages-sentence-case.html#decision-drivers",
-    "href": "decisions/20260609-commit-messages-sentence-case.html#decision-drivers",
-    "title": "Commit messages use sentence case without Conventional Commits prefixes",
-    "section": "Decision Drivers",
-    "text": "Decision Drivers\n\nA reader scans the subject as a sentence first, and the meaning sits at the front rather than after a colon.\nThe repos here run no tooling that consumes a commit type: no semantic-release, no changelog keyed on feat or fix.\nOne rule covers every commit, so review needs no judgement about which type applies."
-  },
-  {
-    "objectID": "decisions/20260609-commit-messages-sentence-case.html#considered-options",
-    "href": "decisions/20260609-commit-messages-sentence-case.html#considered-options",
-    "title": "Commit messages use sentence case without Conventional Commits prefixes",
-    "section": "Considered Options",
-    "text": "Considered Options\n\nConventional Commits, with a type(scope): prefix on every subject.\nSentence-case prose subjects with no prefix.\nFree choice of style per author."
-  },
-  {
-    "objectID": "decisions/20260609-commit-messages-sentence-case.html#decision-outcome",
-    "href": "decisions/20260609-commit-messages-sentence-case.html#decision-outcome",
-    "title": "Commit messages use sentence case without Conventional Commits prefixes",
-    "section": "Decision Outcome",
-    "text": "Decision Outcome\nChosen option: sentence-case prose with no prefix, because the subject stays a sentence a reader understands on sight, and the repos gain nothing from a commit type that no tool reads.\nA commit subject opens with a capital letter and reads as a plain sentence, such as Add the macOS and Windows release workflows. It carries no feat:, fix:, chore:, or type(scope): prefix, and no trailing period. The body, where present, states what the change makes true of the system and why.\n\nConsequences\n\nGood, because the subject reads as a summary on its own, with nothing to strip before the meaning.\nGood, because the rule holds for every commit, so no author weighs whether a change counts as a feat or a fix.\nBad, because a changelog tool that groups commits by type finds no signal here, so adopting one later needs a different marker or a history rewrite.\n\n\n\nConfirmation\nReview reads each subject as a capitalised sentence with no type prefix and no trailing period. The history after this decision shows subjects in that form."
-  },
-  {
-    "objectID": "decisions/20260609-commit-messages-sentence-case.html#more-information",
-    "href": "decisions/20260609-commit-messages-sentence-case.html#more-information",
-    "title": "Commit messages use sentence case without Conventional Commits prefixes",
-    "section": "More Information",
-    "text": "More Information\nThis pairs with the tenseless continuous-present voice (20260607-tenseless-continuous-present-voice.md): a commit body states what the change makes true of the system, the same way comments and docs do."
-  },
-  {
-    "objectID": "decisions/20260609-commit-messages-sentence-case.html#related",
-    "href": "decisions/20260609-commit-messages-sentence-case.html#related",
-    "title": "Commit messages use sentence case without Conventional Commits prefixes",
-    "section": "Related",
-    "text": "Related\n\nComments and docs use a tenseless continuous-present voice"
-  },
-  {
-    "objectID": "decisions/20260612-fabric-channels-as-reliability-classes.html",
-    "href": "decisions/20260612-fabric-channels-as-reliability-classes.html",
-    "title": "Fabric channels as reliability classes, control in payload",
-    "section": "",
-    "text": "Manuals › Decisions › Fabric channels as reliability classes, control in payload\nStatus: accepted"
-  },
-  {
-    "objectID": "decisions/20260612-fabric-channels-as-reliability-classes.html#context-and-problem-statement",
-    "href": "decisions/20260612-fabric-channels-as-reliability-classes.html#context-and-problem-statement",
-    "title": "Fabric channels as reliability classes, control in payload",
-    "section": "Context and Problem Statement",
-    "text": "Context and Problem Statement\nTransforms want unreliable, latest-wins delivery at tick rate; sparse control events (a teleport vote, a loot grab) want reliable, exactly-once delivery. Mixing both on one ordered stream lets a reliable event head-of-line-block the transform flow, and a separate text channel for control means two codecs and two reliability models to reason about."
-  },
-  {
-    "objectID": "decisions/20260612-fabric-channels-as-reliability-classes.html#decision-outcome",
-    "href": "decisions/20260612-fabric-channels-as-reliability-classes.html#decision-outcome",
-    "title": "Fabric channels as reliability classes, control in payload",
-    "section": "Decision Outcome",
-    "text": "Decision Outcome\nChosen option: the fabric’s logical channels are the reliability classes, and the 100-byte entity packet carries everything. FabricMultiplayerPeer runs one ENet host per channel, so channels are head-of-line-free: CH_INTEREST (1) carries unreliable transforms, CH_MIGRATION (0) carries reliable-ordered control and state. The lane is chosen with set_transfer_channel plus set_transfer_mode; a cmd/action byte in the payload picks the meaning within a lane.\nControl rides the same packet as the transform that produced it, so an action arrives bound to its position and HLC — the server validates a hit against the exact transform and tick, atomically. The transport gives exactly-once per channel, so there is no sequence counter, repeat, or dedupe. Server-to-client state (phase, grant, reject) uses the same format under reserved global ids (a zone entity for phase, the player entity for grants)."
-  },
-  {
-    "objectID": "decisions/20260612-fabric-channels-as-reliability-classes.html#consequences",
-    "href": "decisions/20260612-fabric-channels-as-reliability-classes.html#consequences",
-    "title": "Fabric channels as reliability classes, control in payload",
-    "section": "Consequences",
-    "text": "Consequences\n\nA reliable control event never stalls the unreliable transform stream, because each is a separate ENet host.\nOne codec and one wire format both directions; text disappears entirely.\nA display name is a byte field in the payload, and bytes are integers, so even names stay integral and deterministic."
-  },
-  {
-    "objectID": "decisions/20260612-fabric-channels-as-reliability-classes.html#confirmation",
-    "href": "decisions/20260612-fabric-channels-as-reliability-classes.html#confirmation",
-    "title": "Fabric channels as reliability classes, control in payload",
-    "section": "Confirmation",
-    "text": "Confirmation\nThe multi-session http3 fix (godot#56) routes per-session replies, and a FabricMultiplayerPeer probe routes four concurrent clients with the ENet factories injected."
-  },
-  {
-    "objectID": "decisions/20260612-fabric-channels-as-reliability-classes.html#related",
-    "href": "decisions/20260612-fabric-channels-as-reliability-classes.html#related",
-    "title": "Fabric channels as reliability classes, control in payload",
-    "section": "Related",
-    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)\nWebTransport reliable delivery on one persistent framed stream per session"
-  },
-  {
-    "objectID": "changelog.html",
-    "href": "changelog.html",
-    "title": "Changelog",
-    "section": "",
-    "text": "Manuals › Changelog\nAll notable changes are documented here. Format based on Keep a Changelog.\nAdded — new features. Changed — changes in existing functionality. Fixed — bug fixes. Removed — removed features.\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\n\n\n\n\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)\n\n\n\n\n\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)\n\n\n\n\n\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\n\n\n\n\n\n\nV-Sekai Fire Deck Log — 2026-05-07 (Thursday)\n\n\n\n\n\n\nV-Sekai Fire Deck Log — 2026-05-06 (Wednesday)\n\n\n\n\n\n\nV-Sekai Fire Deck Log — 2026-04-25 (Saturday)\n\n\n\n\n\n\nV-Sekai Fire Deck Log — 2026-04-21 (Tuesday)\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "decisions/20260606-compiling-godot-engine.html",
-    "href": "decisions/20260606-compiling-godot-engine.html",
-    "title": "Compiling the Godot engine",
-    "section": "",
-    "text": "Manuals › Decisions › Compiling the Godot engine\nTier: baseline · Status: accepted"
-  },
-  {
-    "objectID": "decisions/20260606-compiling-godot-engine.html#context",
-    "href": "decisions/20260606-compiling-godot-engine.html#context",
-    "title": "Compiling the Godot engine",
+    "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#context",
+    "href": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#context",
+    "title": "CockroachDB with mTLS and role-separated access",
     "section": "Context",
-    "text": "Context\nDevelopers build the V-Sekai multiplayer-fabric Godot engine on two hosts from one workstation: Windows (PowerShell + MinGW) and WSL / Linux (linuxbsd). Without a shared, persistent compiler cache, each host rebuilds from scratch and cache hits are lost whenever a checkout is moved or renamed."
+    "text": "Context\nThe stack needs a relational database reachable by the Elixir gateway and the Phoenix zone backend. It must support schema migrations (DDL) separately from application queries (DML) to limit blast radius if application credentials are compromised."
   },
   {
-    "objectID": "decisions/20260606-compiling-godot-engine.html#decision",
-    "href": "decisions/20260606-compiling-godot-engine.html#decision",
-    "title": "Compiling the Godot engine",
+    "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#decision",
+    "href": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#decision",
+    "title": "CockroachDB with mTLS and role-separated access",
     "section": "Decision",
-    "text": "Decision\nStandardise on sccache as the only object cache, wired in as the SCons compiler launcher. Wrap the build in a gscons shell function on each host.\nDo not also enable SCons’s own CacheDir (cache_path=). sccache already caches every compiled object before SCons’s cache would see it, so running both double-caches the same artefacts — wasted disk and I/O for no extra hits. sccache is the single source of truth.\nCross-host sharing is handled by sccache’s S3-compatible storage backend, not by a shared filesystem directory. Credentials come from a local AWS profile (~/.aws/credentials) and are never committed — only the non-secret bucket coordinates are configured, via environment variables, so this guide hardcodes no absolute paths and no secrets:\n\nGODOT_SRC — the engine checkout root.\nSCCACHE_BUCKET / SCCACHE_ENDPOINT / SCCACHE_REGION — your S3 bucket coordinates.\nAWS_PROFILE — the named profile holding the access keys, read from ~/.aws/credentials. The keys themselves stay on the developer’s machine.\n\n\nPrerequisites\n\n\n\n\n\n\n\n\nTool\nWindows\nWSL (Ubuntu 24.04)\n\n\n\n\nPython 3\nscoop install python\nsystem python3\n\n\nSCons\npython -m pip install scons\npython3 -m pip install scons\n\n\nCompiler\nMinGW-w64 (use_mingw=yes)\nbuild-essential (gcc/g++)\n\n\nsccache\nscoop install sccache\nbrew install sccache\n\n\nGit\nscoop install git\nsystem git\n\n\n\nVerify sccache --version resolves in each shell. The verified setup uses sccache 0.15.0.\n\n\nStorage backend\nsccache picks its backend from environment variables. Two options:\n\nTo share the cache across hosts (recommended), use an S3-compatible bucket: set the SCCACHE_BUCKET / SCCACHE_ENDPOINT / SCCACHE_REGION coordinates and point AWS_PROFILE at a profile in ~/.aws/credentials. sccache keys include the compiler, target triple, and flags, so Windows/MinGW and Linux objects coexist in one bucket without colliding. A SCCACHE_S3_KEY_PREFIX namespaces these objects so they never collide with other projects sharing the bucket.\nFor a single host, use a local directory instead: set SCCACHE_DIR and SCCACHE_CACHE_SIZE, and sccache uses local disk with no S3 config needed.\n\n\nSecrets policy: only the bucket name, endpoint, region, and key prefix — none of which are secrets — appear in committed config. The access key and secret are never committed to any repo, dotfile, or build log. They live in one of two places depending on where the build runs:\n\nLocally: ~/.aws/credentials under a named profile (AWS_PROFILE).\nCI: GitHub Actions secret variables, injected at runtime via the ${{ secrets.* }} context. Storing the keys there is fine — they are encrypted and never land in the repo. What is not fine is pasting a literal key into a workflow YAML, a script, or this manual.\n\n\n\n\nCI — GitHub Actions\nIn a workflow, read the credentials from secret variables into the sccache S3 environment for the build step. Only the secret names appear in the committed YAML — the values are stored in the repo/org Actions secrets:\nenv:\n  SCCACHE_BUCKET: &lt;your-sccache-bucket&gt; # non-secret coordinates\n  SCCACHE_ENDPOINT: &lt;region&gt;.example-object-store.com\n  SCCACHE_REGION: &lt;region&gt;\n  SCCACHE_S3_KEY_PREFIX: godot\n  AWS_ACCESS_KEY_ID: ${{ secrets.SCCACHE_AWS_ACCESS_KEY_ID }} # from Actions secrets\n  AWS_SECRET_ACCESS_KEY: ${{ secrets.SCCACHE_AWS_SECRET_ACCESS_KEY }}\nsccache reads AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY directly, so CI needs no ~/.aws/credentials file or AWS_PROFILE.\nSCCACHE_BASEDIRS (the equivalent of ccache’s CCACHE_BASEDIR) strips a leading absolute prefix before hashing so hits survive a moved/renamed checkout. Point it at GODOT_SRC. Paths must be absolute; separate multiple dirs with ; on Windows and : elsewhere (longest matching prefix wins). The server reads it at startup — run sccache --stop-server after changing it.\n\n\nWindows — PowerShell profile\nSet GODOT_SRC and the S3 coordinates to your values, then add to Documents\\WindowsPowerShell\\Microsoft.PowerShell_profile.ps1. The function sets the sccache env only for the duration of the build and restores it afterwards, so the interactive session and the real AWS CLI are never shadowed:\nif (-not $env:GODOT_SRC) { $env:GODOT_SRC = \"$env:USERPROFILE\\godot\" }\nfunction gscons {\n    $envset = [ordered]@{\n        SCCACHE_BUCKET        = '&lt;your-sccache-bucket&gt;'\n        SCCACHE_ENDPOINT      = '&lt;region&gt;.example-object-store.com'\n        SCCACHE_REGION        = '&lt;region&gt;'\n        SCCACHE_S3_USE_SSL    = 'true'\n        SCCACHE_S3_KEY_PREFIX = 'godot'\n        SCCACHE_BASEDIRS      = $env:GODOT_SRC\n        AWS_PROFILE           = '&lt;your-s3-profile&gt;'   # keys live in ~/.aws/credentials, never committed\n    }\n    $saved = @{}\n    foreach ($k in $envset.Keys) { $saved[$k] = [Environment]::GetEnvironmentVariable($k, 'Process'); Set-Item \"env:$k\" $envset[$k] }\n    try {\n        python -m SCons platform=windows use_mingw=yes compiledb=yes target=editor precision=double `\n            c_compiler_launcher=sccache cpp_compiler_launcher=sccache -j16 @args\n    } finally {\n        foreach ($k in $envset.Keys) { if ($null -eq $saved[$k]) { Remove-Item \"env:$k\" -ErrorAction SilentlyContinue } else { Set-Item \"env:$k\" $saved[$k] } }\n    }\n}\n\n\nWSL / Linux — ~/.bashrc\n# Godot V-Sekai linuxbsd build. sccache is the only object cache; S3 backend shares it across hosts.\nexport GODOT_SRC=\"${GODOT_SRC:-$HOME/godot}\"                 # engine checkout\nexport SCCACHE_BUCKET=\"${SCCACHE_BUCKET:-&lt;your-sccache-bucket&gt;}\"\nexport SCCACHE_ENDPOINT=\"${SCCACHE_ENDPOINT:-&lt;region&gt;.example-object-store.com}\"\nexport SCCACHE_REGION=\"${SCCACHE_REGION:-&lt;region&gt;}\"\nexport SCCACHE_S3_USE_SSL=\"${SCCACHE_S3_USE_SSL:-true}\"\nexport SCCACHE_S3_KEY_PREFIX=\"${SCCACHE_S3_KEY_PREFIX:-godot}\"\nexport AWS_PROFILE=\"${AWS_PROFILE:-&lt;your-s3-profile&gt;}\"       # keys in ~/.aws/credentials, never committed\n# Strip the checkout root from compile paths so cache hits survive a moved/renamed build dir.\nexport SCCACHE_BASEDIRS=\"${SCCACHE_BASEDIRS:-$GODOT_SRC}\"\ngscons() {\n    python3 -m SCons compiledb=yes target=editor precision=double \\\n        c_compiler_launcher=sccache cpp_compiler_launcher=sccache \\\n        debug_symbols=yes tests=yes -j$(nproc) \"$@\"\n}\nOpen a fresh shell (or source ~/.bashrc / . $PROFILE) so gscons is defined.\n\n\nBuilding\nFrom your engine checkout ($GODOT_SRC):\ngscons                      # full editor build\ngscons verbose=yes          # extra args pass straight through to SCons\nOutput binary:\n\nWindows: bin\\godot.windows.editor.double.x86_64.exe\nWSL: bin/godot.linuxbsd.editor.double.x86_64\n\nThe two functions differ only where the platform requires it: Windows pins platform=windows use_mingw=yes and -j16; WSL infers platform=linuxbsd, uses -j$(nproc), and adds debug_symbols=yes tests=yes. Both share compiledb=yes target=editor precision=double and the sccache launchers — and neither enables a SCons CacheDir.\n\n\nVerifying and maintaining the cache\nsccache --show-stats        # \"Compile requests\" / \"Cache hits\" climb across builds\nsccache --stop-server       # apply changed SCCACHE_* / AWS_PROFILE env vars\nsccache --zero-stats        # reset counters\nA clean first build is mostly misses; a second build of the same tree shows a high hit rate and finishes substantially faster. With the S3 backend, a build on the other host hits the same objects once they are uploaded."
+    "text": "Decision\nRun a single-node CockroachDB on Fly.io with mTLS for all connections and three application roles:\n\ngateway_admin — DDL access for Ecto migrations\ngateway_writer — DML access for the running application\ngateway_reader — read-only access\n\nCerts are generated by gen_crdb_certs.sh with 100-year validity and stored as Fly secrets. The node cert must include both serverAuth and clientAuth in extendedKeyUsage because CockroachDB uses the node cert for internal gRPC client authentication."
   },
   {
-    "objectID": "decisions/20260606-compiling-godot-engine.html#consequences",
-    "href": "decisions/20260606-compiling-godot-engine.html#consequences",
-    "title": "Compiling the Godot engine",
+    "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#consequences",
+    "href": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#consequences",
+    "title": "CockroachDB with mTLS and role-separated access",
     "section": "Consequences",
-    "text": "Consequences\n\nThere is one object cache, not two: sccache is the sole cache; the SCons CacheDir is deliberately not enabled, so the same objects are never stored twice.\nOne S3 bucket serves both hosts; management is a single location, and a checkout can move or be renamed without losing hits (SCCACHE_BASEDIRS).\nNo secrets live in the repo; bucket coordinates are non-secret config. Access keys live in ~/.aws/credentials locally and in GitHub Actions secret variables in CI, never in committed files or build logs.\nThe engine SConstruct recognises only cache_path and cache_limit for the SCons cache. We intentionally pass neither. scons_cache= is not valid and is silently ignored.\nCommon failures: no hits between builds → server started before the env vars, run sccache --stop-server; no hits after relocating a checkout → set SCCACHE_BASEDIRS to the checkout root; S3 auth errors → wrong/expired AWS_PROFILE or missing ~/.aws/credentials entry."
+    "text": "Consequences\n\n--advertise-addr must be localhost. A flycast address routes the internal gRPC loopback through Fly’s NAT, breaking the admin UI.\nprepare: :unnamed is required in Postgrex to avoid statement-cache OOM on single-node deployments.\nPort 26257 is never publicly exposed. Access is via Fly’s private network (6PN) using socket_options: [:inet6] in Ecto, because .internal DNS returns only AAAA records.\nThe root cert is provisioned on the CRDB machine only. gateway_admin is the highest-privilege cert available to the application."
   },
   {
-    "objectID": "decisions/20260606-compiling-godot-engine.html#further-reading",
-    "href": "decisions/20260606-compiling-godot-engine.html#further-reading",
-    "title": "Compiling the Godot engine",
-    "section": "Further reading",
-    "text": "Further reading\n\nsccache S3 storage (SCCACHE_BUCKET, SCCACHE_ENDPOINT, SCCACHE_S3_KEY_PREFIX)\nsccache configuration (SCCACHE_BASEDIRS)\nGodot SConstruct"
-  },
-  {
-    "objectID": "decisions/20260606-compiling-godot-engine.html#related",
-    "href": "decisions/20260606-compiling-godot-engine.html#related",
-    "title": "Compiling the Godot engine",
+    "objectID": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#related",
+    "href": "decisions/20260501-cockroachdb-with-mtls-role-separation.html#related",
+    "title": "CockroachDB with mTLS and role-separated access",
     "section": "Related",
-    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nChecking the sccache build cache\nCold-boot dependencies for the presence-marker demo\nRunning background services on Windows with nssm\nContent creation in a single merged double-precision build via the editor MCP"
+    "text": "Related\n\nProgression hexagon — core, ports, and adapters"
   },
   {
-    "objectID": "decisions/20260612-headless-openxr-testing-with-monado.html",
-    "href": "decisions/20260612-headless-openxr-testing-with-monado.html",
-    "title": "Headless OpenXR testing with Monado (null compositor + simulated HMD)",
+    "objectID": "decisions/20260606-presence-demo-networking-internals.html",
+    "href": "decisions/20260606-presence-demo-networking-internals.html",
+    "title": "Presence demo pose networking",
     "section": "",
-    "text": "Manuals › Decisions › Headless OpenXR testing with Monado (null compositor + simulated HMD)\nStatus: accepted"
+    "text": "Manuals › Decisions › Presence demo pose networking\nTier: baseline · Status: accepted"
   },
   {
-    "objectID": "decisions/20260612-headless-openxr-testing-with-monado.html#context-and-problem-statement",
-    "href": "decisions/20260612-headless-openxr-testing-with-monado.html#context-and-problem-statement",
-    "title": "Headless OpenXR testing with Monado (null compositor + simulated HMD)",
+    "objectID": "decisions/20260606-presence-demo-networking-internals.html#context-and-problem-statement",
+    "href": "decisions/20260606-presence-demo-networking-internals.html#context-and-problem-statement",
+    "title": "Presence demo pose networking",
     "section": "Context and Problem Statement",
-    "text": "Context and Problem Statement\nThe OpenXR path needs to run on Linux without a headset: on the workstation for iteration and in a podman quadlet for CI. Functional and integration coverage of the OpenXR path needs a runnable runtime on the box, with no display and no hardware."
+    "text": "Context and Problem Statement\nThe presence demo sends head and hand poses to peers over the WebTransport transport. How are those poses sourced, encoded, and sent?"
   },
   {
-    "objectID": "decisions/20260612-headless-openxr-testing-with-monado.html#decision-outcome",
-    "href": "decisions/20260612-headless-openxr-testing-with-monado.html#decision-outcome",
-    "title": "Headless OpenXR testing with Monado (null compositor + simulated HMD)",
+    "objectID": "decisions/20260606-presence-demo-networking-internals.html#decision-drivers",
+    "href": "decisions/20260606-presence-demo-networking-internals.html#decision-drivers",
+    "title": "Presence demo pose networking",
+    "section": "Decision Drivers",
+    "text": "Decision Drivers\n\nHigh-rate pose streams must be compact.\nReuse the engine’s XR trackers and WebTransport datagrams.\nAvoid the per-property bookkeeping of automatic scene replication."
+  },
+  {
+    "objectID": "decisions/20260606-presence-demo-networking-internals.html#considered-options",
+    "href": "decisions/20260606-presence-demo-networking-internals.html#considered-options",
+    "title": "Presence demo pose networking",
+    "section": "Considered Options",
+    "text": "Considered Options\n\nHigh-level scene replication (MultiplayerSynchronizer / MultiplayerSpawner).\nExplicit RPC with Variant-encoded arguments.\nHand-rolled compact binary over WebTransport datagrams."
+  },
+  {
+    "objectID": "decisions/20260606-presence-demo-networking-internals.html#decision-outcome",
+    "href": "decisions/20260606-presence-demo-networking-internals.html#decision-outcome",
+    "title": "Presence demo pose networking",
     "section": "Decision Outcome",
-    "text": "Decision Outcome\nChosen option: run Monado with the null compositor and a simulated HMD, headless, because it is a conformant OpenXR runtime that an app reaches over the loader with no display and no device, on the workstation and inside a quadlet.\nThe recipe on Fedora (Monado 25.1.0):\n\nInstall monado monado-devel monado-vulkan-layers.\nSelect the runtime: symlink ~/.config/openxr/1/active_runtime.json to /usr/share/openxr/1/openxr_monado.json, or set XR_RUNTIME_JSON.\nStart the service headless: tail -f /dev/null | XRT_COMPOSITOR_NULL=1 SIMULATED_ENABLE=1 monado-service.\nOpenXR clients connect over the IPC socket $XDG_RUNTIME_DIR/monado_comp_ipc.\n\nThe non-obvious part is the stdin pipe. monado-service watches stdin through epoll to notice shutdown, and a non-epoll-able stdin (a closed descriptor or a regular file, which is what a background job, a nohup, or a container hands it) makes epoll_ctl(stdin) fail and the service aborts before it opens the socket. Feeding it an epoll-able pipe (tail -f /dev/null | ..., or a held-open FIFO) is what lets it start."
+    "text": "Decision Outcome\nChosen option: “Hand-rolled compact binary over WebTransport datagrams”.\n\nPose source: XRPositionalTracker / XRHandTracker / XRPose (servers/xr/) give a Transform3D, velocity, and tracking confidence; a hand has 26 joints.\nEncoding: a compact binary layout, not MultiplayerAPI’s Variant encoding, which is too fat for high-rate poses.\nVetoed: the high-level nodes in modules/multiplayer (MultiplayerSynchronizer, MultiplayerSpawner, SceneReplicationInterface).\nIdentity: the cassie pen supplies optional signing (stretch).\n\n\nConsequences\n\nGood: poses ride compact datagrams on the same WebTransport the gateway uses.\nBad: the encoding, send rate, and interpolation are hand-written and maintained.\n\n\n\nConfirmation\nThe demo reads local head and hand poses, sends them as datagrams, and a remote peer renders orbs from the decoded transforms."
   },
   {
-    "objectID": "decisions/20260612-headless-openxr-testing-with-monado.html#consequences",
-    "href": "decisions/20260612-headless-openxr-testing-with-monado.html#consequences",
-    "title": "Headless OpenXR testing with Monado (null compositor + simulated HMD)",
+    "objectID": "decisions/20260606-presence-demo-networking-internals.html#related",
+    "href": "decisions/20260606-presence-demo-networking-internals.html#related",
+    "title": "Presence demo pose networking",
+    "section": "Related",
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nFeature classification — proof of concept, baseline, stretch\nHuman-readable presence markers with an orb debug mode\nWebTransport over HTTP/3 transport"
+  },
+  {
+    "objectID": "decisions/20260606-archival-file-naming-convention.html",
+    "href": "decisions/20260606-archival-file-naming-convention.html",
+    "title": "Archival file naming convention for committed assets",
+    "section": "",
+    "text": "Manuals › Decisions › Archival file naming convention for committed assets\nTier: baseline · Status: accepted"
+  },
+  {
+    "objectID": "decisions/20260606-archival-file-naming-convention.html#context-and-problem-statement",
+    "href": "decisions/20260606-archival-file-naming-convention.html#context-and-problem-statement",
+    "title": "Archival file naming convention for committed assets",
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe manuals repo now commits binary assets alongside prose, starting with screenshots under decisions/attachments/. Ad-hoc names like image.png collide, sort poorly, and lose their provenance once they leave the page that referenced them. What naming convention should committed assets follow so they stay unique, sortable, and self-describing?"
+  },
+  {
+    "objectID": "decisions/20260606-archival-file-naming-convention.html#decision-drivers",
+    "href": "decisions/20260606-archival-file-naming-convention.html#decision-drivers",
+    "title": "Archival file naming convention for committed assets",
+    "section": "Decision Drivers",
+    "text": "Decision Drivers\n\nNames should be unique and not collide across decisions.\nNames should sort chronologically and read as self-describing.\nNames should survive being copied out of the repo (provenance in the name).\nThe convention should match established digital-preservation guidance."
+  },
+  {
+    "objectID": "decisions/20260606-archival-file-naming-convention.html#considered-options",
+    "href": "decisions/20260606-archival-file-naming-convention.html#considered-options",
+    "title": "Archival file naming convention for committed assets",
+    "section": "Considered Options",
+    "text": "Considered Options\n\nKeep source names (image.png, screenshot (1).png).\nContent hash names (a1b2c3.png).\nA Library of Congress style descriptive convention."
+  },
+  {
+    "objectID": "decisions/20260606-archival-file-naming-convention.html#decision-outcome",
+    "href": "decisions/20260606-archival-file-naming-convention.html#decision-outcome",
+    "title": "Archival file naming convention for committed assets",
+    "section": "Decision Outcome",
+    "text": "Decision Outcome\nChosen option: “A Library of Congress style descriptive convention”, because it follows recognized preservation guidance and yields names that sort and explain themselves.\nThe pattern:\nYYYYMMDD_project_description_NNNN.ext\nFollowing the Library of Congress file-naming guidance:\n\nLowercase ASCII only; no spaces or special characters.\nISO 8601 date first (YYYYMMDD) so names sort chronologically.\nFacets separated by underscores (_); words within a facet by hyphens (-).\nA zero-padded sequence (NNNN) to keep same-day captures unique and ordered.\nDescriptive but reasonably short.\n\nExample, used for the first committed screenshot:\n20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png\nEach committed asset also gets a BibTeX entry in references.bib recording its capture date and archived path, so the References page lists it.\n\nConsequences\n\nGood: assets are unique, sort by date, and carry their provenance in the name.\nGood: the convention matches preservation practice and is mechanical to apply.\nBad: names are longer than source names, and renaming on import is a manual step.\n\n\n\nConfirmation\nAssets under decisions/attachments/ match YYYYMMDD_project_description_NNNN.ext and have a matching references.bib entry. The first example is 20260606_vsekai-mpf_xr-grid-debug-orbs_0001.png, cited from the presence-demo decision."
+  },
+  {
+    "objectID": "decisions/20260606-archival-file-naming-convention.html#more-information",
+    "href": "decisions/20260606-archival-file-naming-convention.html#more-information",
+    "title": "Archival file naming convention for committed assets",
+    "section": "More Information",
+    "text": "More Information\nBased on the Library of Congress guidance on file naming for digital preservation (descriptive, no spaces, lowercase, ISO dates, zero-padded sequences)."
+  },
+  {
+    "objectID": "decisions/20260606-archival-file-naming-convention.html#related",
+    "href": "decisions/20260606-archival-file-naming-convention.html#related",
+    "title": "Archival file naming convention for committed assets",
+    "section": "Related",
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)"
+  },
+  {
+    "objectID": "decisions/20260606-webtransport-http3-transport.html",
+    "href": "decisions/20260606-webtransport-http3-transport.html",
+    "title": "WebTransport over HTTP/3 transport",
+    "section": "",
+    "text": "Manuals › Decisions › WebTransport over HTTP/3 transport\nTier: baseline · Status: accepted"
+  },
+  {
+    "objectID": "decisions/20260606-webtransport-http3-transport.html#context-and-problem-statement",
+    "href": "decisions/20260606-webtransport-http3-transport.html#context-and-problem-statement",
+    "title": "WebTransport over HTTP/3 transport",
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe stack needs a client/server transport that carries reliable control messages and high-rate unreliable state over one connection, on both native and web clients. Which transport does the engine provide?"
+  },
+  {
+    "objectID": "decisions/20260606-webtransport-http3-transport.html#decision-drivers",
+    "href": "decisions/20260606-webtransport-http3-transport.html#decision-drivers",
+    "title": "WebTransport over HTTP/3 transport",
+    "section": "Decision Drivers",
+    "text": "Decision Drivers\n\nUnreliable datagrams for high-rate state, plus reliable streams for control.\nOne connection for both, with native and browser support."
+  },
+  {
+    "objectID": "decisions/20260606-webtransport-http3-transport.html#considered-options",
+    "href": "decisions/20260606-webtransport-http3-transport.html#considered-options",
+    "title": "WebTransport over HTTP/3 transport",
+    "section": "Considered Options",
+    "text": "Considered Options\n\nStandard MultiplayerPeer transports (ENet, WebSocket, WebRTC).\nWebTransport over HTTP/3 / QUIC."
+  },
+  {
+    "objectID": "decisions/20260606-webtransport-http3-transport.html#decision-outcome",
+    "href": "decisions/20260606-webtransport-http3-transport.html#decision-outcome",
+    "title": "WebTransport over HTTP/3 transport",
+    "section": "Decision Outcome",
+    "text": "Decision Outcome\nChosen option: “WebTransport over HTTP/3”, provided by the engine’s modules/http3 (on feat/module-http3):\n\nquic_picoquic_backend.{cpp,h} — native QUIC via picoquic.\nquic_web_backend.cpp + quic_web_glue.js — the web/wasm backend.\nhttp3_client.{cpp,h}, quic_client.{cpp,h}, quic_server.h.\nClasses HTTP3Client, QUICClient, QUICServer, WebTransportPeer.\nDemos: modules/http3/demo/wt_client_test.gd, wt_server_demo.gd, wt_browser_test.html.\nlean/http3/PollingTermination.lean proves the poll loop terminates.\n\nOne QUIC connection carries reliable streams and unreliable datagrams, so control messages and high-rate state share a connection.\n\nConsequences\n\nGood: datagrams suit high-rate state; one connection serves native and browser.\nBad: the fork carries a picoquic backend and a QUIC stack to maintain.\n\n\n\nConfirmation\nThe modules/http3 demos open a WebTransport client and server over QUIC."
+  },
+  {
+    "objectID": "decisions/20260606-webtransport-http3-transport.html#more-information",
+    "href": "decisions/20260606-webtransport-http3-transport.html#more-information",
+    "title": "WebTransport over HTTP/3 transport",
+    "section": "More Information",
+    "text": "More Information\nPose streaming for the presence demo rides this transport; see presence demo pose networking. The engine is pinned to a frozen Godot 4.7 commit."
+  },
+  {
+    "objectID": "decisions/20260606-webtransport-http3-transport.html#related",
+    "href": "decisions/20260606-webtransport-http3-transport.html#related",
+    "title": "WebTransport over HTTP/3 transport",
+    "section": "Related",
+    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nPin the engine to a frozen Godot 4.7 commit\nCold-boot dependencies for the presence-marker demo\nPresence demo pose networking\nRepository and capability inventory for the multiplayer fabric"
+  },
+  {
+    "objectID": "decisions/20260611-genre-generic-naming-no-trademarks.html",
+    "href": "decisions/20260611-genre-generic-naming-no-trademarks.html",
+    "title": "Genre-generic naming, no trademarked proper nouns",
+    "section": "",
+    "text": "Manuals › Decisions › Genre-generic naming, no trademarked proper nouns\nStatus: accepted"
+  },
+  {
+    "objectID": "decisions/20260611-genre-generic-naming-no-trademarks.html#context-and-problem-statement",
+    "href": "decisions/20260611-genre-generic-naming-no-trademarks.html#context-and-problem-statement",
+    "title": "Genre-generic naming, no trademarked proper nouns",
+    "section": "Context and Problem Statement",
+    "text": "Context and Problem Statement\nThe core loop draws on a trademarked action RPG. The project reuses none of that game’s trademarks, so the docs and the game need a neutral vocabulary that carries the mechanics without the marks."
+  },
+  {
+    "objectID": "decisions/20260611-genre-generic-naming-no-trademarks.html#decision-outcome",
+    "href": "decisions/20260611-genre-generic-naming-no-trademarks.html#decision-outcome",
+    "title": "Genre-generic naming, no trademarked proper nouns",
+    "section": "Decision Outcome",
+    "text": "Decision Outcome\nChosen option: use genre-generic vocabulary throughout the docs, the filenames, and the game, because generic terms describe the mechanics while carrying no trademark.\nThe vocabulary: Hub for the social staging area, Field for a combat instance, melee, ranged, and caster for the archetypes, art for a learnable ability, affinity for the gating stat, and energy for the ability resource."
+  },
+  {
+    "objectID": "decisions/20260611-genre-generic-naming-no-trademarks.html#consequences",
+    "href": "decisions/20260611-genre-generic-naming-no-trademarks.html#consequences",
+    "title": "Genre-generic naming, no trademarked proper nouns",
     "section": "Consequences",
-    "text": "Consequences\n\nThe OpenXR path runs on the workstation and in a podman quadlet with no display and no headset.\nXRT_COMPOSITOR_NULL discards submitted frames, so this covers the runtime, the tracking, and frame submission, with no rendered output and no performance signal.\nSIMULATED_ENABLE supplies a head and controllers driven programmatically; the qwerty driver (QWERTY_ENABLE) adds keyboard and mouse control for an interactive desktop run.\nThis is functional and integration coverage; the standalone OpenXR build is the performance and comfort gate."
+    "text": "Consequences\n\nNo trademarked proper nouns appear in filenames, docs, or content.\nThe docs read as their own product.\nNew writing reuses the same neutral terms, so the vocabulary stays consistent."
   },
   {
-    "objectID": "decisions/20260612-headless-openxr-testing-with-monado.html#confirmation",
-    "href": "decisions/20260612-headless-openxr-testing-with-monado.html#confirmation",
-    "title": "Headless OpenXR testing with Monado (null compositor + simulated HMD)",
+    "objectID": "decisions/20260611-genre-generic-naming-no-trademarks.html#confirmation",
+    "href": "decisions/20260611-genre-generic-naming-no-trademarks.html#confirmation",
+    "title": "Genre-generic naming, no trademarked proper nouns",
     "section": "Confirmation",
-    "text": "Confirmation\nopenxr_runtime_list, and any OpenXR app, reaches xrCreateInstance against the running service, and the service log reports the null compositor and a simulated HMD."
+    "text": "Confirmation\nA trademark scan over the project docs returns clean."
   },
   {
-    "objectID": "decisions/20260612-headless-openxr-testing-with-monado.html#related",
-    "href": "decisions/20260612-headless-openxr-testing-with-monado.html#related",
-    "title": "Headless OpenXR testing with Monado (null compositor + simulated HMD)",
+    "objectID": "decisions/20260611-genre-generic-naming-no-trademarks.html#related",
+    "href": "decisions/20260611-genre-generic-naming-no-trademarks.html#related",
+    "title": "Genre-generic naming, no trademarked proper nouns",
     "section": "Related",
     "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)"
-  },
-  {
-    "objectID": "decisions/20260606-presence-demo-cold-boot-dependencies.html",
-    "href": "decisions/20260606-presence-demo-cold-boot-dependencies.html",
-    "title": "Cold-boot dependencies for the presence-marker demo",
-    "section": "",
-    "text": "Manuals › Decisions › Cold-boot dependencies for the presence-marker demo\nTier: proof of concept · Status: proposed"
-  },
-  {
-    "objectID": "decisions/20260606-presence-demo-cold-boot-dependencies.html#context-and-problem-statement",
-    "href": "decisions/20260606-presence-demo-cold-boot-dependencies.html#context-and-problem-statement",
-    "title": "Cold-boot dependencies for the presence-marker demo",
-    "section": "Context and Problem Statement",
-    "text": "Context and Problem Statement\nThe presence-marker demo (and its ghostly ANNY/SOMA-X body refinement) needs a reproducible setup from nothing. What is the minimal dependency set to cold boot the development environment for it?"
-  },
-  {
-    "objectID": "decisions/20260606-presence-demo-cold-boot-dependencies.html#decision-drivers",
-    "href": "decisions/20260606-presence-demo-cold-boot-dependencies.html#decision-drivers",
-    "title": "Cold-boot dependencies for the presence-marker demo",
-    "section": "Decision Drivers",
-    "text": "Decision Drivers\n\nA new machine should reach a running demo from a checkout and a short script.\nReuse the engine and transport the stack already standardises on.\nKeep the heavy ML pipeline optional until the ghostly body is worked on."
-  },
-  {
-    "objectID": "decisions/20260606-presence-demo-cold-boot-dependencies.html#decision-outcome",
-    "href": "decisions/20260606-presence-demo-cold-boot-dependencies.html#decision-outcome",
-    "title": "Cold-boot dependencies for the presence-marker demo",
-    "section": "Decision Outcome",
-    "text": "Decision Outcome\nCold-boot dependencies, by layer:\n\n1. Engine (pick one)\n\nPrebuilt: pull the editor image from godot-images (GHCR), built at the pinned Godot 4.7 commit.\nFrom source: the compiling SOP toolchain (git, Python 3, SCons, sccache, MinGW-w64 on Windows / build-essential on Linux), plus merge (Elixir gitassembly) to assemble feat/module-xr-grid, feat/module-cassie, and feat/module-http3 onto the pinned base. Check out a gitassembly tag release (v2026.06.06.1853-multiplayer-fabric) rather than the moving branch tips for a reproducible assembly.\n\n\n\n2. Demo project\n\nThe xr-grid checkout: the scene with the skinned-mesh hero-asset landmark and the head/hand pose orbs.\n\n\n\n3. Networking\n\nWebTransport over HTTP/3 is compiled into the engine (modules/http3, picoquic), so local loopback needs nothing extra. The Elixir gateway (on V-Sekai-fire) is only needed for call-scale runs.\n\n\n\n4. Ghostly body pipeline (optional, for the marker upgrade)\n\nA Python 3 environment with ANNY and SOMA-X (py-soma-x), PyTorch, and NVIDIA Warp on a CUDA GPU. Persona and body assets auto-download from Hugging Face.\n\n\n\n5. VR runtime (optional)\n\nAn OpenXR runtime and headset for in-headset use; the desktop debug window runs without one.\n\n\n\nConsequences\n\nGood: layers 1–2 alone boot a local, single-peer demo; networking and the ML body pipeline are additive.\nBad: the from-source path pulls in an Elixir assembly step and a GPU/PyTorch stack, so the full cold boot is heavy.\n\n\n\nConfirmation\nA fresh machine reaches the desktop debug window of the xr-grid demo using the prebuilt engine plus the xr-grid checkout; adding the Python ANNY/SOMA-X stack enables the ghostly body."
-  },
-  {
-    "objectID": "decisions/20260606-presence-demo-cold-boot-dependencies.html#more-information",
-    "href": "decisions/20260606-presence-demo-cold-boot-dependencies.html#more-information",
-    "title": "Cold-boot dependencies for the presence-marker demo",
-    "section": "More Information",
-    "text": "More Information\nLayers reuse the compiling SOP, the engine pin, and the WebTransport transport."
-  },
-  {
-    "objectID": "decisions/20260606-presence-demo-cold-boot-dependencies.html#related",
-    "href": "decisions/20260606-presence-demo-cold-boot-dependencies.html#related",
-    "title": "Cold-boot dependencies for the presence-marker demo",
-    "section": "Related",
-    "text": "Related\n\nCompiling the Godot engine\nGhostly partial-body presence avatar from ANNY via SOMA-X\nCut gitassembly tag releases for the assembled engine\nPin the engine to a frozen Godot 4.7 commit\nHuman-readable presence markers with an orb debug mode\nWebTransport over HTTP/3 transport"
-  },
-  {
-    "objectID": "decisions/20260611-hexagon-budgeter-core.html",
-    "href": "decisions/20260611-hexagon-budgeter-core.html",
-    "title": "Budgeter hexagon — core, ports, and adapters",
-    "section": "",
-    "text": "Manuals › Decisions › Budgeter hexagon — core, ports, and adapters\nTier: proof of concept · Status: accepted"
-  },
-  {
-    "objectID": "decisions/20260611-hexagon-budgeter-core.html#context-and-problem-statement",
-    "href": "decisions/20260611-hexagon-budgeter-core.html#context-and-problem-statement",
-    "title": "Budgeter hexagon — core, ports, and adapters",
-    "section": "Context and Problem Statement",
-    "text": "Context and Problem Statement\nThe slice needs graceful degradation under load on the mobile floor, dialing quality knobs per frame so the player stays inside the experience during a burst."
-  },
-  {
-    "objectID": "decisions/20260611-hexagon-budgeter-core.html#decision-outcome",
-    "href": "decisions/20260611-hexagon-budgeter-core.html#decision-outcome",
-    "title": "Budgeter hexagon — core, ports, and adapters",
-    "section": "Decision Outcome",
-    "text": "Decision Outcome\nChosen option: structure the budgeter as a hexagon. The core is a constraint solver mapping on-device measurements to knob settings — avatar level-of-detail, interpolation against extrapolation, voice radius, and audio sample quality — as a pure reducer; it dials the knobs every frame, never overrules itself, and never dictates how the artists work.\nDriving port: measurement_source (frame time, thermals, and entity counts). Driven port: knob_sink (the settings the runtime applies). Adapters: feat/module-open-telemetry feeds measurement_source; the engine runtime applies knob_sink; a fixture adapter replays a load spike for CI."
-  },
-  {
-    "objectID": "decisions/20260611-hexagon-budgeter-core.html#consequences",
-    "href": "decisions/20260611-hexagon-budgeter-core.html#consequences",
-    "title": "Budgeter hexagon — core, ports, and adapters",
-    "section": "Consequences",
-    "text": "Consequences\n\nAs a hundred extra players land in the hub, the budgeter degrades gracefully, so the player stays inside the experience.\nThe solve runs against a recorded spike in CI, so the knob response is testable with no device.\nThe budgeter stays advisory, so it never overrules the artists."
-  },
-  {
-    "objectID": "decisions/20260611-hexagon-budgeter-core.html#confirmation",
-    "href": "decisions/20260611-hexagon-budgeter-core.html#confirmation",
-    "title": "Budgeter hexagon — core, ports, and adapters",
-    "section": "Confirmation",
-    "text": "Confirmation\nThe core replays a recorded load spike and asserts the knob response, with no device under it."
-  },
-  {
-    "objectID": "decisions/20260611-hexagon-budgeter-core.html#related",
-    "href": "decisions/20260611-hexagon-budgeter-core.html#related",
-    "title": "Budgeter hexagon — core, ports, and adapters",
-    "section": "Related",
-    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)\nLoot-action core-loop MVP vertical slice"
-  },
-  {
-    "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html",
-    "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html",
-    "title": "Feature classification — proof of concept, baseline, stretch",
-    "section": "",
-    "text": "Manuals › Decisions › Feature classification — proof of concept, baseline, stretch\nTier: baseline · Status: accepted"
-  },
-  {
-    "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html#context-and-problem-statement",
-    "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html#context-and-problem-statement",
-    "title": "Feature classification — proof of concept, baseline, stretch",
-    "section": "Context and Problem Statement",
-    "text": "Context and Problem Statement\nThe capabilities table lists features with a free-text status (“working”, “loses about 90%”). Free text does not say whether a feature is a throwaway experiment, a committed part of the product, or a nice-to-have. The team needs one shared vocabulary for how far along and how committed a feature is, so planning and the docs agree on what “done” means for each one."
-  },
-  {
-    "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html#decision-drivers",
-    "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html#decision-drivers",
-    "title": "Feature classification — proof of concept, baseline, stretch",
-    "section": "Decision Drivers",
-    "text": "Decision Drivers\n\nOne vocabulary shared between planning and the manuals.\nA reader should know at a glance whether a feature is committed or exploratory.\nCheap to apply and to move as a feature matures."
-  },
-  {
-    "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html#considered-options",
-    "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html#considered-options",
-    "title": "Feature classification — proof of concept, baseline, stretch",
-    "section": "Considered Options",
-    "text": "Considered Options\n\nKeep free-text status only.\nA maturity ladder (alpha / beta / stable).\nA three-tier commitment classification: proof of concept, baseline, stretch."
-  },
-  {
-    "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html#decision-outcome",
-    "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html#decision-outcome",
-    "title": "Feature classification — proof of concept, baseline, stretch",
-    "section": "Decision Outcome",
-    "text": "Decision Outcome\nChosen option: “A three-tier commitment classification”, because it captures commitment, not just maturity, which is what planning needs.\nThe tiers:\n\nA proof of concept demonstrates the idea works end to end, in partial or throwaway form. It may be unreliable or lossy, and nothing depends on it yet.\nThe baseline is the committed minimum the product ships. It works reliably across the target platforms, and is the bar.\nA stretch goal goes beyond baseline. It is pursued if time allows; cutting it does not block the release.\n\nEach feature in the capabilities table carries one tier. A feature moves between tiers as it matures or as commitment changes; the tier is the current call, not a permanent label.\n\nInitial triage\n\nNative video playback — baseline.\nScene baking via OpenUSD — baseline.\nSpatial audio (HRTF + audio probes) — baseline.\nSpeech — baseline.\nPen stroke creation (cassie) — proof of concept (patch surface creation loses about 90%).\n\n\n\nConsequences\n\nGood: planning and docs share one word per feature for its commitment level.\nGood: the tier is a small, reversible edit as features move.\nBad: a tier is a judgement call and can drift from reality if the table is not kept current.\n\n\n\nConfirmation\nThe capabilities table has a Tier column, and every row carries one of the three tiers. New capabilities are added with a tier."
-  },
-  {
-    "objectID": "decisions/20260606-feature-classification-poc-baseline-stretch.html#related",
-    "href": "decisions/20260606-feature-classification-poc-baseline-stretch.html#related",
-    "title": "Feature classification — proof of concept, baseline, stretch",
-    "section": "Related",
-    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-06 (Saturday)\nRecursive art-game loop and its minimal steel thread\nPresence demo pose networking\nHuman-readable presence markers with an orb debug mode\nRepository and capability inventory for the multiplayer fabric"
-  },
-  {
-    "objectID": "decisions/20260606-gitassembly-tag-release.html",
-    "href": "decisions/20260606-gitassembly-tag-release.html",
-    "title": "Cut gitassembly tag releases for the assembled engine",
-    "section": "",
-    "text": "Manuals › Decisions › Cut gitassembly tag releases for the assembled engine\nStatus: accepted"
-  },
-  {
-    "objectID": "decisions/20260606-gitassembly-tag-release.html#context-and-problem-statement",
-    "href": "decisions/20260606-gitassembly-tag-release.html#context-and-problem-statement",
-    "title": "Cut gitassembly tag releases for the assembled engine",
-    "section": "Context and Problem Statement",
-    "text": "Context and Problem Statement\nThe merge repo’s gitassembly recipe builds the engine by merging feature branches (feat/module-xr-grid, feat/module-cassie, feat/module-http3, and the rest) onto the frozen Godot 4.7 base. The base is pinned, but the feature branch tips are not: an assembly run today and one next week can merge different branch SHAs and produce a different engine. The cold-boot dependencies refer to the branches by name, so “assemble these branches” alone is not a reproducible artifact. What is the shareable, fixed reference for the assembled engine?"
-  },
-  {
-    "objectID": "decisions/20260606-gitassembly-tag-release.html#decision-drivers",
-    "href": "decisions/20260606-gitassembly-tag-release.html#decision-drivers",
-    "title": "Cut gitassembly tag releases for the assembled engine",
-    "section": "Decision Drivers",
-    "text": "Decision Drivers\n\nReproducibility: a name that resolves to one exact assembled tree, not moving tips.\nA single reference the demo, godot-images, and CI can all build from.\nCheap to cut so releases keep pace with the feature branches.\nDo not steamroll prior assemblies that other work already builds against."
-  },
-  {
-    "objectID": "decisions/20260606-gitassembly-tag-release.html#considered-options",
-    "href": "decisions/20260606-gitassembly-tag-release.html#considered-options",
-    "title": "Cut gitassembly tag releases for the assembled engine",
-    "section": "Considered Options",
-    "text": "Considered Options\n\nKeep referring to branch names; each consumer assembles the tips itself.\nForce-push the assembled multiplayer-fabric branch as the shared reference.\nPush an immutable, timestamped tag of the assembled tree (the existing merge tooling already does this)."
-  },
-  {
-    "objectID": "decisions/20260606-gitassembly-tag-release.html#decision-outcome",
-    "href": "decisions/20260606-gitassembly-tag-release.html#decision-outcome",
-    "title": "Cut gitassembly tag releases for the assembled engine",
-    "section": "Decision Outcome",
-    "text": "Decision Outcome\nChosen option: “Push an immutable, timestamped tag”, because it gives one reference that resolves to an exact tree without overwriting prior assemblies. This adopts the behavior the merge tooling already implements rather than inventing a new scheme.\n\nelixir update_godot_v_sekai.exs (run from main) fetches the remotes, runs the vendored git-assembler over the gitassembly recipe, then tags the assembled multiplayer-fabric branch and pushes only the tag to v-sekai-multiplayer-fabric/godot. The moving branch stays local, so a release never steamrolls anyone working off a previous tip.\nTag format (CalVer, UTC): v&lt;YYYY.MM.DD.HHMM&gt;-multiplayer-fabric. The timestamp is the only thing that changes between runs; the assembler is deterministic, so the same inputs produce the same tree.\nThe current cold-boot reference is v2026.06.06.1853-multiplayer-fabric (commit 9ea526ab), assembled onto the pinned 4.7 base with the full recipe, including feat/module-xr-grid, feat/module-cassie, and feat/module-http3.\nConsumers pin to a tag, not to branch names. godot-images builds its GHCR editor image from a tag, and the cold-boot steps reference that tag.\nIterate with --dry-run (assembles locally, no push) before cutting a release.\n\n\nConsequences\n\nGood: a tag resolves to one exact assembled engine, so demo, image, and CI build the same tree.\nGood: tag-only push keeps every prior assembly intact and addressable.\nBad: the CalVer tag carries no semantic version, so the assembled Godot version is implicit in the pinned base.\nBad: tags must be cut deliberately, so a stale tag can lag the live branches.\n\n\n\nConfirmation\ngit ls-remote --tags v-sekai-multiplayer-fabric/godot lists v&lt;YYYY.MM.DD.HHMM&gt;-multiplayer-fabric tags, a godot-images build from a tag reproduces the same editor, and the cold-boot steps reference a tag rather than branch names."
-  },
-  {
-    "objectID": "decisions/20260606-gitassembly-tag-release.html#more-information",
-    "href": "decisions/20260606-gitassembly-tag-release.html#more-information",
-    "title": "Cut gitassembly tag releases for the assembled engine",
-    "section": "More Information",
-    "text": "More Information\nThe tag sits on top of the engine pin: the pin fixes the base, and the tag fixes the assembly merged onto it. It is the reproducible artifact the cold-boot dependencies build from. The tag format and workflow are documented in the merge repo’s CONTRIBUTING.md."
-  },
-  {
-    "objectID": "decisions/20260606-gitassembly-tag-release.html#related",
-    "href": "decisions/20260606-gitassembly-tag-release.html#related",
-    "title": "Cut gitassembly tag releases for the assembled engine",
-    "section": "Related",
-    "text": "Related\n\nAmend a PR before it enters the merge queue, not after\nPin the engine to a frozen Godot 4.7 commit\nCold-boot dependencies for the presence-marker demo"
-  },
-  {
-    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html",
-    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html",
-    "title": "Loot-action core-loop MVP vertical slice",
-    "section": "",
-    "text": "Manuals › Decisions › Loot-action core-loop MVP vertical slice\nStatus: accepted"
-  },
-  {
-    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-context",
-    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-context",
-    "title": "Loot-action core-loop MVP vertical slice",
-    "section": "The Context",
-    "text": "The Context\nThe fabric has transport, authority, persistence, and budget decisions in place, but no running loop that exercises all of them together. The team needs a first playable to find the gaps that only appear when the whole stack runs end to end: a social hub where players gather, an instanced combat zone where they fight and collect, and the round trip that carries the result back. Without a bounded target the risk is that each layer is individually correct but the integration is never tested until it is too late to fix."
-  },
-  {
-    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-problem-statement",
-    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-problem-statement",
-    "title": "Loot-action core-loop MVP vertical slice",
-    "section": "The Problem Statement",
-    "text": "The Problem Statement\nThere is no single bounded deliverable that tells the team whether the stack works together. The team needs one vertical slice, small enough to build in a week, complete enough to exercise every integration seam: transport, server authority, loot contention, inventory persistence, performance budgeting, and the Hub-to-Field-to-Hub round trip."
-  },
-  {
-    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#design",
-    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#design",
-    "title": "Loot-action core-loop MVP vertical slice",
-    "section": "Design",
-    "text": "Design\nShip one vertical slice of an instanced, four-player loot-action core loop.\nScene layout\n\nOne Hub deck with a shop backed by the loot and progression cores. The shop degrades to a free starting kit if the economy slips.\nOne Field room: four players, one melee combo against one enemy, one loot drop, one persistence round trip.\n\nLoop\n\nPlayers gather in the Hub and form a party.\nThe party teleports into the Field instance hosted by zone-server.\nOne player lands a timed melee combo. The server validates the hit, deducts enemy health, and spawns a loot drop.\nOne player touches the drop first. The loot core resolves contention by receipt timestamp, grants the winner, and rejects the rest.\nThe progression core commits the inventory delta through the CockroachDB adapter (or the SQLite fallback if the commit path slips).\nThe party teleports back to the Hub. The shop reflects the new inventory.\n\nCores\nEach concern is a hexagonal pure reducer (the hexagonal decision, the core contract):\n\n\n\nCore\nResponsibility\nKey ports\n\n\n\n\nCombat (decision)\nCombo timing, hit validation, health, enemy spawn window\ninput_source, tick_source, behavior_source → state_sink, event_sink\n\n\nLoot (decision)\nDrop generation, first-touch contention\nloot_request_source → grant_sink, inventory_delta_sink\n\n\nPresence (decision)\nRemote-pose interpolation\npose_source → avatar_sink\n\n\nProgression (decision)\nProfile, inventory, affinity gate\nprofile_source → commit_sink\n\n\nBudgeter (decision)\nPer-frame quality knobs under load\nmeasurement_source → knob_sink\n\n\n\nAuthority and networking\nThe zone-server is the single authority per instance (server-authoritative decision). For the deadline the model is server-authoritative with client interpolation and no prediction. The rollback adapter lands after the gate behind the same ports.\nContent and performance gate\nContent is first-party curated only; the zone-baker enforces hard budgets at bake time (content decision). The sign-off gate is a SteamVR build at 90 Hz: four avatars and one Field room under 500,000 visible triangles and 200 draw calls per eye.\nWhat ships after the gate\nRanged and caster archetypes, Steam Frame and Steam Deck builds, in-headset authoring, rollback, and user-generated content."
-  },
-  {
-    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#cris-score",
-    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#cris-score",
-    "title": "Loot-action core-loop MVP vertical slice",
-    "section": "CRIS Score",
-    "text": "CRIS Score\n\n\n\n\n\n\n\n\nFactor\nScore\nEvidence\n\n\n\n\nComplexity\n5\nFive hexagonal cores, server authority, three platforms in scope, and a content pipeline; not novel but genuinely wide\n\n\nReach\n10\nThis is the whole stack; every subsystem touches the slice\n\n\nImpediment\n9\nWithout it there is no first playable, no integration proof, and no gate to build subsequent features against\n\n\nStakeholder\n9\nThe vertical slice is the primary deliverable for the proof-of-concept milestone; all downstream work depends on it shipping\n\n\nTotal\n8.25\nBuild now"
-  },
-  {
-    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-downsides",
-    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-downsides",
-    "title": "Loot-action core-loop MVP vertical slice",
-    "section": "The Downsides",
-    "text": "The Downsides\n\nThe slice runs on placeholder content; art is not gated, only the frame floor.\nOnly the melee archetype ships; ranged and caster are explicitly deferred.\nNo client prediction at the deadline; the rollback adapter lands after the gate.\nThe SQLite fallback in progression degrades the inventory persistence, which is not visible to the player but makes the economy untrustworthy until the CockroachDB path is confirmed."
-  },
-  {
-    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-road-not-taken",
-    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#the-road-not-taken",
-    "title": "Loot-action core-loop MVP vertical slice",
-    "section": "The Road Not Taken",
-    "text": "The Road Not Taken\nFull toolchain and content pipeline first — building the full pipeline before the loop means the integration gaps appear late, when they are most expensive. Rejected in favour of the thin steel thread.\nMulti-archetype slice — including ranged and caster in the first slice widens the scope beyond one week. The melee archetype is sufficient to prove combat authority and loot contention; the others follow the gate.\nBroader platform launch — targeting Steam Frame and Steam Deck alongside SteamVR at the gate is sufficient scope for the vertical slice; additional standalone VR platforms are deferred.\nPer-zone distributed authority (Maglev intercept model) — a geometric Hilbert-zone authority was attempted and rejected in the Maglev intercept smoke test. A single zone-server authority per instance is simpler and sufficient for a four-player room."
-  },
-  {
-    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#status",
-    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#status",
-    "title": "Loot-action core-loop MVP vertical slice",
-    "section": "Status",
-    "text": "Status\nStatus: Accepted"
-  },
-  {
-    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#decision-makers",
-    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#decision-makers",
-    "title": "Loot-action core-loop MVP vertical slice",
-    "section": "Decision Makers",
-    "text": "Decision Makers\n\nK. S. Ernest (iFire) Lee"
-  },
-  {
-    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#tags",
-    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#tags",
-    "title": "Loot-action core-loop MVP vertical slice",
-    "section": "Tags",
-    "text": "Tags\n\nloot-action, mvp, vertical-slice, proof-of-concept, hexagonal, 20260611-loot-action-core-loop-mvp-vertical-slice, madr-proposal-template"
-  },
-  {
-    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#further-reading",
-    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#further-reading",
-    "title": "Loot-action core-loop MVP vertical slice",
-    "section": "Further Reading",
-    "text": "Further Reading\n@misc{v_sekai_2026,\n  title = {V-Sekai},\n  year  = {2026},\n  url   = {https://v-sekai.org/}\n}"
-  },
-  {
-    "objectID": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#related",
-    "href": "decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html#related",
-    "title": "Loot-action core-loop MVP vertical slice",
-    "section": "Related",
-    "text": "Related\n\nV-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)\nHexagonal core/ports/adapters as the component convention\nCores as pure reducers over byte-serialized state\nFirst-party curated content with zone-baker budgets\nBudgeter hexagon — core, ports, and adapters\nCombat hexagon — core, ports, and adapters\nLoot hexagon — core, ports, and adapters\nPresence hexagon — wrapping the existing presence stack\nProgression hexagon — core, ports, and adapters\nServer-authoritative simulation with deferred rollback\nRepository map of the loot-action vertical slice"
   },
   {
     "objectID": "decisions/20260611-hexagon-presence-core.html",
@@ -3483,6 +3546,6 @@
     "href": "decisions.html",
     "title": "Decisions",
     "section": "",
-    "text": "Manuals › Decisions\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDate\n\n\n\nTier\n\n\n\nStatus\n\n\n\nFile\n\n\n\n\n\n\n\n\n[MADR Proposal Title]\n\n\n \n\n\n \n\n\n \n\n\nmadr-proposal-template.md\n\n\n\n\n\n\nGame-loop-first delivery sequence\n\n\nJun 24, 2026\n\n\n \n\n\naccepted\n\n\n20260624-game-loop-cluster-sequence.md\n\n\n\n\n\n\nRelease tags progress chronologically through dev, beta, rc, and release\n\n\nJun 24, 2026\n\n\n \n\n\naccepted\n\n\n20260624-release-tag-progression-dev-beta-rc.md\n\n\n\n\n\n\nsccache with GitHub Actions cache for Godot container builds\n\n\nJun 24, 2026\n\n\n \n\n\naccepted\n\n\n20260624-sccache-github-actions-cache-for-godot-builds.md\n\n\n\n\n\n\nGitHub repos use kebab-case; local checkout dirs keep build-native names\n\n\nJun 21, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260621-kebab-case-repos-snake-case-local-checkouts.md\n\n\n\n\n\n\nProject state lives in repo markdown, not in agent auto-memory\n\n\nJun 16, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260616-repo-markdown-single-source-of-truth-for-project-state.md\n\n\n\n\n\n\nOrg-scoped GitHub App installation token for gh access instead of a personal OAuth token\n\n\nJun 13, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260613-org-scoped-github-app-token-for-gh-access.md\n\n\n\n\n\n\nRepository and capability inventory for the multiplayer fabric\n\n\nJun 13, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260613-repository-and-capability-inventory.md\n\n\n\n\n\n\nRun services as systemd podman quadlets on Fedora 44 instead of Harvester HCI\n\n\nJun 13, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260613-quadlets-on-fedora-44-instead-of-harvester.md\n\n\n\n\n\n\nStatus reports lead with the bottom line\n\n\nJun 13, 2026\n\n\n \n\n\naccepted\n\n\n20260613-bad-news-reports-lead-with-the-bottom-line.md\n\n\n\n\n\n\nAndroid template builds with Temurin JDK 21 and config.gradle-pinned SDK\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-android-template-temurin-jdk21.md\n\n\n\n\n\n\nFabric channels as reliability classes, control in payload\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-fabric-channels-as-reliability-classes.md\n\n\n\n\n\n\nFive-second transaction limit (bounded operations)\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-five-second-transaction-limit.md\n\n\n\n\n\n\nHeadless OpenXR testing with Monado (null compositor + simulated HMD)\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-headless-openxr-testing-with-monado.md\n\n\n\n\n\n\nIntegral entity-transform wire (int64 micrometers, no origin shift)\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-integral-entity-transform-wire.md\n\n\n\n\n\n\nMCP runtime bridge for deployed builds\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-mcp-runtime-bridge-deployed-builds.md\n\n\n\n\n\n\nOne transport listener per authority pending http3 multi-session fixes\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-http3-listener-session-findings.md\n\n\n\n\n\n\nRepository map of the loot-action vertical slice\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-vertical-slice-repository-map.md\n\n\n\n\n\n\nVerification smokes as a systemd podman quadlet queue\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-systemd-quadlet-verification-queue.md\n\n\n\n\n\n\nWebTransport reliable delivery on one persistent framed stream per session\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-webtransport-persistent-framed-stream.md\n\n\n\n\n\n\nr128 Q64.64 fixed-point as a Lean library for the cores\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-r128-fixed-point-as-lean-library.md\n\n\n\n\n\n\nBudgeter hexagon — core, ports, and adapters\n\n\nJun 11, 2026\n\n\nproof of concept\n\n\naccepted\n\n\n20260611-hexagon-budgeter-core.md\n\n\n\n\n\n\nCASSIE desktop curvenet authoring for content, no Blender\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-cassie-desktop-curvenet-authoring.md\n\n\n\n\n\n\nCI/CD runners operate as a finite queueing system\n\n\nJun 11, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260611-cicd-runners-as-queueing-system.md\n\n\n\n\n\n\nCombat hexagon — core, ports, and adapters\n\n\nJun 11, 2026\n\n\nproof of concept\n\n\naccepted\n\n\n20260611-hexagon-combat-core.md\n\n\n\n\n\n\nContent creation in a single merged double-precision build via the editor MCP\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-content-build-merged-double-precision-mcp.md\n\n\n\n\n\n\nCore kernel codegen via lean-slang (Lean to Slang to SPIR-V)\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-core-codegen-lean-slang.md\n\n\n\n\n\n\nCores as pure reducers over byte-serialized state\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-core-contract-pure-reducer-byte-state.md\n\n\n\n\n\n\nDeterministic cores via r128 fixed-point and seeded RNG\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-deterministic-cores-integer-seeded-rng.md\n\n\n\n\n\n\nFirst-party curated content with zone-baker budgets\n\n\nJun 11, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260611-first-party-curated-content-zone-baker-budgets.md\n\n\n\n\n\n\nForward renderer with baked light for the mobile floor\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-forward-renderer-baked-light.md\n\n\n\n\n\n\nGenerated behavior runs as sandboxed RISC-V\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-generated-behavior-sandboxed-riscv.md\n\n\n\n\n\n\nGenre-generic naming, no trademarked proper nouns\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-genre-generic-naming-no-trademarks.md\n\n\n\n\n\n\nLean 4 build-time kernel cores with flat-C host adapters\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-lean4-kernel-cores-flat-c-host-adapters.md\n\n\n\n\n\n\nLoot hexagon — core, ports, and adapters\n\n\nJun 11, 2026\n\n\nproof of concept\n\n\naccepted\n\n\n20260611-hexagon-loot-core.md\n\n\n\n\n\n\nLoot-action core-loop MVP vertical slice\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-loot-action-core-loop-mvp-vertical-slice.md\n\n\n\n\n\n\nPresence hexagon — wrapping the existing presence stack\n\n\nJun 11, 2026\n\n\nproof of concept\n\n\naccepted\n\n\n20260611-hexagon-presence-core.md\n\n\n\n\n\n\nProgression hexagon — core, ports, and adapters\n\n\nJun 11, 2026\n\n\nproof of concept\n\n\naccepted\n\n\n20260611-hexagon-progression-core.md\n\n\n\n\n\n\nServer-authoritative simulation with deferred rollback\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-server-authoritative-simulation-deferred-rollback.md\n\n\n\n\n\n\nwebtransportd as the out-of-process core transport adapter\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-webtransportd-core-transport-adapter.md\n\n\n\n\n\n\nHexagonal core/ports/adapters as the component convention\n\n\nJun 10, 2026\n\n\n \n\n\naccepted\n\n\n20260610-hexagonal-core-ports-adapters.md\n\n\n\n\n\n\nAn umbrella package installs every component in one command\n\n\nJun 9, 2026\n\n\n \n\n\naccepted\n\n\n20260609-umbrella-package-installs-all-components.md\n\n\n\n\n\n\nCommit messages use sentence case without Conventional Commits prefixes\n\n\nJun 9, 2026\n\n\n \n\n\naccepted\n\n\n20260609-commit-messages-sentence-case.md\n\n\n\n\n\n\nComments and docs use a tenseless continuous-present voice\n\n\nJun 7, 2026\n\n\n \n\n\naccepted\n\n\n20260607-tenseless-continuous-present-voice.md\n\n\n\n\n\n\nAmend a PR before it enters the merge queue, not after\n\n\nJun 6, 2026\n\n\n \n\n\naccepted\n\n\n20260606-amend-pr-before-it-enters-the-queue.md\n\n\n\n\n\n\nArchival file naming convention for committed assets\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-archival-file-naming-convention.md\n\n\n\n\n\n\nBound the LLM steering queue to avoid context overflow\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-bounded-llm-steering-queue.md\n\n\n\n\n\n\nChecking the sccache build cache\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-checking-sccache.md\n\n\n\n\n\n\nCold-boot dependencies for the presence-marker demo\n\n\nJun 6, 2026\n\n\nproof of concept\n\n\nproposed\n\n\n20260606-presence-demo-cold-boot-dependencies.md\n\n\n\n\n\n\nCompiling the Godot engine\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-compiling-godot-engine.md\n\n\n\n\n\n\nCut gitassembly tag releases for the assembled engine\n\n\nJun 6, 2026\n\n\n \n\n\naccepted\n\n\n20260606-gitassembly-tag-release.md\n\n\n\n\n\n\nFeature classification — proof of concept, baseline, stretch\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-feature-classification-poc-baseline-stretch.md\n\n\n\n\n\n\nGhostly partial-body presence avatar from ANNY via SOMA-X\n\n\nJun 6, 2026\n\n\nproof of concept\n\n\nproposed\n\n\n20260606-ghostly-presence-body-model.md\n\n\n\n\n\n\nHuman-readable presence markers with an orb debug mode\n\n\nJun 6, 2026\n\n\nproof of concept\n\n\nproposed\n\n\n20260606-presence-marker-representation.md\n\n\n\n\n\n\nPin the engine to a frozen Godot 4.7 commit\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-pin-engine-to-frozen-godot-4-7.md\n\n\n\n\n\n\nPresence demo pose networking\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-presence-demo-networking-internals.md\n\n\n\n\n\n\nRecursive art-game loop and its minimal steel thread\n\n\nJun 6, 2026\n\n\nproof of concept\n\n\nproposed\n\n\n20260606-art-game-loop-steel-thread.md\n\n\n\n\n\n\nRequire pull requests and a merge queue on main\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-require-pr-and-merge-queue-on-main.md\n\n\n\n\n\n\nRunning background services on Windows with nssm\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-windows-background-services-nssm.md\n\n\n\n\n\n\nSpatial audio via a patched Resonance Audio (HRTF and audio probes)\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-spatial-audio-patched-resonance-audio.md\n\n\n\n\n\n\nWebTransport over HTTP/3 transport\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-webtransport-http3-transport.md\n\n\n\n\n\n\nGHCR packages must be built by the repo that consumes them\n\n\nMay 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260506-ghcr-package-ownership-same-repo.md\n\n\n\n\n\n\nGodot Client Gateway Handshake\n\n\nMay 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260506-maglev-cycle-1-gateway-handshake.md\n\n\n\n\n\n\nReplace Jaeger with VictoriaTraces for trace storage\n\n\nMay 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260506-observability-stack-victoriatraces.md\n\n\n\n\n\n\nCockroachDB with mTLS and role-separated access\n\n\nMay 1, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260501-cockroachdb-with-mtls-role-separation.md\n\n\n\n\n\n\nGodot double precision template_release for zone servers\n\n\nMay 1, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260501-godot-double-precision-template-release-for-zone.md\n\n\n\n\n\n\nUse WebTransport over QUIC for game traffic\n\n\nMay 1, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260501-webtransport-over-quic-for-game-traffic.md\n\n\n\n\n\n\nNo matching items"
+    "text": "Manuals › Decisions\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDate\n\n\n\nTier\n\n\n\nStatus\n\n\n\nFile\n\n\n\n\n\n\n\n\n[MADR Proposal Title]\n\n\n \n\n\n \n\n\n \n\n\nmadr-proposal-template.md\n\n\n\n\n\n\nGame-loop-first delivery sequence\n\n\nJun 24, 2026\n\n\n \n\n\naccepted\n\n\n20260624-game-loop-cluster-sequence.md\n\n\n\n\n\n\nRelease tags progress chronologically through dev, beta, rc, and release\n\n\nJun 24, 2026\n\n\n \n\n\naccepted\n\n\n20260624-release-tag-progression-dev-beta-rc.md\n\n\n\n\n\n\nfabric-platform-central as Elixir OTP app with Burrito and casync\n\n\nJun 24, 2026\n\n\n \n\n\naccepted\n\n\n20260624-fabric-platform-central-elixir-burrito-casync.md\n\n\n\n\n\n\nsccache with GitHub Actions cache for Godot container builds\n\n\nJun 24, 2026\n\n\n \n\n\naccepted\n\n\n20260624-sccache-github-actions-cache-for-godot-builds.md\n\n\n\n\n\n\nGitHub repos use kebab-case; local checkout dirs keep build-native names\n\n\nJun 21, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260621-kebab-case-repos-snake-case-local-checkouts.md\n\n\n\n\n\n\nProject state lives in repo markdown, not in agent auto-memory\n\n\nJun 16, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260616-repo-markdown-single-source-of-truth-for-project-state.md\n\n\n\n\n\n\nOrg-scoped GitHub App installation token for gh access instead of a personal OAuth token\n\n\nJun 13, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260613-org-scoped-github-app-token-for-gh-access.md\n\n\n\n\n\n\nRepository and capability inventory for the multiplayer fabric\n\n\nJun 13, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260613-repository-and-capability-inventory.md\n\n\n\n\n\n\nRun services as systemd podman quadlets on Fedora 44 instead of Harvester HCI\n\n\nJun 13, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260613-quadlets-on-fedora-44-instead-of-harvester.md\n\n\n\n\n\n\nStatus reports lead with the bottom line\n\n\nJun 13, 2026\n\n\n \n\n\naccepted\n\n\n20260613-bad-news-reports-lead-with-the-bottom-line.md\n\n\n\n\n\n\nAndroid template builds with Temurin JDK 21 and config.gradle-pinned SDK\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-android-template-temurin-jdk21.md\n\n\n\n\n\n\nFabric channels as reliability classes, control in payload\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-fabric-channels-as-reliability-classes.md\n\n\n\n\n\n\nFive-second transaction limit (bounded operations)\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-five-second-transaction-limit.md\n\n\n\n\n\n\nHeadless OpenXR testing with Monado (null compositor + simulated HMD)\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-headless-openxr-testing-with-monado.md\n\n\n\n\n\n\nIntegral entity-transform wire (int64 micrometers, no origin shift)\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-integral-entity-transform-wire.md\n\n\n\n\n\n\nMCP runtime bridge for deployed builds\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-mcp-runtime-bridge-deployed-builds.md\n\n\n\n\n\n\nOne transport listener per authority pending http3 multi-session fixes\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-http3-listener-session-findings.md\n\n\n\n\n\n\nRepository map of the loot-action vertical slice\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-vertical-slice-repository-map.md\n\n\n\n\n\n\nVerification smokes as a systemd podman quadlet queue\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-systemd-quadlet-verification-queue.md\n\n\n\n\n\n\nWebTransport reliable delivery on one persistent framed stream per session\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-webtransport-persistent-framed-stream.md\n\n\n\n\n\n\nr128 Q64.64 fixed-point as a Lean library for the cores\n\n\nJun 12, 2026\n\n\n \n\n\naccepted\n\n\n20260612-r128-fixed-point-as-lean-library.md\n\n\n\n\n\n\nBudgeter hexagon — core, ports, and adapters\n\n\nJun 11, 2026\n\n\nproof of concept\n\n\naccepted\n\n\n20260611-hexagon-budgeter-core.md\n\n\n\n\n\n\nCASSIE desktop curvenet authoring for content, no Blender\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-cassie-desktop-curvenet-authoring.md\n\n\n\n\n\n\nCI/CD runners operate as a finite queueing system\n\n\nJun 11, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260611-cicd-runners-as-queueing-system.md\n\n\n\n\n\n\nCombat hexagon — core, ports, and adapters\n\n\nJun 11, 2026\n\n\nproof of concept\n\n\naccepted\n\n\n20260611-hexagon-combat-core.md\n\n\n\n\n\n\nContent creation in a single merged double-precision build via the editor MCP\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-content-build-merged-double-precision-mcp.md\n\n\n\n\n\n\nCore kernel codegen via lean-slang (Lean to Slang to SPIR-V)\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-core-codegen-lean-slang.md\n\n\n\n\n\n\nCores as pure reducers over byte-serialized state\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-core-contract-pure-reducer-byte-state.md\n\n\n\n\n\n\nDeterministic cores via r128 fixed-point and seeded RNG\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-deterministic-cores-integer-seeded-rng.md\n\n\n\n\n\n\nFirst-party curated content with zone-baker budgets\n\n\nJun 11, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260611-first-party-curated-content-zone-baker-budgets.md\n\n\n\n\n\n\nForward renderer with baked light for the mobile floor\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-forward-renderer-baked-light.md\n\n\n\n\n\n\nGenerated behavior runs as sandboxed RISC-V\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-generated-behavior-sandboxed-riscv.md\n\n\n\n\n\n\nGenre-generic naming, no trademarked proper nouns\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-genre-generic-naming-no-trademarks.md\n\n\n\n\n\n\nLean 4 build-time kernel cores with flat-C host adapters\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-lean4-kernel-cores-flat-c-host-adapters.md\n\n\n\n\n\n\nLoot hexagon — core, ports, and adapters\n\n\nJun 11, 2026\n\n\nproof of concept\n\n\naccepted\n\n\n20260611-hexagon-loot-core.md\n\n\n\n\n\n\nLoot-action core-loop MVP vertical slice\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-loot-action-core-loop-mvp-vertical-slice.md\n\n\n\n\n\n\nPresence hexagon — wrapping the existing presence stack\n\n\nJun 11, 2026\n\n\nproof of concept\n\n\naccepted\n\n\n20260611-hexagon-presence-core.md\n\n\n\n\n\n\nProgression hexagon — core, ports, and adapters\n\n\nJun 11, 2026\n\n\nproof of concept\n\n\naccepted\n\n\n20260611-hexagon-progression-core.md\n\n\n\n\n\n\nServer-authoritative simulation with deferred rollback\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-server-authoritative-simulation-deferred-rollback.md\n\n\n\n\n\n\nwebtransportd as the out-of-process core transport adapter\n\n\nJun 11, 2026\n\n\n \n\n\naccepted\n\n\n20260611-webtransportd-core-transport-adapter.md\n\n\n\n\n\n\nHexagonal core/ports/adapters as the component convention\n\n\nJun 10, 2026\n\n\n \n\n\naccepted\n\n\n20260610-hexagonal-core-ports-adapters.md\n\n\n\n\n\n\nAn umbrella package installs every component in one command\n\n\nJun 9, 2026\n\n\n \n\n\naccepted\n\n\n20260609-umbrella-package-installs-all-components.md\n\n\n\n\n\n\nCommit messages use sentence case without Conventional Commits prefixes\n\n\nJun 9, 2026\n\n\n \n\n\naccepted\n\n\n20260609-commit-messages-sentence-case.md\n\n\n\n\n\n\nComments and docs use a tenseless continuous-present voice\n\n\nJun 7, 2026\n\n\n \n\n\naccepted\n\n\n20260607-tenseless-continuous-present-voice.md\n\n\n\n\n\n\nAmend a PR before it enters the merge queue, not after\n\n\nJun 6, 2026\n\n\n \n\n\naccepted\n\n\n20260606-amend-pr-before-it-enters-the-queue.md\n\n\n\n\n\n\nArchival file naming convention for committed assets\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-archival-file-naming-convention.md\n\n\n\n\n\n\nBound the LLM steering queue to avoid context overflow\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-bounded-llm-steering-queue.md\n\n\n\n\n\n\nChecking the sccache build cache\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-checking-sccache.md\n\n\n\n\n\n\nCold-boot dependencies for the presence-marker demo\n\n\nJun 6, 2026\n\n\nproof of concept\n\n\nproposed\n\n\n20260606-presence-demo-cold-boot-dependencies.md\n\n\n\n\n\n\nCompiling the Godot engine\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-compiling-godot-engine.md\n\n\n\n\n\n\nCut gitassembly tag releases for the assembled engine\n\n\nJun 6, 2026\n\n\n \n\n\naccepted\n\n\n20260606-gitassembly-tag-release.md\n\n\n\n\n\n\nFeature classification — proof of concept, baseline, stretch\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-feature-classification-poc-baseline-stretch.md\n\n\n\n\n\n\nGhostly partial-body presence avatar from ANNY via SOMA-X\n\n\nJun 6, 2026\n\n\nproof of concept\n\n\nproposed\n\n\n20260606-ghostly-presence-body-model.md\n\n\n\n\n\n\nHuman-readable presence markers with an orb debug mode\n\n\nJun 6, 2026\n\n\nproof of concept\n\n\nproposed\n\n\n20260606-presence-marker-representation.md\n\n\n\n\n\n\nPin the engine to a frozen Godot 4.7 commit\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-pin-engine-to-frozen-godot-4-7.md\n\n\n\n\n\n\nPresence demo pose networking\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-presence-demo-networking-internals.md\n\n\n\n\n\n\nRecursive art-game loop and its minimal steel thread\n\n\nJun 6, 2026\n\n\nproof of concept\n\n\nproposed\n\n\n20260606-art-game-loop-steel-thread.md\n\n\n\n\n\n\nRequire pull requests and a merge queue on main\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-require-pr-and-merge-queue-on-main.md\n\n\n\n\n\n\nRunning background services on Windows with nssm\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-windows-background-services-nssm.md\n\n\n\n\n\n\nSpatial audio via a patched Resonance Audio (HRTF and audio probes)\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-spatial-audio-patched-resonance-audio.md\n\n\n\n\n\n\nWebTransport over HTTP/3 transport\n\n\nJun 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260606-webtransport-http3-transport.md\n\n\n\n\n\n\nGHCR packages must be built by the repo that consumes them\n\n\nMay 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260506-ghcr-package-ownership-same-repo.md\n\n\n\n\n\n\nGodot Client Gateway Handshake\n\n\nMay 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260506-maglev-cycle-1-gateway-handshake.md\n\n\n\n\n\n\nReplace Jaeger with VictoriaTraces for trace storage\n\n\nMay 6, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260506-observability-stack-victoriatraces.md\n\n\n\n\n\n\nCockroachDB with mTLS and role-separated access\n\n\nMay 1, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260501-cockroachdb-with-mtls-role-separation.md\n\n\n\n\n\n\nGodot double precision template_release for zone servers\n\n\nMay 1, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260501-godot-double-precision-template-release-for-zone.md\n\n\n\n\n\n\nUse WebTransport over QUIC for game traffic\n\n\nMay 1, 2026\n\n\nbaseline\n\n\naccepted\n\n\n20260501-webtransport-over-quic-for-game-traffic.md\n\n\n\n\n\n\nNo matching items"
   }
 ]
