@@ -26,6 +26,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
-        run: pip install jupyter pandas itables plotly scipy panflute
+        run: pip install jupyter pandas itables plotly scipy panflute cffconvert
       - uses: quarto-dev/quarto-actions/setup@v2
       - run: quarto render

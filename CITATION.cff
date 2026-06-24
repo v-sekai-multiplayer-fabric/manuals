@@ -1,0 +1,646 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "multiplayer-fabric-manuals: Architecture Decision Records for the V-Sekai multiplayer fabric"
+abstract: >
+  Architecture Decision Records (MADRs) and reference bibliography for the
+  V-Sekai multiplayer fabric, covering WebTransport/QUIC networking, server-authoritative
+  game architecture, interest management, formal verification with Lean 4, CockroachDB
+  deployment, and release processes. Includes peer-reviewed citations across
+  networking, databases, game servers, and formal methods.
+authors:
+  - family-names: Lee
+    given-names: "K. S. Ernest (iFire)"
+    email: ernest.lee@chibifire.com
+    orcid: "https://orcid.org/0000-0003-4570-1436"
+version: 0.1.0-dev.1
+date-released: "2026-06-24"
+license: MIT
+repository-code: "https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals"
+url: "https://v-sekai-multiplayer-fabric.github.io/multiplayer-fabric-manuals/"
+keywords:
+  - architecture-decision-records
+  - multiplayer
+  - networking
+  - formal-verification
+  - godot
+  - webtransport
+  - madr
+
+references:
+
+  # ── Networking / Protocols ─────────────────────────────────────────────────
+
+  - type: generic
+    title: "WebTransport over HTTP/3"
+    authors:
+      - family-names: Frindell
+        given-names: Alan
+      - family-names: Kinnear
+        given-names: Eric
+      - family-names: Vassiliev
+        given-names: Victor
+    year: 2023
+    url: "https://datatracker.ietf.org/doc/draft-ietf-webtrans-http3/"
+
+  - type: conference-paper
+    title: "Congestion Avoidance and Control"
+    authors:
+      - family-names: Jacobson
+        given-names: Van
+      - family-names: Karels
+        given-names: "Michael J."
+    year: 1988
+    doi: 10.1145/52324.52356
+    conference:
+      name: "ACM SIGCOMM '88"
+
+  - type: conference-paper
+    title: "Improving Round-Trip Time Estimates in Reliable Transport Protocols"
+    authors:
+      - family-names: Karn
+        given-names: Phil
+      - family-names: Partridge
+        given-names: Craig
+    year: 1987
+    doi: 10.1145/55483.55484
+    conference:
+      name: "ACM SIGCOMM '87"
+
+  - type: report
+    title: "Network Time Protocol Version 4: Protocol and Algorithms Specification"
+    authors:
+      - family-names: Mills
+        given-names: David
+      - family-names: Martin
+        given-names: Juergen
+      - family-names: Burbank
+        given-names: Jack
+      - family-names: Kasch
+        given-names: William
+    year: 2010
+    doi: 10.17487/RFC5905
+    institution:
+      name: IETF
+
+  - type: software
+    title: "ENet: Reliable UDP Networking Library"
+    authors:
+      - family-names: Salzman
+        given-names: Lee
+    year: 2026
+    url: "http://enet.bespin.org/"
+
+  # ── Multiplayer / Game Servers / Interest Management ──────────────────────
+
+  - type: conference-paper
+    title: "Talaria: In-Engine Synchronisation for Seamless Migration of Mobile Edge Gaming Instances"
+    authors:
+      - family-names: Braud
+        given-names: Tristan
+      - family-names: Alhilal
+        given-names: Ahmad
+      - family-names: Hui
+        given-names: Pan
+    year: 2021
+    doi: 10.1145/3485983.3494848
+    conference:
+      name: "CoNEXT '21"
+
+  - type: article
+    title: "The Partial Migration of Game State and Dynamic Server Selection to Reduce Latency"
+    authors:
+      - family-names: Beskow
+        given-names: "Paul B."
+      - family-names: Vik
+        given-names: "Knut-Helge"
+      - family-names: Halvorsen
+        given-names: "Pål"
+      - family-names: Griwodz
+        given-names: Carsten
+    year: 2009
+    doi: 10.1007/s11042-009-0287-7
+    journal: "Multimedia Tools and Applications"
+    volume: 45
+
+  - type: conference-paper
+    title: "Cheat-Proofing Dead Reckoned Multiplayer Games"
+    authors:
+      - family-names: Cronin
+        given-names: Eric
+      - family-names: Filstrup
+        given-names: Brian
+      - family-names: Jamin
+        given-names: Sugih
+    year: 2003
+    conference:
+      name: "Workshop on Anti-Cheating in Online Games (ADCOG)"
+
+  - type: article
+    title: "Cheat-Proof Playout for Centralized and Peer-to-Peer Gaming"
+    authors:
+      - family-names: Baughman
+        given-names: "Nathaniel E."
+      - family-names: Liberatore
+        given-names: Marc
+      - family-names: Levine
+        given-names: "Brian Neil"
+    year: 2007
+    doi: 10.1109/TNET.2006.886289
+    journal: "IEEE/ACM Transactions on Networking"
+    volume: 15
+
+  - type: conference-paper
+    title: "Supporting Spectators in Online Multiplayer Games"
+    authors:
+      - family-names: Bharambe
+        given-names: "Ashwin R."
+      - family-names: Padmanabhan
+        given-names: "Venkata N."
+      - family-names: Seshan
+        given-names: Srinivasan
+    year: 2004
+    url: "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/hotnets2004.pdf"
+    conference:
+      name: "HotNets-III"
+
+  - type: conference-paper
+    title: "Enhancing the Experience of Multiplayer Shooter Games via Advanced Lag Compensation"
+    authors:
+      - family-names: Lee
+        given-names: "Steven W. K."
+      - family-names: Chang
+        given-names: "Rocky K. C."
+    year: 2018
+    doi: 10.1145/3204949.3204971
+    conference:
+      name: "MMSys '18"
+
+  - type: article
+    title: "A Survey and Taxonomy of Latency Compensation Techniques for Network Computer Games"
+    authors:
+      - family-names: Liu
+        given-names: Shengmei
+      - family-names: Xu
+        given-names: Xiaokun
+      - family-names: Claypool
+        given-names: Mark
+    year: 2022
+    doi: 10.1145/3519023
+    journal: "ACM Computing Surveys"
+    volume: 54
+
+  - type: article
+    title: "Interest Management for Distributed Virtual Environments: A Survey"
+    authors:
+      - family-names: Liu
+        given-names: "Elvis S."
+      - family-names: Theodoropoulos
+        given-names: "Georgios K."
+    year: 2014
+    doi: 10.1145/2535417
+    journal: "ACM Computing Surveys"
+    volume: 46
+
+  - type: generic
+    title: "Zoning Issues and Area of Interest Management in Massively Multiplayer Online Games"
+    authors:
+      - family-names: Ahmed
+        given-names: "Dewan T."
+      - family-names: Shirmohammadi
+        given-names: Shervin
+    year: 2009
+    doi: 10.1007/978-0-387-89024-1_8
+    publisher:
+      name: Springer
+
+  - type: conference-paper
+    title: "A Dynamic Area of Interest Management and Collaboration Model for P2P MMOGs"
+    authors:
+      - family-names: Ahmed
+        given-names: "Dewan T."
+      - family-names: Shirmohammadi
+        given-names: Shervin
+    year: 2008
+    doi: 10.1109/DS-RT.2008.26
+    conference:
+      name: "DS-RT '08"
+
+  - type: conference-paper
+    title: "Comparing Interest Management Algorithms for Massively Multiplayer Games"
+    authors:
+      - family-names: Boulanger
+        given-names: "Jean-Sébastien"
+      - family-names: Kienzle
+        given-names: "Jörg"
+      - family-names: Verbrugge
+        given-names: Clark
+    year: 2006
+    doi: 10.1145/1230040.1230046
+    conference:
+      name: "NetGames '06"
+
+  - type: conference-paper
+    title: "Expanding Spheres: A Collision Detection Algorithm for Interest Management in Networked Games"
+    authors:
+      - family-names: Morgan
+        given-names: Graham
+      - family-names: Storey
+        given-names: Kier
+      - family-names: Lu
+        given-names: Fengyun
+    year: 2004
+    doi: 10.1007/978-3-540-28643-1_56
+    conference:
+      name: "ICEC 2004"
+
+  - type: conference-paper
+    title: "Hitboxes: A Survey About Collision Detection in Video Games"
+    authors:
+      - family-names: Lazaridis
+        given-names: Lazaros
+      - family-names: Papatsimouli
+        given-names: Maria
+      - family-names: Kollias
+        given-names: "Konstantinos F."
+      - family-names: Sarigiannidis
+        given-names: Panagiotis
+      - family-names: Fragulis
+        given-names: "George F."
+    year: 2021
+    doi: 10.1007/978-3-030-77277-2_24
+    conference:
+      name: "HCI in Games 2021"
+
+  - type: generic
+    title: "Photon PUN2: Regions and Best Region"
+    authors:
+      - name: "Exit Games"
+    year: 2026
+    url: "https://doc.photonengine.com/pun/current/connection-and-authentication/regions"
+
+  - type: website
+    title: "VRChat Network Sync and IK Update Rate"
+    authors:
+      - name: "VRChat School"
+    year: 2026
+    url: "https://vrchatschool.com/network-sync/"
+
+  - type: generic
+    title: "Most Players Simultaneously in a First-Person Shooter Battle: Planetside 2 World Record"
+    authors:
+      - name: "Guinness World Records"
+      - name: "Daybreak Game Company"
+    year: 2022
+    url: "https://www.guinnessworldrecords.com/world-records/most-players-simultaneously-in-a-fps-battle"
+
+  # ── Godot Engine ──────────────────────────────────────────────────────────
+
+  - type: software
+    title: "Godot Engine"
+    authors:
+      - name: "Godot Engine contributors"
+    year: 2026
+    url: "https://godotengine.org/"
+
+  - type: manual
+    title: "Godot Engine Documentation"
+    authors:
+      - name: "Godot Engine contributors"
+    year: 2026
+    url: "https://docs.godotengine.org/"
+
+  - type: manual
+    title: "GDScript Documentation"
+    authors:
+      - name: "Godot Engine contributors"
+    year: 2026
+    url: "https://docs.godotengine.org/en/stable/getting_started/scripting/gdscript/gdscript_basics.html"
+
+  - type: generic
+    title: "Add WebTransport Support (Proposal #3899)"
+    authors:
+      - name: "Godot Engine contributors"
+    year: 2022
+    url: "https://github.com/godotengine/godot-proposals/issues/3899"
+
+  - type: software-code
+    title: "Godot 4.x Dynamic BVH Broadphase: Node Expansion Constants"
+    authors:
+      - name: "Godot Engine contributors"
+    year: 2026
+    url: "https://github.com/godotengine/godot/blob/master/servers/physics_3d/godot_broad_phase_3d_bvh.h"
+
+  # ── CockroachDB / FoundationDB / Distributed Databases ───────────────────
+
+  - type: software
+    title: CockroachDB
+    authors:
+      - name: "Cockroach Labs"
+    year: 2026
+    url: "https://www.cockroachlabs.com/"
+
+  - type: generic
+    title: "Parallel Commits TLA+ Specification"
+    authors:
+      - name: "Cockroach Labs"
+    year: 2020
+    url: "https://github.com/v-sekai/cockroach/blob/release-22.1-oxide/docs/tla-plus/ParallelCommits/ParallelCommits.tla"
+
+  - type: manual
+    title: "CockroachDB Manual Deployment"
+    authors:
+      - name: "Cockroach Labs"
+    year: 2026
+    url: "https://www.cockroachlabs.com/docs/v22.1/manual-deployment.html"
+
+  - type: conference-paper
+    title: "Logical Physical Clocks and Consistent Snapshots in Globally Distributed Databases"
+    authors:
+      - family-names: Kulkarni
+        given-names: Sandeep
+      - family-names: Demirbas
+        given-names: Murat
+      - family-names: Madappa
+        given-names: Deepak
+      - family-names: Avva
+        given-names: Bharadwaj
+      - family-names: Leone
+        given-names: Marcelo
+    year: 2014
+    doi: 10.1007/978-3-319-11764-5_14
+    conference:
+      name: "SSS 2014"
+
+  - type: conference-paper
+    title: "FoundationDB: A Distributed Unbundled Transactional Key Value Store"
+    authors:
+      - family-names: Zhou
+        given-names: Jingyu
+      - family-names: Xu
+        given-names: Meng
+      - family-names: Shraer
+        given-names: Alexander
+      - family-names: Namasivayam
+        given-names: Bala
+      - family-names: Miller
+        given-names: Alex
+      - family-names: Tschannen
+        given-names: Evan
+      - family-names: Atherton
+        given-names: Steve
+      - family-names: Beez
+        given-names: "Andrew J."
+      - family-names: Hammer
+        given-names: Pat
+      - family-names: Arefin
+        given-names: Soumya
+      - family-names: Banning
+        given-names: Jared
+      - family-names: Laber
+        given-names: Markus
+      - family-names: Stumm
+        given-names: Michael
+      - family-names: Butterstein
+        given-names: David
+      - family-names: Fischel
+        given-names: Brian
+      - family-names: Gazit
+        given-names: Benny
+      - family-names: Terber
+        given-names: Avi
+      - family-names: Collins
+        given-names: Rusty
+    year: 2021
+    doi: 10.1145/3448016.3457559
+    conference:
+      name: "ACM SIGMOD 2021"
+
+  - type: software
+    title: FoundationDB
+    authors:
+      - name: "Apple Inc."
+    year: 2026
+    url: "https://github.com/apple/foundationdb"
+
+  - type: generic
+    title: "FoundationDB Fault Tolerance"
+    authors:
+      - name: "Apple Inc."
+    year: 2026
+    url: "https://apple.github.io/foundationdb/fault-tolerance.html"
+
+  # ── Deployment / Infrastructure ───────────────────────────────────────────
+
+  - type: manual
+    title: "systemd Service Unit Documentation"
+    authors:
+      - name: "The systemd project"
+    year: 2026
+    url: "https://www.freedesktop.org/software/systemd/man/systemd.service.html"
+
+  - type: manual
+    title: "Helm Documentation"
+    authors:
+      - name: "Helm project"
+    year: 2026
+    url: "https://helm.sh/docs/"
+
+  - type: manual
+    title: "Tailscale Funnel Documentation"
+    authors:
+      - name: "Tailscale"
+    year: 2026
+    url: "https://tailscale.com/kb/1132/tailscale-funnel/"
+
+  - type: manual
+    title: "Dokku Documentation"
+    authors:
+      - name: "Dokku project"
+    year: 2026
+    url: "http://dokku.viewdocs.io/dokku/"
+
+  - type: generic
+    title: "The Twelve-Factor App: Config"
+    authors:
+      - name: "The Twelve-Factor App authors"
+    year: 2026
+    url: "https://12factor.net/config"
+
+  # ── Formal Verification / Lean 4 ──────────────────────────────────────────
+
+  - type: conference-paper
+    title: "The Lean 4 Theorem Prover and Programming Language"
+    authors:
+      - family-names: "de Moura"
+        given-names: Leonardo
+      - family-names: Ullrich
+        given-names: Sebastian
+    year: 2021
+    doi: 10.1007/978-3-030-79876-5_37
+    conference:
+      name: "CADE 28"
+
+  - type: conference-paper
+    title: "The Lean Mathematical Library"
+    authors:
+      - name: "The mathlib Community"
+    year: 2020
+    doi: 10.1145/3372885.3373824
+    conference:
+      name: "CPP 2020"
+
+  # ── Engine, Rendering, Audio, and Tooling ─────────────────────────────────
+
+  - type: software
+    title: "MaterialX: An Open Standard for Network-Based CG Object Looks"
+    authors:
+      - name: "Academy Software Foundation"
+    year: 2026
+    url: "https://materialx.org/"
+
+  - type: software
+    title: "OpenUSD: Universal Scene Description"
+    authors:
+      - name: "Pixar Animation Studios"
+      - name: "Alliance for OpenUSD"
+    year: 2026
+    url: "https://openusd.org/"
+
+  - type: article
+    title: "GPU-Centered Font Rendering Directly from Glyph Outlines"
+    authors:
+      - family-names: Lengyel
+        given-names: Eric
+    year: 2017
+    url: "https://jcgt.org/published/0006/02/02/"
+    journal: "Journal of Computer Graphics Techniques (JCGT)"
+    volume: 6
+
+  - type: software
+    title: "Resonance Audio: Multi-Platform Spatial Audio SDK"
+    authors:
+      - name: "Google"
+    year: 2018
+    url: "https://resonance-audio.github.io/resonance-audio/"
+
+  - type: software
+    title: "sccache: Shared Compilation Cache"
+    authors:
+      - name: "Mozilla"
+    year: 2026
+    url: "https://github.com/mozilla/sccache"
+
+  - type: generic
+    title: "MADR: Markdown Any Decision Records"
+    authors:
+      - name: "adr.github.io"
+    year: 2026
+    url: "https://adr.github.io/madr/"
+
+  - type: website
+    title: "Tropes: A Directory of AI Writing Tells"
+    authors:
+      - family-names: Bukhsh
+        given-names: Ossama
+    year: 2026
+    url: "https://tropes.fyi/"
+
+  - type: generic
+    title: "Vulkan Video"
+    authors:
+      - name: "Khronos Group"
+    year: 2026
+    url: "https://www.khronos.org/blog/an-introduction-to-vulkan-video"
+
+  - type: software
+    title: "Harvester: Open-Source Hyperconverged Infrastructure"
+    authors:
+      - name: "SUSE Rancher"
+    year: 2026
+    url: "https://harvesterhci.io/"
+
+  - type: generic
+    title: "Semantic Versioning 2.0.0"
+    authors:
+      - family-names: Preston-Werner
+        given-names: Tom
+    year: 2013
+    url: "https://semver.org/"
+
+  # ── Project captures ──────────────────────────────────────────────────────
+
+  - type: generic
+    title: "xr-grid Debug Scene: Hero-Asset Landmark with Head and Hand Orientation-and-Translation Orbs"
+    authors:
+      - name: "V-Sekai Multiplayer Fabric"
+    year: 2026
+
+  # ── Body models and the uncanny valley ───────────────────────────────────
+
+  - type: software
+    title: "ANNY: A Differentiable Human Body Model"
+    authors:
+      - name: "NAVER"
+    year: 2026
+    url: "https://github.com/naver/anny"
+
+  - type: software
+    title: "SOMA-X: Unifying Parametric Human Body Models"
+    authors:
+      - name: "NVIDIA Labs"
+    year: 2026
+    url: "https://github.com/NVlabs/SOMA-X"
+
+  - type: article
+    title: "The Uncanny Valley [From the Field]"
+    authors:
+      - family-names: Mori
+        given-names: Masahiro
+      - family-names: MacDorman
+        given-names: "Karl F."
+      - family-names: Kageki
+        given-names: Norri
+    year: 2012
+    doi: 10.1109/MRA.2012.2192811
+    journal: "IEEE Robotics & Automation Magazine"
+    volume: 19
+
+  - type: article
+    title: "Venturing into the Uncanny Valley of Mind — The Influence of Mind Attribution on the Acceptance of Human-Like Characters in a Virtual Reality Setting"
+    authors:
+      - family-names: Stein
+        given-names: "Jan-Philipp"
+      - family-names: Ohler
+        given-names: Peter
+    year: 2017
+    doi: 10.1016/j.cognition.2016.12.010
+    journal: Cognition
+    volume: 160
+
+  - type: article
+    title: "Aspects of Visual Avatar Appearance: Self-Representation, Display Type, and Uncanny Valley"
+    authors:
+      - family-names: Hepperle
+        given-names: Daniel
+      - family-names: Purps
+        given-names: "Christian Felix"
+      - family-names: Deuchler
+        given-names: Jonas
+      - family-names: Wölfel
+        given-names: Matthias
+    year: 2021
+    doi: 10.1007/s00371-021-02151-0
+    journal: "The Visual Computer"
+
+  - type: article
+    title: "Implications of the Uncanny Valley of Avatars and Virtual Characters for Human-Computer Interaction"
+    authors:
+      - family-names: Schwind
+        given-names: Valentin
+      - family-names: Wolf
+        given-names: Katrin
+      - family-names: Henze
+        given-names: Niels
+    year: 2018
+    url: "https://www.semanticscholar.org/paper/bbcb5ed4d1d26f9767dbdffb9bb4b60b668a49cb"
+    journal: "Human-Computer Interaction"

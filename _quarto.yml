@@ -27,8 +27,6 @@ website:
       - icon: github
         href: https://github.com/v-sekai-multiplayer-fabric
 
-bibliography: references.bib
-
 format:
   html:
     toc: true
