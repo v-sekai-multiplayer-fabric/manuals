@@ -1,4 +1,4 @@
-# [Proposal Title]
+# [MADR Proposal Title]
 
 ## The Context
 
