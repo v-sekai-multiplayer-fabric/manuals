@@ -1,3 +1,10 @@
+---
+title: sccache with GitHub Actions cache for Godot container builds
+date: 2026-06-24
+status: accepted
+decision-makers: Ernest Lee
+---
+
 # sccache with GitHub Actions cache for Godot container builds
 
 ## The Context

@@ -1,3 +1,10 @@
+---
+title: Loot-action core-loop MVP vertical slice
+date: 2026-06-11
+status: accepted
+decision-makers: K. S. Ernest (iFire) Lee
+---
+
 # Loot-action core-loop MVP vertical slice
 
 ## The Context

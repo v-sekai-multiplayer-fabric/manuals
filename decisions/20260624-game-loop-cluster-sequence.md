@@ -1,34 +1,45 @@
-# Game-loop-first cluster sequence
+---
+title: Game-loop-first delivery sequence
+date: 2026-06-24
+status: accepted
+decision-makers: K. S. Ernest (iFire) Lee
+---
+
+# Game-loop-first delivery sequence
 
 ## The Context
 
-The team polled on which cluster to build next. Game-loop won (2 of 4, 50%). uiux polish, Cassie pen-mesh, shop economy, and OpenUSD i/o all depend on a working loop and cannot be integration-tested without it.
+The team polled on which concern to stabilise next. Game-loop received 2 of 4 votes (50%). The uiux-polish, cassie-pen-mesh, shop-economy, and openUSD-i/o concerns all require a verified game-loop as their integration target and are not testable end-to-end without one.
 
 ## The Problem Statement
 
-No agreed delivery sequence across the three remaining clusters, risking polish and content work landing on an unstable loop and blocking the feedback release.
+The uiux-polish, cassie-pen-mesh, shop-economy, and openUSD-i/o concerns have no stable integration target while the game-loop remains unverified. Work that lands on an unstable loop accumulates rework debt that blocks the feedback release.
 
 ## Design
 
-Cut a SteamVR build for external feedback.
+The OpenXR Windows build (export preset `OpenXR`, `build/openxr/loop-slice.exe`) is the external feedback artifact. It runs the full hub-to-field-to-loot round trip over the same server-authoritative loop as the Quest 3 build, and is the SteamVR-compatible path for PCVR reviewers. The Quest 3 standalone build at 72 Hz remains the hard performance gate per [Quest 3 frame floor as the MVP performance gate](20260611-quest-3-frame-floor-as-mvp-gate.md).
+
+The game-loop is complete when `smoke.sh` passes, the OpenXR Windows build exports without error, and at least one external reviewer runs the full loop against a live server.
 
 ## CRIS Score
 
 | Factor          | Score | Evidence                                                             |
 | --------------- | ----- | -------------------------------------------------------------------- |
 | **C**omplexity  | 2     | Sequencing decision only; no new implementation work ordered here    |
-| **R**each       | 10    | Sets the delivery order for all remaining vertical-slice work        |
-| **I**mpediment  | 9     | Without a fixed sequence, uiux and content risk blocking the release |
-| **S**takeholder | 9     | Poll-validated (2 of 4, 50%); release date depends on this order     |
+| **R**reach      | 10    | Sets the integration target for all remaining vertical-slice work    |
+| **I**mpediment  | 9     | Without a verified loop, uiux-polish and content accumulate rework   |
+| **S**takeholder | 9     | Poll-validated (2 of 4, 50%); feedback release depends on this order |
 | **Total**       | 7.5   | Accept and hold                                                      |
 
 ## The Downsides
 
-Cluster 3 waits until after the feedback release. If game-loop slips the whole sequence slides with no parallel path to absorb delay.
+The shop-economy and openUSD-i/o concerns have no integration path before the feedback release. If the game-loop verification slips, all four dependent concerns slip with it and there is no parallel path to absorb the delay.
 
 ## The Road Not Taken
 
-Parallel clusters and content-first were considered; both risk landing polish or authoring work on a loop that is still changing.
+**Parallel concerns** — advancing uiux-polish or cassie-pen-mesh in parallel with the game-loop risks landing polish or authoring work on a loop that is still changing, producing rework.
+
+**Content-first** — stabilising content concerns before the loop means integration gaps appear late, when they are most expensive to fix.
 
 ## Status
 
@@ -40,4 +51,4 @@ Status: Accepted
 
 ## Tags
 
-- loot-action, cluster-sequence, game-loop, uiux, content, release, 20260624-game-loop-cluster-sequence
+- loot-action, game-loop, uiux-polish, cassie-pen-mesh, shop-economy, openUSD-i/o, feedback-release, 20260624-game-loop-cluster-sequence
