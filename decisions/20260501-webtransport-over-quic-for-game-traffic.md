@@ -2,6 +2,7 @@
 title: Use WebTransport over QUIC for game traffic
 date: 2026-05-01
 status: accepted
+decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 

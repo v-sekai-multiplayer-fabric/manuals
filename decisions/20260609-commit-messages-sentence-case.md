@@ -2,6 +2,7 @@
 title: Commit messages use sentence case without Conventional Commits prefixes
 date: 2026-06-09
 status: accepted
+decision-makers: K. S. Ernest (iFire) Lee
 ---
 
 ## Context and Problem Statement

@@ -2,6 +2,7 @@
 title: Godot double precision template_release for zone servers
 date: 2026-05-01
 status: accepted
+decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 

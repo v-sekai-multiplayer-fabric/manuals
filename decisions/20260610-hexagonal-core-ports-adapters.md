@@ -2,6 +2,7 @@
 title: Hexagonal core/ports/adapters as the component convention
 date: 2026-06-10
 status: accepted
+decision-makers: K. S. Ernest (iFire) Lee
 ---
 
 ## Context and Problem Statement

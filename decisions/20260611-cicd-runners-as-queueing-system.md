@@ -2,6 +2,7 @@
 title: CI/CD runners operate as a finite queueing system
 date: 2026-06-11
 status: accepted
+decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 

@@ -2,6 +2,7 @@
 title: Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI
 date: 2026-06-13
 status: accepted
+decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 supersedes: 20260606-self-host-on-harvester-hci.md
 ---

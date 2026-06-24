@@ -2,6 +2,7 @@
 title: An umbrella package installs every component in one command
 date: 2026-06-09
 status: accepted
+decision-makers: K. S. Ernest (iFire) Lee
 ---
 
 ## Context and Problem Statement

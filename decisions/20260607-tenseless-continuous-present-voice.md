@@ -2,6 +2,7 @@
 title: Comments and docs use a tenseless continuous-present voice
 date: 2026-06-07
 status: accepted
+decision-makers: K. S. Ernest (iFire) Lee
 ---
 
 ## Context and Problem Statement

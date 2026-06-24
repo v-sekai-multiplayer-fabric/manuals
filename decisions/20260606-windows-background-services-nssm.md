@@ -3,7 +3,7 @@ title: Running background services on Windows with nssm
 date: 2026-06-06
 status: accepted
 tier: baseline
-deciders: K. S. Ernest (iFire) Lee
+decision-makers: K. S. Ernest (iFire) Lee
 ---
 
 ## Context and Problem Statement

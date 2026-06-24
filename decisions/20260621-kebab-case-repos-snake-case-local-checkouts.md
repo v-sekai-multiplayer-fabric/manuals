@@ -2,6 +2,7 @@
 title: GitHub repos use kebab-case; local checkout dirs keep build-native names
 date: 2026-06-21
 status: accepted
+decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 

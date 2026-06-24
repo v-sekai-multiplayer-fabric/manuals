@@ -2,6 +2,7 @@
 title: WebTransport over HTTP/3 transport
 date: 2026-06-06
 status: accepted
+decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 

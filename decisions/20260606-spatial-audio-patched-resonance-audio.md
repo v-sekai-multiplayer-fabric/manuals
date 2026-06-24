@@ -2,6 +2,7 @@
 title: Spatial audio via a patched Resonance Audio (HRTF and audio probes)
 date: 2026-06-06
 status: accepted
+decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 

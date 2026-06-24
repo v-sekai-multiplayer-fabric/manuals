@@ -2,6 +2,7 @@
 title: Require pull requests and a merge queue on main
 date: 2026-06-06
 status: accepted
+decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---
 
