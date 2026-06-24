@@ -3,7 +3,6 @@ title: Release tags progress chronologically through dev, beta, rc, and release
 date: 2026-06-24
 status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
-
 ---
 
 # Release tags progress chronologically through dev, beta, rc, and release
