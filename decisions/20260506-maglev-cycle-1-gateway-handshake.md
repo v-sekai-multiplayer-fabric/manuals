@@ -1,5 +1,5 @@
 ---
-title: "Maglev Cycle 1: Godot Client Gateway Handshake"
+title: "Godot Client Gateway Handshake"
 date: 2026-05-06
 status: accepted
 decision-makers: K. S. Ernest (iFire) Lee
