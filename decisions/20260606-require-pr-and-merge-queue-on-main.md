@@ -40,7 +40,7 @@ The ruleset targets the default branch with these rules:
 - Block branch deletion and non-fast-forward pushes.
 - Require a pull request, with `0` required approvals (review is allowed, not
   mandated) and all three merge methods permitted on the PR.
-- Require a merge queue using the squash merge method, `ALLGREEN` grouping, up to
+- Require a merge queue using the merge commit method, `ALLGREEN` grouping, up to
   5 entries built and merged per batch, and a 1-minute minimum wait.
 
 ### Consequences
