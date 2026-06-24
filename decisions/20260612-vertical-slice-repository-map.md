@@ -7,7 +7,7 @@ decision-makers: K. S. Ernest (iFire) Lee
 
 ## Context and Problem Statement
 
-The [loot-action core-loop slice](20260611-loot-action-core-loop-mvp-vertical-slice.md) spans more than a dozen repositories: a playable app, one Lean core per loop concern, the wire and transport specs, the engine fork and its assembly recipe, the verification queue, and the docs. A reader who clones one repo sees one slice of the whole and has no single place that says which repository owns which concern and how they compose into a build a Quest 3 runs.
+The [loot-action core-loop slice](20260611-loot-action-core-loop-mvp-vertical-slice.md) spans more than a dozen repositories: a playable app, one Lean core per loop concern, the wire and transport specs, the engine fork and its assembly recipe, the verification queue, and the docs. A reader who clones one repo sees one slice of the whole and has no single place that says which repository owns which concern and how they compose into a deployable build.
 
 ## Decision Drivers
 
@@ -53,7 +53,7 @@ Each loop concern carries a hexagon (`core/` + `ports/` + `adapters/`) and a sta
 ### Verification, tooling, and docs
 
 - [`fabric-verify`](https://github.com/v-sekai-multiplayer-fabric/fabric-verify) — the verification smokes as a systemd podman quadlet queue, gating the cores against their golden vectors.
-- [`vsekai-godot-mcp`](https://github.com/v-sekai-multiplayer-fabric/vsekai-godot-mcp) — the in-editor and runtime MCP addon that drives a deployed build over adb, including on the Quest 3.
+- [`vsekai-godot-mcp`](https://github.com/v-sekai-multiplayer-fabric/vsekai-godot-mcp) — the in-editor and runtime MCP addon that drives a deployed build over adb.
 - [`xr-grid`](https://github.com/v-sekai-multiplayer-fabric/xr-grid) — the VR interaction tool whose orientation orbs render the peers in the slice.
 - [`tropes-action`](https://github.com/v-sekai-multiplayer-fabric/tropes-action) — the static house-style check the manuals run.
 - [`manuals`](https://github.com/v-sekai-multiplayer-fabric/manuals) — these decisions, the changelog, and the reference docs.
@@ -66,4 +66,4 @@ Each loop concern carries a hexagon (`core/` + `ports/` + `adapters/`) and a sta
 
 ## Confirmation
 
-A Quest 3 builds from the `multiplayer-fabric` assembly, joins the `loop-slice` server over the wire, and completes a Hub-to-Field-to-Loot round that commits progression, exercising the cores, the wire, the transport, and the persistence together.
+An OpenXR build assembles from the `multiplayer-fabric` assembly, joins the `loop-slice` server over the wire, and completes a Hub-to-Field-to-Loot round that commits progression, exercising the cores, the wire, the transport, and the persistence together.

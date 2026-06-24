@@ -17,7 +17,7 @@ The uiux-polish, cassie-pen-mesh, shop-economy, and openUSD-i/o concerns have no
 
 ## Design
 
-The OpenXR Windows build (export preset `OpenXR`, `build/openxr/loop-slice.exe`) is the external feedback artifact. It runs the full hub-to-field-to-loot round trip over the same server-authoritative loop as the Quest 3 build, and is the SteamVR-compatible path for PCVR reviewers. The Quest 3 standalone build at 72 Hz remains the hard performance gate per [Quest 3 frame floor as the MVP performance gate](20260611-quest-3-frame-floor-as-mvp-gate.md).
+The OpenXR Windows build (export preset `OpenXR`, `build/openxr/loop-slice.exe`) is the external feedback artifact. It runs the full hub-to-field-to-loot round trip and is the SteamVR-compatible path for PCVR reviewers.
 
 The game-loop is complete when `smoke.sh` passes, the OpenXR Windows build exports without error, and at least one external reviewer runs the full loop against a live server.
 

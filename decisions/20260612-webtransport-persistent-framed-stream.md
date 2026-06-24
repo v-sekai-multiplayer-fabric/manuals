@@ -38,7 +38,7 @@ Five supporting invariants keep the server alive under concurrent load:
 
 - A client opens one reliable stream for its whole session, so concurrent joins keep their stream credit and reach open.
 - The channel-plus-reliability flag the ENet peer reads from the transfer channel and mode rides inside the frame, so both transports realize the channels decision with one mental model.
-- The slice runs identically on `TRANSPORT=enet` and `TRANSPORT=wt`; the text protocol stays transport-agnostic, and the Quest 3 joins the same loop over either.
+- The slice runs identically on `TRANSPORT=enet` and `TRANSPORT=wt`; the text protocol stays transport-agnostic across both.
 
 ## Confirmation
 

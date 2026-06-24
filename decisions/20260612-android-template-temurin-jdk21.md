@@ -7,7 +7,7 @@ decision-makers: K. S. Ernest (iFire) Lee
 
 ## Context and Problem Statement
 
-The Quest 3 gate needs an Android export template of the merged double-precision assembly. The box carries no Android SDK, and Fedora 44 packages only JDK 25 and 26; Gradle rejects Java 25 with "Unsupported class file major version 69".
+The Android export template of the merged double-precision assembly is needed for OpenXR builds. The box carries no Android SDK, and Fedora 44 packages only JDK 25 and 26; Gradle rejects Java 25 with "Unsupported class file major version 69".
 
 ## Decision Outcome
 
@@ -17,10 +17,10 @@ The verified sequence: `scons platform=android target=template_release arch=arm6
 
 ## Consequences
 
-- The Quest 3 export template exists days before the gate, retiring the toolchain risk.
+- The Android OpenXR export template exists before the gate, retiring the toolchain risk.
 - `config.gradle` is the single source of truth for SDK versions; reading it first avoids guessing.
 - The JDK is per-user (`~/jdks`), so system Java stays at the distribution default.
 
 ## Confirmation
 
-`bin/android_release.apk` builds from the merged assembly and installs on a Quest 3.
+`bin/android_release.apk` builds from the merged assembly and installs on an Android OpenXR device.

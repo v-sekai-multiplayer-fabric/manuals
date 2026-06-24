@@ -7,7 +7,7 @@ decision-makers: K. S. Ernest (iFire) Lee
 
 ## Context and Problem Statement
 
-Replay, recorded fixtures, and the future rollback adapter need the authoritative cores to be bit-exact across the RTX 4090 workstation, the Quest 3, and the Steam Deck. IEEE-754 floating point diverges across platforms through fused multiply-add, instruction reordering, and transcendental functions, so a float in the authoritative path breaks replay silently.
+Replay, recorded fixtures, and the future rollback adapter need the authoritative cores to be bit-exact across the RTX 4090 workstation and the Steam Deck. IEEE-754 floating point diverges across platforms through fused multiply-add, instruction reordering, and transcendental functions, so a float in the authoritative path breaks replay silently.
 
 ## Decision Outcome
 

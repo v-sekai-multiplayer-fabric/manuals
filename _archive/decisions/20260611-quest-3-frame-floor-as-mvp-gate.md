@@ -1,7 +1,7 @@
 ---
 title: Quest 3 frame floor as the MVP performance gate
 date: 2026-06-11
-status: accepted
+status: deprecated
 tier: baseline
 decision-makers: K. S. Ernest (iFire) Lee
 ---

@@ -7,7 +7,7 @@ decision-makers: K. S. Ernest (iFire) Lee
 
 ## Context and Problem Statement
 
-The OpenXR path needs to run on Linux without a headset: on the workstation for iteration and in a podman quadlet for CI. The standalone Quest 3 build is the performance gate ([the Quest 3 gate](20260611-quest-3-frame-floor-as-mvp-gate.md)), but functional and integration coverage of the OpenXR path needs a runnable runtime on the box, with no display and no hardware.
+The OpenXR path needs to run on Linux without a headset: on the workstation for iteration and in a podman quadlet for CI. Functional and integration coverage of the OpenXR path needs a runnable runtime on the box, with no display and no hardware.
 
 ## Decision Outcome
 
@@ -27,7 +27,7 @@ The non-obvious part is the stdin pipe. `monado-service` watches stdin through `
 - The OpenXR path runs on the workstation and in a podman quadlet with no display and no headset.
 - `XRT_COMPOSITOR_NULL` discards submitted frames, so this covers the runtime, the tracking, and frame submission, with no rendered output and no performance signal.
 - `SIMULATED_ENABLE` supplies a head and controllers driven programmatically; the `qwerty` driver (`QWERTY_ENABLE`) adds keyboard and mouse control for an interactive desktop run.
-- This is functional and integration coverage; the standalone Quest 3 build stays the performance and comfort gate.
+- This is functional and integration coverage; the standalone OpenXR build is the performance and comfort gate.
 
 ## Confirmation
 

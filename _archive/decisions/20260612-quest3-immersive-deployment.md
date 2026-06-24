@@ -1,7 +1,7 @@
 ---
 title: Quest 3 immersive deployment requirements
 date: 2026-06-12
-status: accepted
+status: deprecated
 decision-makers: K. S. Ernest (iFire) Lee
 ---
 

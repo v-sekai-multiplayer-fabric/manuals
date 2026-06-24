@@ -10,7 +10,7 @@ decision-makers: K. S. Ernest (iFire) Lee
 ## The Context
 
 `fabric-godot-packaging` produces native Linux packages, a Podman quadlet
-package, a Quest 3 APK, and Windows MSIXes for the loot-action loop-slice.
+package, an Android APK, and Windows MSIXes for the loot-action loop-slice.
 All build workflows are manually dispatched (`workflow_dispatch`) and accept a
 `version` input. Until now there was no defined convention for what version
 strings to use at each stage of a build's lifecycle, no incrementable counter

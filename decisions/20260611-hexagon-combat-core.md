@@ -24,4 +24,4 @@ Driving ports: `input_source` (player commands with timestamps and targets), `ti
 
 ## Confirmation
 
-The combat core passes its fixtures, and a melee combo lands a hit under server authority on a Quest 3.
+The combat core passes its fixtures, and a melee combo lands a hit under server authority on the OpenXR client.

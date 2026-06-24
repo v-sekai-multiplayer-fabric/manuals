@@ -7,7 +7,7 @@ decision-makers: K. S. Ernest (iFire) Lee
 
 ## Context and Problem Statement
 
-The Quest 3 rations bandwidth across file, memory, and network IO, and deferred rendering competes for it. The slice needs predictable frame cost regardless of light count on the mobile tile renderer.
+The mobile tile renderer rations bandwidth across file, memory, and network IO, and deferred rendering competes for it. The slice needs predictable frame cost regardless of light count.
 
 ## Considered Options
 
@@ -26,4 +26,4 @@ Chosen option: a simple forward renderer with baked global illumination and ligh
 
 ## Confirmation
 
-The Field room holds 72 Hz on a standalone Quest 3 with many lights placed.
+The Field room holds the frame floor on the standalone VR build with many lights placed.

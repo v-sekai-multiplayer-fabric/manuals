@@ -16,10 +16,10 @@ Chosen option: ship first-party curated content only, with no user-generated-con
 
 ## Consequences
 
-- A four-player Field room holds its geometry, four avatars, and props under roughly 500,000 visible triangles and 200 draw calls per eye on the Quest 3.
+- A four-player Field room holds its geometry, four avatars, and props under roughly 500,000 visible triangles and 200 draw calls per eye on the standalone VR build.
 - The baker rejects any asset that exceeds the budget, so cost stays predictable.
 - The content surface stays small, which keeps the determinism and the budgeter tractable.
 
 ## Confirmation
 
-Every shipped asset passes the `zone-baker` at budget, and a four-player room holds the per-eye limits on a standalone Quest 3.
+Every shipped asset passes the `zone-baker` at budget, and a four-player room holds the per-eye limits on the standalone VR build.
