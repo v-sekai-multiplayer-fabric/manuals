@@ -47,7 +47,10 @@ Each loop concern carries a hexagon (`core/` + `ports/` + `adapters/`) and a sta
 ### The engine and its assembly
 
 - [`godot`](https://github.com/v-sekai-multiplayer-fabric/godot) — the double-precision fork. Each module rides its own `feat/*` branch (for example `feat/module-http3` carries WebTransport and the mbedtls ECDSA crypto, `feat/module-xr-grid` carries the orientation orbs, `feat/module-sqlite` carries the progression store).
-- [`godot-assembly`](https://github.com/v-sekai-multiplayer-fabric/godot-assembly) — the `gitassembly` recipe and the git-assembler driver that stage and merge every `feat/*` branch into the `multiplayer-fabric` assembly, then tag the result. The branch stays local; the tag is the durable artifact.
+- [`godot-assembly`](https://github.com/v-sekai-multiplayer-fabric/godot-assembly) — the `gitassembly` recipe and the git-assembler driver (`update_godot_v_sekai.exs`) that stage and merge every `feat/*` branch into the `multiplayer-fabric` assembly, then tag the result. The branch stays local; the tag is the durable artifact.
+
+  **Assembly structure:** `godot-assembly` is checked out alongside `godot` and its driver runs _inside_ the `godot` working directory. It adds `v-sekai-multiplayer-fabric` as a remote pointing at the `godot` repo, calls `git-assembler` with the `gitassembly` recipe to produce a local `multiplayer-fabric` branch (first branch via `stage`, subsequent branches via `merge`), creates an annotated tag named `v{YYYY.MM.DD.HHMM}-multiplayer-fabric`, pushes only the tag to `v-sekai-multiplayer-fabric/godot`, then deletes the local `multiplayer-fabric` branch. The `godot` repo never receives a force-pushed moving branch; the tag is the sole immutable artifact consumers pin.
+
 - [`godot-images`](https://github.com/v-sekai-multiplayer-fabric/godot-images) — rootless podman quadlet container images for the Godot build toolchain, with sccache backed by GitHub Actions cache.
 - [`godot-archived`](https://github.com/v-sekai-multiplayer-fabric/godot-archived) — branches the assembly drops, such as `crypto-extensions`, whose crypto lives in `feat/module-http3`.
 
