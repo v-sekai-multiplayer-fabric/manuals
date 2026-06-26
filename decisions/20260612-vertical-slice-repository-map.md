@@ -59,7 +59,7 @@ Each loop concern carries a hexagon (`core/` + `ports/` + `adapters/`) and a sta
 - [`zone-backend`](https://github.com/v-sekai-multiplayer-fabric/zone-backend) — the Elixir/Phoenix backend: identity, the zone/shard directory (zone servers self-register via `POST /shards` and heartbeat via `PUT /shards/:id`), the loop profile commit endpoint (`POST /api/v1/loop/commit`), and casync asset serving through `aria-storage`. Follows a hexagonal `uro_loop` sub-app structure with `UroLoop.Ports.ProfileStore`.
 - [`zone-backend-quadlet`](https://github.com/v-sekai-multiplayer-fabric/zone-backend-quadlet) — systemd podman quadlet deployment unit for `zone-backend` on AlmaLinux, with CRDB mTLS client certs and TLS cert mountpoints.
 - [`aria-storage`](https://github.com/V-Sekai-fire/aria-storage) — casync chunk store library (Elixir): encodes and decodes `.caibx` index files and `.cacnk` chunk files in the desync-compatible raw-zstd format; `desync` round-trip verified in CI.
-- [`cockroach`](https://github.com/v-sekai-multiplayer-fabric/cockroach) — CockroachDB cluster configuration with multi-arch Docker build (amd64 + arm64).
+- [`cockroach`](https://github.com/v-sekai/cockroach) — CockroachDB cluster configuration with multi-arch Docker build (amd64 + arm64).
 - [`observability`](https://github.com/v-sekai-multiplayer-fabric/observability) — observability stack: fully-qualified image names for Prometheus and Grafana monitoring.
 
 ### Platform tooling

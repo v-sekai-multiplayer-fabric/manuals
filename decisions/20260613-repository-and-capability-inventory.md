@@ -71,16 +71,16 @@ systemd; see [run services as systemd podman quadlets on Fedora 44](20260613-qua
 which supersedes the earlier qcow2-on-Harvester model. The `*-image` repos below are
 being repointed from qcow2 VM images to OCI images per that decision.
 
-| Repo                                                                                       | Purpose                                                                                 |
-| ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
-| [linux-base-image](https://github.com/v-sekai-multiplayer-fabric/linux-base-image)         | Shared base image with podman, chrony, and a guest agent. Base for every service image. |
-| [zone-server-image](https://github.com/v-sekai-multiplayer-fabric/zone-server-image)       | Headless Godot zone server runtime image.                                               |
-| [zone-baker-image](https://github.com/v-sekai-multiplayer-fabric/zone-baker-image)         | Headless Godot asset validator and exporter image.                                      |
-| [zone-backend-image](https://github.com/v-sekai-multiplayer-fabric/zone-backend-image)     | URO Phoenix backend image.                                                              |
-| [cockroach-crdb-image](https://github.com/v-sekai-multiplayer-fabric/cockroach-crdb-image) | CockroachDB server image (v-sekai fork).                                                |
-| [restic-backup-image](https://github.com/v-sekai-multiplayer-fabric/restic-backup-image)   | versitygw, restic, and a cockroach client for the backup image.                         |
-| [gha-runner-image](https://github.com/v-sekai-multiplayer-fabric/gha-runner-image)         | Org-wide GitHub Actions self-hosted runner as a podman quadlet.                         |
-| [sccache-cache-image](https://github.com/v-sekai-multiplayer-fabric/sccache-cache-image)   | versitygw S3 endpoint dedicated to sccache for fast C++ rebuilds.                       |
+| Repo                                                                                           | Purpose                                                                                 |
+| ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| [linux-base-image](https://github.com/v-sekai-multiplayer-fabric/linux-base-image)             | Shared base image with podman, chrony, and a guest agent. Base for every service image. |
+| [zone-server-image](https://github.com/v-sekai-multiplayer-fabric/zone-server-image)           | Headless Godot zone server runtime image.                                               |
+| [zone-baker-image](https://github.com/v-sekai-multiplayer-fabric/zone-baker-image)             | Headless Godot asset validator and exporter image.                                      |
+| [zone-backend-image](https://github.com/v-sekai-multiplayer-fabric/zone-backend-image)         | URO Phoenix backend image.                                                              |
+| [cockroach-crdb-quadlet](https://github.com/v-sekai-multiplayer-fabric/cockroach-crdb-quadlet) | CockroachDB server image (v-sekai fork).                                                |
+| [restic-backup-quadlet](https://github.com/v-sekai-multiplayer-fabric/restic-backup-quadlet)   | versitygw, restic, and a cockroach client for the backup image.                         |
+| [gha-runner-image](https://github.com/v-sekai-multiplayer-fabric/gha-runner-image)             | Org-wide GitHub Actions self-hosted runner as a podman quadlet.                         |
+| [sccache-cache-image](https://github.com/v-sekai-multiplayer-fabric/sccache-cache-image)       | versitygw S3 endpoint dedicated to sccache for fast C++ rebuilds.                       |
 
 #### Rendering, shaders, and USD
 
