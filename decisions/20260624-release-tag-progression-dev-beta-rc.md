@@ -95,16 +95,6 @@ git tag v0.1.0-dev.1
 git push origin v0.1.0-dev.1
 ```
 
-## CRIS Score
-
-| Factor          | Score | Evidence                                                                                       |
-| --------------- | ----- | ---------------------------------------------------------------------------------------------- |
-| **C**omplexity  | 10    | Convention only — no tooling changes; existing scripts already handle the `-` prerelease flag  |
-| **R**each       | 7     | Applies to every build artifact across all five release workflows                              |
-| **I**mpediment  | 5     | Absence causes ad-hoc tags; workaround is operator discipline, which is unreliable over time   |
-| **S**takeholder | 6     | External testers and the release pipeline both depend on readable, ordered version identifiers |
-| **Total**       | 7     | Schedule soon                                                                                  |
-
 ## The Downsides
 
 - `git tag --sort=creatordate` requires discipline: a tag created out of order
@@ -116,50 +106,7 @@ git push origin v0.1.0-dev.1
 
 ## The Road Not Taken
 
-**Numeric stage prefixes** (`v0.1.0-1dev.1`, `v0.1.0-2beta.1`) — force
-correct lexicographic order without depending on creator date. Rejected
-because the numeric prefix is visually noisy and unfamiliar to readers who did
-not write the convention.
-
-**Zero-padded counter** (`v0.1.0-dev.001`) — preserves within-stage
-lexicographic order for counters ≥ 10. Rejected because creator-date sort
-makes padding unnecessary, and three-digit counters look non-standard compared
-to Kubernetes, Node.js, and Rust conventions.
-
-**`alpha` instead of `dev`** — `alpha < beta < rc` sorts correctly as strings.
-Rejected because the project stages are named dev/beta/rc/release and renaming
-dev to alpha would introduce a mismatch between the tag and the pipeline
-vocabulary.
-
-**`sort -V` / `--sort=version:refname`** — both put bare `v0.1.0` before
-`v0.1.0-dev.*` (since a string is a prefix of a longer string) and sort `beta`
-before `dev`. Neither gives the correct cross-stage order for these names.
-
-## Status
-
-Status: Accepted
-
-## Decision Makers
-
-- Ernest Lee
-
-## Tags
-
-- release, versioning, git-tags, dev, beta, rc, 20260624-release-tag-progression-dev-beta-rc, madr-proposal-template
-
-## Further Reading
-
-```
-@misc{semver2013,
-  author = {Preston-Werner, Tom},
-  title  = {Semantic Versioning 2.0.0},
-  year   = {2013},
-  url    = {https://semver.org/}
-}
-
-@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}
-```
+- Numeric stage prefixes (`v0.1.0-1dev.1`, `v0.1.0-2beta.1`): force correct lexicographic order without depending on creator date. Rejected as visually noisy and unfamiliar to readers who did not write the convention.
+- Zero-padded counter (`v0.1.0-dev.001`): preserves within-stage lexicographic order for counters ≥ 10. Rejected because creator-date sort makes padding unnecessary, and three-digit counters look non-standard next to Kubernetes, Node.js, and Rust.
+- `alpha` instead of `dev`: `alpha < beta < rc` sorts correctly as strings. Rejected because the project stages are named dev/beta/rc/release, and renaming dev to alpha would mismatch the pipeline vocabulary.
+- `sort -V` / `--sort=version:refname`: both put bare `v0.1.0` before `v0.1.0-dev.*` and sort `beta` before `dev`, so neither gives the correct cross-stage order.

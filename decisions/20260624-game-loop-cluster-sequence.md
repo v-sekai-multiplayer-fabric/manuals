@@ -21,34 +21,11 @@ The OpenXR Windows build (export preset `OpenXR`, `build/openxr/loop-slice.exe`)
 
 The game-loop is complete when `smoke.sh` passes, the OpenXR Windows build exports without error, and at least one external reviewer runs the full loop against a live server.
 
-## CRIS Score
-
-| Factor          | Score | Evidence                                                             |
-| --------------- | ----- | -------------------------------------------------------------------- |
-| **C**omplexity  | 2     | Sequencing decision only; no new implementation work ordered here    |
-| **R**reach      | 10    | Sets the integration target for all remaining vertical-slice work    |
-| **I**mpediment  | 9     | Without a verified loop, uiux-polish and content accumulate rework   |
-| **S**takeholder | 9     | Poll-validated (2 of 4, 50%); feedback release depends on this order |
-| **Total**       | 7.5   | Accept and hold                                                      |
-
 ## The Downsides
 
 The shop-economy and openUSD-i/o concerns have no integration path before the feedback release. If the game-loop verification slips, all four dependent concerns slip with it and there is no parallel path to absorb the delay.
 
 ## The Road Not Taken
 
-**Parallel concerns** — advancing uiux-polish or cassie-pen-mesh in parallel with the game-loop risks landing polish or authoring work on a loop that is still changing, producing rework.
-
-**Content-first** — stabilising content concerns before the loop means integration gaps appear late, when they are most expensive to fix.
-
-## Status
-
-Status: Accepted
-
-## Decision Makers
-
-- K. S. Ernest (iFire) Lee
-
-## Tags
-
-- loot-action, game-loop, uiux-polish, cassie-pen-mesh, shop-economy, openUSD-i/o, feedback-release, 20260624-game-loop-cluster-sequence
+- Parallel concerns: advancing uiux-polish or cassie-pen-mesh alongside the game-loop risks landing polish or authoring work on a loop that is still changing, producing rework.
+- Content-first: stabilising content concerns before the loop pushes integration gaps late, when they are most expensive to fix.

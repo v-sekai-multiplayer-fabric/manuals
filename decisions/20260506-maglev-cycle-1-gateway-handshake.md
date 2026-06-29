@@ -32,93 +32,20 @@ Pass criteria:
 
 Every subsequent cycle extends this scene.
 
-## Estimate
-
-**2 days** (2026-05-07 → 2026-05-08). The gateway was built from scratch in one day (25+ commits on 2026-05-05); the zone server initial deploy took two days (2026-05-05–06). The remaining work is a minimal headless Godot scene that connects and logs one datagram.
-
-## CRIS Score
-
-| Factor          | Score | Evidence                                                                                                                                                                                                                                                                                                        |
-| --------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **C**omplexity  | 6     | Godot's WebTransport datagram API is documented but untested in this build config; the Fly UDP routing adds one unknown. The wtransport Rust library (v0.7.1) carries an upstream disclaimer that it is not yet considered production-ready; the WebTransport protocol itself is standardized (RFC 9220, 2023). |
-| **R**each       | 10    | Every subsequent cycle runs inside this Godot client.                                                                                                                                                                                                                                                           |
-| **I**mpediment  | 10    | Nothing else can be tested until a real Godot process receives a datagram end-to-end.                                                                                                                                                                                                                           |
-| **S**takeholder | 10    | Gate for all Maglev cycles.                                                                                                                                                                                                                                                                                     |
-| **Total**       | 9.0   | Build first.                                                                                                                                                                                                                                                                                                    |
-
 ## The Downsides
 
 Writing a minimal Godot scene that connects via WebTransport is more work than a curl ping test, and cannot be deferred — a non-Godot client would not catch Godot-specific datagram handling bugs before they reach Cycle 5.
 
 ## The Road Not Taken
 
-A bare WebTransport client (curl, Python, or Elixir test harness) was the original Cycle 1 design but was rejected because it only tests the gateway in isolation, leaving the Godot client's WebTransport implementation unverified until Cycle 4, where any failure would be much harder to isolate.
+- Bare WebTransport client (curl, Python, or Elixir harness): the original Cycle 1 design; it tests the gateway in isolation and leaves the Godot client's WebTransport path unverified until Cycle 4, where a failure is much harder to isolate.
 
-## Status
+## Confirmation
 
-Status: Done (verified 2026-05-07)
+Verified 2026-05-07 against the live deployment, with all three pass criteria met:
 
-All three pass criteria verified end-to-end against the live deployment:
+- WebTransport/QUIC handshake without TLS error: the picoquic trace shows a full handshake, h3 ALPN negotiated, and 1-RTT keys derived.
+- One datagram received: the gateway returned `{"id":"c1-...","ok":true,"result":"pong"}` matching the request id, in ~880 ms over real internet.
+- Client exits cleanly: `quit(0)`, exit code 0, no orphaned process.
 
-- ✅ WebTransport/QUIC handshake without TLS error: picoquic trace shows
-  full handshake, h3 ALPN negotiated, 1-RTT keys derived
-- ✅ One datagram received: gateway returned
-  `{"id":"c1-...","ok":true,"result":"pong"}` matching the request id, in
-  ~880ms over real internet
-- ✅ Client exits cleanly: `quit(0)`, exit code 0, no orphaned process
-
-The handshake test client lives at
-[`multiplayer-fabric-cycle-tests/cycle-1-gateway-handshake/cycle1.gd`](https://github.com/V-Sekai-fire/multiplayer-fabric-cycle-tests/blob/main/cycle-1-gateway-handshake/cycle1.gd).
-Note: the ping is answered directly by the gateway's
-`Gateway.Router.dispatch/1` (`router.ex:55`), not proxied to the zone server.
-Zone-routing is exercised in cycle 5+.
-
-## Decision Makers
-
-- Lead Architect / Fabric Maintainer
-
-## Tags
-
-- maglev-cycle-1, godot-client, gateway-handshake, webtransport, smoke-test, galls-law, 20260506-maglev-cycle-1-gateway-handshake, present-proposal-template
-
-## Further Reading
-
-```
-@techreport{20260501_webtransport,
-  title       = {Use WebTransport over QUIC for game traffic},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260501-webtransport-over-quic-for-game-traffic.md}
-}
-
-@techreport{20260501_godot_precision,
-  title       = {Godot double precision template\_release for zone servers},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260501-godot-double-precision-template-release-for-zone.md}
-}
-
-@techreport{20260501_fly,
-  title       = {Fly.io for deployment},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260501-fly-io-for-deployment.md}
-}
-
-@techreport{20260506_ghcr,
-  title       = {GHCR packages must be built by the repo that consumes them},
-  institution = {V-Sekai Fire},
-  year        = {2026},
-  type        = {Architecture Decision Record},
-  note        = {decisions/20260506-ghcr-package-ownership-same-repo.md}
-}
-
-@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}
-```
+The handshake test client lives at [`multiplayer-fabric-cycle-tests/cycle-1-gateway-handshake/cycle1.gd`](https://github.com/V-Sekai-fire/multiplayer-fabric-cycle-tests/blob/main/cycle-1-gateway-handshake/cycle1.gd). The ping is answered directly by the gateway's `Gateway.Router.dispatch/1` (`router.ex:55`); zone routing is exercised in cycle 5 onward.

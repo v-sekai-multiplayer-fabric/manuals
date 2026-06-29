@@ -103,16 +103,6 @@ defp releases do
 end
 ```
 
-## CRIS Score
-
-| Factor          | Score | Evidence                                                                                           |
-| --------------- | ----- | -------------------------------------------------------------------------------------------------- |
-| **C**omplexity  | 7     | Elixir OTP + Burrito are established; Burrito needs Zig in CI, which is a new toolchain dependency |
-| **R**each       | 6     | Affects every Windows user who installs via the platform manager MSIX                              |
-| **I**mpediment  | 8     | Without a working platform manager MSIX, Windows distribution has no self-update path              |
-| **S**takeholder | 7     | Directly blocks the three-MSIX release milestone (client, server, platform-central)                |
-| **Total**       | 7.0   | Schedule soon                                                                                      |
-
 ## The Downsides
 
 - Burrito requires Zig installed in the release CI runner. Zig version compatibility with
@@ -124,43 +114,8 @@ end
 
 ## The Road Not Taken
 
-**Godot + GDExtension casync**: Would require writing the casync protocol from scratch in
-C++, duplicating `aria_storage` with no gain. The `multiplayer_fabric_asset` module stub
-confirmed this was not started.
-
-**Godot + GDScript HTTPRequest**: Could call `Add-AppxPackage` via `OS.execute()` for
-whole-file downloads but cannot do casync delta transfers without a full casync client in
-GDScript. Carries the rendering engine for no reason.
-
-**Scoop shim + OTP release tree**: Downloading a pre-built Zig shim from
-`ScoopInstaller/Shim` and writing a `.shim` sidecar avoids writing any stub code, but
-still ships the full OTP release directory tree (hundreds of files) in the MSIX alongside
-it. Burrito produces a single file and is an Elixir-native solution.
-
-**Go stub**: A tiny `main.go` that execs the OTP `.bat` launcher works but adds a Go
-compile step and a non-Elixir source file to maintain, offering no advantage over Burrito.
-
-**.NET 8 self-contained launcher**: Was the original approach; removed because .NET 8 is a
-large dependency (~60 MB self-contained), the team does not otherwise use .NET, and it only
-wrapped a shell invocation — nothing the OTP release cannot do directly.
-
-## Tags
-
-- elixir, burrito, casync, msix, windows, aria-storage, 20260624-fabric-platform-central-elixir-burrito-casync
-
-## Further Reading
-
-```bibtex
-@misc{burrito_2024,
-  title  = {Burrito — Wrap your application in a BEAM Burrito!},
-  year   = {2024},
-  url    = {https://github.com/burrito-elixir/burrito}
-}
-
-@misc{aria_storage_2025,
-  title  = {aria-storage — Content-addressable storage with casync protocol},
-  author = {Lee, K. S. Ernest (iFire)},
-  year   = {2025},
-  url    = {https://github.com/V-Sekai-fire/aria-storage}
-}
-```
+- Godot + GDExtension casync: would require writing the casync protocol from scratch in C++, duplicating `aria_storage` with no gain. The `multiplayer_fabric_asset` module stub confirmed this was not started.
+- Godot + GDScript HTTPRequest: could call `Add-AppxPackage` via `OS.execute()` for whole-file downloads but cannot do casync delta transfers without a full casync client in GDScript, and carries the rendering engine for no reason.
+- Scoop shim + OTP release tree: avoids writing stub code, but still ships the full OTP release directory tree (hundreds of files) in the MSIX. Burrito produces a single file and stays Elixir-native.
+- Go stub: a tiny `main.go` that execs the OTP `.bat` launcher works but adds a Go compile step and a non-Elixir source file, offering no advantage over Burrito.
+- .NET 8 self-contained launcher: the original approach, removed because .NET 8 is a large dependency (~60 MB), the team does not otherwise use .NET, and it only wrapped a shell invocation.

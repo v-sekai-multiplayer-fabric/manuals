@@ -57,16 +57,6 @@ Content is first-party curated only; the `zone-baker` enforces hard budgets at b
 
 Ranged and caster archetypes, Steam Frame and Steam Deck builds, in-headset authoring, rollback, and user-generated content.
 
-## CRIS Score
-
-| Factor          | Score | Evidence                                                                                                                     |
-| --------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------- |
-| **C**omplexity  | 5     | Five hexagonal cores, server authority, three platforms in scope, and a content pipeline; not novel but genuinely wide       |
-| **R**each       | 10    | This is the whole stack; every subsystem touches the slice                                                                   |
-| **I**mpediment  | 9     | Without it there is no first playable, no integration proof, and no gate to build subsequent features against                |
-| **S**takeholder | 9     | The vertical slice is the primary deliverable for the proof-of-concept milestone; all downstream work depends on it shipping |
-| **Total**       | 8.25  | Build now                                                                                                                    |
-
 ## The Downsides
 
 - The slice runs on placeholder content; art is not gated, only the frame floor.
@@ -76,32 +66,7 @@ Ranged and caster archetypes, Steam Frame and Steam Deck builds, in-headset auth
 
 ## The Road Not Taken
 
-**Full toolchain and content pipeline first** — building the full pipeline before the loop means the integration gaps appear late, when they are most expensive. Rejected in favour of the thin steel thread.
-
-**Multi-archetype slice** — including ranged and caster in the first slice widens the scope beyond one week. The melee archetype is sufficient to prove combat authority and loot contention; the others follow the gate.
-
-**Broader platform launch** — targeting Steam Frame and Steam Deck alongside SteamVR at the gate is sufficient scope for the vertical slice; additional standalone VR platforms are deferred.
-
-**Per-zone distributed authority (Maglev intercept model)** — a geometric Hilbert-zone authority was attempted and rejected in the Maglev intercept smoke test. A single `zone-server` authority per instance is simpler and sufficient for a four-player room.
-
-## Status
-
-Status: Accepted
-
-## Decision Makers
-
-- K. S. Ernest (iFire) Lee
-
-## Tags
-
-- loot-action, mvp, vertical-slice, proof-of-concept, hexagonal, 20260611-loot-action-core-loop-mvp-vertical-slice, madr-proposal-template
-
-## Further Reading
-
-```
-@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}
-```
+- Full toolchain and content pipeline first: building the pipeline before the loop pushes the integration gaps late, when they are most expensive. Rejected for the thin steel thread.
+- Multi-archetype slice: ranged and caster widen scope beyond one week. Melee alone proves combat authority and loot contention; the others follow the gate.
+- Broader platform launch: SteamVR is sufficient scope for the slice; Steam Frame and Steam Deck follow.
+- Per-zone distributed authority (Maglev intercept model): a geometric Hilbert-zone authority was attempted and rejected in the Maglev smoke test. One `zone-server` per instance is simpler and sufficient for a four-player room.

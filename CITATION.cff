@@ -530,6 +530,21 @@ references:
     year: 2026
     url: "https://github.com/mozilla/sccache"
 
+  - type: software
+    title: "Burrito: Wrap your Elixir application in a BEAM Burrito"
+    authors:
+      - name: "burrito-elixir"
+    year: 2024
+    url: "https://github.com/burrito-elixir/burrito"
+
+  - type: software
+    title: "aria-storage: Content-addressable storage with the casync protocol"
+    authors:
+      - family-names: Lee
+        given-names: "K. S. Ernest (iFire)"
+    year: 2025
+    url: "https://github.com/V-Sekai-fire/aria-storage"
+
   - type: generic
     title: "MADR: Markdown Any Decision Records"
     authors:

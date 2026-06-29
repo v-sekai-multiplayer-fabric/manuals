@@ -66,16 +66,6 @@ RUN --mount=type=secret,id=ACTIONS_CACHE_URL \
 
 For local `just build-docker` runs the build arg and secrets are absent; sccache falls back to the on-disk cache at `~/.cache/sccache`.
 
-## CRIS Score
-
-| Factor          | Score | Evidence                                                                                                  |
-| --------------- | ----- | --------------------------------------------------------------------------------------------------------- |
-| **C**omplexity  | 8     | sccache GHA backend is a documented, stable feature (since v0.5.0); podman secret mounts are standard     |
-| **R**each       | 6     | Affects every CI run of `build-docker`; local builds are unchanged                                        |
-| **I**mpediment  | 7     | Without it every CI run spends 30–60 min recompiling; no workaround short of a different caching strategy |
-| **S**takeholder | 7     | `zone-baker` and `zone-server` both consume these images; slow CI blocks their image updates              |
-| **Total**       | 7     | Schedule soon                                                                                             |
-
 ## The Downsides
 
 - GHA cache has a 10 GB per-repo limit with LRU eviction. A full dual-target sccache population is 2–4 GB, which fits, but will compete with other caches in the same repo.
@@ -84,36 +74,6 @@ For local `just build-docker` runs the build arg and secrets are absent; sccache
 
 ## The Road Not Taken
 
-**Tigris S3 bucket** — previously used for local builds. Requires provisioning an external account, five repo secrets, and ongoing cost. Removed in favour of zero-config GHA cache.
-
-**OCI layer cache via `actions/cache`** — podman's build layer cache lives in `~/.local/share/containers/storage/`, a complex blob store that is expensive to tar and restore. sccache caches compiler outputs at a finer granularity and transfers better across minor source changes.
-
-**Host sccache server + `--network=host`** — running sccache on the GHA runner host and connecting from the container via `--network=host` avoids the secret-mount approach but changes container network behaviour and requires sccache to be installed on the host separately from the in-container copy.
-
-## Status
-
-Status: Accepted
-
-## Decision Makers
-
-- Ernest Lee
-
-## Tags
-
-- sccache, github-actions, godot, podman, ci, 20260624-sccache-github-actions-cache-for-godot-builds, madr-proposal-template
-
-## Further Reading
-
-```
-@misc{sccache_gha_2026,
-  title = {sccache — GitHub Actions cache backend},
-  year  = {2026},
-  url   = {https://github.com/mozilla/sccache#github-actions-cache}
-}
-
-@misc{v_sekai_2026,
-  title = {V-Sekai},
-  year  = {2026},
-  url   = {https://v-sekai.org/}
-}
-```
+- Tigris S3 bucket: previously used for local builds; needs an external account, five repo secrets, and ongoing cost. Removed for the zero-config GHA cache.
+- OCI layer cache via `actions/cache`: podman's build layer cache lives in `~/.local/share/containers/storage/`, a blob store that is expensive to tar and restore. sccache caches compiler outputs at finer granularity and transfers better across minor source changes.
+- Host sccache server + `--network=host`: avoids the secret mount but changes container network behaviour and needs sccache installed on the host separately from the in-container copy.
