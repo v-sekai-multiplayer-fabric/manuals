@@ -733,6 +733,7 @@ font-style: inherit;">end</span></span></code></pre></div></div>
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="../changelog/2026/20260629-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)</a></p></li>
+<li><p><a href="20260612-vertical-slice-repository-map.html">Repository map of the loot-action vertical slice</a></p></li>
 </ul>
 </section>
 </section>
@@ -1682,6 +1683,7 @@ font-style: inherit;">|</span></span>
 <ul>
 <li><p><a href="20260606-pin-engine-to-frozen-godot-4-7.html">Pin the engine to a frozen Godot 4.7 commit</a></p></li>
 <li><p><a href="20260612-systemd-quadlet-verification-queue.html">Verification smokes as a systemd podman quadlet queue</a></p></li>
+<li><p><a href="20260612-vertical-slice-repository-map.html">Repository map of the loot-action vertical slice</a></p></li>
 <li><p><a href="20260613-org-scoped-github-app-token-for-gh-access.html">Org-scoped GitHub App installation token for gh access instead of a personal OAuth token</a></p></li>
 <li><p><a href="20260613-repository-and-capability-inventory.html">Repository and capability inventory for the multiplayer fabric</a></p></li>
 </ul>
@@ -1851,6 +1853,7 @@ font-style: inherit;">|</span></span>
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
+<li><p><a href="20260506-maglev-cycle-1-gateway-handshake.html">Godot client transport handshake against the authoritative server</a></p></li>
 <li><p><a href="20260612-webtransport-persistent-framed-stream.html">WebTransport reliable delivery on one persistent framed stream per session</a></p></li>
 </ul>
 </section>
@@ -1891,6 +1894,12 @@ font-style: inherit;">|</span></span>
 <p><code>lake exe fsm_demo</code> reports soundness and five-second recovery clean over a thirty-thousand-history sweep, with Plausible finding no counter-example for the fixed protocol and a ghost witness for the buggy one.</p>
 
 
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="20260612-vertical-slice-repository-map.html">Repository map of the loot-action vertical slice</a></p></li>
+</ul>
 </section>
 
  ]]></description>
@@ -2036,6 +2045,7 @@ font-style: inherit;">|</span></span>
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
+<li><p><a href="20260612-vertical-slice-repository-map.html">Repository map of the loot-action vertical slice</a></p></li>
 </ul>
 </section>
 

@@ -8,7 +8,7 @@
 
 <meta name="dcterms.date" content="2026-05-06">
 
-<title>Godot Client Gateway Handshake – V-Sekai Fire — Manuals</title>
+<title>Godot client transport handshake against the authoritative server – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -287,13 +287,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#the-context" id="toc-the-context" class="nav-link active" data-scroll-target="#the-context">The Context</a></li>
+  <li><a href="#godot-client-transport-handshake-against-the-authoritative-server" id="toc-godot-client-transport-handshake-against-the-authoritative-server" class="nav-link active" data-scroll-target="#godot-client-transport-handshake-against-the-authoritative-server">Godot client transport handshake against the authoritative server</a>
+  <ul class="collapse">
+  <li><a href="#the-context" id="toc-the-context" class="nav-link" data-scroll-target="#the-context">The Context</a></li>
   <li><a href="#the-problem-statement" id="toc-the-problem-statement" class="nav-link" data-scroll-target="#the-problem-statement">The Problem Statement</a></li>
   <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design">Design</a></li>
   <li><a href="#the-downsides" id="toc-the-downsides" class="nav-link" data-scroll-target="#the-downsides">The Downsides</a></li>
   <li><a href="#the-road-not-taken" id="toc-the-road-not-taken" class="nav-link" data-scroll-target="#the-road-not-taken">The Road Not Taken</a></li>
   <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260506-maglev-cycle-1-gateway-handshake.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -303,7 +306,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Godot Client Gateway Handshake</h1>
+<h1 class="title">Godot client transport handshake against the authoritative server</h1>
 </div>
 
 
@@ -326,49 +329,43 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Godot Client Gateway Handshake</em></p>
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Godot client transport handshake against the authoritative server</em></p>
 <p><strong>Tier:</strong> baseline · <strong>Status:</strong> accepted</p>
+<section id="godot-client-transport-handshake-against-the-authoritative-server" class="level1">
+<h1>Godot client transport handshake against the authoritative server</h1>
 <section id="the-context" class="level2">
 <h2 class="anchored" data-anchor-id="the-context">The Context</h2>
-<p>The clients in this stack are Godot engine processes built from <code>multiplayer-fabric-godot</code> (branch <code>multiplayer-fabric</code>, <code>template_release double</code>). The Godot WebTransport implementation, its thread model, and its datagram API underpin all subsequent cycles; a curl or test-harness ping tests the gateway in isolation and leaves those untouched.</p>
-<p>Cycle 0 (Terraform) must pass before this cycle begins — the Fly apps, dedicated IPv4, and secrets that this cycle depends on are created by Terraform.</p>
+<p>The clients in this stack are Godot engine processes built from the frozen Godot 4.7 “double” engine (<a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">pin the engine</a>). Godot’s own networking — its multiplayer peer, thread model, and datagram path — carries every later networking behaviour, so a non-Godot ping (curl, Python, an Elixir harness) tests the wire but leaves the engine’s own client path unproven. Engine-specific datagram and connection bugs surface only when a real Godot process drives the transport.</p>
 </section>
 <section id="the-problem-statement" class="level2">
 <h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
-<p>A Godot client running <code>multiplayer-fabric-godot</code> has not connected to <code>multiplayer-fabric-gateway</code> and received a datagram from <code>multiplayer-fabric-zone</code> under Fly’s network. Until a real Godot process completes that round trip, the client side of the stack is unvalidated.</p>
+<p>Until a real Godot client opens a connection to the authoritative server and completes the round trip — connect, receive, exit cleanly — the client side of the networking stack is unvalidated. A failure first seen deep in a gameplay scene is far harder to isolate than the same failure seen in a bare handshake.</p>
 </section>
 <section id="design" class="level2">
 <h2 class="anchored" data-anchor-id="design">Design</h2>
-<p>Build a minimal Godot scene (empty world, no avatar, no physics) that opens a WebTransport/QUIC connection to the gateway on UDP 443, waits for one datagram from the zone server, logs the receipt, and exits cleanly. Run it headlessly on a desktop to isolate client behaviour from display and input.</p>
-<p>The zone server is <code>godot.linuxbsd.template_release.double.x86_64</code> built from <code>V-Sekai-fire/multiplayer-fabric-zone</code> (the zone repo owns and publishes its own GHCR image). It runs <code>--headless</code> with an empty world and sends one datagram on connection.</p>
-<p>The gateway runs as root on UDP 443 (port &lt; 1024 requires root or <code>CAP_NET_BIND_SERVICE</code>) and proxies to the zone server on UDP 7443. The Fly DNS record for the gateway endpoint is DNS-only — no Cloudflare proxy, which cannot forward QUIC/UDP. Both services deploy in the <code>iad</code> region and communicate over Fly’s 6PN private network.</p>
+<p>A minimal headless Godot client opens a transport connection to the authoritative server, waits for the server’s first message, logs it, and exits cleanly. Running headless isolates client networking from display and input.</p>
+<p>Transport is switchable in the client (<a href="../decisions/20260606-webtransport-http3-transport.html">WebTransport over HTTP/3</a>, <a href="../decisions/20260612-fabric-channels-as-reliability-classes.html">fabric channels as reliability classes</a>): ENet for a stable local default, or WebTransport/QUIC under <code>TRANSPORT=wt</code>. The same handshake holds across both — the client calls <code>create_client(host, port)</code> for ENet or <code>create_client(host, port, "/wt")</code> for WebTransport and joins once the peer reports connected. The client reaches the authoritative server directly; no separate proxy tier sits in the path.</p>
 <p>Pass criteria:</p>
-<ul class="task-list">
-<li><label><input type="checkbox">Godot client establishes the WebTransport/QUIC connection without TLS or handshake error</label></li>
-<li><label><input type="checkbox">Client receives and logs one <strong>datagram</strong> (not a stream) from the zone server</label></li>
-<li><label><input type="checkbox">Client exits cleanly; no orphaned Godot process or open port</label></li>
+<ul>
+<li>The Godot client establishes the connection without TLS or handshake error.</li>
+<li>The client receives and logs the server’s first message.</li>
+<li>The client exits cleanly: no orphaned process, no open port.</li>
 </ul>
-<p>Every subsequent cycle extends this scene.</p>
 </section>
 <section id="the-downsides" class="level2">
 <h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
-<p>Writing a minimal Godot scene that connects via WebTransport is more work than a curl ping test, and cannot be deferred — a non-Godot client would not catch Godot-specific datagram handling bugs before they reach Cycle 5.</p>
+<p>A minimal Godot client is more work than a curl or harness ping, and the work cannot be skipped — a non-Godot client would not catch Godot-specific datagram handling before it reaches a gameplay scene.</p>
 </section>
 <section id="the-road-not-taken" class="level2">
 <h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
 <ul>
-<li>Bare WebTransport client (curl, Python, or Elixir harness): the original Cycle 1 design; it tests the gateway in isolation and leaves the Godot client’s WebTransport path unverified until Cycle 4, where a failure is much harder to isolate.</li>
+<li>A bare non-Godot client (curl, Python, or Elixir harness): it tests the server in isolation and leaves the Godot client’s transport path unverified until a gameplay scene exercises it, where a failure is much harder to isolate.</li>
+<li>A separate gateway proxy fronting the server on a privileged port: the as-built path connects the client straight to the authoritative server, so a proxy tier adds an unproven hop the slice does not need.</li>
 </ul>
 </section>
 <section id="confirmation" class="level2">
 <h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>Verified 2026-05-07 against the live deployment, with all three pass criteria met:</p>
-<ul>
-<li>WebTransport/QUIC handshake without TLS error: the picoquic trace shows a full handshake, h3 ALPN negotiated, and 1-RTT keys derived.</li>
-<li>One datagram received: the gateway returned <code>{"id":"c1-...","ok":true,"result":"pong"}</code> matching the request id, in ~880 ms over real internet.</li>
-<li>Client exits cleanly: <code>quit(0)</code>, exit code 0, no orphaned process.</li>
-</ul>
-<p>The handshake test client lives at <a href="https://github.com/V-Sekai-fire/multiplayer-fabric-cycle-tests/blob/main/cycle-1-gateway-handshake/cycle1.gd"><code>multiplayer-fabric-cycle-tests/cycle-1-gateway-handshake/cycle1.gd</code></a>. The ping is answered directly by the gateway’s <code>Gateway.Router.dispatch/1</code> (<code>router.ex:55</code>); zone routing is exercised in cycle 5 onward.</p>
+<p>The loop-slice client (<code>godot-loop-slice/client.gd</code>) completes this handshake against the authoritative server (<code>godot-loop-slice/server.gd</code>). The playable-loop smoke runs four real Godot clients through it end to end on ENet: each connects, joins, runs the loop, and exits cleanly. The run on 2026-06-29 passes — all four clients complete and exactly one loot grant lands. The WebTransport/QUIC path is selectable with <code>TRANSPORT=wt</code> over the same handshake.</p>
 
 
 </section>
@@ -376,7 +373,11 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="../changelog/2026/20260629-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)</a></p></li>
+<li><p><a href="20260606-pin-engine-to-frozen-godot-4-7.html">Pin the engine to a frozen Godot 4.7 commit</a></p></li>
+<li><p><a href="20260606-webtransport-http3-transport.html">WebTransport over HTTP/3 transport</a></p></li>
+<li><p><a href="20260612-fabric-channels-as-reliability-classes.html">Fabric channels as reliability classes, control in payload</a></p></li>
 </ul>
+</section>
 </section>
 
 </main> <!-- /main -->

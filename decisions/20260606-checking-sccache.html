@@ -422,7 +422,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>The non-secret <code>SCCACHE_*</code> variables (<code>SCCACHE_BUCKET</code>, <code>SCCACHE_ENDPOINT</code>, <code>SCCACHE_REGION</code>, <code>SCCACHE_S3_USE_SSL</code>, <code>SCCACHE_S3_KEY_PREFIX</code>) are set globally; credentials live in the <code>do-tor1</code> profile (<code>~/.aws/credentials</code>) and are applied only for the duration of a build, so the real AWS CLI is never shadowed.</li>
 <li>Per-project key prefixes keep objects from colliding in the one bucket (e.g. <code>godot</code> vs <code>idtx-flow</code>).</li>
-<li>To debug a non-zero error count, set <code>SCCACHE_LOG=debug</code> and <code>SCCACHE_ERROR_LOG</code> before restarting the server (<code>sccache --stop-server; sccache --start-server</code>).</li>
+<li>To debug a non-zero error count, set <code>SCCACHE_LOG=debug</code> and <code>SCCACHE_ERROR_LOG</code> in the sccache service launcher and reinstall the service so the supervised server picks them up (<a href="../decisions/20260606-windows-background-services-nssm.html">nssm-supervised services</a>).</li>
 </ul>
 
 

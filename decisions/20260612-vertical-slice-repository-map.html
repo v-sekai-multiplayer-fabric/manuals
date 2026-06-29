@@ -287,21 +287,25 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link active" data-scroll-target="#context-and-problem-statement">Context and Problem Statement</a></li>
-  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision Drivers</a></li>
-  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision Outcome</a>
+  <li><a href="#repository-map-of-the-loot-action-vertical-slice" id="toc-repository-map-of-the-loot-action-vertical-slice" class="nav-link active" data-scroll-target="#repository-map-of-the-loot-action-vertical-slice">Repository map of the loot-action vertical slice</a>
+  <ul class="collapse">
+  <li><a href="#the-context" id="toc-the-context" class="nav-link" data-scroll-target="#the-context">The Context</a></li>
+  <li><a href="#the-problem-statement" id="toc-the-problem-statement" class="nav-link" data-scroll-target="#the-problem-statement">The Problem Statement</a></li>
+  <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design">Design</a>
   <ul class="collapse">
   <li><a href="#the-playable-slice" id="toc-the-playable-slice" class="nav-link" data-scroll-target="#the-playable-slice">The playable slice</a></li>
-  <li><a href="#the-domain-hexagons-and-their-lean-cores" id="toc-the-domain-hexagons-and-their-lean-cores" class="nav-link" data-scroll-target="#the-domain-hexagons-and-their-lean-cores">The domain hexagons and their Lean cores</a></li>
-  <li><a href="#the-wire-transport-and-determinism-specs-leanplausible" id="toc-the-wire-transport-and-determinism-specs-leanplausible" class="nav-link" data-scroll-target="#the-wire-transport-and-determinism-specs-leanplausible">The wire, transport, and determinism specs (Lean+Plausible)</a></li>
+  <li><a href="#the-proven-loop-cores" id="toc-the-proven-loop-cores" class="nav-link" data-scroll-target="#the-proven-loop-cores">The proven loop cores</a></li>
+  <li><a href="#the-wire-transport-and-determinism-specs-lean-plausible" id="toc-the-wire-transport-and-determinism-specs-lean-plausible" class="nav-link" data-scroll-target="#the-wire-transport-and-determinism-specs-lean-plausible">The wire, transport, and determinism specs (Lean + Plausible)</a></li>
   <li><a href="#the-engine-and-its-assembly" id="toc-the-engine-and-its-assembly" class="nav-link" data-scroll-target="#the-engine-and-its-assembly">The engine and its assembly</a></li>
-  <li><a href="#backend-services" id="toc-backend-services" class="nav-link" data-scroll-target="#backend-services">Backend services</a></li>
+  <li><a href="#backend-and-infrastructure-services" id="toc-backend-and-infrastructure-services" class="nav-link" data-scroll-target="#backend-and-infrastructure-services">Backend and infrastructure services</a></li>
   <li><a href="#platform-tooling" id="toc-platform-tooling" class="nav-link" data-scroll-target="#platform-tooling">Platform tooling</a></li>
   <li><a href="#verification-tooling-and-docs" id="toc-verification-tooling-and-docs" class="nav-link" data-scroll-target="#verification-tooling-and-docs">Verification, tooling, and docs</a></li>
   </ul></li>
-  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#the-downsides" id="toc-the-downsides" class="nav-link" data-scroll-target="#the-downsides">The Downsides</a></li>
+  <li><a href="#the-road-not-taken" id="toc-the-road-not-taken" class="nav-link" data-scroll-target="#the-road-not-taken">The Road Not Taken</a></li>
   <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260612-vertical-slice-repository-map.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -336,100 +340,102 @@ ul.task-list li input[type="checkbox"] {
 
 <p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Repository map of the loot-action vertical slice</em></p>
 <p><strong>Status:</strong> accepted</p>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The <a href="../decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html">loot-action core-loop slice</a> spans more than a dozen repositories: a playable app, one Lean core per loop concern, the wire and transport specs, the engine fork and its assembly recipe, the backend services, the verification queue, and the docs. A reader who clones one repo sees one slice of the whole and has no single place that says which repository owns which concern and how they compose into a deployable build.</p>
+<section id="repository-map-of-the-loot-action-vertical-slice" class="level1">
+<h1>Repository map of the loot-action vertical slice</h1>
+<section id="the-context" class="level2">
+<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
+<p>The <a href="../decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html">loot-action core-loop slice</a> spans more than a dozen repositories in the <a href="https://github.com/v-sekai-multiplayer-fabric"><code>v-sekai-multiplayer-fabric</code></a> organization: a playable app, one proven core per loop concern, the wire and transport specs, the engine fork and its assembly recipe, the backend and infrastructure services, the verification queue, and these docs. A reader who clones one repository sees one slice of the whole, with no single place that says which repository owns which concern and how they compose.</p>
 </section>
-<section id="decision-drivers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
-<ul>
-<li>The slice follows the <a href="../decisions/20260610-hexagonal-core-ports-adapters.html">hexagonal core/ports/adapters structure</a>, so each loop concern lives behind its own narrow port in its own repository.</li>
-<li>The cores are pure reducers proven in Lean+Plausible, separate from the engine that hosts them.</li>
-<li>The engine fork assembles from independent <code>feat/*</code> branches through a recipe, so the runtime binary has no single source repository.</li>
-</ul>
+<section id="the-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
+<p>Without an index, a contributor cannot tell which repository owns a concern, which name is current — several repositories carry a <code>fabric-</code> prefix that an earlier short name does not — or how the pieces relate, in particular whether the playable slice imports the cores or carries its own copies. This record is that index, and it has to match the repositories as they stand, not as first sketched.</p>
 </section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: one repository owns each concern, and this map is the index. Every repository below lives in the <a href="https://github.com/v-sekai-multiplayer-fabric"><code>v-sekai-multiplayer-fabric</code></a> organization.</p>
+<section id="design" class="level2">
+<h2 class="anchored" data-anchor-id="design">Design</h2>
+<p>One repository owns each concern; this record is the index. Every repository lives in <a href="https://github.com/v-sekai-multiplayer-fabric"><code>v-sekai-multiplayer-fabric</code></a>.</p>
 <section id="the-playable-slice" class="level3">
 <h3 class="anchored" data-anchor-id="the-playable-slice">The playable slice</h3>
 <ul>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/godot-loop-slice"><code>godot-loop-slice</code></a> — the GDScript app: hub deck, party teleport, the timed combo against one enemy, first-touch loot contention, and the round trip that commits the result. The text protocol is transport-agnostic, so <code>TRANSPORT=enet</code> drives the local slice and <code>TRANSPORT=wt</code> drives the WebTransport path over the same protocol.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/godot-loop-slice"><code>godot-loop-slice</code></a> — the GDScript app: the Hub deck and teleporter, the Field room with one enemy, the timed melee combo, first-touch loot contention, and the round trip that commits the result to SQLite. Transport is switchable over one text protocol — <code>TRANSPORT=enet</code> for the stable local default, <code>TRANSPORT=wt</code> for the WebTransport path.</li>
+</ul>
+<p>The slice does not import the core repositories below. It <strong>transcribes</strong> the proven cores into GDScript reducers — combat into <code>core/combat.gd</code>, loot into <code>core/loot.gd</code> — with the cores’ wire parities pinning the behaviour. Progression is an inline inventory append through the SQLite adapter (<code>adapters/sqlite_profiles.gd</code>), not a transcribed reducer. The core repositories are the canonical, proven reference; the slice is a standalone playable build.</p>
+</section>
+<section id="the-proven-loop-cores" class="level3">
+<h3 class="anchored" data-anchor-id="the-proven-loop-cores">The proven loop cores</h3>
+<p>Each loop concern is a hexagon (<code>core/</code> + <code>ports/</code> + <code>adapters/</code>) holding a dependency-free Lean core behind narrow ports (<a href="../decisions/20260610-hexagonal-core-ports-adapters.html">hexagonal core/ports/adapters</a>), with a matching standalone Lean workspace:</p>
+<ul>
+<li>combat: <a href="https://github.com/v-sekai-multiplayer-fabric/combat"><code>combat</code></a> hexagon and <a href="https://github.com/v-sekai-multiplayer-fabric/lean-combat-core"><code>lean-combat-core</code></a> — combo timing, hit validation, the enemy spawn-invulnerability window, damage.</li>
+<li>loot: <a href="https://github.com/v-sekai-multiplayer-fabric/loot"><code>loot</code></a> hexagon and <a href="https://github.com/v-sekai-multiplayer-fabric/lean-loot-core"><code>lean-loot-core</code></a> — the seeded weighted roll and first-touch contention, with R128 fixed-point.</li>
+<li>progression: <a href="https://github.com/v-sekai-multiplayer-fabric/progression"><code>progression</code></a> hexagon and <a href="https://github.com/v-sekai-multiplayer-fabric/lean-progression-core"><code>lean-progression-core</code></a> — profile and inventory rules: credits, the affinity gate on arts, valid item transitions.</li>
 </ul>
 </section>
-<section id="the-domain-hexagons-and-their-lean-cores" class="level3">
-<h3 class="anchored" data-anchor-id="the-domain-hexagons-and-their-lean-cores">The domain hexagons and their Lean cores</h3>
-<p>Each loop concern carries a hexagon (<code>core/</code> + <code>ports/</code> + <code>adapters/</code>) and a standalone Lean workspace holding the canonical core:</p>
+<section id="the-wire-transport-and-determinism-specs-lean-plausible" class="level3">
+<h3 class="anchored" data-anchor-id="the-wire-transport-and-determinism-specs-lean-plausible">The wire, transport, and determinism specs (Lean + Plausible)</h3>
+<p>Each is a Lean 4 + Plausible workspace proving one spec; several split out of the now-archived <code>lean-predictive-bvh</code> monorepo along the dependency seams:</p>
 <ul>
-<li>combat: <a href="https://github.com/v-sekai-multiplayer-fabric/combat"><code>combat</code></a> hexagon, <a href="https://github.com/v-sekai-multiplayer-fabric/lean-combat-core"><code>lean-combat-core</code></a> Lean core (combo timing, the enemy spawn-invulnerability window, hit validation, damage).</li>
-<li>loot: <a href="https://github.com/v-sekai-multiplayer-fabric/loot"><code>loot</code></a> hexagon, <a href="https://github.com/v-sekai-multiplayer-fabric/lean-loot-core"><code>lean-loot-core</code></a> Lean core (the seeded weighted roll and first-touch contention, with a lean-slang SPIR-V kernel).</li>
-<li>progression: <a href="https://github.com/v-sekai-multiplayer-fabric/progression"><code>progression</code></a> hexagon, <a href="https://github.com/v-sekai-multiplayer-fabric/lean-progression-core"><code>lean-progression-core</code></a> Lean core (profile and inventory rules, the persistence commit).</li>
-</ul>
-</section>
-<section id="the-wire-transport-and-determinism-specs-leanplausible" class="level3">
-<h3 class="anchored" data-anchor-id="the-wire-transport-and-determinism-specs-leanplausible">The wire, transport, and determinism specs (Lean+Plausible)</h3>
-<ul>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-entity-packet"><code>lean-entity-packet</code></a> — the integral 100-byte entity transform packet (int64 micrometers, no origin shift), with a roundtrip and size proof and a C++ differential.</li>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-http3-queue"><code>lean-http3-queue</code></a> — the WebTransport transport concurrency model: a mutex-guarded inbound queue proven size-honest, and a starvation-free network-thread loop (<a href="../decisions/20260612-webtransport-persistent-framed-stream.html">the persistent-stream decision</a>).</li>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-connection-fsm"><code>lean-connection-fsm</code></a> — the client-server connection lifecycle, proven sound and recovering inside the five-second transaction limit.</li>
-<li>the predictive spatial oracle and the proof hexagons that rode alongside it, split out of the now-archived <a href="https://github.com/v-sekai-multiplayer-fabric/lean-predictive-bvh"><code>lean-predictive-bvh</code></a> monorepo into one repository per hexagon cluster along the dependency seams:
-<ul>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-spatial-oracle"><code>lean-spatial-oracle</code></a> — the predictive BVH and its R128 fixed-point, the velocity scale the entity packet binds to (ghost expansion, SAH, and Hilbert broadphase, emitting <code>predictive_bvh.h</code> through the AmoLean codegen).</li>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-shared-core"><code>lean-shared-core</code></a> — the shared primitive types every cluster core builds on, dependency-free so the others require it without pulling Mathlib.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-entity-packet"><code>lean-entity-packet</code></a> — the 100-byte entity transform packet (int64 micrometers, no origin shift), with roundtrip and size proofs and a C++ differential.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-http3-queue"><code>lean-http3-queue</code></a> — the HTTP/3 inbound queue: atomic push and pop proven to keep <code>size == nodes.length</code> (<a href="../decisions/20260612-webtransport-persistent-framed-stream.html">persistent framed stream</a>).</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-connection-fsm"><code>lean-connection-fsm</code></a> — the client-server connection lifecycle, proven sound and recovering inside the <a href="../decisions/20260612-five-second-transaction-limit.html">five-second transaction limit</a>.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-spatial-oracle"><code>lean-spatial-oracle</code></a> — the predictive spatial oracle (ghost-expansion and SAH proofs), emitting <code>predictive_bvh.h</code>.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-shared-core"><code>lean-shared-core</code></a> — the shared primitive types every cluster core builds on, dependency-free.</li>
 <li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-rebac-core"><code>lean-rebac-core</code></a> — the NoGod / ReBAC authorization core.</li>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-humanoid-rom"><code>lean-humanoid-rom</code></a> — humanoid range-of-motion and IK constraints (Kusudama, muscle and prismatic limits), with the body-model and biomechanics citations.</li>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-fabric-protocol"><code>lean-fabric-protocol</code></a> — the fabric networking and SLA proofs: saturation, waypoint bounds, and the abyssal SLA.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-humanoid-rom"><code>lean-humanoid-rom</code></a> — humanoid range-of-motion and IK constraints (Kusudama, muscle and prismatic limits).</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-fabric-protocol"><code>lean-fabric-protocol</code></a> — the fabric networking and SLA proofs: saturation, waypoint bounds, the abyssal SLA.</li>
 <li><a href="https://github.com/v-sekai-multiplayer-fabric/lean-interest-mgmt"><code>lean-interest-mgmt</code></a> — authority-interest and solve-order: who-sees-whom and solve sequencing.</li>
-</ul></li>
 </ul>
 </section>
 <section id="the-engine-and-its-assembly" class="level3">
 <h3 class="anchored" data-anchor-id="the-engine-and-its-assembly">The engine and its assembly</h3>
 <ul>
-<li><p><a href="https://github.com/v-sekai-multiplayer-fabric/godot"><code>godot</code></a> — the double-precision fork. Each module rides its own <code>feat/*</code> branch (for example <code>feat/module-http3</code> carries WebTransport and the mbedtls ECDSA crypto, <code>feat/module-xr-grid</code> carries the orientation orbs, <code>feat/module-sqlite</code> carries the progression store).</p></li>
-<li><p><a href="https://github.com/v-sekai-multiplayer-fabric/godot-assembly"><code>godot-assembly</code></a> — the <code>gitassembly</code> recipe and the git-assembler driver (<code>update_godot_v_sekai.exs</code>) that stage and merge every <code>feat/*</code> branch into the <code>multiplayer-fabric</code> assembly, then tag the result. The branch stays local; the tag is the durable artifact.</p>
-<p><strong>Assembly structure:</strong> <code>godot-assembly</code> is checked out alongside <code>godot</code> and its driver runs <em>inside</em> the <code>godot</code> working directory. It adds <code>v-sekai-multiplayer-fabric</code> as a remote pointing at the <code>godot</code> repo, calls <code>git-assembler</code> with the <code>gitassembly</code> recipe to produce a local <code>multiplayer-fabric</code> branch (first branch via <code>stage</code>, subsequent branches via <code>merge</code>), creates an annotated tag named <code>v{YYYY.MM.DD.HHMM}-multiplayer-fabric</code>, pushes only the tag to <code>v-sekai-multiplayer-fabric/godot</code>, then deletes the local <code>multiplayer-fabric</code> branch. The <code>godot</code> repo never receives a force-pushed moving branch; the tag is the sole immutable artifact consumers pin.</p></li>
-<li><p><a href="https://github.com/v-sekai-multiplayer-fabric/godot-images"><code>godot-images</code></a> — the engine build factory and its container toolchain. A GitHub Actions matrix cross-compiles the double-precision fork’s editor and export templates (<code>editor</code>, <code>template_release</code>, <code>template_debug</code>) for Windows (through the llvm-mingw toolchain) and Linux, with sccache backed by GitHub Actions cache, and publishes each platform as a release zip (<code>windows-editor.zip</code>, <code>windows-template-release.zip</code>, …) that <code>godot-loop-slice</code> unpacks for its MSIX export. A parallel <code>build-docker</code> job builds the rootless podman quadlet Linux server images to GHCR. The native Linux engine/template builds are currently paused (<a href="https://github.com/v-sekai-multiplayer-fabric/godot-images/pull/28">disabled in #28</a>), so releases ship Windows-only until they are re-enabled.</p></li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/fabric-godot-core"><code>fabric-godot-core</code></a> — the double-precision Godot 4.7 engine fork, each module on its own <code>feat/*</code> branch (<a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">pin the engine</a>).</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/fabric-godot-assembly"><code>fabric-godot-assembly</code></a> — the <code>gitassembly</code> recipe and driver that stage and merge every <code>feat/*</code> branch into the assembly and tag the result (<a href="../decisions/20260606-gitassembly-tag-release.html">gitassembly tag release</a>); the branch stays local and the tag is the durable artifact.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/godot-images"><code>godot-images</code></a> — the engine build factory: a GitHub Actions matrix cross-compiles the fork’s editor and export templates for Windows and Linux with sccache, publishing per-platform release zips (<code>windows-editor.zip</code>, <code>linux-editor.zip</code>, and the matching templates) that <code>godot-loop-slice</code> unpacks, and a parallel job builds the rootless podman server images to GHCR.</li>
 </ul>
 </section>
-<section id="backend-services" class="level3">
-<h3 class="anchored" data-anchor-id="backend-services">Backend services</h3>
+<section id="backend-and-infrastructure-services" class="level3">
+<h3 class="anchored" data-anchor-id="backend-and-infrastructure-services">Backend and infrastructure services</h3>
 <ul>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/zone-backend"><code>zone-backend</code></a> — the Elixir/Phoenix backend: identity, the zone/shard directory (zone servers self-register via <code>POST /shards</code> and heartbeat via <code>PUT /shards/:id</code>), the loop profile commit endpoint (<code>POST /api/v1/loop/commit</code>), and casync asset serving through <code>aria-storage</code>. Follows a hexagonal <code>uro_loop</code> sub-app structure with <code>UroLoop.Ports.ProfileStore</code>.</li>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/zone-backend-quadlet"><code>zone-backend-quadlet</code></a> — systemd podman quadlet deployment unit for <code>zone-backend</code> on AlmaLinux, with CRDB mTLS client certs and TLS cert mountpoints.</li>
-<li><a href="https://github.com/V-Sekai-fire/aria-storage"><code>aria-storage</code></a> — casync chunk store library (Elixir): encodes and decodes <code>.caibx</code> index files and <code>.cacnk</code> chunk files in the desync-compatible raw-zstd format; <code>desync</code> round-trip verified in CI.</li>
-<li><a href="https://github.com/v-sekai/cockroach"><code>cockroach</code></a> — CockroachDB cluster configuration with multi-arch Docker build (amd64 + arm64).</li>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/observability"><code>observability</code></a> — observability stack: fully-qualified image names for Prometheus and Grafana monitoring.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/zone-backend"><code>zone-backend</code></a> — the Phoenix/Elixir backend (Uro): identity, the zone and shard directory, and the loop profile commit endpoint, in a hexagonal <code>uro_loop</code> sub-app.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/zone-server-quadlet"><code>zone-server-quadlet</code></a> — the podman quadlet for <code>zone-server</code>, the headless Godot multiplayer zone runtime (<a href="../decisions/20260613-quadlets-on-fedora-44-instead-of-harvester.html">quadlets on Fedora 44</a>).</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/zone-baker"><code>zone-baker</code></a> and <a href="https://github.com/v-sekai-multiplayer-fabric/zone-baker-quadlet"><code>zone-baker-quadlet</code></a> — the headless Godot asset validator and exporter, and its quadlet.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/cockroach-crdb-quadlet"><code>cockroach-crdb-quadlet</code></a> — the podman quadlet for a single-node CockroachDB with mTLS (<a href="../decisions/20260501-cockroachdb-with-mtls-role-separation.html">CockroachDB with mTLS</a>).</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/fabric-game-observability"><code>fabric-game-observability</code></a> — the observability stack: VictoriaMetrics (8428), VictoriaLogs (9428), VictoriaTraces (10428), and an OTEL collector (4317 gRPC, 4318 HTTP) in one pod (<a href="../decisions/20260506-observability-stack-victoriatraces.html">VictoriaTraces</a>).</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/fabric-casync-central"><code>fabric-casync-central</code></a> — the content-addressable casync chunk store whose chunks <code>fabric-platform-central</code> fetches.</li>
 </ul>
 </section>
 <section id="platform-tooling" class="level3">
 <h3 class="anchored" data-anchor-id="platform-tooling">Platform tooling</h3>
 <ul>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/fabric-platform-central"><code>fabric-platform-central</code></a> — cross-platform Elixir tray launcher (<code>godot-launcher-fire</code>) distributed as a self-contained binary via Burrito; starts and monitors the Godot editor on Linux, macOS, and Windows.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/fabric-platform-central"><code>fabric-platform-central</code></a> — the cross-platform Elixir tray launcher (<code>godot-launcher-fire</code>), a self-contained Burrito binary that starts and monitors the editor on Linux, macOS, and Windows (<a href="../decisions/20260624-fabric-platform-central-elixir-burrito-casync.html">fabric-platform-central</a>).</li>
 </ul>
 </section>
 <section id="verification-tooling-and-docs" class="level3">
 <h3 class="anchored" data-anchor-id="verification-tooling-and-docs">Verification, tooling, and docs</h3>
 <ul>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/fabric-verify"><code>fabric-verify</code></a> — the verification smokes as a systemd podman quadlet queue, gating the cores against their golden vectors.</li>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/vsekai-godot-mcp"><code>vsekai-godot-mcp</code></a> — the in-editor and runtime MCP addon that drives a deployed build over adb.</li>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/xr-grid"><code>xr-grid</code></a> — the VR interaction tool whose orientation orbs render the peers in the slice.</li>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/tropes-action"><code>tropes-action</code></a> — the static house-style check the manuals run.</li>
-<li><a href="https://github.com/v-sekai-multiplayer-fabric/fabric-manuals"><code>fabric-manuals</code></a> — these decisions, the changelog, and the reference docs.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/fabric-container-verify"><code>fabric-container-verify</code></a> — the verification smokes as a systemd podman quadlet queue (monado, loot, combat, four-player), gating the cores against their golden vectors (<a href="../decisions/20260612-systemd-quadlet-verification-queue.html">verification queue</a>).</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/vsekai-godot-mcp"><code>vsekai-godot-mcp</code></a> — the MCP server that drives the Godot editor and deployed builds from an MCP client (<a href="../decisions/20260612-mcp-runtime-bridge-deployed-builds.html">MCP runtime bridge</a>).</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/xr-grid"><code>xr-grid</code></a> — the VR interaction tool.</li>
+<li><a href="https://github.com/v-sekai-multiplayer-fabric/multiplayer-fabric-manuals"><code>multiplayer-fabric-manuals</code></a> — these decisions, the changelog, and the reference docs, with the <code>tropes</code> house-style check run as a pre-commit hook.</li>
 </ul>
 </section>
 </section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
+<section id="the-downsides" class="level2">
+<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
 <ul>
-<li>A reader starts here, follows one link to the concern they care about, and finds a self-contained repository.</li>
-<li>A core proves itself in its own Lean workspace, the engine hosts it through a flat-C adapter, and the slice wires the hexagons together, so a change to one concern stays in one repository.</li>
-<li>The runtime binary is reproducible from the pushed <code>feat/*</code> branches through the <code>godot-assembly</code> recipe, so no single clone holds the whole engine and none needs to.</li>
+<li>An index drifts: a repository renamed or re-scoped leaves the map stale until someone updates it, and the map carries no automated check that its links resolve.</li>
+<li>Listing the cores apart from the slice that transcribes them can read as if the slice imports them. It does not, and the text says so, but the two copies stay in step only as long as the wire-parity vectors are checked.</li>
+</ul>
+</section>
+<section id="the-road-not-taken" class="level2">
+<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
+<ul>
+<li>A single monorepo for the slice: one tree is easier to read at once but couples every concern’s history and CI. One repository per concern keeps a change to one concern in one repository, and <code>lean-predictive-bvh</code> was split apart for exactly that reason.</li>
+<li>Wiring the cores into the slice as submodules or packages: the slice transcribes the proven cores into GDScript instead, so a core proves itself in Lean while the playable build stays a standalone Godot project; the wire-parity vectors, not a build dependency, keep the two honest.</li>
 </ul>
 </section>
 <section id="confirmation" class="level2">
 <h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>An OpenXR build assembles from the <code>multiplayer-fabric</code> assembly, joins the <code>godot-loop-slice</code> server over the wire, and completes a Hub-to-Field-to-Loot round that commits progression, exercising the cores, the wire, the transport, and the persistence together.</p>
+<p>The playable-loop smoke runs the slice end to end — four Godot clients through the Hub-to-Field-to-Loot round, exactly one grant, and the SQLite profile commit — and passes on 2026-06-29. <code>fabric-container-verify</code> runs the same smokes (loot, combat, four-player, monado) as a quadlet queue against the cores’ golden vectors.</p>
 
 
 </section>
@@ -437,11 +443,21 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
 <li><p><a href="../changelog/2026/20260622-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-22 (Monday)</a></p></li>
+<li><p><a href="20260501-cockroachdb-with-mtls-role-separation.html">CockroachDB with mTLS and role-separated access</a></p></li>
+<li><p><a href="20260506-observability-stack-victoriatraces.html">Replace Jaeger with VictoriaTraces for trace storage</a></p></li>
+<li><p><a href="20260606-gitassembly-tag-release.html">Cut gitassembly tag releases for the assembled engine</a></p></li>
+<li><p><a href="20260606-pin-engine-to-frozen-godot-4-7.html">Pin the engine to a frozen Godot 4.7 commit</a></p></li>
 <li><p><a href="20260610-hexagonal-core-ports-adapters.html">Hexagonal core/ports/adapters as the component convention</a></p></li>
 <li><p><a href="20260611-loot-action-core-loop-mvp-vertical-slice.html">Loot-action core-loop MVP vertical slice</a></p></li>
+<li><p><a href="20260612-five-second-transaction-limit.html">Five-second transaction limit (bounded operations)</a></p></li>
+<li><p><a href="20260612-mcp-runtime-bridge-deployed-builds.html">MCP runtime bridge for deployed builds</a></p></li>
+<li><p><a href="20260612-systemd-quadlet-verification-queue.html">Verification smokes as a systemd podman quadlet queue</a></p></li>
 <li><p><a href="20260612-webtransport-persistent-framed-stream.html">WebTransport reliable delivery on one persistent framed stream per session</a></p></li>
+<li><p><a href="20260613-quadlets-on-fedora-44-instead-of-harvester.html">Run services as systemd podman quadlets on Fedora 44 instead of Harvester HCI</a></p></li>
 <li><p><a href="20260613-repository-and-capability-inventory.html">Repository and capability inventory for the multiplayer fabric</a></p></li>
+<li><p><a href="20260624-fabric-platform-central-elixir-burrito-casync.html">fabric-platform-central as Elixir OTP app with Burrito and casync</a></p></li>
 </ul>
+</section>
 </section>
 
 </main> <!-- /main -->
