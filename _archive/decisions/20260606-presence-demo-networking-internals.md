@@ -1,7 +1,7 @@
 ---
 title: Presence demo pose networking
 date: 2026-06-06
-status: accepted
+status: superseded by 20260611-loot-action-core-loop-mvp-vertical-slice.md
 decision-makers: K. S. Ernest (iFire) Lee
 tier: baseline
 ---

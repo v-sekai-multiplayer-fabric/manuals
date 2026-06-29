@@ -13,7 +13,7 @@ The [`merge`](https://github.com/v-sekai-multiplayer-fabric/merge) repo's
 onto the [frozen Godot 4.7 base](20260606-pin-engine-to-frozen-godot-4-7.md). The
 base is pinned, but the feature branch tips are not: an assembly run today and one
 next week can merge different branch SHAs and produce a different engine. The
-[cold-boot dependencies](20260606-presence-demo-cold-boot-dependencies.md) refer to
+cold-boot dependencies refer to
 the branches by name, so "assemble these branches" alone is not a reproducible
 artifact. What is the shareable, fixed reference for the assembled engine?
 
@@ -49,7 +49,7 @@ behavior the `merge` tooling already implements rather than inventing a new sche
   (commit `9ea526ab`), assembled onto the pinned 4.7 base with the full recipe,
   including `feat/module-xr-grid`, `feat/module-cassie`, and `feat/module-http3`.
 - Consumers pin to a tag, not to branch names. `godot-images` builds its GHCR
-  editor image from a tag, and the [cold-boot steps](20260606-presence-demo-cold-boot-dependencies.md)
+  editor image from a tag, and the cold-boot steps
   reference that tag.
 - Iterate with `--dry-run` (assembles locally, no push) before cutting a release.
 
@@ -73,6 +73,6 @@ branch names.
 
 The tag sits on top of the [engine pin](20260606-pin-engine-to-frozen-godot-4-7.md):
 the pin fixes the base, and the tag fixes the assembly merged onto it. It is the
-reproducible artifact the [cold-boot dependencies](20260606-presence-demo-cold-boot-dependencies.md)
+reproducible artifact the cold-boot dependencies
 build from. The tag format and workflow are documented in the `merge` repo's
 `CONTRIBUTING.md`.

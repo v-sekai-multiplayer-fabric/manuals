@@ -50,5 +50,5 @@ The `modules/http3` demos open a WebTransport client and server over QUIC.
 ## More Information
 
 Pose streaming for the presence demo rides this transport; see
-[presence demo pose networking](20260606-presence-demo-networking-internals.md).
+presence demo pose networking.
 The engine is [pinned to a frozen Godot 4.7 commit](20260606-pin-engine-to-frozen-godot-4-7.md).

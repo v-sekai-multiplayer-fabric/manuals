@@ -1,7 +1,7 @@
 ---
 title: Human-readable presence markers with an orb debug mode
 date: 2026-06-06
-status: proposed
+status: superseded by 20260611-loot-action-core-loop-mvp-vertical-slice.md
 tier: proof of concept
 decision-makers: K. S. Ernest (iFire) Lee
 consulted: Joseph

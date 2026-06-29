@@ -8,7 +8,7 @@ decision-makers: K. S. Ernest (iFire) Lee
 
 ## Context and Problem Statement
 
-Remote-avatar presence is already decided in depth: head and hand orbs (the orb demo), human-readable markers ([the marker decision](20260606-presence-marker-representation.md)), and a ghostly partial body ([the body-model decision](20260606-ghostly-presence-body-model.md)). The loop needs presence behind ports like the other cores, without redeciding the representation.
+Remote-avatar presence is already decided in depth: head and hand orbs (the orb demo), human-readable markers (the marker decision), and a ghostly partial body (the body-model decision). The loop needs presence behind ports like the other cores, without redeciding the representation.
 
 ## Decision Outcome
 

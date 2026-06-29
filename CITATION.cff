@@ -560,6 +560,14 @@ references:
     year: 2026
     url: "https://tropes.fyi/"
 
+  - type: article
+    title: "The Cost YAGNI Was Never About"
+    authors:
+      - family-names: Beck
+        given-names: Kent
+    year: 2026
+    url: "https://newsletter.kentbeck.com/p/the-cost-yagni-was-never-about"
+
   - type: generic
     title: "Vulkan Video"
     authors:
