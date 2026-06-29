@@ -15,6 +15,7 @@
   {
     "listing": "/decisions.html",
     "items": [
+      "/decisions/20260629-yagni-times-structure-to-need.html",
       "/decisions/20260624-game-loop-cluster-sequence.html",
       "/decisions/20260624-release-tag-progression-dev-beta-rc.html",
       "/decisions/20260624-fabric-platform-central-elixir-burrito-casync.html",
@@ -54,6 +55,8 @@
       "/decisions/20260611-hexagon-presence-core.html",
       "/decisions/20260611-hexagon-progression-core.html",
       "/decisions/20260611-server-authoritative-simulation-deferred-rollback.html",
+      "/decisions/madr-proposal-template.html",
+      "/decisions/20260611-webtransportd-core-transport-adapter.html",
       "/decisions/20260610-hexagonal-core-ports-adapters.html",
       "/decisions/20260609-umbrella-package-installs-all-components.html",
       "/decisions/20260609-commit-messages-sentence-case.html",
@@ -62,14 +65,10 @@
       "/decisions/20260606-archival-file-naming-convention.html",
       "/decisions/20260606-bounded-llm-steering-queue.html",
       "/decisions/20260606-checking-sccache.html",
-      "/decisions/20260606-presence-demo-cold-boot-dependencies.html",
       "/decisions/20260606-compiling-godot-engine.html",
       "/decisions/20260606-gitassembly-tag-release.html",
       "/decisions/20260606-feature-classification-poc-baseline-stretch.html",
-      "/decisions/20260606-ghostly-presence-body-model.html",
-      "/decisions/20260606-presence-marker-representation.html",
       "/decisions/20260606-pin-engine-to-frozen-godot-4-7.html",
-      "/decisions/20260606-presence-demo-networking-internals.html",
       "/decisions/20260606-art-game-loop-steel-thread.html",
       "/decisions/20260606-require-pr-and-merge-queue-on-main.html",
       "/decisions/20260606-windows-background-services-nssm.html",
@@ -80,8 +79,6 @@
       "/decisions/20260506-observability-stack-victoriatraces.html",
       "/decisions/20260501-cockroachdb-with-mtls-role-separation.html",
       "/decisions/20260501-godot-double-precision-template-release-for-zone.html",
-      "/decisions/madr-proposal-template.html",
-      "/decisions/20260611-webtransportd-core-transport-adapter.html",
       "/decisions/20260501-webtransport-over-quic-for-game-traffic.html"
     ]
   }

@@ -10,7 +10,69 @@
 <atom:link href="https://v-sekai-multiplayer-fabric.github.io/manuals/decisions.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.9.38</generator>
-<lastBuildDate>Wed, 24 Jun 2026 00:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 29 Jun 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>YAGNI times structure to the need, in code and in the record</title>
+  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260629-yagni-times-structure-to-need.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › YAGNI times structure to the need, in code and in the record</em></p>
+<p><strong>Status:</strong> accepted</p>
+<section id="yagni-times-structure-to-the-need-in-code-and-in-the-record" class="level1">
+<h1>YAGNI times structure to the need, in code and in the record</h1>
+<section id="the-context" class="level2">
+<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
+<p>Kent Beck’s <a href="https://newsletter.kentbeck.com/p/the-cost-yagni-was-never-about">The Cost YAGNI Was Never About</a> reframes YAGNI as a question of timing rather than thrift. Building structure ahead of the feature that needs it sends two bills: optionality, because committing on a guess spends the option to build the right thing once the need is known; and net present value, because the cost lands early while the return lands late. Both bills survive cheap code generation, since neither one is the price of typing.</p>
+<p>Two artifacts in this stack carried speculative structure of that kind. The <code>build_msix</code> script had cross-platform branches for hosts that never run it. Several decision records carried CRIS score tables and other ceremony around the decision they recorded.</p>
+</section>
+<section id="the-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
+<p>Cheap generation makes speculative structure easy to produce, and it reads as diligence. Code and decision records can accrete structure ahead of need, which carries both bills and crowds the load-bearing parts.</p>
+</section>
+<section id="design" class="level2">
+<h2 class="anchored" data-anchor-id="design">Design</h2>
+<p>Adopt YAGNI as a question of timing.</p>
+<ul>
+<li>Build structure when the feature that needs it arrives. The rule is about timing, so a real near-term need is met by building now.</li>
+<li>Keep a decision record to the load-bearing sections set by the MADR proposal template: context, problem, design, downsides, the road not taken, and how the decision is confirmed.</li>
+<li>When a record stops describing the live plan, mark it superseded and move it to <code>_archive</code>, following <code>_archive/README.md</code>.</li>
+</ul>
+</section>
+<section id="the-downsides" class="level2">
+<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
+<ul>
+<li>A timing judgment can defer something whose need turns out to be near. The rule is about timing, so the response is to build once the need is real.</li>
+<li>Trimming and archiving move breadth of context out of the live listing. The archive keeps that history in the repository.</li>
+</ul>
+</section>
+<section id="the-road-not-taken" class="level2">
+<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
+<ul>
+<li>Read YAGNI as effort-saving, so that cheap code retires it. The essay rejects this reading: the bills are optionality and net present value, and cheap generation leaves both intact.</li>
+</ul>
+</section>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>The principle was applied in three changes: the ceremony trim across the heavy decision records, this pass archiving the superseded presence demo, and the <code>build_msix</code> script trimmed to the two platforms it serves. Each change left the working behaviour unchanged.</p>
+
+
+</section>
+<section id="related" class="level2">
+<h2 class="anchored" data-anchor-id="related">Related</h2>
+<ul>
+<li><p><a href="../changelog/2026/20260629-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)</a></p></li>
+</ul>
+</section>
+</section>
+
+ ]]></description>
+  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260629-yagni-times-structure-to-need.html</guid>
+  <pubDate>Mon, 29 Jun 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Game-loop-first delivery sequence</title>
   <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260624-game-loop-cluster-sequence.html</link>
@@ -2016,76 +2078,6 @@ font-style: inherit;">|</span></span>
 
  ]]></description>
   <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-systemd-quadlet-verification-queue.html</guid>
-  <pubDate>Fri, 12 Jun 2026 00:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>WebTransport reliable delivery on one persistent framed stream per session</title>
-  <link>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-webtransport-persistent-framed-stream.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › WebTransport reliable delivery on one persistent framed stream per session</em></p>
-<p><strong>Status:</strong> accepted</p>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The fabric’s reliability classes (<a href="../decisions/20260612-fabric-channels-as-reliability-classes.html">fabric channels</a>) run over ENet for the local slice. WebTransport carries the same classes for the browser and Quest paths over one QUIC connection per client. The picoquic WebTransport server goes silent within seconds once four or more sessions connect: some clients never finish the extended-CONNECT handshake, and once a few sessions are open every client stops sending and receiving while the network thread stays alive in <code>poll()</code>.</p>
-</section>
-<section id="decision-drivers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
-<ul>
-<li>A client sends a transform every tick and a control event rarely, so the reliable path takes a high message rate.</li>
-<li>picoquic caps concurrent streams per connection, and the extended-CONNECT response rides the session’s control stream.</li>
-<li>The same <code>set_transfer_channel</code> plus <code>set_transfer_mode</code> lane selection has to read the same on both transports.</li>
-</ul>
-</section>
-<section id="considered-options" class="level2">
-<h2 class="anchored" data-anchor-id="considered-options">Considered Options</h2>
-<ul>
-<li>A fresh bidirectional stream per reliable message, FIN’d after the payload.</li>
-<li>One persistent bidirectional stream per session, carrying length-prefixed frames.</li>
-</ul>
-</section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Chosen option: reliable traffic rides one persistent bidirectional WebTransport stream per session, opened once after connect-accepted and appended to without a per-message FIN; unreliable traffic rides datagrams. Each reliable message carries the webtransportd frame header (<code>flag | len_varint | payload</code>, where the flag holds a 0–7 channel and a reliable bit), so the receiver delimits messages on the shared stream and recovers the channel. This matches the picoquic <code>wt_baton</code> reference and the webtransportd frame spec.</p>
-<p>A fresh stream per message exhausts the connection’s stream credit, and the exhaustion starves the connect-accepted response on the control stream, so the late session stays in connecting. The persistent stream holds the stream count at one per session regardless of message rate.</p>
-<p>Five supporting invariants keep the server alive under concurrent load:</p>
-<ul>
-<li>The inbound packet queue takes a mutex shared by the picoquic network thread and the main thread. A Lean+Plausible model proves the locked queue stays size-honest for every schedule, and finds the unlocked interleaving that strands the newest session’s packets behind a stale cached length.</li>
-<li>The packet-loop wake branch services receive and send on the same iteration, and the work queue drains on every loop callback, including timeouts and receives. A steady wake stream otherwise holds the loop in the wake branch and starves both directions. The same Lean+Plausible model proves the inclusive iteration stays starvation-free for every schedule.</li>
-<li><code>get_packet_peer</code>, <code>get_packet_mode</code>, and <code>get_packet_channel</code> peek the front of the queue, the MultiplayerPeer contract, rather than the last-popped value. Reading the popped value mis-attributes interleaved sessions, so a late client’s join credits another peer and the client never receives its welcome.</li>
-<li>The server connection table sizes for the entity and interest fanout, above a single slot.</li>
-<li>The picoquic textlog stays behind the engine verbose flag, because its synchronous stdout writes stall the network thread under load.</li>
-</ul>
-</section>
-<section id="consequences" class="level2">
-<h2 class="anchored" data-anchor-id="consequences">Consequences</h2>
-<ul>
-<li>A client opens one reliable stream for its whole session, so concurrent joins keep their stream credit and reach open.</li>
-<li>The channel-plus-reliability flag the ENet peer reads from the transfer channel and mode rides inside the frame, so both transports realize the channels decision with one mental model.</li>
-<li>The slice runs identically on <code>TRANSPORT=enet</code> and <code>TRANSPORT=wt</code>; the text protocol stays transport-agnostic across both.</li>
-</ul>
-</section>
-<section id="confirmation" class="level2">
-<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
-<p>The <a href="https://github.com/v-sekai-multiplayer-fabric/http3-queue">http3-queue</a> Lean+Plausible workspace proves the queue and wake-loop properties and exhibits the failing schedules. Five concurrent WebTransport sessions stay healthy for ninety seconds and complete full Hub-to-Field-to-Loot rounds, on the fork’s <code>feat/module-http3</code>.</p>
-
-
-</section>
-<section id="related" class="level2">
-<h2 class="anchored" data-anchor-id="related">Related</h2>
-<ul>
-<li><p><a href="../changelog/2026/20260612-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-12 (Friday)</a></p></li>
-<li><p><a href="20260612-fabric-channels-as-reliability-classes.html">Fabric channels as reliability classes, control in payload</a></p></li>
-<li><p><a href="20260612-vertical-slice-repository-map.html">Repository map of the loot-action vertical slice</a></p></li>
-</ul>
-</section>
-
- ]]></description>
-  <guid>https://v-sekai-multiplayer-fabric.github.io/manuals/decisions/20260612-webtransport-persistent-framed-stream.html</guid>
   <pubDate>Fri, 12 Jun 2026 00:00:00 GMT</pubDate>
 </item>
 </channel>

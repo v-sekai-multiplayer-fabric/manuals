@@ -288,7 +288,9 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#v-sekai-multiplayer-fabric-deck-log-2026-06-29-monday" id="toc-v-sekai-multiplayer-fabric-deck-log-2026-06-29-monday" class="nav-link active" data-scroll-target="#v-sekai-multiplayer-fabric-deck-log-2026-06-29-monday">V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)</a>
   <ul class="collapse">
+  <li><a href="#added" id="toc-added" class="nav-link" data-scroll-target="#added">Added</a></li>
   <li><a href="#changed" id="toc-changed" class="nav-link" data-scroll-target="#changed">Changed</a></li>
+  <li><a href="#removed" id="toc-removed" class="nav-link" data-scroll-target="#removed">Removed</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/changelog/2026/20260629-deck-log.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
@@ -304,11 +306,24 @@ ul.task-list li input[type="checkbox"] {
 <h1>V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)</h1>
 <p>Date: 2026-06-29</p>
 <p>Trimmed the heavy decision records back to the lean MADR template, applying YAGNI to the docs. A decision record carries its context, decision, downsides, alternatives, and verification; the scoring ceremony around it added bulk without changing the decision, so it came out.</p>
+<p>Then archived the standalone presence demo as superseded, and recorded the YAGNI principle as its own decision.</p>
+<section id="added" class="level2">
+<h2 class="anchored" data-anchor-id="added">Added</h2>
+<ul>
+<li>A decision record, <a href="../../decisions/20260629-yagni-times-structure-to-need.html">YAGNI times structure to the need</a>, adopting Beck’s framing of YAGNI as a question of timing, with Kent Beck’s essay added to <code>CITATION.cff</code>.</li>
+</ul>
+</section>
 <section id="changed" class="level2">
 <h2 class="anchored" data-anchor-id="changed">Changed</h2>
 <ul>
 <li>Six decision records dropped their CRIS score tables, <code>Tags</code> lists, <code>Further Reading</code> bibliographies, and the body <code>Status</code> and <code>Decision Makers</code> sections that only duplicated the YAML frontmatter, and collapsed <code>The Road Not Taken</code> to one line per alternative: <a href="../../decisions/20260506-maglev-cycle-1-gateway-handshake.html">maglev cycle 1 gateway handshake</a>, <a href="../../decisions/20260611-loot-action-core-loop-mvp-vertical-slice.html">loot-action core-loop MVP vertical slice</a>, <a href="../../decisions/20260624-fabric-platform-central-elixir-burrito-casync.html">fabric-platform-central as Elixir OTP app</a>, <a href="../../decisions/20260624-game-loop-cluster-sequence.html">game-loop-first delivery sequence</a>, <a href="../../decisions/20260624-release-tag-progression-dev-beta-rc.html">release tag progression</a>, and <a href="../../decisions/20260624-sccache-github-actions-cache-for-godot-builds.html">sccache GitHub Actions cache</a>. The maglev record kept its round-trip verification evidence under a <code>Confirmation</code> heading. The frontmatter and the decisions index are unchanged.</li>
 <li>The <a href="../../decisions/madr-proposal-template.html">MADR proposal template</a> follows the same lean shape, with status and decision-makers in frontmatter, so new records keep to the load-bearing sections.</li>
+</ul>
+</section>
+<section id="removed" class="level2">
+<h2 class="anchored" data-anchor-id="removed">Removed</h2>
+<ul>
+<li>The standalone presence demo moved to <code>_archive/decisions/</code>, marked superseded by the loot-action vertical slice: the ghostly partial-body avatar, the cold-boot dependencies, the pose networking, and the orb presence markers. Their orb sibling was already archived. Three live records that linked to them were delinked so the rendered site keeps no dead links.</li>
 </ul>
 
 

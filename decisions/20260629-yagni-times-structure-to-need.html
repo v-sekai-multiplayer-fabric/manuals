@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-06-06">
+<meta name="dcterms.date" content="2026-06-29">
 
-<title>Cold-boot dependencies for the presence-marker demo – V-Sekai Fire — Manuals</title>
+<title>YAGNI times structure to the need, in code and in the record – V-Sekai Fire — Manuals</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -287,22 +287,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#context-and-problem-statement" id="toc-context-and-problem-statement" class="nav-link active" data-scroll-target="#context-and-problem-statement">Context and Problem Statement</a></li>
-  <li><a href="#decision-drivers" id="toc-decision-drivers" class="nav-link" data-scroll-target="#decision-drivers">Decision Drivers</a></li>
-  <li><a href="#decision-outcome" id="toc-decision-outcome" class="nav-link" data-scroll-target="#decision-outcome">Decision Outcome</a>
+  <li><a href="#yagni-times-structure-to-the-need-in-code-and-in-the-record" id="toc-yagni-times-structure-to-the-need-in-code-and-in-the-record" class="nav-link active" data-scroll-target="#yagni-times-structure-to-the-need-in-code-and-in-the-record">YAGNI times structure to the need, in code and in the record</a>
   <ul class="collapse">
-  <li><a href="#engine-pick-one" id="toc-engine-pick-one" class="nav-link" data-scroll-target="#engine-pick-one">1. Engine (pick one)</a></li>
-  <li><a href="#demo-project" id="toc-demo-project" class="nav-link" data-scroll-target="#demo-project">2. Demo project</a></li>
-  <li><a href="#networking" id="toc-networking" class="nav-link" data-scroll-target="#networking">3. Networking</a></li>
-  <li><a href="#ghostly-body-pipeline-optional-for-the-marker-upgrade" id="toc-ghostly-body-pipeline-optional-for-the-marker-upgrade" class="nav-link" data-scroll-target="#ghostly-body-pipeline-optional-for-the-marker-upgrade">4. Ghostly body pipeline (optional, for the marker upgrade)</a></li>
-  <li><a href="#vr-runtime-optional" id="toc-vr-runtime-optional" class="nav-link" data-scroll-target="#vr-runtime-optional">5. VR runtime (optional)</a></li>
-  <li><a href="#consequences" id="toc-consequences" class="nav-link" data-scroll-target="#consequences">Consequences</a></li>
+  <li><a href="#the-context" id="toc-the-context" class="nav-link" data-scroll-target="#the-context">The Context</a></li>
+  <li><a href="#the-problem-statement" id="toc-the-problem-statement" class="nav-link" data-scroll-target="#the-problem-statement">The Problem Statement</a></li>
+  <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design">Design</a></li>
+  <li><a href="#the-downsides" id="toc-the-downsides" class="nav-link" data-scroll-target="#the-downsides">The Downsides</a></li>
+  <li><a href="#the-road-not-taken" id="toc-the-road-not-taken" class="nav-link" data-scroll-target="#the-road-not-taken">The Road Not Taken</a></li>
   <li><a href="#confirmation" id="toc-confirmation" class="nav-link" data-scroll-target="#confirmation">Confirmation</a></li>
-  </ul></li>
-  <li><a href="#more-information" id="toc-more-information" class="nav-link" data-scroll-target="#more-information">More Information</a></li>
   <li><a href="#related" id="toc-related" class="nav-link" data-scroll-target="#related">Related</a></li>
+  </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260606-presence-demo-cold-boot-dependencies.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260629-yagni-times-structure-to-need.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -310,7 +306,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Cold-boot dependencies for the presence-marker demo</h1>
+<h1 class="title">YAGNI times structure to the need, in code and in the record</h1>
 </div>
 
 
@@ -321,7 +317,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">June 6, 2026</p>
+      <p class="date">June 29, 2026</p>
     </div>
   </div>
   
@@ -333,82 +329,53 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › Cold-boot dependencies for the presence-marker demo</em></p>
-<p><strong>Tier:</strong> proof of concept · <strong>Status:</strong> proposed</p>
-<section id="context-and-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="context-and-problem-statement">Context and Problem Statement</h2>
-<p>The <a href="../decisions/20260606-presence-marker-representation.html">presence-marker demo</a> (and its <a href="../decisions/20260606-ghostly-presence-body-model.html">ghostly ANNY/SOMA-X body</a> refinement) needs a reproducible setup from nothing. What is the minimal dependency set to cold boot the development environment for it?</p>
+<p><em><a href="../index.html">Manuals</a> › <a href="../decisions.html">Decisions</a> › YAGNI times structure to the need, in code and in the record</em></p>
+<p><strong>Status:</strong> accepted</p>
+<section id="yagni-times-structure-to-the-need-in-code-and-in-the-record" class="level1">
+<h1>YAGNI times structure to the need, in code and in the record</h1>
+<section id="the-context" class="level2">
+<h2 class="anchored" data-anchor-id="the-context">The Context</h2>
+<p>Kent Beck’s <a href="https://newsletter.kentbeck.com/p/the-cost-yagni-was-never-about">The Cost YAGNI Was Never About</a> reframes YAGNI as a question of timing rather than thrift. Building structure ahead of the feature that needs it sends two bills: optionality, because committing on a guess spends the option to build the right thing once the need is known; and net present value, because the cost lands early while the return lands late. Both bills survive cheap code generation, since neither one is the price of typing.</p>
+<p>Two artifacts in this stack carried speculative structure of that kind. The <code>build_msix</code> script had cross-platform branches for hosts that never run it. Several decision records carried CRIS score tables and other ceremony around the decision they recorded.</p>
 </section>
-<section id="decision-drivers" class="level2">
-<h2 class="anchored" data-anchor-id="decision-drivers">Decision Drivers</h2>
+<section id="the-problem-statement" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-statement">The Problem Statement</h2>
+<p>Cheap generation makes speculative structure easy to produce, and it reads as diligence. Code and decision records can accrete structure ahead of need, which carries both bills and crowds the load-bearing parts.</p>
+</section>
+<section id="design" class="level2">
+<h2 class="anchored" data-anchor-id="design">Design</h2>
+<p>Adopt YAGNI as a question of timing.</p>
 <ul>
-<li>A new machine should reach a running demo from a checkout and a short script.</li>
-<li>Reuse the engine and transport the stack already standardises on.</li>
-<li>Keep the heavy ML pipeline optional until the ghostly body is worked on.</li>
+<li>Build structure when the feature that needs it arrives. The rule is about timing, so a real near-term need is met by building now.</li>
+<li>Keep a decision record to the load-bearing sections set by the MADR proposal template: context, problem, design, downsides, the road not taken, and how the decision is confirmed.</li>
+<li>When a record stops describing the live plan, mark it superseded and move it to <code>_archive</code>, following <code>_archive/README.md</code>.</li>
 </ul>
 </section>
-<section id="decision-outcome" class="level2">
-<h2 class="anchored" data-anchor-id="decision-outcome">Decision Outcome</h2>
-<p>Cold-boot dependencies, by layer:</p>
-<section id="engine-pick-one" class="level3">
-<h3 class="anchored" data-anchor-id="engine-pick-one">1. Engine (pick one)</h3>
+<section id="the-downsides" class="level2">
+<h2 class="anchored" data-anchor-id="the-downsides">The Downsides</h2>
 <ul>
-<li>Prebuilt: pull the editor image from <a href="https://github.com/v-sekai-multiplayer-fabric/godot-images">godot-images</a> (GHCR), built at the <a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">pinned Godot 4.7 commit</a>.</li>
-<li>From source: the <a href="../decisions/20260606-compiling-godot-engine.html">compiling SOP</a> toolchain (<code>git</code>, Python 3, SCons, sccache, MinGW-w64 on Windows / <code>build-essential</code> on Linux), plus <a href="https://github.com/v-sekai-multiplayer-fabric/merge">merge</a> (Elixir <code>gitassembly</code>) to assemble <code>feat/module-xr-grid</code>, <code>feat/module-cassie</code>, and <code>feat/module-http3</code> onto the pinned base. Check out a <a href="../decisions/20260606-gitassembly-tag-release.html">gitassembly tag release</a> (<code>v2026.06.06.1853-multiplayer-fabric</code>) rather than the moving branch tips for a reproducible assembly.</li>
+<li>A timing judgment can defer something whose need turns out to be near. The rule is about timing, so the response is to build once the need is real.</li>
+<li>Trimming and archiving move breadth of context out of the live listing. The archive keeps that history in the repository.</li>
 </ul>
 </section>
-<section id="demo-project" class="level3">
-<h3 class="anchored" data-anchor-id="demo-project">2. Demo project</h3>
+<section id="the-road-not-taken" class="level2">
+<h2 class="anchored" data-anchor-id="the-road-not-taken">The Road Not Taken</h2>
 <ul>
-<li>The <a href="https://github.com/v-sekai-multiplayer-fabric/xr-grid">xr-grid</a> checkout: the scene with the skinned-mesh hero-asset landmark and the head/hand pose orbs.</li>
+<li>Read YAGNI as effort-saving, so that cheap code retires it. The essay rejects this reading: the bills are optionality and net present value, and cheap generation leaves both intact.</li>
 </ul>
 </section>
-<section id="networking" class="level3">
-<h3 class="anchored" data-anchor-id="networking">3. Networking</h3>
-<ul>
-<li><a href="../decisions/20260606-webtransport-http3-transport.html">WebTransport over HTTP/3</a> is compiled into the engine (<code>modules/http3</code>, picoquic), so local loopback needs nothing extra. The Elixir gateway (on V-Sekai-fire) is only needed for call-scale runs.</li>
-</ul>
-</section>
-<section id="ghostly-body-pipeline-optional-for-the-marker-upgrade" class="level3">
-<h3 class="anchored" data-anchor-id="ghostly-body-pipeline-optional-for-the-marker-upgrade">4. Ghostly body pipeline (optional, for the marker upgrade)</h3>
-<ul>
-<li>A Python 3 environment with <a href="https://github.com/naver/anny">ANNY</a> and <a href="https://github.com/NVlabs/SOMA-X">SOMA-X</a> (<code>py-soma-x</code>), PyTorch, and NVIDIA Warp on a CUDA GPU. Persona and body assets auto-download from Hugging Face.</li>
-</ul>
-</section>
-<section id="vr-runtime-optional" class="level3">
-<h3 class="anchored" data-anchor-id="vr-runtime-optional">5. VR runtime (optional)</h3>
-<ul>
-<li>An OpenXR runtime and headset for in-headset use; the desktop debug window runs without one.</li>
-</ul>
-</section>
-<section id="consequences" class="level3">
-<h3 class="anchored" data-anchor-id="consequences">Consequences</h3>
-<ul>
-<li>Good: layers 1–2 alone boot a local, single-peer demo; networking and the ML body pipeline are additive.</li>
-<li>Bad: the from-source path pulls in an Elixir assembly step and a GPU/PyTorch stack, so the full cold boot is heavy.</li>
-</ul>
-</section>
-<section id="confirmation" class="level3">
-<h3 class="anchored" data-anchor-id="confirmation">Confirmation</h3>
-<p>A fresh machine reaches the desktop debug window of the xr-grid demo using the prebuilt engine plus the xr-grid checkout; adding the Python ANNY/SOMA-X stack enables the ghostly body.</p>
-</section>
-</section>
-<section id="more-information" class="level2">
-<h2 class="anchored" data-anchor-id="more-information">More Information</h2>
-<p>Layers reuse the <a href="../decisions/20260606-compiling-godot-engine.html">compiling SOP</a>, the <a href="../decisions/20260606-pin-engine-to-frozen-godot-4-7.html">engine pin</a>, and the <a href="../decisions/20260606-webtransport-http3-transport.html">WebTransport transport</a>.</p>
+<section id="confirmation" class="level2">
+<h2 class="anchored" data-anchor-id="confirmation">Confirmation</h2>
+<p>The principle was applied in three changes: the ceremony trim across the heavy decision records, this pass archiving the superseded presence demo, and the <code>build_msix</code> script trimmed to the two platforms it serves. Each change left the working behaviour unchanged.</p>
 
 
 </section>
 <section id="related" class="level2">
 <h2 class="anchored" data-anchor-id="related">Related</h2>
 <ul>
-<li><p><a href="20260606-compiling-godot-engine.html">Compiling the Godot engine</a></p></li>
-<li><p><a href="20260606-ghostly-presence-body-model.html">Ghostly partial-body presence avatar from ANNY via SOMA-X</a></p></li>
-<li><p><a href="20260606-gitassembly-tag-release.html">Cut gitassembly tag releases for the assembled engine</a></p></li>
-<li><p><a href="20260606-pin-engine-to-frozen-godot-4-7.html">Pin the engine to a frozen Godot 4.7 commit</a></p></li>
-<li><p><a href="20260606-presence-marker-representation.html">Human-readable presence markers with an orb debug mode</a></p></li>
-<li><p><a href="20260606-webtransport-http3-transport.html">WebTransport over HTTP/3 transport</a></p></li>
+<li><p><a href="../changelog/2026/20260629-deck-log.html">V-Sekai Multiplayer Fabric Deck Log — 2026-06-29 (Monday)</a></p></li>
 </ul>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -833,7 +800,7 @@ ul.task-list li input[type="checkbox"] {
     </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260606-presence-demo-cold-boot-dependencies.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/v-sekai-multiplayer-fabric/manuals/edit/main/decisions/20260629-yagni-times-structure-to-need.md" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">
