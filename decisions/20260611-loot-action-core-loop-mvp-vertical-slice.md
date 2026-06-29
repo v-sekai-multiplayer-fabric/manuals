@@ -70,3 +70,13 @@ Ranged and caster archetypes, Steam Frame and Steam Deck builds, in-headset auth
 - Multi-archetype slice: ranged and caster widen scope beyond one week. Melee alone proves combat authority and loot contention; the others follow the gate.
 - Broader platform launch: SteamVR is sufficient scope for the slice; Steam Frame and Steam Deck follow.
 - Per-zone distributed authority (Maglev intercept model): a geometric Hilbert-zone authority was attempted and rejected in the Maglev smoke test. One `zone-server` per instance is simpler and sufficient for a four-player room.
+
+## Confirmation
+
+As built on 2026-06-29, verified by reading the `godot-loop-slice` source. The engine was not run, so the runtime result is not recorded here.
+
+- Two of the five cores exist as named pure resolvers wired into the server: combat (`core/combat.gd`) and loot (`core/loot.gd`). Presence runs through a Hilbert interest core (`core/hilbert.gd`) and a multiplayer sink (`adapters/multiplayer_sink.gd`) rather than a named presence core. Progression is an inline inventory append committed through a SQLite adapter (`adapters/sqlite_profiles.gd`) rather than a separate reducer. The budgeter core is not implemented.
+- Persistence is SQLite. The CockroachDB adapter is not implemented.
+- The performance gate (90 Hz, 500,000 triangles, 200 draw calls per eye) is not measured or enforced in the repository.
+- The `OpenXR` desktop export preset duplicates the Windows Desktop preset and carries no XR options; the Quest Android preset is the configured XR target.
+- The playable-loop smoke (`smoke.sh`) exercises the full loop and asserts exactly one grant. The committed profile row is printed for inspection without an assertion on it, and the runtime pass is not yet recorded here.
